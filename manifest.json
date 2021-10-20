@@ -1,0 +1,18 @@
+{
+  "domain": "huawei_solar",
+  "name": "Huawei Solar",
+  "config_flow": true,
+  "documentation": "https://www.home-assistant.io/integrations/huawei_solar",
+  "requirements": [
+    "huawei_solar==1.1.0"
+  ],
+  "ssdp": [],
+  "zeroconf": [],
+  "homekit": {},
+  "dependencies": [],
+  "codeowners": [
+    "@wlcrs"
+  ],
+  "iot_class": "local_polling",
+  "version": "2.0.0-alpha1"
+}
