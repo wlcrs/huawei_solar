@@ -48,7 +48,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     #     your_validate_func, data["username"], data["password"]
     # )
 
-    inverter = HuaweiSolar(host=data[CONF_HOST])
+    inverter = HuaweiSolar(host=data[CONF_HOST], slave=data[CONF_SLAVE])
 
     try:
         model_name = inverter.get(ATTR_MODEL_ID).value
