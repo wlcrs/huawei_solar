@@ -5,21 +5,56 @@ title: ''
 labels: ''
 assignees: ''
 
----
 
-<!--
+body:
+- type: markdown
+  attributes:
+    value: |
+      Before you open a new issue, search through the existing issues to see if others have had the same problem.
+- type: textarea
+  attributes:
+    label: "System Health details"
+    description: "Paste the data from the System Health card in Home Assistant (https://www.home-assistant.io//more-info/system-health#github-issues)"
+  validations:
+    required: true
 
-You MUST include relevant logfiles to debug your issue.
+- type: textarea
+  attributes:
+    label: "Describe the issue"
+    description: "A clear and concise description of what the issue is."
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Reproduction steps
+    description: "Without steps to reproduce, it will be hard to fix, it is very important that you fill out this part, issues without it will be closed"
+    value: |
+      1.
+      2.
+      3.
+      ...
+  validations:
+    required: true
 
-For instance: if the integration does not show up in the `+ Add Integration` list, then add any relevant lines you can find in `/config/home-assistant.log` after a full restart of your Home Assistant instance.
+- type: markdown
+  attributes:
+    value: |
+      You MUST include relevant logfiles to debug your issue.
 
-When you don't find any relevant logs, please increase your logging level and try again. To do this, add the following lines to your `/config/configuration.yaml`:
+      For instance: if the integration does not show up in the `+ Add Integration` list, then add any relevant lines you can find in `/config/home-assistant.log` after a full restart of your Home Assistant instance.
 
-```
-logger:
-  default: debug
-  logs:
-    custom_components.huawei_solar: debug
-```
+      When you don't find any relevant logs, please increase your logging level and try again. To do this, add the following lines to your `/config/configuration.yaml`:
 
--->
+      ```
+      logger:
+        default: debug
+        logs:
+          custom_components.huawei_solar: debug
+      ```
+
+- type: textarea
+  attributes:
+    label: "Relevant debug logs"
+    render: text
+  validations:
+    required: true
