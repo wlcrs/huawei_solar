@@ -47,6 +47,10 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
         model_name = (await inverter.get(ATTR_MODEL_NAME)).value
         serial_number = (await inverter.get(ATTR_SERIAL_NUMBER)).value
 
+        # Cleanup this inverter object explicitely to prevent it from trying to maintain a modbus connection
+        client = await inverter.client
+        client.stop()
+
         # Return info that you want to store in the config entry.
         return dict(model_name=model_name, serial_number=serial_number)
     except ConnectionException as ex:
