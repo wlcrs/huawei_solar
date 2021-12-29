@@ -4,7 +4,7 @@
   "config_flow": true,
   "documentation": "https://www.home-assistant.io/integrations/huawei_solar",
   "requirements": [
-    "huawei_solar==1.1.0"
+    "huawei-solar==1.2.0"
   ],
   "ssdp": [],
   "zeroconf": [],

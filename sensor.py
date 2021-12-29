@@ -5,6 +5,8 @@ import backoff
 from huawei_solar import HuaweiSolar, ConnectionException, ReadException
 
 from .const import (
+    ATTR_SERIAL_NUMBER,
+    ATTR_MODEL_NAME,
     DOMAIN,
     DATA_MODBUS_CLIENT,
     CONF_BATTERY,
@@ -23,14 +25,15 @@ async def async_setup_entry(hass, entry, async_add_entities):
     """Add Huawei Solar entry"""
     inverter = hass.data[DOMAIN][entry.entry_id][DATA_MODBUS_CLIENT]
 
-    serial_number = inverter.get("serial_number").value
-    name = inverter.get("model_name").value
+    serial_number = (await inverter.get(ATTR_SERIAL_NUMBER)).value
+    name = (await inverter.get(ATTR_MODEL_NAME)).value
 
     device_info = {
         "identifiers": {(DOMAIN, name, serial_number)},
         "name": name,
         "manufacturer": "Huawei",
         "serial_number": serial_number,
+        "model": name,
     }
 
     async_add_entities(
@@ -81,11 +84,13 @@ class HuaweiSolarSensor(SensorEntity):
         """Return the state of the sensor."""
         return self._state
 
-    def update(self):
+    async def async_update(self):
         """Get the latest data from the Huawei solar inverter."""
 
-        @backoff.on_exception(backoff.expo, (ConnectionException, ReadException), max_time=120)
-        def _get_value():
-            return self._inverter.get(self.entity_description.key).value
+        @backoff.on_exception(
+            backoff.expo, (ConnectionException, ReadException), max_time=120
+        )
+        async def _get_value():
+            return (await self._inverter.get(self.entity_description.key)).value
 
-        self._state = _get_value()
+        self._state = await _get_value()

@@ -2,20 +2,15 @@
 from dataclasses import dataclass
 
 from homeassistant.const import (
-    DEVICE_CLASS_BATTERY,
     POWER_WATT,
     ENERGY_KILO_WATT_HOUR,
-    DEVICE_CLASS_ENERGY,
-    DEVICE_CLASS_POWER,
-    DEVICE_CLASS_POWER_FACTOR,
     PERCENTAGE,
 )
 
 from homeassistant.components.sensor import (
-    STATE_CLASS_MEASUREMENT,
-    STATE_CLASS_TOTAL,
-    STATE_CLASS_TOTAL_INCREASING,
+    SensorStateClass,
     SensorEntityDescription,
+    SensorDeviceClass,
 )
 
 DOMAIN = "huawei_solar"
@@ -24,6 +19,7 @@ DATA_MODBUS_CLIENT = "client"
 
 
 ATTR_MODEL_ID = "model_id"
+ATTR_MODEL_NAME = "model_name"
 ATTR_SERIAL_NUMBER = "serial_number"
 
 CONF_OPTIMIZERS = "optimizers"
@@ -83,56 +79,56 @@ SENSOR_TYPES: tuple[HuaweiSolarSensorEntityDescription] = (
         name="Daily Yield",
         icon="mdi:solar-power",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        device_class=DEVICE_CLASS_ENERGY,
-        state_class=STATE_CLASS_TOTAL_INCREASING,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=ATTR_TOTAL_YIELD,
         name="Total Yield",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        device_class=DEVICE_CLASS_ENERGY,
-        state_class=STATE_CLASS_TOTAL,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL,
     ),
     HuaweiSolarSensorEntityDescription(
         key=ATTR_ACTIVE_POWER,
         name="Active Power",
         native_unit_of_measurement=POWER_WATT,
-        device_class=DEVICE_CLASS_POWER,
-        state_class=STATE_CLASS_MEASUREMENT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
         key=ATTR_INPUT_POWER,
         name="Input Power",
         native_unit_of_measurement=POWER_WATT,
-        device_class=DEVICE_CLASS_POWER,
-        state_class=STATE_CLASS_MEASUREMENT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
         key=ATTR_POWER_METER_ACTIVE_POWER,
         name="Power Meter Active Power",
         native_unit_of_measurement=POWER_WATT,
-        device_class=DEVICE_CLASS_POWER,
-        state_class=STATE_CLASS_MEASUREMENT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
         key=ATTR_POWER_FACTOR,
         name="Power Factor",
-        device_class=DEVICE_CLASS_POWER_FACTOR,
-        state_class=STATE_CLASS_MEASUREMENT,
+        device_class=SensorDeviceClass.POWER_FACTOR,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
         key=ATTR_GRID_ACCUMULATED,
         name="Grid Consumption",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        device_class=DEVICE_CLASS_ENERGY,
-        state_class=STATE_CLASS_TOTAL_INCREASING,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=ATTR_GRID_EXPORTED,
         name="Grid Exported",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        device_class=DEVICE_CLASS_ENERGY,
-        state_class=STATE_CLASS_TOTAL_INCREASING,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
     ),
 )
 
@@ -142,47 +138,47 @@ BATTERY_SENSOR_TYPES = (
         name="Battery Total Charge",
         icon="mdi:battery-plus-variant",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        state_class=STATE_CLASS_TOTAL,
-        device_class=DEVICE_CLASS_ENERGY,
+        state_class=SensorStateClass.TOTAL,
+        device_class=SensorDeviceClass.ENERGY,
     ),
     HuaweiSolarSensorEntityDescription(
         key=ATTR_STORAGE_DAY_CHARGE,
         name="Battery Day Charge",
         icon="mdi:battery-plus-variant",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        state_class=STATE_CLASS_TOTAL_INCREASING,
-        device_class=DEVICE_CLASS_ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.ENERGY,
     ),
     HuaweiSolarSensorEntityDescription(
         key=ATTR_STORAGE_TOTAL_DISCHARGE,
         name="Battery Total Discharge",
         icon="mdi:battery-minus-variant",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        state_class=STATE_CLASS_TOTAL,
-        device_class=DEVICE_CLASS_ENERGY,
+        state_class=SensorStateClass.TOTAL,
+        device_class=SensorDeviceClass.ENERGY,
     ),
     HuaweiSolarSensorEntityDescription(
         key=ATTR_STORAGE_DAY_DISCHARGE,
         name="Battery Day Discharge",
         icon="mdi:battery-minus-variant",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        state_class=STATE_CLASS_TOTAL_INCREASING,
-        device_class=DEVICE_CLASS_ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.ENERGY,
     ),
     HuaweiSolarSensorEntityDescription(
         key=ATTR_STORAGE_STATE_OF_CAPACITY,
         name="Battery State of Capacity",
         icon="mdi:home-battery",
         native_unit_of_measurement=PERCENTAGE,
-        state_class=STATE_CLASS_MEASUREMENT,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
         key=ATTR_STORAGE_CHARGE_DISCHARGE_POWER,
         name="Charge/Discharge Power",
         icon="mdi:flash",
         native_unit_of_measurement=POWER_WATT,
-        state_class=STATE_CLASS_MEASUREMENT,
-        device_class=DEVICE_CLASS_POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.POWER,
     ),
 )
 
@@ -192,7 +188,7 @@ OPTIMIZER_SENSOR_TYPES = (
         name="Optimizers Online",
         icon="mdi:solar-panel",
         native_unit_of_measurement="optimizers",
-        state_class=STATE_CLASS_MEASUREMENT,
-        device_class=DEVICE_CLASS_ENERGY,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.ENERGY,
     ),
 )

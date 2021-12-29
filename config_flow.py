@@ -17,11 +17,11 @@ from .const import (
     CONF_BATTERY,
     CONF_OPTIMIZERS,
     CONF_SLAVE,
-    ATTR_MODEL_ID,
+    ATTR_MODEL_NAME,
     ATTR_SERIAL_NUMBER,
 )
 
-from huawei_solar import HuaweiSolar, ConnectionException
+from huawei_solar import AsyncHuaweiSolar, ConnectionException
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -40,19 +40,12 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
 
     Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
     """
-    # TODO validate the data can be used to set up a connection.
 
-    # If your PyPI package is not built with async, pass your methods
-    # to the executor:
-    # await hass.async_add_executor_job(
-    #     your_validate_func, data["username"], data["password"]
-    # )
-
-    inverter = HuaweiSolar(host=data[CONF_HOST], slave=data[CONF_SLAVE])
+    inverter = AsyncHuaweiSolar(host=data[CONF_HOST], slave=data[CONF_SLAVE])
 
     try:
-        model_name = inverter.get(ATTR_MODEL_ID).value
-        serial_number = inverter.get(ATTR_SERIAL_NUMBER).value
+        model_name = (await inverter.get(ATTR_MODEL_NAME)).value
+        serial_number = (await inverter.get(ATTR_SERIAL_NUMBER)).value
 
         # Return info that you want to store in the config entry.
         return dict(model_name=model_name, serial_number=serial_number)
