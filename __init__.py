@@ -15,11 +15,18 @@ PLATFORMS: list[str] = ["sensor"]
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Huawei Solar from a config entry."""
 
-    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {
-        DATA_MODBUS_CLIENT: AsyncHuaweiSolar(
-            host=entry.data[CONF_HOST], slave=entry.data[CONF_SLAVE]
-        )
-    }
+    inverter = AsyncHuaweiSolar(
+        host=entry.data[CONF_HOST], slave=entry.data[CONF_SLAVE]
+    )
+
+    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {DATA_MODBUS_CLIENT: inverter}
+
+    # Fix for previously added entries which were missing a proper title
+
+    model_name = (await inverter.get("model_name")).value
+
+    if model_name != entry.title:
+        hass.config_entries.async_update_entry(entry, title=model_name)
 
     hass.config_entries.async_setup_platforms(entry, PLATFORMS)
 
