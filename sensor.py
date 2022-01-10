@@ -1,6 +1,7 @@
 """Support for Huawei inverter monitoring API."""
 import logging
 import backoff
+import asyncio
 
 from huawei_solar import HuaweiSolar, ConnectionException, ReadException
 
@@ -15,6 +16,7 @@ from .const import (
     HuaweiSolarSensorEntityDescription,
     SENSOR_TYPES,
     BATTERY_SENSOR_TYPES,
+    DEFAULT_COOLDOWN_INTERVAL
 )
 
 import homeassistant.helpers.config_validation as cv
@@ -59,6 +61,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
             True,
         )
 
+request_lock = asyncio.Lock()
 
 class HuaweiSolarSensor(SensorEntity):
 
@@ -91,6 +94,9 @@ class HuaweiSolarSensor(SensorEntity):
             backoff.expo, (ConnectionException, ReadException), max_time=120
         )
         async def _get_value():
-            return (await self._inverter.get(self.entity_description.key)).value
+            value = (await self._inverter.get(self.entity_description.key)).value
+            await asyncio.sleep(DEFAULT_COOLDOWN_INTERVAL)
+            return value
 
-        self._state = await _get_value()
+        async with request_lock:
+            self._state = await _get_value()

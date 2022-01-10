@@ -15,6 +15,9 @@ from homeassistant.components.sensor import (
 
 DOMAIN = "huawei_solar"
 
+# don't overload the poor thing
+DEFAULT_COOLDOWN_INTERVAL = 0.1
+
 DATA_MODBUS_CLIENT = "client"
 
 
@@ -30,6 +33,8 @@ ATTR_DAILY_YIELD = "daily_yield_energy"
 ATTR_TOTAL_YIELD = "accumulated_yield_energy"
 
 ATTR_POWER_FACTOR = "power_factor"
+
+ATTR_STORAGE_RUNNING_STATUS = "storage_running_status"
 
 ATTR_STORAGE_TOTAL_CHARGE = "storage_total_charge"
 ATTR_STORAGE_TOTAL_DISCHARGE = "storage_total_discharge"
@@ -187,7 +192,7 @@ OPTIMIZER_SENSOR_TYPES = (
         key=ATTR_NB_ONLINE_OPTIMIZERS,
         name="Optimizers Online",
         icon="mdi:solar-panel",
-        native_unit_of_measurement="optimizers",
+        native_unit_of_measurement="count",
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.ENERGY,
     ),
