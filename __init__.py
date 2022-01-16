@@ -3,9 +3,9 @@ from __future__ import annotations
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.const import CONF_HOST
+from homeassistant.const import CONF_HOST, CONF_PORT
 
-from .const import DOMAIN, CONF_SLAVE, DATA_MODBUS_CLIENT
+from .const import DOMAIN, CONF_SLAVE, DATA_MODBUS_CLIENT, DEFAULT_PORT
 
 from huawei_solar import AsyncHuaweiSolar, ConnectionException
 
@@ -16,7 +16,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Huawei Solar from a config entry."""
 
     inverter = AsyncHuaweiSolar(
-        host=entry.data[CONF_HOST], slave=entry.data[CONF_SLAVE]
+        host=entry.data[CONF_HOST],
+        port=entry.data.get(CONF_PORT, DEFAULT_PORT),
+        slave=entry.data[CONF_SLAVE]
     )
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {DATA_MODBUS_CLIENT: inverter}

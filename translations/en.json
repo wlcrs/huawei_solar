@@ -13,7 +13,9 @@
                 "data": {
                     "battery": "Battery Present",
                     "host": "Host",
-                    "optimizers": "Optimizers present"
+                    "port": "Port",
+                    "optimizers": "Optimizers present",
+                    "slave": "Slave ID"
                 }
             }
         }

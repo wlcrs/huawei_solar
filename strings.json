@@ -4,8 +4,10 @@
       "user": {
         "data": {
           "host": "[%key:common::config_flow::data::host%]",
+          "port": "[%key:common::config_flow::data::port%]",
           "battery": "Battery Present",
-          "optimizers": "Optimizers present"
+          "optimizers": "Optimizers present",
+          "slave": "Slave ID"
         }
       }
     },

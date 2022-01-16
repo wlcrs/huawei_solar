@@ -18,6 +18,8 @@ DOMAIN = "huawei_solar"
 # don't overload the poor thing
 DEFAULT_COOLDOWN_INTERVAL = 0.1
 
+DEFAULT_PORT = 502
+
 DATA_MODBUS_CLIENT = "client"
 
 
