@@ -30,7 +30,7 @@ DEFAULT_PORT = 502
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_HOST): str,
-        vol.Required(CONF_PORT, DEFAULT_PORT):int,
+        vol.Required(CONF_PORT, default=DEFAULT_PORT):int,
         vol.Optional(CONF_OPTIMIZERS, default=False): bool,
         vol.Optional(CONF_BATTERY, default=False): bool,
         vol.Optional(CONF_SLAVE, default=0): int,
@@ -44,7 +44,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
     """
 
-    inverter = AsyncHuaweiSolar(host=data[CONF_HOST], port=data.get(CONF_PORT, DEFAULT_PORT) slave=data[CONF_SLAVE])
+    inverter = AsyncHuaweiSolar(host=data[CONF_HOST], port=data.get(CONF_PORT, DEFAULT_PORT), slave=data[CONF_SLAVE])
 
     try:
         model_name = (await inverter.get(ATTR_MODEL_NAME)).value
