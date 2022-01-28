@@ -348,5 +348,5 @@ def get_device_info_unique_id(device_info: DeviceInfo):
     Assumes there is only one identifier!
     """
 
-    _, value = next(iter(device_info.identifiers))
+    _, value = next(iter(device_info["identifiers"]))
     return value
