@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 
-from huawei_solar import AsyncHuaweiSolar, register_names as rn
+from huawei_solar import AsyncHuaweiSolar, register_names as rn, ReadException
 
 from homeassistant.components.sensor import SensorEntity, SensorStateClass
 from homeassistant.config_entries import ConfigEntry
@@ -59,7 +59,12 @@ async def async_setup_entry(
     for slave_device_info in slave_device_infos:
         inverter_device_info = slave_device_info["inverter"]
         slave_id = slave_device_info["slave_id"]
-        has_optimizers = (await inverter.get(rn.NB_OPTIMIZERS, slave_id)).value
+
+        has_optimizers = False
+        try:
+            has_optimizers = (await inverter.get(rn.NB_OPTIMIZERS, slave_id)).value
+        except ReadException: # some optimizers throw an IllegalAddress exception if this doesn't exist?
+            pass 
 
         if has_optimizers:
             entities_to_add.extend(
