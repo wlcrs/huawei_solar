@@ -521,8 +521,8 @@ def get_pv_entity_descriptions(idx: int):
             key=getattr(rn, f"PV_{idx:02}_VOLTAGE"),
             name=f"PV {idx} Voltage",
             icon="mdi:lightning-bolt",
-            native_unit_of_measurement=POWER_WATT,
-            device_class=SensorDeviceClass.POWER,
+            native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+            device_class=SensorDeviceClass.VOLTAGE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         HuaweiSolarSensorEntityDescription(
