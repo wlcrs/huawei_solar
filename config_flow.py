@@ -4,36 +4,30 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from huawei_solar import (
+    AsyncHuaweiSolar,
+    ConnectionException,
+    HuaweiSolarException,
+    ReadException,
+    register_names as rn,
+)
 import voluptuous as vol
 
 from homeassistant import config_entries
-from homeassistant.core import HomeAssistant, callback
+from homeassistant.const import CONF_HOST, CONF_PORT
+from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
-from homeassistant.exceptions import HomeAssistantError
+import homeassistant.helpers.config_validation as cv
 
-from homeassistant.const import CONF_HOST,CONF_PORT
-from .const import (
-    DOMAIN,
-    CONF_BATTERY,
-    CONF_OPTIMIZERS,
-    CONF_SLAVE,
-    ATTR_MODEL_NAME,
-    ATTR_SERIAL_NUMBER,
-)
-
-from huawei_solar import AsyncHuaweiSolar, ConnectionException
+from .const import CONF_SLAVE_IDS, DEFAULT_PORT, DEFAULT_SLAVE_ID, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
-
-DEFAULT_PORT = 502
 
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_HOST): str,
-        vol.Required(CONF_PORT, default=DEFAULT_PORT):int,
-        vol.Optional(CONF_OPTIMIZERS, default=False): bool,
-        vol.Optional(CONF_BATTERY, default=False): bool,
-        vol.Optional(CONF_SLAVE, default=0): int,
+        vol.Required(CONF_PORT, default=DEFAULT_PORT): cv.port,
+        vol.Required(CONF_SLAVE_IDS, default=str(DEFAULT_SLAVE_ID)): str,
     }
 )
 
@@ -44,20 +38,48 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
     """
 
-    inverter = AsyncHuaweiSolar(host=data[CONF_HOST], port=data.get(CONF_PORT, DEFAULT_PORT), slave=data[CONF_SLAVE])
-
+    inverter = None
     try:
-        model_name = (await inverter.get(ATTR_MODEL_NAME)).value
-        serial_number = (await inverter.get(ATTR_SERIAL_NUMBER)).value
+        inverter = await AsyncHuaweiSolar.create(
+            host=data[CONF_HOST],
+            port=data[CONF_PORT],
+            slave=data[CONF_SLAVE_IDS][0],
+        )
+
+        model_name, serial_number = await inverter.get_multiple(
+            [rn.MODEL_NAME, rn.SERIAL_NUMBER]
+        )
+
+        _LOGGER.info(
+            "Successfully connected to inverter %s with SN %s",
+            model_name.value,
+            serial_number.value,
+        )
+
+        # Also validate the other slave-ids
+        for slave_id in data[CONF_SLAVE_IDS][1:]:
+            try:
+                slave_model_name, slave_serial_number = await inverter.get_multiple(
+                    [rn.MODEL_NAME, rn.SERIAL_NUMBER], slave_id
+                )
+
+                _LOGGER.info(
+                    "Successfully connected to slave inverter %s: %s with SN %s",
+                    slave_id,
+                    slave_model_name.value,
+                    slave_serial_number.value,
+                )
+            except HuaweiSolarException as err:
+                _LOGGER.error("Could not connect to slave %s", slave_id)
+                raise SlaveException(f"Could not connect to slave {slave_id}") from err
 
         # Return info that you want to store in the config entry.
-        return dict(model_name=model_name, serial_number=serial_number)
-    except ConnectionException as ex:
-        raise CannotConnect from ex
+        return {"model_name": model_name.value, "serial_number": serial_number.value}
+
     finally:
-        # Cleanup this inverter object explicitely to prevent it from trying to maintain a modbus connection
-        if inverter._client:
-            inverter._client.stop()
+        if inverter is not None:
+            # Cleanup this inverter object explicitly to prevent it from trying to maintain a modbus connection
+            await inverter.stop()
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -77,28 +99,37 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
 
         try:
-            info = await validate_input(self.hass, user_input)
-
-            await self.async_set_unique_id(info["serial_number"])
-            self._abort_if_unique_id_configured()
-        except CannotConnect:
-            errors["base"] = "cannot_connect"
-        except InvalidAuth:
-            errors["base"] = "invalid_auth"
-        except Exception:  # pylint: disable=broad-except
-            _LOGGER.exception("Unexpected exception")
-            errors["base"] = "unknown"
+            user_input[CONF_SLAVE_IDS] = list(
+                map(int, user_input[CONF_SLAVE_IDS].split(","))
+            )
+        except ValueError:
+            errors["base"] = "invalid_slave_ids"
         else:
-            return self.async_create_entry(title=info["model_name"], data=user_input)
+
+            try:
+                info = await validate_input(self.hass, user_input)
+
+            except ConnectionException:
+                errors["base"] = "cannot_connect"
+            except SlaveException:
+                errors["base"] = "slave_cannot_connect"
+            except ReadException:
+                errors["base"] = "read_error"
+            except Exception as exception:  # pylint: disable=broad-except
+                _LOGGER.exception(exception)
+                errors["base"] = "unknown"
+            else:
+                await self.async_set_unique_id(info["serial_number"])
+                self._abort_if_unique_id_configured()
+
+                return self.async_create_entry(
+                    title=info["model_name"], data=user_input
+                )
 
         return self.async_show_form(
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
         )
 
 
-class CannotConnect(HomeAssistantError):
-    """Error to indicate we cannot connect."""
-
-
-class InvalidAuth(HomeAssistantError):
-    """Error to indicate there is invalid auth."""
+class SlaveException(Exception):
+    """Error while testing communication with a slave."""

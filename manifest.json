@@ -4,15 +4,11 @@
   "config_flow": true,
   "documentation": "https://www.home-assistant.io/integrations/huawei_solar",
   "requirements": [
-    "huawei-solar==1.2.0"
+    "huawei-solar==2.0.0rc1"
   ],
-  "ssdp": [],
-  "zeroconf": [],
-  "homekit": {},
-  "dependencies": [],
   "codeowners": [
     "@wlcrs"
   ],
   "iot_class": "local_polling",
-  "version": "2.0.0-alpha1"
+  "version": "2.1.0rc1"
 }

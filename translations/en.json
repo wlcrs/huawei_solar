@@ -6,16 +6,17 @@
         "error": {
             "cannot_connect": "Failed to connect",
             "invalid_auth": "Invalid authentication",
+            "invalid_slave_ids": "Slave IDs must be comma-separated list of ints",
+            "read_error": "Reading from the inverter failed.",
+            "slave_cannot_connect": "Failed to connect to additional slave",
             "unknown": "Unexpected error"
         },
         "step": {
             "user": {
                 "data": {
-                    "battery": "Battery Present",
                     "host": "Host",
                     "port": "Port",
-                    "optimizers": "Optimizers present",
-                    "slave": "Slave ID"
+                    "slave_ids": "Slave IDs (Comma separated)"
                 }
             }
         }

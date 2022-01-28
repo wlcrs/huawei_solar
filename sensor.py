@@ -1,102 +1,138 @@
 """Support for Huawei inverter monitoring API."""
+from __future__ import annotations
+
 import logging
-import backoff
-import asyncio
 
-from huawei_solar import HuaweiSolar, ConnectionException, ReadException
+from huawei_solar import AsyncHuaweiSolar, register_names as rn
 
+from homeassistant.components.sensor import SensorEntity, SensorStateClass
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
+
+from . import HuaweiInverterSlaveDeviceInfos, HuaweiSolarRegisterUpdateCoordinator, get_device_info_unique_id
 from .const import (
-    ATTR_SERIAL_NUMBER,
-    ATTR_MODEL_NAME,
-    DOMAIN,
+    DATA_DEVICE_INFOS,
     DATA_MODBUS_CLIENT,
-    CONF_BATTERY,
-    CONF_OPTIMIZERS,
-    OPTIMIZER_SENSOR_TYPES,
-    HuaweiSolarSensorEntityDescription,
-    SENSOR_TYPES,
-    BATTERY_SENSOR_TYPES,
-    DEFAULT_COOLDOWN_INTERVAL
+    DATA_UPDATE_COORDINATORS,
+    DOMAIN,
 )
+from .entity_descriptions import HuaweiSolarSensorEntityDescription
 
-import homeassistant.helpers.config_validation as cv
-from homeassistant.components.sensor import SensorEntity
+_LOGGER = logging.getLogger(__name__)
+
+PARALLEL_UPDATES = 1
 
 
-async def async_setup_entry(hass, entry, async_add_entities):
-    """Add Huawei Solar entry"""
-    inverter = hass.data[DOMAIN][entry.entry_id][DATA_MODBUS_CLIENT]
+async def async_setup_entry(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+) -> None:
+    """Add Huawei Solar entry."""
+    inverter = hass.data[DOMAIN][entry.entry_id][
+        DATA_MODBUS_CLIENT
+    ]  # type: AsyncHuaweiSolar
+    slave_device_infos = hass.data[DOMAIN][entry.entry_id][
+        DATA_DEVICE_INFOS
+    ]  # type: list[HuaweiInverterSlaveDeviceInfos]
+    update_coordinators = hass.data[DOMAIN][entry.entry_id][
+        DATA_UPDATE_COORDINATORS
+    ]  # type: list[HuaweiSolarRegisterUpdateCoordinator]
 
-    serial_number = (await inverter.get(ATTR_SERIAL_NUMBER)).value
-    name = (await inverter.get(ATTR_MODEL_NAME)).value
+    # Create all sensor-entities that are available via the created update coordinators.
+    entities_to_add: list[SensorEntity] = []
+    for update_coordinator in update_coordinators:
+        for entity_description in update_coordinator.entity_descriptions:
 
-    device_info = {
-        "identifiers": {(DOMAIN, name, serial_number)},
-        "name": name,
-        "manufacturer": "Huawei",
-        "serial_number": serial_number,
-        "model": name,
-    }
+            if isinstance(entity_description, HuaweiSolarSensorEntityDescription):
+                entities_to_add.append(
+                    BatchedHuaweiSolarSensor(
+                        update_coordinator,
+                        entity_description,
+                        update_coordinator.device_info,
+                    )
+                )
 
-    async_add_entities(
-        [HuaweiSolarSensor(inverter, descr, device_info) for descr in SENSOR_TYPES],
-        True,
-    )
+    # Add optimizer sensors if optimizers are detected
+    for slave_device_info in slave_device_infos:
+        inverter_device_info = slave_device_info["inverter"]
+        slave_id = slave_device_info["slave_id"]
+        has_optimizers = (await inverter.get(rn.NB_OPTIMIZERS, slave_id)).value
 
-    if entry.data[CONF_BATTERY]:
-        async_add_entities(
-            [
-                HuaweiSolarSensor(inverter, descr, device_info)
-                for descr in BATTERY_SENSOR_TYPES
-            ],
-            True,
-        )
+        if has_optimizers:
+            entities_to_add.extend(
+                [
+                    HuaweiSolarSensor(inverter, slave_id, descr, inverter_device_info)
+                    for descr in OPTIMIZER_SENSOR_DESCRIPTIONS
+                ]
+            )
 
-    if entry.data[CONF_OPTIMIZERS]:
-        async_add_entities(
-            [
-                HuaweiSolarSensor(inverter, descr, device_info)
-                for descr in OPTIMIZER_SENSOR_TYPES
-            ],
-            True,
-        )
+    async_add_entities(entities_to_add, True)
 
-request_lock = asyncio.Lock()
+
+OPTIMIZER_SENSOR_DESCRIPTIONS = [
+    HuaweiSolarSensorEntityDescription(
+        key=rn.NB_ONLINE_OPTIMIZERS,
+        name="Optimizers Online",
+        icon="mdi:solar-panel",
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+]
+
 
 class HuaweiSolarSensor(SensorEntity):
+    """Huawei Solar Sensor."""
 
     entity_description: HuaweiSolarSensorEntityDescription
 
     def __init__(
         self,
-        inverter: HuaweiSolar,
+        inverter: AsyncHuaweiSolar,
+        slave: int | None,
         description: HuaweiSolarSensorEntityDescription,
         device_info,
     ):
+        """Huawei Solar Sensor Entity constructor."""
 
         self._inverter = inverter
+        self._slave = slave
         self.entity_description = description
 
         self._attr_device_info = device_info
-        self._attr_unique_id = f"{device_info['serial_number']}_{description.key}"
+        self._attr_unique_id = f"{get_device_info_unique_id(device_info)}_{description.key}"
 
-        self._state = None
-
-    @property
-    def state(self):
-        """Return the state of the sensor."""
-        return self._state
+        self._attr_native_value = None
 
     async def async_update(self):
         """Get the latest data from the Huawei solar inverter."""
+        self._attr_native_value = (
+            await self._inverter.get(self.entity_description.key, self._slave)
+        ).value
 
-        @backoff.on_exception(
-            backoff.expo, (ConnectionException, ReadException), max_time=120
-        )
-        async def _get_value():
-            value = (await self._inverter.get(self.entity_description.key)).value
-            await asyncio.sleep(DEFAULT_COOLDOWN_INTERVAL)
-            return value
 
-        async with request_lock:
-            self._state = await _get_value()
+class BatchedHuaweiSolarSensor(CoordinatorEntity, SensorEntity):
+    """Huawei Solar Sensor which receives its data via an DataUpdateCoordinator."""
+
+    entity_description: HuaweiSolarSensorEntityDescription
+
+    def __init__(
+        self,
+        coordinator: HuaweiSolarRegisterUpdateCoordinator,
+        description: HuaweiSolarSensorEntityDescription,
+        device_info,
+    ):
+        """Batched Huawei Solar Sensor Entity constructor."""
+        super().__init__(coordinator)
+
+        self.coordinator = coordinator
+        self.entity_description = description
+
+        self._attr_device_info = device_info
+        self._attr_unique_id = f"{get_device_info_unique_id(device_info)}_{description.key}"
+        
+    @property
+    def native_value(self):
+        """Native sensor value."""
+        return self.coordinator.data[self.entity_description.key].value
