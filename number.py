@@ -146,22 +146,31 @@ class HuaweiSolarNumberEntity(NumberEntity):
 
         This async constructor fills in the necessary min/max values
         """
-        if description.minimum_key:
-            description.min_value = (
-                await bridge.client.get(description.minimum_key)
-            ).value
-
-        if description.maximum_key:
-            description.max_value = (
-                await bridge.client.get(description.maximum_key)
-            ).value
 
         # Assumption: these values are not updated outside of HA.
         # This should hold true as they typically can only be set via the Modbus-interface,
         # which only allows one client at a time.
         initial_value = (await bridge.client.get(description.key)).value
 
-        return cls(bridge, description, device_info, initial_value)
+        entity = cls(bridge, description, device_info, initial_value)
+
+        if description.minimum_key:
+            entity._attr_min_value = (
+                await bridge.client.get(description.minimum_key)
+            ).value
+
+            _LOGGER.info(
+                f"Set minimum to {entity._attr_min_value} from {description.maximum_key}")
+
+        if description.maximum_key:
+            entity._attr_max_value = (
+                await bridge.client.get(description.maximum_key)
+            ).value
+
+            _LOGGER.info(
+                f"Set maximum to {entity._attr_max_value} from {description.maximum_key}")
+
+        return entity
 
     async def async_set_value(self, value: float) -> None:
         """Set a new value."""
