@@ -7,6 +7,7 @@ import logging
 from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
 
 from homeassistant.components.number import NumberEntity, NumberEntityDescription
+from homeassistant.components.number.const import DEFAULT_MAX_VALUE, DEFAULT_MIN_VALUE
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import PERCENTAGE, POWER_WATT
 from homeassistant.core import HomeAssistant
@@ -22,7 +23,8 @@ _LOGGER = logging.getLogger(__name__)
 @dataclass
 class HuaweiSolarNumberEntityDescription(NumberEntityDescription):
     """Huawei Solar Number Entity Description."""
-
+    max_value: float | None = None
+    min_value: float | None = None
     minimum_key: str | None = None
     maximum_key: str | None = None
     custom_class: type[HuaweiSolarNumberEntity] | None = None
@@ -165,3 +167,27 @@ class HuaweiSolarNumberEntity(NumberEntity):
         """Set a new value."""
         if await self.bridge.set(self.entity_description.key, int(value)):
             self._attr_value = int(value)
+
+    @property
+    def min_value(self) -> float:
+        """Return the minimum value."""
+        if hasattr(self, "_attr_min_value"):
+            return self._attr_min_value
+        if (
+            hasattr(self, "entity_description")
+            and self.entity_description.min_value is not None
+        ):
+            return self.entity_description.min_value
+        return DEFAULT_MIN_VALUE
+
+    @property
+    def max_value(self) -> float:
+        """Return the maximum value."""
+        if hasattr(self, "_attr_max_value"):
+            return self._attr_max_value
+        if (
+            hasattr(self, "entity_description")
+            and self.entity_description.max_value is not None
+        ):
+            return self.entity_description.max_value
+        return DEFAULT_MAX_VALUE
