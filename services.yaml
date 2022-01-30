@@ -1,0 +1,117 @@
+forcible_charge:
+  name: Forcible Charge
+  description: Forcible Charge of the battery for a certain time
+  fields:
+    device_id:
+      name: Battery
+      description: Must be a 'Connected Energy Storage' device
+      required: true
+      selector:
+        device:
+          integration: huawei_solar
+    duration:
+      name: Duration
+      description: Duration of the charge
+      required: true
+      default: 60
+      selector:
+        number:
+          min: 1
+          max: 1440
+          unit_of_measurement: "minutes"
+          mode: box
+    power:
+      name: Power
+      description: Wattage used for the discharge
+      required: true
+      default: 1000
+      selector:
+        text:
+
+forcible_discharge:
+  name: Forcible Discharge
+  description: Forcible Discharge of the battery for a certain time
+  fields:
+    device_id:
+      name: Battery
+      description: Must be a 'Connected Energy Storage' device
+      required: true
+      selector:
+        device:
+          integration: huawei_solar
+    duration:
+      name: Duration
+      description: Duration of the discharge
+      required: true
+      default: 60
+      selector:
+        number:
+          min: 1
+          max: 1440
+          unit_of_measurement: "minutes"
+          mode: box
+    power:
+      name: Power
+      description: Wattage used for the discharge
+      required: true
+      default: 1000
+      selector:
+        text:
+
+forcible_charge_soc:
+  name: Forcible Charge to a SoC level
+  description: Forcible Charge of the battery to a certain State of Charge level
+  fields:
+    device_id:
+      name: Battery
+      description: Must be a 'Connected Energy Storage' device
+      required: true
+      selector:
+        device:
+          integration: huawei_solar
+    target_soc:
+      name: Target SoC
+      description: State of Charge that must be reached
+      required: true
+      default: 50
+      selector:
+        number:
+          min: 12
+          max: 100
+          unit_of_measurement: "%"
+    power:
+      name: Power
+      description: Wattage used for the discharge
+      required: true
+      default: 1000
+      selector:
+        text:
+
+forcible_discharge_soc:
+  name: Forcible Discharge to a SoC level
+  description: Forcible Discharge of the battery to a certain State of Charge level
+  fields:
+    device_id:
+      name: Battery
+      description: Must be a 'Connected Energy Storage' device
+      required: true
+      selector:
+        device:
+          integration: huawei_solar
+    target_soc:
+      name: Target SoC
+      description: State of Charge that must be reached
+      required: true
+      default: 15
+      selector:
+        number:
+          min: 12
+          max: 100
+          unit_of_measurement: "%"
+    power:
+      name: Power
+      description: Wattage used for the discharge
+      required: true
+      default: 1000
+      selector:
+        text:
