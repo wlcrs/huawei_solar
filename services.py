@@ -1,7 +1,6 @@
 """The Huawei Solar services."""
 from __future__ import annotations
 
-from datetime import timedelta
 import logging
 from typing import TYPE_CHECKING
 
@@ -18,6 +17,7 @@ from .const import (
     SERVICE_FORCIBLE_CHARGE_SOC,
     SERVICE_FORCIBLE_DISCHARGE,
     SERVICE_FORCIBLE_DISCHARGE_SOC,
+    SERVICE_STOP_FORCIBLE_CHARGE,
 )
 
 if TYPE_CHECKING:
@@ -27,26 +27,25 @@ DATA_DEVICE_ID = "device_id"
 DATA_POWER = "power"
 DATA_DURATION = "duration"
 DATA_TARGET_SOC = "target_soc"
-BASE_SCHEMA = vol.Schema(
+
+
+DEVICE_SCHEMA = vol.Schema(
     {
         vol.Required(DATA_DEVICE_ID): cv.string,
+    }
+)
+
+FORCIBLE_CHARGE_BASE_SCHEMA = DEVICE_SCHEMA.extend(
+    {
         vol.Required(DATA_POWER): cv.positive_int,
     }
 )
 
-
-def validate_duration(value) -> timedelta:
-    """Validate timedelta is maximum 1440 minutes."""
-    if value > timedelta(minutes=1440):
-        raise vol.Invalid("Duration has a maximum of 1 day")
-    return value
-
-
-DURATION_SCHEMA = BASE_SCHEMA.extend(
+DURATION_SCHEMA = FORCIBLE_CHARGE_BASE_SCHEMA.extend(
     {vol.Required(DATA_DURATION): vol.All(vol.Coerce(int), vol.Range(min=1, max=1440))}
 )
 
-SOC_SCHEMA = BASE_SCHEMA.extend(
+SOC_SCHEMA = FORCIBLE_CHARGE_BASE_SCHEMA.extend(
     {
         vol.Required(DATA_TARGET_SOC): vol.All(
             vol.Coerce(float), vol.Range(min=12, max=100)
@@ -163,6 +162,21 @@ async def async_setup_services(
             rv.StorageForcibleChargeDischarge.DISCHARGE,
         )
 
+    async def stop_forcible_charge(service_call: ServiceCall) -> None:
+        """Start a forcible discharge on the battery until the target SOC is hit."""
+
+        bridge = get_battery_bridge(service_call)
+        await bridge.set(
+            rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
+            rv.StorageForcibleChargeDischarge.STOP,
+        )
+        await bridge.set(rn.STORAGE_FORCIBLE_DISCHARGE_POWER, 0)
+        await bridge.set(
+            rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD,
+            0,
+        )
+        await bridge.set(rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE, 0)
+
     has_write_access = False
     for bridge, _ in bridges_with_device_infos:
         has_write_access = has_write_access or bridge.has_write_access
@@ -185,4 +199,10 @@ async def async_setup_services(
             SERVICE_FORCIBLE_DISCHARGE_SOC,
             forcible_discharge_soc,
             schema=SOC_SCHEMA,
+        )
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_STOP_FORCIBLE_CHARGE,
+            stop_forcible_charge,
+            schema=DEVICE_SCHEMA,
         )

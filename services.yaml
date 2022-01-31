@@ -115,3 +115,15 @@ forcible_discharge_soc:
       default: 1000
       selector:
         text:
+
+stop_forcible_charge:
+  name: Stop the forcible charge or discharge
+  description: Cancel the running forcible charge command
+  fields:
+    device_id:
+      name: Battery
+      description: Must be a 'Connected Energy Storage' device
+      required: true
+      selector:
+        device:
+          integration: huawei_solar
