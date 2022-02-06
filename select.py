@@ -34,7 +34,7 @@ async def async_setup_entry(
 ) -> None:
     """Huawei Solar Select Entities Setup."""
 
-    if not entry.data[CONF_ENABLE_PARAMETER_CONFIGURATION]:
+    if not entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
         _LOGGER.info("Skipping select setup, as parameter configuration is not enabled")
         return
 

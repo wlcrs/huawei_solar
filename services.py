@@ -180,7 +180,7 @@ async def async_setup_services(
         )
         await bridge.set(rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE, 0)
 
-    if entry.data[CONF_ENABLE_PARAMETER_CONFIGURATION]:
+    if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
         hass.services.async_register(
             DOMAIN, SERVICE_FORCIBLE_CHARGE, forcible_charge, schema=DURATION_SCHEMA
         )
