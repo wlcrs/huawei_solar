@@ -22,7 +22,7 @@ forcible_charge:
           mode: box
     power:
       name: Power
-      description: Wattage used for the discharge
+      description: Wattage used for the charge
       required: true
       default: 1000
       selector:
@@ -81,7 +81,7 @@ forcible_charge_soc:
           unit_of_measurement: "%"
     power:
       name: Power
-      description: Wattage used for the discharge
+      description: Wattage used for the charge
       required: true
       default: 1000
       selector:

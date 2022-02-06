@@ -12,8 +12,16 @@
             "unknown": "Unexpected error"
         },
         "step": {
+            "login": {
+                "data": {
+                    "password": "Password",
+                    "username": "Username"
+                },
+                "description": "Please enter the Installer credentials"
+            },
             "user": {
                 "data": {
+                    "enable_parameter_configuration": "Advanced: enable parameter configuration",
                     "host": "Host",
                     "port": "Port",
                     "slave_ids": "Slave IDs (Comma separated)"

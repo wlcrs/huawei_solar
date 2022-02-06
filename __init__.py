@@ -7,17 +7,29 @@ import logging
 from typing import TypedDict, TypeVar
 
 import async_timeout
-from huawei_solar import HuaweiSolarBridge, HuaweiSolarException, register_values as rv
+from huawei_solar import (
+    HuaweiSolarBridge,
+    HuaweiSolarException,
+    InvalidCredentials,
+    register_values as rv,
+)
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_HOST, CONF_PORT, Platform
+from homeassistant.const import (
+    CONF_HOST,
+    CONF_PASSWORD,
+    CONF_PORT,
+    CONF_USERNAME,
+    Platform,
+)
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.debounce import Debouncer
-from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.entity import DeviceInfo, Entity
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import (
+    CONF_ENABLE_PARAMETER_CONFIGURATION,
     CONF_SLAVE_IDS,
     DATA_UPDATE_COORDINATORS,
     DOMAIN,
@@ -30,20 +42,33 @@ _LOGGER = logging.getLogger(__name__)
 
 T = TypeVar("T")
 
-PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.NUMBER, Platform.SWITCH]
+PLATFORMS: list[Platform] = [
+    Platform.SENSOR,
+    Platform.NUMBER,
+    Platform.SWITCH,
+    Platform.SELECT,
+]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Huawei Solar from a config entry."""
 
+    primary_bridge = None
     try:
         primary_bridge = await HuaweiSolarBridge.create(
             host=entry.data[CONF_HOST],
             port=entry.data[CONF_PORT],
             slave_id=entry.data[CONF_SLAVE_IDS][0],
-            username="installer",
-            password="00000a",
         )
+
+        if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION):
+            if entry.data.get(CONF_USERNAME) and entry.data.get(CONF_PASSWORD):
+                try:
+                    await primary_bridge.login(
+                        entry.data[CONF_USERNAME], entry.data[CONF_PASSWORD]
+                    )
+                except InvalidCredentials as err:
+                    raise ConfigEntryAuthFailed() from err
 
         primary_bridge_device_infos = _compute_device_infos(
             primary_bridge,
@@ -60,8 +85,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             )
 
             extra_bridge_device_infos = _compute_device_infos(
-                primary_bridge,
-                connecting_inverter_device_id=(DOMAIN, primary_bridge.serial_number),
+                extra_bridge,
+                connecting_inverter_device_id=(
+                    DOMAIN,
+                    primary_bridge.serial_number,
+                ),
             )
 
             bridges_with_device_infos.append((extra_bridge, extra_bridge_device_infos))
@@ -79,10 +107,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             DATA_UPDATE_COORDINATORS: update_coordinators,
         }
     except HuaweiSolarException as err:
+        if primary_bridge is not None:
+            await primary_bridge.stop()
+
         raise ConfigEntryNotReady from err
+    except Exception as err:
+        # always try to stop the bridge, as it will keep retrying
+        # in the background otherwise!
+        if primary_bridge is not None:
+            await primary_bridge.stop()
+
+        raise err
 
     hass.config_entries.async_setup_platforms(entry, PLATFORMS)
-    await async_setup_services(hass, bridges_with_device_infos)
+    await async_setup_services(hass, entry, bridges_with_device_infos)
 
     return True
 
@@ -215,3 +253,11 @@ async def _create_update_coordinator(
     await coordinator.async_config_entry_first_refresh()
 
     return coordinator
+
+
+class HuaweiSolarEntity(Entity):
+    """Huawei Solar Entity."""
+
+    def add_name_suffix(self, suffix) -> None:
+        """Add a suffix after the current entity name."""
+        self._attr_name = f"{self.name}{suffix}"

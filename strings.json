@@ -5,7 +5,14 @@
         "data": {
           "host": "[%key:common::config_flow::data::host%]",
           "port": "[%key:common::config_flow::data::port%]",
-          "slave_ids": "Slave IDs (Comma separated)"
+          "slave_ids": "Slave IDs (Comma separated)",
+          "enable_parameter_configuration": "Advanced: enable parameter configuration"
+        }
+      },"login":{
+        "description": "Please enter the Installer credentials",
+        "data":{
+          "username": "[%key:common::config_flow::data::username%]",
+          "password": "[%key:common::config_flow::data::password%]"
         }
       }
     },

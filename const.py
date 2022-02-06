@@ -4,8 +4,12 @@ from datetime import timedelta
 DOMAIN = "huawei_solar"
 DEFAULT_PORT = 502
 DEFAULT_SLAVE_ID = 0
+DEFAULT_USERNAME = "installer"
+DEFAULT_PASSWORD = "00000a"
 
 CONF_SLAVE_IDS = "slave_ids"
+CONF_ENABLE_PARAMETER_CONFIGURATION = "enable_parameter_configuration"
+
 
 DATA_UPDATE_COORDINATORS = "update_coordinators"
 

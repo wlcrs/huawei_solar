@@ -6,16 +6,19 @@ import logging
 
 from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
 
-from homeassistant.components.number import NumberEntity, NumberEntityDescription, NumberMode
-from homeassistant.components.number.const import DEFAULT_MAX_VALUE, DEFAULT_MIN_VALUE
+from homeassistant.components.number import (
+    NumberEntity,
+    NumberEntityDescription,
+    NumberMode,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import PERCENTAGE, POWER_WATT
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from . import HuaweiSolarUpdateCoordinator
-from .const import DATA_UPDATE_COORDINATORS, DOMAIN
+from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinator
+from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -23,11 +26,9 @@ _LOGGER = logging.getLogger(__name__)
 @dataclass
 class HuaweiSolarNumberEntityDescription(NumberEntityDescription):
     """Huawei Solar Number Entity Description."""
-    max_value: float | None = None
-    min_value: float | None = None
+
     minimum_key: str | None = None
     maximum_key: str | None = None
-    custom_class: type[HuaweiSolarNumberEntity] | None = None
 
 
 ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
@@ -67,6 +68,24 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         unit_of_measurement=POWER_WATT,
         entity_category=EntityCategory.CONFIG,
     ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.STORAGE_FORCIBLE_CHARGE_POWER,
+        min_value=0,
+        maximum_key=rn.STORAGE_MAXIMUM_CHARGE_POWER,
+        name="Forcible Charge Power",
+        icon="mdi:battery-positive",
+        unit_of_measurement=POWER_WATT,
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.STORAGE_FORCIBLE_DISCHARGE_POWER,
+        min_value=0,
+        maximum_key=rn.STORAGE_MAXIMUM_DISCHARGE_POWER,
+        name="Forcible Discharge Power",
+        icon="mdi:battery-negative",
+        unit_of_measurement=POWER_WATT,
+        entity_category=EntityCategory.CONFIG,
+    ),
 )
 
 
@@ -77,27 +96,29 @@ async def async_setup_entry(
 ) -> None:
     """Huawei Solar Number entities Setup."""
 
+    if not entry.data[CONF_ENABLE_PARAMETER_CONFIGURATION]:
+        _LOGGER.info("Skipping number setup, as parameter configuration is not enabled")
+        return
+
     update_coordinators = hass.data[DOMAIN][entry.entry_id][
         DATA_UPDATE_COORDINATORS
     ]  # type: list[HuaweiSolarUpdateCoordinator]
 
-    entities_to_add: list[NumberEntity] = []
+    # When more than one inverter is present, then we suffix all sensors with '#1', '#2', ...
+    # The order for these suffixes is the order in which the user entered the slave-ids.
+    must_append_inverter_suffix = len(update_coordinators) > 1
 
-    for update_coordinator in update_coordinators:
+    entities_to_add: list[NumberEntity] = []
+    for idx, update_coordinator in enumerate(update_coordinators):
+        slave_entities: list[HuaweiSolarNumberEntity] = []
         bridge = update_coordinator.bridge
         device_infos = update_coordinator.device_infos
-
-        if not bridge.has_write_access:
-            _LOGGER.info(
-                "Skipping slave %s, as we have no write access there", bridge.slave_id
-            )
-            continue
 
         if bridge.battery_1_type != rv.StorageProductModel.NONE:
             assert device_infos["connected_energy_storage"]
 
             for entity_description in ENERGY_STORAGE_NUMBER_DESCRIPTIONS:
-                entities_to_add.append(
+                slave_entities.append(
                     await HuaweiSolarNumberEntity.create(
                         bridge,
                         entity_description,
@@ -111,10 +132,17 @@ async def async_setup_entry(
                 bridge.slave_id,
             )
 
+        # Add suffix if multiple inverters are present
+        if must_append_inverter_suffix:
+            for entity in slave_entities:
+                entity.add_name_suffix(f" #{idx+1}")
+
+        entities_to_add.extend(slave_entities)
+
     async_add_entities(entities_to_add)
 
 
-class HuaweiSolarNumberEntity(NumberEntity):
+class HuaweiSolarNumberEntity(HuaweiSolarEntity, NumberEntity):
     """Huawei Solar Number Entity."""
 
     def __init__(
@@ -134,7 +162,7 @@ class HuaweiSolarNumberEntity(NumberEntity):
         self._attr_device_info = device_info
         self._attr_unique_id = f"{bridge.serial_number}_{description.key}"
         self._attr_value = initial_value
-        self._attr_mode = NumberMode.BOX  # always allow precise control
+        self._attr_mode = NumberMode.BOX  # Always allow a precise number
 
     @classmethod
     async def create(
@@ -147,57 +175,24 @@ class HuaweiSolarNumberEntity(NumberEntity):
 
         This async constructor fills in the necessary min/max values
         """
+        if description.minimum_key:
+            description.min_value = (
+                await bridge.client.get(description.minimum_key)
+            ).value
+
+        if description.maximum_key:
+            description.max_value = (
+                await bridge.client.get(description.maximum_key)
+            ).value
 
         # Assumption: these values are not updated outside of HA.
         # This should hold true as they typically can only be set via the Modbus-interface,
         # which only allows one client at a time.
         initial_value = (await bridge.client.get(description.key)).value
 
-        entity = cls(bridge, description, device_info, initial_value)
-
-        if description.minimum_key:
-            entity._attr_min_value = (
-                await bridge.client.get(description.minimum_key)
-            ).value
-
-            _LOGGER.info(
-                f"Set minimum to {entity._attr_min_value} from {description.maximum_key}")
-
-        if description.maximum_key:
-            entity._attr_max_value = (
-                await bridge.client.get(description.maximum_key)
-            ).value
-
-            _LOGGER.info(
-                f"Set maximum to {entity._attr_max_value} from {description.maximum_key}")
-
-        return entity
+        return cls(bridge, description, device_info, initial_value)
 
     async def async_set_value(self, value: float) -> None:
         """Set a new value."""
         if await self.bridge.set(self.entity_description.key, int(value)):
             self._attr_value = int(value)
-
-    @property
-    def min_value(self) -> float:
-        """Return the minimum value."""
-        if hasattr(self, "_attr_min_value"):
-            return self._attr_min_value
-        if (
-            hasattr(self, "entity_description")
-            and self.entity_description.min_value is not None
-        ):
-            return self.entity_description.min_value
-        return DEFAULT_MIN_VALUE
-
-    @property
-    def max_value(self) -> float:
-        """Return the maximum value."""
-        if hasattr(self, "_attr_max_value"):
-            return self._attr_max_value
-        if (
-            hasattr(self, "entity_description")
-            and self.entity_description.max_value is not None
-        ):
-            return self.entity_description.max_value
-        return DEFAULT_MAX_VALUE
