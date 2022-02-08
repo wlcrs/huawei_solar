@@ -52,8 +52,8 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_GRID_CHARGE_CUTOFF_STATE_OF_CHARGE,
-        min_value=30,
-        max_value=70,
+        min_value=20,
+        max_value=100,
         name="Grid Charge Cutoff SOC",
         icon="mdi:battery-charging-50",
         unit_of_measurement=PERCENTAGE,
