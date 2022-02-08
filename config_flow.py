@@ -83,13 +83,11 @@ async def validate_input(data: dict[str, Any]) -> dict[str, Any]:
                     bridge.client, slave_id
                 )
 
-                slave_info = await slave_bridge.get_info()
-
                 _LOGGER.info(
                     "Successfully connected to slave inverter %s: %s with SN %s",
                     slave_id,
-                    slave_info["model_name"],
-                    slave_info["serial_number"],
+                    slave_bridge.model_name,
+                    slave_bridge.serial_number,
                 )
             except HuaweiSolarException as err:
                 _LOGGER.error("Could not connect to slave %s", slave_id)
