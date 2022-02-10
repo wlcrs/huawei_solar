@@ -81,7 +81,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
         for extra_slave_id in entry.data[CONF_SLAVE_IDS][1:]:
             extra_bridge = await HuaweiSolarBridge.create_extra_slave(
-                primary_bridge.client, extra_slave_id
+                primary_bridge, extra_slave_id
             )
 
             extra_bridge_device_infos = _compute_device_infos(

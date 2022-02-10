@@ -80,7 +80,7 @@ async def validate_input(data: dict[str, Any]) -> dict[str, Any]:
         for slave_id in data[CONF_SLAVE_IDS][1:]:
             try:
                 slave_bridge = await HuaweiSolarBridge.create_extra_slave(
-                    bridge.client, slave_id
+                    bridge, slave_id
                 )
 
                 _LOGGER.info(
