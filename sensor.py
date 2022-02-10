@@ -288,14 +288,6 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
         state_class=SensorStateClass.TOTAL_INCREASING,
         entity_registry_enabled_default=False,
     ),
-    HuaweiSolarSensorEntityDescription(
-        key=rn.ACTIVE_GRID_A_POWER,
-        name="Grid Active Power",
-        icon="mdi:flash",
-        native_unit_of_measurement=POWER_WATT,
-        device_class=SensorDeviceClass.ENERGY,
-        state_class=SensorStateClass.MEASUREMENT,
-    ),
 )
 
 
