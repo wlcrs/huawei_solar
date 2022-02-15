@@ -233,7 +233,7 @@ async def _create_update_coordinator(
 ):
     async def async_update_data():
         try:
-            async with async_timeout.timeout(10):
+            async with async_timeout.timeout(20):
                 return await bridge.update()
         except HuaweiSolarException as err:
             raise UpdateFailed(
