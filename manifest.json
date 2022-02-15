@@ -2,7 +2,8 @@
   "domain": "huawei_solar",
   "name": "Huawei Solar",
   "config_flow": true,
-  "documentation": "https://www.home-assistant.io/integrations/huawei_solar",
+  "documentation": "https://www.home-assistant.io/integrations/huawei_solar", 
+  "issue_tracker": "https://github.com/wlcrs/huawei_solar/issues",
   "requirements": [
     "huawei-solar==2.0.0rc6"
   ],
