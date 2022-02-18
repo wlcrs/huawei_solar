@@ -33,11 +33,29 @@ the FusionSolar App.
 
 Starting from firmware updates released in December 2021, Huawei has closed the Modbus-TCP interface on the network to which the inverter connects. ie. If the inverter is connected to your home network on `192.168.1.11`, it will no longer be possible to connect on that IP.
 
-In this case, you must connect your Home Assistant device `SUN2000-<inverter serial number>` WiFi network (*), and use the Modbus-TCP interface available on `192.168.200.1`. In most cases, the port has been moved to `6607` instead of `502`.
+In this case, you must connect your Home Assistant device `SUN2000-<inverter serial number>` WiFi network, and use the Modbus-TCP interface available on `192.168.200.1`. In most cases, the port has been moved to `6607` instead of `502`.
 
-(*) There are multiple possible approaches for this. A straightforward one is to connect a USB WiFi stick to your Home Assistant device. You can configure this device in Hass.io via `Configuration` -> `Add-ons, Backups & Supervisor` -> `System` -> `Change` (next to IP address) -> `WLAN<x>`. 
+
+### How do I connect to the inverter WiFi
+There are multiple possible approaches for this. We list the most simple ones here:
+
+#### Using a WiFi USB Stick (or built-in WiFi)
+
+The most straightforward approach is to use an USB WiFi stick, or use the built-in WiFi or your Home Assistant server (for instance: the WiFi functionality of your Raspberry Pi 4). This must be a dedicated WiFi device: it is not possible to connect the same WiFi interface to both your home network and the invertwer WiFi at the same time (*).
+
+You can configure this device in Hass.io via `Configuration` -> `Add-ons, Backups & Supervisor` -> `System` -> `Change` (next to IP address) -> `WLAN<x>`. 
 
 ![](/images/network-settings.jpeg)
+
+(*) Some WiFi dongles might support multiple connections by separating it into multiple VLAN's. This is considered an advanced use-case, and is not covered in this README.
+
+#### Use a dedicated WLAN Bridge
+
+This approach is recommended when your Home Assistant server is positioned too far from the inverter to connect to it's WiFi.
+
+Some devices marketed as WLAN Repeaters can also be configured in 'client mode', which creates a bridge between your home netwerk and inverter WiFi.
+
+For example: [TP-link TL-WR802N: Configure the Router in Client Mode](https://www.tp-link.com/us/user-guides/tl-wr802n_v4/chapter-8-configure-the-router-in-client-mode#ug-sub-title-6)
 
 
 ## SDongle Configuration
