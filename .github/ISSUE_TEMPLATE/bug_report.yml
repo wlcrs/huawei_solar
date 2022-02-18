@@ -16,6 +16,13 @@ body:
 
 - type: textarea
   attributes:
+    label: "Huawei Solar Setup"
+    description: "Describe your setup: which inverter(s) do you have? Do you have an SDongle? Is a power meter type present (single/three phase?)? Do you have a battery (which type?)?. Include the firmware versions if possible."
+  validations:
+    required: true
+
+- type: textarea
+  attributes:
     label: "Describe the issue"
     description: "A clear and concise description of what the issue is."
   validations:
