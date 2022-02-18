@@ -1,4 +1,4 @@
-# Huawei Solar Sensors
+# Huawei Solar Integration
 
 This integration splits out the various values that are fetched from your
 Huawei Solar inverter into separate HomeAssistant sensors. These are properly
@@ -6,6 +6,8 @@ configured  to allow immediate integration into the HA Energy view.
 
 ![sensors](images/sensors-screenshot.png)
 ![energy-config](images/energy-config.png)
+
+![](images/configuration-screenshot.png)
 
 ## Installation
 
@@ -16,9 +18,35 @@ repository into the `custom_components/huawei_solar` directory
 button
 4. Select `Huawei Solar` from the list
 5. Enter the IP address of your inverter (192.168.200.1 if you are connected to 
-its WiFi AP). Select if you have a battery and/or optimizers. The slave id is 
-typically 0.
+its WiFi AP). The slave id is typically 0. You should only check the
+`Advanced: enable parameter configuration` checkbox if you intend to dynamically
+change your battery settings.
 
+![](images/configuration-dialog.png)
+
+6. When using the `parameter configuration` feature, you might be asked to enter
+the credentials to the `installer` account in a next step. These are the 
+credentials used to connect to the inverter in the "Device Commissioning" section of
+the FusionSolar App.
+
+## What IP-address and port should I enter?
+
+Starting from firmware updates released in December 2021, Huawei has closed the Modbus-TCP interface on the network to which the inverter connects. ie. If the inverter is connected to your home network on `192.168.1.11`, it will no longer be possible to connect on that IP.
+
+In this case, you must connect your Home Assistant device `SUN2000-<inverter serial number>` WiFi network (*), and use the Modbus-TCP interface available on `192.168.200.1`. In most cases, the port has been moved to `6607` instead of `502`.
+
+(*) There are multiple possible approaches for this. A straightforward one is to connect a USB WiFi stick to your Home Assistant device. You can configure this device in Hass.io via `Configuration` -> `Add-ons, Backups & Supervisor` -> `System` -> `Change` (next to IP address) -> `WLAN<x>`. 
+
+![](/images/network-settings.jpeg)
+
+
+## SDongle Configuration
+
+If your inverter has an SDongle, you need to make sure that it is properly configured to access it via your home network. 
+Use the 'Device Commissioning' function of the FusionSolar app to login on your inverter (default password for the 'installer' account is '00000a').
+In Settings > Communication Configuration:
+- Set "Dongle Parameter Settings" → "Modbus TCP" → "Connection" to "Enabled (Unrestricted)"
+- Set "Parallel system communication parameter setting" → "Parallel communication mode" to "RS485"
 
 ## Inverter polling frequency
 
