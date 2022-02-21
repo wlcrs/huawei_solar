@@ -15,7 +15,7 @@ configured  to allow immediate integration into the HA Energy view.
 repository into the `custom_components/huawei_solar` directory
 2. Restart HA
 3. Start the configuration flow:
-   - ![https://my.home-assistant.io/badges/config_flow_start.svg](https://my.home-assistant.io/redirect/config_flow_start?domain=huawei_solar)
+   - [![Start Config Flow](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start?domain=huawei_solar)
    - Or: Go to `Configuration` -> `Integrations` and click the `+ Add Integration`. Select `Huawei Solar` from the list
 
 4. Enter the IP address of your inverter (192.168.200.1 if you are connected to 
