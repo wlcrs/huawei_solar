@@ -14,17 +14,18 @@ configured  to allow immediate integration into the HA Energy view.
 1. Install this integration with HACS, or copy the contents of this
 repository into the `custom_components/huawei_solar` directory
 2. Restart HA
-3. Go to `Configuration` -> `Integrations` and click the `+ Add Integration` 
-button
-4. Select `Huawei Solar` from the list
-5. Enter the IP address of your inverter (192.168.200.1 if you are connected to 
+3. Start the configuration flow:
+   - ![https://my.home-assistant.io/badges/config_flow_start.svg](https://my.home-assistant.io/redirect/config_flow_start?domain=huawei_solar)
+   - Or: Go to `Configuration` -> `Integrations` and click the `+ Add Integration`. Select `Huawei Solar` from the list
+
+4. Enter the IP address of your inverter (192.168.200.1 if you are connected to 
 its WiFi AP). The slave id is typically 0. You should only check the
 `Advanced: enable parameter configuration` checkbox if you intend to dynamically
 change your battery settings.
 
 ![](images/configuration-dialog.png)
 
-6. When using the `parameter configuration` feature, you might be asked to enter
+5. When using the `parameter configuration` feature, you might be asked to enter
 the credentials to the `installer` account in a next step. These are the 
 credentials used to connect to the inverter in the "Device Commissioning" section of
 the FusionSolar App.
