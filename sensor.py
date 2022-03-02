@@ -462,6 +462,11 @@ BATTERY_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
+        key=rn.STORAGE_RUNNING_STATUS,
+        name="Battery Status",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_BUS_VOLTAGE,
         name="Storage Bus Voltage",
         icon="mdi:home-lightning-bolt",
