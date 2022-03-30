@@ -41,31 +41,8 @@ Starting from firmware updates released in December 2021, Huawei has closed the 
 In this case, you must connect your Home Assistant device `SUN2000-<inverter serial number>` WiFi network, and use the Modbus-TCP interface available on `192.168.200.1`. In most cases, the port has been moved to `6607` instead of `502`.
 
 
-### How do I connect to the inverter WiFi
-There are multiple possible approaches for this. We list the most simple ones here:
-
-#### Using a WiFi USB Stick (or built-in WiFi)
-
-The most straightforward approach is to use an USB WiFi stick, or use the built-in WiFi or your Home Assistant server (for instance: the WiFi functionality of your Raspberry Pi 4). This must be a dedicated WiFi device: it is not possible to connect the same WiFi interface to both your home network and the invertwer WiFi at the same time (*).
-
-You can configure this device in Hass.io via `Configuration` -> `Add-ons, Backups & Supervisor` -> `System` -> `Change` (next to IP address) -> `WLAN<x>`. 
-
-![](/images/network-settings.jpeg)
-
-(*) Some WiFi dongles might support multiple connections by separating it into multiple VLAN's. This is considered an advanced use-case, and is not covered in this README.
-
-#### Use a dedicated WLAN Bridge
-
-This approach is recommended when your Home Assistant server is positioned too far from the inverter to connect to it's WiFi. It requires a good understanding of IP routing and suitable hardware.
-
-Some devices marketed as WLAN Repeaters can also be configured in 'client mode', which creates a bridge between your home netwerk and inverter WiFi.
-
-For example: [TP-link TL-WR802N: Configure the Router in Client Mode](https://www.tp-link.com/us/user-guides/tl-wr802n_v4/chapter-8-configure-the-router-in-client-mode#ug-sub-title-6)
-
-After setting up your WLAN device in 'client mode', you need to add a static route on your home network router to `192.168.200.0/24` via that WLAN bridge. Otherwise the devices in your network won't know how to reach the inverter subnet.
-
-*Note:* Not every home router allows you to add static routes. For example: the router provided by your ISP might not expose this advanced feature. You'll need to re-evalute your network setup in that case.
-
+### How do I connect to the inverter WiFi?
+There are multiple possible approaches which are discussed on our [Connecting to the inverter Wiki-page](https://github.com/wlcrs/huawei_solar/wiki/Connecting-to-the-inverter#getting-connectivity-between-ha-on-your-home-network-and-the-inverter-ap)
 
 ## SDongle Configuration
 
