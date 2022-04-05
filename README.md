@@ -83,6 +83,16 @@ The integration will poll the inverter for new values every 30 seconds. If you w
 
 ---
 
+<a name="daily-yield"></a>
+
+**Q**: The "Daily Yield" value reported does not match with the value from FusionSolar?
+
+**A**: The "Daily Yield" reported by the inverter is the *output* yield of the inverter, and not the *input* from your solar panels. It therefore includes the yield from discharging the battery, but misses the yield used to charge the battery. FusionSolar computes the "Yield" by combining the values from "Daily Yield", "Battery Day Charge" and "Battery Day Discharge".
+
+---
+
+<a name="debugging"></a>
+
 **Q**: I can't get this integration to work. What am I doing wrong?
 
 **A**: First make sure that ['Modbus TCP' access is enabled in the settings of your inverter](https://forum.huawei.com/enterprise/en/modbus-tcp-guide/thread/789585-100027). Next, check if the port is correct. Some inverters use port 6607 instead of 502 (this can change for you after a firmware update!). If that doesn't work for you, and you intend to write an issue, make sure you have the relevant logs included. For this integration, you can enable all relevant logs by including the following lines in your `configuration.yaml`:
