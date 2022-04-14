@@ -38,7 +38,7 @@ the FusionSolar App.
 
 Starting from firmware updates released in December 2021, Huawei has closed the Modbus-TCP interface on the network to which the inverter connects. ie. If the inverter is connected to your home network on `192.168.1.11`, it will no longer be possible to connect on that IP.
 
-In this case, you must connect your Home Assistant device `SUN2000-<inverter serial number>` WiFi network, and use the Modbus-TCP interface available on `192.168.200.1`. In most cases, the port has been moved to `6607` instead of `502`.
+In this case, you must connect your Home Assistant device to `SUN2000-<inverter serial number>` WiFi network, and use the Modbus-TCP interface available on `192.168.200.1`. In most cases, the port has been moved to `6607` instead of `502`.
 
 
 ### How do I connect to the inverter WiFi?
