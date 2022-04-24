@@ -181,12 +181,14 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         key=rn.STARTUP_TIME,
         name="Startup Time",
         icon="mdi:weather-sunset-up",
+        device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.SHUTDOWN_TIME,
         name="Shutdown Time",
         icon="mdi:weather-sunset-down",
+        device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HuaweiSolarSensorEntityDescription(
