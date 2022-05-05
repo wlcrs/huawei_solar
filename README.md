@@ -15,17 +15,15 @@ configured  to allow immediate integration into the HA Energy view.
 
 ## Installation
 
+1.  [Connect Home Assistant to the WiFi Access Point of your Huawei inverter.](https://github.com/wlcrs/huawei_solar/wiki/Connecting-to-the-inverter#getting-connectivity-between-ha-on-your-home-network-and-the-inverter-ap)
 1. Install this integration with HACS, or copy the contents of this
 repository into the `custom_components/huawei_solar` directory
-2. Restart HA
-3. Start the configuration flow:
+1. Restart HA
+1. Start the configuration flow:
    - [![Start Config Flow](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start?domain=huawei_solar)
    - Or: Go to `Configuration` -> `Integrations` and click the `+ Add Integration`. Select `Huawei Solar` from the list
 
-4. Enter the IP address of your inverter (192.168.200.1 if you are connected to 
-its WiFi AP). The slave id is typically 0. You should only check the
-`Advanced: enable parameter configuration` checkbox if you intend to dynamically
-change your battery settings.
+4. Enter the IP address of your inverter (192.168.200.1). The slave id is typically 0. You should only check the `Advanced: enable parameter configuration` checkbox if you intend to dynamically change your battery settings.
 
 ![](images/configuration-dialog.png)
 
@@ -36,9 +34,9 @@ the FusionSolar App.
 
 ## What IP-address and port should I enter?
 
-Starting from firmware updates released in December 2021, Huawei has closed the Modbus-TCP interface on the network to which the inverter connects. ie. If the inverter is connected to your home network on `192.168.1.11`, it will no longer be possible to connect on that IP.
+Starting from firmware updates released in December 2021, Huawei has closed the Modbus-TCP interface on the network to which the inverter connects. ie. If the inverter is connected to your home network on `192.168.1.11`, it will no longer be possible to connect on that IP.  This also applies for connecting via the Dongle.  You will need to connect to the inverter using the WiFi AP.
 
-In this case, you must connect your Home Assistant device `SUN2000-<inverter serial number>` WiFi network, and use the Modbus-TCP interface available on `192.168.200.1`. In most cases, the port has been moved to `6607` instead of `502`.
+To configure your WiFi access, connect to the WiFi SSID `SUN2000-<inverter serial number>`, and use the Modbus-TCP interface available on `192.168.200.1`. In most cases, the port has been moved to `6607` instead of `502`.
 
 
 ### How do I connect to the inverter WiFi?
@@ -51,6 +49,8 @@ Use the 'Device Commissioning' function of the FusionSolar app to login on your 
 In Settings > Communication Configuration:
 - Set "Dongle Parameter Settings" → "Modbus TCP" → "Connection" to "Enabled (Unrestricted)"
 - Set "Parallel system communication parameter setting" → "Parallel communication mode" to "RS485"
+
+Note: Having an SDOngle will not remove the requirement of connecting to the WiFi AP of the inverter.
 
 ## Inverter polling frequency
 
