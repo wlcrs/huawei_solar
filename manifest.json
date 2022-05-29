@@ -4,8 +4,8 @@
   "config_flow": true,
   "documentation": "https://www.home-assistant.io/integrations/huawei_solar",
   "issue_tracker": "https://github.com/wlcrs/huawei_solar/issues",
-  "requirements": ["huawei-solar==2.1.0a1"],
+  "requirements": ["huawei-solar==2.1.0a2"],
   "codeowners": ["@wlcrs"],
   "iot_class": "local_polling",
-  "version": "1.1.0a1"
+  "version": "1.1.0a2"
 }

@@ -1,32 +1,32 @@
 {
-    "config": {
-        "abort": {
-            "already_configured": "Device is already configured"
+  "config": {
+    "abort": {
+      "already_configured": "Device is already configured"
+    },
+    "error": {
+      "cannot_connect": "Failed to connect",
+      "invalid_auth": "Invalid authentication",
+      "invalid_slave_ids": "Slave IDs must be comma-separated list of ints",
+      "read_error": "Reading from the inverter failed.",
+      "slave_cannot_connect": "Failed to connect to additional slave",
+      "unknown": "Unexpected error"
+    },
+    "step": {
+      "login": {
+        "data": {
+          "password": "Password",
+          "username": "Username"
         },
-        "error": {
-            "cannot_connect": "Failed to connect",
-            "invalid_auth": "Invalid authentication",
-            "invalid_slave_ids": "Slave IDs must be comma-separated list of ints",
-            "read_error": "Reading from the inverter failed.",
-            "slave_cannot_connect": "Failed to connect to additional slave",
-            "unknown": "Unexpected error"
-        },
-        "step": {
-            "login": {
-                "data": {
-                    "password": "Password",
-                    "username": "Username"
-                },
-                "description": "Please enter the Installer credentials"
-            },
-            "user": {
-                "data": {
-                    "enable_parameter_configuration": "Advanced: enable parameter configuration",
-                    "host": "Host",
-                    "port": "Port",
-                    "slave_ids": "Slave IDs (Comma separated)"
-                }
-            }
+        "description": "Please enter the Installer credentials"
+      },
+      "user": {
+        "data": {
+          "enable_parameter_configuration": "Advanced: elevate permissions",
+          "host": "Host",
+          "port": "Port",
+          "slave_ids": "Slave IDs (Comma separated)"
         }
+      }
     }
+  }
 }

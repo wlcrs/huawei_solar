@@ -131,6 +131,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                         )
                     )
                 except HuaweiSolarException:
+                    _LOGGER.info(
+                        "Cannot create optimizer sensor entities as the integration has insufficient permissions. "
+                        "Consider enabling elevated permissions to get more optimizer data."
+                    )
                     optimizers_device_infos = None
 
         hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {
