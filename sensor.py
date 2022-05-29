@@ -26,8 +26,12 @@ from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinator
-from .const import DATA_UPDATE_COORDINATORS, DOMAIN
+from . import (
+    HuaweiSolarEntity,
+    HuaweiSolarOptimizerUpdateCoordinator,
+    HuaweiSolarUpdateCoordinator,
+)
+from .const import DATA_OPTIMIZER_UPDATE_COORDINATORS, DATA_UPDATE_COORDINATORS, DOMAIN
 
 PARALLEL_UPDATES = 1
 
@@ -214,6 +218,77 @@ OPTIMIZER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = 
         name="Optimizers Online",
         icon="mdi:solar-panel",
         state_class=SensorStateClass.MEASUREMENT,
+    ),
+)
+
+OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
+    HuaweiSolarSensorEntityDescription(
+        key="output_power",
+        name="Output Power",
+        icon="mdi:flash",
+        native_unit_of_measurement=POWER_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key="voltage_to_ground",
+        name="Voltage To Ground",
+        icon="mdi:lightning-bolt",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key="output_voltage",
+        name="Output Voltage",
+        icon="mdi:lightning-bolt",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key="output_current",
+        name="Output Current",
+        icon="mdi:lightning-bolt-outline",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+        device_class=SensorDeviceClass.CURRENT,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key="input_voltage",
+        name="Input Voltage",
+        icon="mdi:lightning-bolt",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key="input_current",
+        name="Input Current",
+        icon="mdi:lightning-bolt-outline",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+        device_class=SensorDeviceClass.CURRENT,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key="temperature",
+        name="Temperature",
+        native_unit_of_measurement=TEMP_CELSIUS,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key="running_status",
+        name="Running Status",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key="accumulated_energy_yield",
+        name="Accumulated Energy Yield",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL,
     ),
 )
 
@@ -607,6 +682,30 @@ async def async_setup_entry(
 
         entities_to_add.extend(slave_entities)
 
+    optimizer_update_coordinators = hass.data[DOMAIN][entry.entry_id][
+        DATA_OPTIMIZER_UPDATE_COORDINATORS
+    ]  # type: list[HuaweiSolarOptimizerUpdateCoordinator]
+
+    for idx, update_coordinator in enumerate(optimizer_update_coordinators):
+        optimizer_entities: list[HuaweiSolarOptimizerSensorEntity] = []
+
+        bridge = update_coordinator.bridge
+        optimizer_device_infos = update_coordinator.optimizer_device_infos
+
+        for entity_description in OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS:
+            for optimizer_id, device_info in optimizer_device_infos.items():
+
+                optimizer_entities.append(
+                    HuaweiSolarOptimizerSensorEntity(
+                        update_coordinator,
+                        entity_description,
+                        optimizer_id,
+                        device_info,
+                    )
+                )
+
+        entities_to_add.extend(optimizer_entities)
+
     async_add_entities(entities_to_add, True)
 
 
@@ -634,6 +733,38 @@ class HuaweiSolarSensorEntity(CoordinatorEntity, HuaweiSolarEntity, SensorEntity
     def native_value(self):
         """Native sensor value."""
         return self.coordinator.data[self.entity_description.key].value
+
+
+class HuaweiSolarOptimizerSensorEntity(
+    CoordinatorEntity, HuaweiSolarEntity, SensorEntity
+):
+    """Huawei Solar Optimizer Sensor which receives its data via an DataUpdateCoordinator."""
+
+    entity_description: HuaweiSolarSensorEntityDescription
+
+    def __init__(
+        self,
+        coordinator: HuaweiSolarOptimizerUpdateCoordinator,
+        description: HuaweiSolarSensorEntityDescription,
+        optimizer_id,
+        device_info,
+    ):
+        """Batched Huawei Solar Sensor Entity constructor."""
+        super().__init__(coordinator)
+
+        self.coordinator = coordinator
+        self.entity_description = description
+        self.optimizer_id = optimizer_id
+
+        self._attr_device_info = device_info
+        self._attr_unique_id = f"{device_info['name']}_{description.key}"
+
+    @property
+    def native_value(self):
+        """Native sensor value."""
+        return getattr(
+            self.coordinator.data[self.optimizer_id], self.entity_description.key
+        )
 
 
 def get_pv_entity_descriptions(count: int) -> list[HuaweiSolarSensorEntityDescription]:

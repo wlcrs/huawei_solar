@@ -12,8 +12,11 @@ CONF_ENABLE_PARAMETER_CONFIGURATION = "enable_parameter_configuration"
 
 
 DATA_UPDATE_COORDINATORS = "update_coordinators"
+DATA_OPTIMIZER_UPDATE_COORDINATORS = "optimizer_update_coordinators"
 
 UPDATE_INTERVAL = timedelta(seconds=30)
+# optimizer data is only refreshed every 5 minutes by the inverter.
+OPTIMIZER_UPDATE_INTERVAL = timedelta(minutes=5)
 
 SERVICE_FORCIBLE_CHARGE = "forcible_charge"
 SERVICE_FORCIBLE_DISCHARGE = "forcible_discharge"
