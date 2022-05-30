@@ -760,11 +760,22 @@ class HuaweiSolarOptimizerSensorEntity(
         self._attr_unique_id = f"{device_info['name']}_{description.key}"
 
     @property
+    def available(self) -> bool:
+        """Report if sensor is available"""
+
+        # Check whether optimizer is listed in coordinator data
+        return super().available and self.optimizer_id in self.coordinator.data
+
+    @property
     def native_value(self):
         """Native sensor value."""
-        return getattr(
-            self.coordinator.data[self.optimizer_id], self.entity_description.key
-        )
+        if self.optimizer_id in self.coordinator.data:
+            return getattr(
+                self.coordinator.data[self.optimizer_id], self.entity_description.key
+            )
+
+        else:
+            return None
 
 
 def get_pv_entity_descriptions(count: int) -> list[HuaweiSolarSensorEntityDescription]:
