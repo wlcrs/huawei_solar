@@ -128,11 +128,13 @@ class StorageModeSelectEntity(HuaweiSolarSelectEntity):
             self.options_to_values = {
                 "Maximise Self Consumption": rv.StorageWorkingModesC.MAXIMISE_SELF_CONSUMPTION,
                 "Time Of Use": rv.StorageWorkingModesC.TIME_OF_USE_LUNA2000,
+                "Fully Fed To Grid": rv.StorageWorkingModesC.FULLY_FED_TO_GRID,
             }
-        elif bridge.battery_2_type == rv.StorageProductModel.LG_RESU:
+        elif bridge.battery_1_type == rv.StorageProductModel.LG_RESU:
             self.options_to_values = {
                 "Maximise Self Consumption": rv.StorageWorkingModesC.MAXIMISE_SELF_CONSUMPTION,
                 "Time Of Use": rv.StorageWorkingModesC.TIME_OF_USE_LG,
+                "Fully Fed To Grid": rv.StorageWorkingModesC.FULLY_FED_TO_GRID,
             }
         self._attr_options = list(self.options_to_values.keys())
 
