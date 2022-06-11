@@ -760,6 +760,7 @@ class HuaweiSolarOptimizerSensorEntity(
 
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device_info['name']}_{description.key}"
+        self._attr_name = f"{device_info['name']} {description.name}"
 
     @property
     def available(self) -> bool:
