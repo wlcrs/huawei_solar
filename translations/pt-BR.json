@@ -1,0 +1,32 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "O dispositivo já está configurado"
+        },
+        "error": {
+            "cannot_connect": "Falhou ao conectar",
+            "invalid_auth": "Autenticação inválida",
+            "invalid_slave_ids": "Os IDs escravos devem ser uma lista de inteiros separada por vírgulas",
+            "read_error": "Falha na leitura do inversor.",
+            "slave_cannot_connect": "Falha ao conectar ao escravo adicional",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "login": {
+                "data": {
+                    "password": "Senha",
+                    "username": "Nome de usuário"
+                },
+                "description": "Por favor, insira as credenciais do instalador"
+            },
+            "user": {
+                "data": {
+                    "enable_parameter_configuration": "Avançado: habilitar configuração de parâmetros",
+                    "host": "Host",
+                    "port": "Porta",
+                    "slave_ids": "IDs de escravos (separados por vírgulas)"
+                }
+            }
+        }
+    }
+}
