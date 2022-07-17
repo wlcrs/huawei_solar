@@ -348,7 +348,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     errors["base"] = "cannot_connect"
                 except SlaveException:
                     errors["base"] = "slave_cannot_connect"
-                except ReadException:
+                except ReadException as exception:
+                    _LOGGER.exception(exception)
                     errors["base"] = "read_error"
                 except Exception as exception:  # pylint: disable=broad-except
                     _LOGGER.exception(exception)
@@ -407,7 +408,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors["base"] = "cannot_connect"
             except SlaveException:
                 errors["base"] = "slave_cannot_connect"
-            except ReadException:
+            except ReadException as exception:
+                _LOGGER.exception(exception)
                 errors["base"] = "read_error"
             except Exception as exception:  # pylint: disable=broad-except
                 _LOGGER.exception(exception)
