@@ -13,44 +13,68 @@ configured  to allow immediate integration into the HA Energy view.
 
 ![](images/configuration-screenshot.png)
 
-## Installation
+## Prerequisites
 
-1.  [Connect Home Assistant to the WiFi Access Point of your Huawei inverter.](https://github.com/wlcrs/huawei_solar/wiki/Connecting-to-the-inverter#getting-connectivity-between-ha-on-your-home-network-and-the-inverter-ap)
-1. Install this integration with HACS, or copy the contents of this
-repository into the `custom_components/huawei_solar` directory
-1. Restart HA
-1. Start the configuration flow:
-   - [![Start Config Flow](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start?domain=huawei_solar)
-   - Or: Go to `Configuration` -> `Integrations` and click the `+ Add Integration`. Select `Huawei Solar` from the list
+This integration supports two connection modes to SUN2000 inverters:
+- direct serial connection to the RS485A1 and RS485B1 pins of the COM port (**Recommended**)
+- network connection
 
-4. Enter the IP address of your inverter (192.168.200.1). The slave id is typically 0. You should only check the `Advanced: enable parameter configuration` checkbox if you intend to dynamically change your battery settings.
+### Serial connection
 
-![](images/configuration-dialog.png)
+To use the direct serial connection, you need an "USB to RS485 converter". These can be obtained relatively inexpensively, for example on [AliExpress](https://www.aliexpress.com/item/32548472327.html) or [Amazon.de](https://amzn.to/3yJ9pCu).
 
-5. When using the `parameter configuration` feature, you might be asked to enter
-the credentials to the `installer` account in a next step. These are the 
-credentials used to connect to the inverter in the "Device Commissioning" section of
-the FusionSolar App.
+Connect the RS485A1 and RS485B1 pins from the COM-port of your (primary) inverter to the two screw terminals of the USB-adapter.
 
-## What IP-address and port should I enter?
+Use the 'Device Commissioning' function of the FusionSolar app to login on your inverter (default password for the `installer` account is `00000a`). Go to *Settings → Communication configuration → RS485_1* and make sure that the parameters are set as follows:
 
-Starting from firmware updates released in December 2021, Huawei has closed the Modbus-TCP interface on the network to which the inverter connects. ie. If the inverter is connected to your home network on `192.168.1.11`, it will no longer be possible to connect on that IP.  This also applies for connecting via the Dongle.  You will need to connect to the inverter using the WiFi AP.
+* Baud rate: `9600`
+* Protocol type: `MODBUS`
+* Com address: `1`
+* RS485 Bus Frame capture: `1`
 
-To configure your WiFi access, connect to the WiFi SSID `SUN2000-<inverter serial number>`, and use the Modbus-TCP interface available on `192.168.200.1`. In most cases, the port has been moved to `6607` instead of `502`.
+### Network connection
 
+Starting from firmware updates released in December 2021, Huawei has closed the Modbus-TCP interface on the network to which the inverter connects. While it is still possible to access a Modbus-TCP interface [when connecting to the SUN2000-xxx WiFi network broadcasted by the inverter](https://github.com/wlcrs/huawei_solar/wiki/Connecting-to-the-inverter#getting-connectivity-between-ha-on-your-home-network-and-the-inverter-ap), this method requires good computer networking knowledge and a device that is closely located to the inverter to connect to its AP.
 
-### How do I connect to the inverter WiFi?
-There are multiple possible approaches which are discussed on our [Connecting to the inverter Wiki-page](https://github.com/wlcrs/huawei_solar/wiki/Connecting-to-the-inverter#getting-connectivity-between-ha-on-your-home-network-and-the-inverter-ap)
-
-## SDongle Configuration
-
-If your inverter has an SDongle, you need to make sure that it is properly configured to access it via your home network. 
-Use the 'Device Commissioning' function of the FusionSolar app to login on your inverter (default password for the 'installer' account is '00000a').
-In Settings > Communication Configuration:
+In some cases, it is still possible to connect via the network if your inverter has an SDongle connected to it. You need to make sure that it is properly configured to access it via your home network.
+Use the 'Device Commissioning' function of the FusionSolar app to login on your inverter (default password for the `installer` account is `00000a`).
+In Settings → Communication Configuration:
 - Set "Dongle Parameter Settings" → "Modbus TCP" → "Connection" to "Enabled (Unrestricted)"
 - Set "Parallel system communication parameter setting" → "Parallel communication mode" to "RS485"
 
-Note: Having an SDOngle will not remove the requirement of connecting to the WiFi AP of the inverter.
+
+## Installation
+
+1. Install this integration with HACS, or copy the contents of this
+repository into the `custom_components/huawei_solar` directory
+2. Restart HA
+3. Start the configuration flow:
+   - [![Start Config Flow](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start?domain=huawei_solar)
+   - Or: Go to `Configuration` -> `Integrations` and click the `+ Add Integration`. Select `Huawei Solar` from the list
+
+4. Choose whether you want to connect via serial or network connection
+
+
+![](images/select-connection-type.png)
+
+
+### Serial configuration
+
+5. Select the "USB to RS485 converter" that you connected to the RS485A1 and RS485B1 pins of your inverter. The Slave ID should be identical to the *Com address* set in the *RS485_1* settings.
+
+![](images/usb-device.png)
+
+### Network configuration
+
+5. Enter the IP address and port on which the Modbus-TCP interface is available (when connecting to the inverter AP the host IP is typically `192.168.200.1` and the port is either `502` or `6607`). The slave id is typically `0`. You should only check the `Advanced: elevate permissions` checkbox if you intend to dynamically change your battery settings or want access to the optimizer data.
+
+![](images/network-configuration.png)
+
+6. When using the `elevate permissions` feature, you will be asked to enter
+the credentials to the `installer` account in a next step. These are the
+credentials used to connect to the inverter in the "Device Commissioning" section of
+the FusionSolar App. The default password is `00000a`.
+
 
 ## Inverter polling frequency
 
@@ -69,6 +93,8 @@ The integration will poll the inverter for new values every 30 seconds. If you w
         entity_id: sensor.daily_yield
 ```
 
+Note that optimizer data is refreshed only every 5 minutes, which matches how frequently the inverter refreshes this data.
+
 ## FAQ - Troubleshooting
 
 **Q**: Why do I get the error "Connection succeeded, but failed to read from inverter." while setting up this integration?
@@ -79,7 +105,7 @@ The integration will poll the inverter for new values every 30 seconds. If you w
 
 **Q**: Will the FusionSolar App still work when using this integration?
 
-**A**: The inverter will still send it's data to the Huawei cloud, and you will still be able to see live statistics from your installation in the FusionSolar App. However, if you (or your installer) need to use the 'Device commissioning' feature of the app, you will need to disable this integration. Only one of them can be connected to the inverter at any one time.
+**A**: The inverter will still send it's data to the Huawei cloud, and you will still be able to see live statistics from your installation in the FusionSolar App. However, if you are using this integration via the network, and you (or your installer) need to use the 'Device commissioning' feature of the app, you will need to disable this integration.
 
 ---
 

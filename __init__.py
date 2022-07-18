@@ -57,20 +57,26 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     primary_bridge = None
     try:
-        primary_bridge = await HuaweiSolarBridge.create(
-            host=entry.data[CONF_HOST],
-            port=entry.data[CONF_PORT],
-            slave_id=entry.data[CONF_SLAVE_IDS][0],
-        )
 
-        if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION):
-            if entry.data.get(CONF_USERNAME) and entry.data.get(CONF_PASSWORD):
-                try:
-                    await primary_bridge.login(
-                        entry.data[CONF_USERNAME], entry.data[CONF_PASSWORD]
-                    )
-                except InvalidCredentials as err:
-                    raise ConfigEntryAuthFailed() from err
+        if entry.data[CONF_HOST] is None:
+            primary_bridge = await HuaweiSolarBridge.create_rtu(
+                port=entry.data[CONF_PORT], slave_id=entry.data[CONF_SLAVE_IDS][0]
+            )
+        else:
+            primary_bridge = await HuaweiSolarBridge.create(
+                host=entry.data[CONF_HOST],
+                port=entry.data[CONF_PORT],
+                slave_id=entry.data[CONF_SLAVE_IDS][0],
+            )
+
+            if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION):
+                if entry.data.get(CONF_USERNAME) and entry.data.get(CONF_PASSWORD):
+                    try:
+                        await primary_bridge.login(
+                            entry.data[CONF_USERNAME], entry.data[CONF_PASSWORD]
+                        )
+                    except InvalidCredentials as err:
+                        raise ConfigEntryAuthFailed() from err
 
         primary_bridge_device_infos = await _compute_device_infos(
             primary_bridge,
@@ -130,10 +136,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                             OPTIMIZER_UPDATE_INTERVAL,
                         )
                     )
-                except HuaweiSolarException:
+                except HuaweiSolarException as exception:
                     _LOGGER.info(
                         "Cannot create optimizer sensor entities as the integration has insufficient permissions. "
-                        "Consider enabling elevated permissions to get more optimizer data."
+                        "Consider enabling elevated permissions to get more optimizer data",
+                        exc_info=exception,
                     )
                     optimizers_device_infos = None
 
