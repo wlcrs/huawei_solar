@@ -30,7 +30,7 @@ class HuaweiSolarSwitchEntityDescription(Generic[T], SwitchEntityDescription):
 ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     HuaweiSolarSwitchEntityDescription(
         key=rn.STORAGE_CHARGE_FROM_GRID_FUNCTION,
-        name="Charge From Grid",
+        name="Charge from grid",
         icon="mdi:battery-charging-50",
         entity_category=EntityCategory.CONFIG,
     ),
