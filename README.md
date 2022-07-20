@@ -21,7 +21,7 @@ This integration supports two connection modes to SUN2000 inverters:
 
 ### Serial connection
 
-To use the direct serial connection, you need an "USB to RS485 converter". These can be obtained relatively inexpensively, for example on [AliExpress](https://www.aliexpress.com/item/32548472327.html) or [Amazon.de](https://amzn.to/3yJ9pCu).
+To use the direct serial connection, you need an "USB to RS485 converter". These can be obtained relatively inexpensively, for example on [AliExpress](https://s.click.aliexpress.com/e/_DddQ7Ib) or [Amazon.de](https://amzn.to/3yJ9pCu).
 
 Connect the RS485A1 and RS485B1 pins from the COM-port of your (primary) inverter to the two screw terminals of the USB-adapter.
 
