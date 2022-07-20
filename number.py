@@ -34,56 +34,56 @@ class HuaweiSolarNumberEntityDescription(NumberEntityDescription):
 ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_MAXIMUM_CHARGING_POWER,
-        min_value=0,
+        native_min_value=0,
         maximum_key=rn.STORAGE_MAXIMUM_CHARGE_POWER,
         name="Maximum charging power",
         icon="mdi:battery-positive",
-        unit_of_measurement=POWER_WATT,
+        native_unit_of_measurement=POWER_WATT,
         entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_MAXIMUM_DISCHARGING_POWER,
-        min_value=0,
+        native_min_value=0,
         maximum_key=rn.STORAGE_MAXIMUM_DISCHARGE_POWER,
         name="Maximum discharging power",
         icon="mdi:battery-negative",
-        unit_of_measurement=POWER_WATT,
+        native_unit_of_measurement=POWER_WATT,
         entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_GRID_CHARGE_CUTOFF_STATE_OF_CHARGE,
-        min_value=20,
-        max_value=100,
+        native_min_value=20,
+        native_max_value=100,
         name="Grid charge cutoff SOC",
         icon="mdi:battery-charging-50",
-        unit_of_measurement=PERCENTAGE,
+        native_unit_of_measurement=PERCENTAGE,
         entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_POWER_OF_CHARGE_FROM_GRID,
-        min_value=0,
+        native_min_value=0,
         maximum_key=rn.STORAGE_MAXIMUM_POWER_OF_CHARGE_FROM_GRID,
         name="Grid charge maximum power",
         icon="mdi:battery-negative",
-        unit_of_measurement=POWER_WATT,
+        native_unit_of_measurement=POWER_WATT,
         entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_FORCIBLE_CHARGE_POWER,
-        min_value=0,
+        native_min_value=0,
         maximum_key=rn.STORAGE_MAXIMUM_CHARGE_POWER,
         name="Forcible charge power",
         icon="mdi:battery-positive",
-        unit_of_measurement=POWER_WATT,
+        native_unit_of_measurement=POWER_WATT,
         entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_FORCIBLE_DISCHARGE_POWER,
-        min_value=0,
+        native_min_value=0,
         maximum_key=rn.STORAGE_MAXIMUM_DISCHARGE_POWER,
         name="Forcible discharge power",
         icon="mdi:battery-negative",
-        unit_of_measurement=POWER_WATT,
+        native_unit_of_measurement=POWER_WATT,
         entity_category=EntityCategory.CONFIG,
     ),
 )
@@ -161,7 +161,7 @@ class HuaweiSolarNumberEntity(HuaweiSolarEntity, NumberEntity):
 
         self._attr_device_info = device_info
         self._attr_unique_id = f"{bridge.serial_number}_{description.key}"
-        self._attr_value = initial_value
+        self._attr_native_value = initial_value
         self._attr_mode = NumberMode.BOX  # Always allow a precise number
 
     @classmethod
@@ -176,12 +176,12 @@ class HuaweiSolarNumberEntity(HuaweiSolarEntity, NumberEntity):
         This async constructor fills in the necessary min/max values
         """
         if description.minimum_key:
-            description.min_value = (
+            description.native_min_value = (
                 await bridge.client.get(description.minimum_key)
             ).value
 
         if description.maximum_key:
-            description.max_value = (
+            description.native_max_value = (
                 await bridge.client.get(description.maximum_key)
             ).value
 
@@ -192,7 +192,7 @@ class HuaweiSolarNumberEntity(HuaweiSolarEntity, NumberEntity):
 
         return cls(bridge, description, device_info, initial_value)
 
-    async def async_set_value(self, value: float) -> None:
+    async def async_set_native_value(self, value: float) -> None:
         """Set a new value."""
         if await self.bridge.set(self.entity_description.key, int(value)):
-            self._attr_value = int(value)
+            self._attr_native_value = int(value)
