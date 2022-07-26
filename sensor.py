@@ -4,6 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from huawei_solar import register_names as rn, register_values as rv
+from huawei_solar.files import OptimizerRunningStatus
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -763,8 +764,17 @@ class HuaweiSolarOptimizerSensorEntity(
     def available(self) -> bool:
         """Report if sensor is available"""
 
-        # Check whether optimizer is listed in coordinator data
-        return super().available and self.optimizer_id in self.coordinator.data
+        return (
+            super().available
+            and self.optimizer_id in self.coordinator.data
+            # Optimizer data fields only return sensible data when the
+            # optimizer is not offline
+            and (
+                self.entity_description.key == "running_status"
+                or self.coordinator.data[self.optimizer.id].running_status
+                != OptimizerRunningStatus.OFFLINE
+            )
+        )
 
     @property
     def native_value(self):
