@@ -771,7 +771,7 @@ class HuaweiSolarOptimizerSensorEntity(
             # optimizer is not offline
             and (
                 self.entity_description.key == "running_status"
-                or self.coordinator.data[self.optimizer.id].running_status
+                or self.coordinator.data[self.optimizer_id].running_status
                 != OptimizerRunningStatus.OFFLINE
             )
         )
