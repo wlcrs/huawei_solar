@@ -406,7 +406,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     # Check if we need to ask for the login details
                     if (
                         self._enable_parameter_configuration
-                        and not info["has_write_permission"]
+                        and info["has_write_permission"] == False # this can also be None, in which case login is not supported. 
                     ):
                         return await self.async_step_network_login()
 
