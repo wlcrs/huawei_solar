@@ -4,13 +4,15 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
+import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
-
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.helpers import device_registry
-import homeassistant.helpers.config_validation as cv
+
+from huawei_solar import HuaweiSolarBridge
+from huawei_solar import register_names as rn
+from huawei_solar import register_values as rv
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
@@ -48,11 +50,7 @@ DURATION_SCHEMA = FORCIBLE_CHARGE_BASE_SCHEMA.extend(
 )
 
 SOC_SCHEMA = FORCIBLE_CHARGE_BASE_SCHEMA.extend(
-    {
-        vol.Required(DATA_TARGET_SOC): vol.All(
-            vol.Coerce(float), vol.Range(min=12, max=100)
-        )
-    }
+    {vol.Required(DATA_TARGET_SOC): vol.All(vol.Coerce(float), vol.Range(min=12, max=100))}
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -65,9 +63,7 @@ class HuaweiSolarServiceException(Exception):
 async def async_setup_services(
     hass: HomeAssistant,
     entry: ConfigEntry,
-    bridges_with_device_infos: list[
-        tuple[HuaweiSolarBridge, HuaweiInverterBridgeDeviceInfos]
-    ],
+    bridges_with_device_infos: list[tuple[HuaweiSolarBridge, HuaweiInverterBridgeDeviceInfos]],
 ):
     """Huawei Solar Services Setup."""
 
@@ -82,17 +78,13 @@ async def async_setup_services(
             if device_infos["connected_energy_storage"] is None:
                 continue
 
-            for ces_identifier in device_infos["connected_energy_storage"][
-                "identifiers"
-            ]:
+            for ces_identifier in device_infos["connected_energy_storage"]["identifiers"]:
                 for device_identifier in device_entry.identifiers:
                     if ces_identifier == device_identifier:
                         return bridge
 
         _LOGGER.error("The provided device is not a Connected Energy Storage")
-        raise HuaweiSolarServiceException(
-            "Not a valid 'Connected Energy Storage' device"
-        )
+        raise HuaweiSolarServiceException("Not a valid 'Connected Energy Storage' device")
 
     async def forcible_charge(service_call: ServiceCall) -> None:
         """Start a forcible charge on the battery."""
@@ -181,18 +173,14 @@ async def async_setup_services(
         await bridge.set(rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE, 0)
 
     if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
-        hass.services.async_register(
-            DOMAIN, SERVICE_FORCIBLE_CHARGE, forcible_charge, schema=DURATION_SCHEMA
-        )
+        hass.services.async_register(DOMAIN, SERVICE_FORCIBLE_CHARGE, forcible_charge, schema=DURATION_SCHEMA)
         hass.services.async_register(
             DOMAIN,
             SERVICE_FORCIBLE_DISCHARGE,
             forcible_discharge,
             schema=DURATION_SCHEMA,
         )
-        hass.services.async_register(
-            DOMAIN, SERVICE_FORCIBLE_CHARGE_SOC, forcible_charge_soc, schema=SOC_SCHEMA
-        )
+        hass.services.async_register(DOMAIN, SERVICE_FORCIBLE_CHARGE_SOC, forcible_charge_soc, schema=SOC_SCHEMA)
         hass.services.async_register(
             DOMAIN,
             SERVICE_FORCIBLE_DISCHARGE_SOC,

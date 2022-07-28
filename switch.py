@@ -1,17 +1,19 @@
 """This component provides switch entities for Huawei Solar."""
 from __future__ import annotations
 
-from dataclasses import dataclass
 import logging
+from dataclasses import dataclass
 from typing import Generic, TypeVar
-
-from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
 
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+
+from huawei_solar import HuaweiSolarBridge
+from huawei_solar import register_names as rn
+from huawei_solar import register_values as rv
 
 from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinator
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN

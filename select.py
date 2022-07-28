@@ -1,17 +1,19 @@
 """This component provides switch entities for Huawei Solar."""
 from __future__ import annotations
 
-from dataclasses import dataclass
 import logging
+from dataclasses import dataclass
 from typing import Generic, TypeVar
-
-from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
 
 from homeassistant.components.select import SelectEntity, SelectEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+
+from huawei_solar import HuaweiSolarBridge
+from huawei_solar import register_names as rn
+from huawei_solar import register_values as rv
 
 from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinator
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
@@ -57,9 +59,7 @@ async def async_setup_entry(
             assert device_infos["connected_energy_storage"]
 
             slave_entities.append(
-                await StorageModeSelectEntity.create(
-                    bridge, device_infos["connected_energy_storage"]
-                )
+                await StorageModeSelectEntity.create(bridge, device_infos["connected_energy_storage"])
             )
 
         else:
@@ -156,16 +156,12 @@ class StorageModeSelectEntity(HuaweiSolarSelectEntity):
         # Assumption: these values are not updated outside of HA.
         # This should hold true as they typically can only be set via the Modbus-interface,
         # which only allows one client at a time.
-        initial_value = (
-            await bridge.client.get(rn.STORAGE_WORKING_MODE_SETTINGS)
-        ).value
+        initial_value = (await bridge.client.get(rn.STORAGE_WORKING_MODE_SETTINGS)).value
 
         return cls(bridge, device_info, initial_value)
 
     async def async_select_option(self, option) -> None:
         """Change the selected option."""
 
-        await self.bridge.set(
-            rn.STORAGE_WORKING_MODE_SETTINGS, self.options_to_values[option]
-        )
+        await self.bridge.set(rn.STORAGE_WORKING_MODE_SETTINGS, self.options_to_values[option])
         self._attr_current_option = option

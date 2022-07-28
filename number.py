@@ -1,21 +1,19 @@
 """This component provides number entities for Huawei Solar."""
 from __future__ import annotations
 
-from dataclasses import dataclass
 import logging
+from dataclasses import dataclass
 
-from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
-
-from homeassistant.components.number import (
-    NumberEntity,
-    NumberEntityDescription,
-    NumberMode,
-)
+from homeassistant.components.number import NumberEntity, NumberEntityDescription, NumberMode
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import PERCENTAGE, POWER_WATT
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+
+from huawei_solar import HuaweiSolarBridge
+from huawei_solar import register_names as rn
+from huawei_solar import register_values as rv
 
 from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinator
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
@@ -176,14 +174,10 @@ class HuaweiSolarNumberEntity(HuaweiSolarEntity, NumberEntity):
         This async constructor fills in the necessary min/max values
         """
         if description.minimum_key:
-            description.native_min_value = (
-                await bridge.client.get(description.minimum_key)
-            ).value
+            description.native_min_value = (await bridge.client.get(description.minimum_key)).value
 
         if description.maximum_key:
-            description.native_max_value = (
-                await bridge.client.get(description.maximum_key)
-            ).value
+            description.native_max_value = (await bridge.client.get(description.maximum_key)).value
 
         # Assumption: these values are not updated outside of HA.
         # This should hold true as they typically can only be set via the Modbus-interface,
