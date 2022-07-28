@@ -7,7 +7,7 @@
   "requirements": [
     "pyserial==3.5",
     "pyserial-asyncio==0.6",
-    "huawei-solar==2.1.2"
+    "huawei-solar==2.1.1"
   ],
   "codeowners": ["@wlcrs"],
   "iot_class": "local_polling",
