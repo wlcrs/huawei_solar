@@ -27,33 +27,26 @@ body:
     description: "A clear and concise description of what the issue is."
   validations:
     required: true
-- type: textarea
-  attributes:
-    label: Reproduction steps
-    description: "Without steps to reproduce, it will be hard to fix, it is very important that you fill out this part, issues without it will be closed"
-    value: |
-      1.
-      2.
-      3.
-      ...
-  validations:
-    required: true
 
 - type: markdown
   attributes:
     value: |
-      You MUST include relevant logfiles to debug your issue.
+      **You MUST include relevant logfiles to debug your issue.**
 
       For instance: if the integration does not show up in the `+ Add Integration` list, then add any relevant lines you can find in `/config/home-assistant.log` after a full restart of your Home Assistant instance.
 
-      When you don't find any relevant logs, please increase your logging level and try again. To do this, add the following lines to your `/config/configuration.yaml`:
+      When you don't find any relevant logs, please increase your logging level and try again. To do this, add the following lines to your `/config/configuration.yaml` and restart HA:
 
-      ```
+      ```yaml
       logger:
         default: debug
         logs:
           custom_components.huawei_solar: debug
+          huawei_solar: debug
+          pymodbus: debug # only include this if you're having connectivity issues
       ```
+      
+      Make sure to check for relevant log lines in the **Full logs**, which you can also find in `/config/home-assistant.log`. Do NOT copy&paste info from the summary that you see when going to `System → Logs`, always push the "Load Full Logs" button and look there.
 
 - type: textarea
   attributes:
