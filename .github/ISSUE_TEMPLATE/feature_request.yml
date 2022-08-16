@@ -12,8 +12,8 @@ body:
 - type: checkboxes
   id: no-bugreport
   attributes:
-    label: ""
-    description: Please do not abuse this form to submit a problem that you are experiencing with this integration. The required fields in the 'Bug report' issue form are needed to understand your report. Your issue will be closed immediately without any reaction if you abuse this form.
+    label: "Proper usage"
     options:
       - label: I confirm that this is not a bug report
+        description: Please do not abuse this form to submit a problem that you are experiencing with this integration. The required fields in the 'Bug report' issue form are needed to understand your report. Your issue will be closed immediately without any reaction if you abuse this form.
         required: true
