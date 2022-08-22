@@ -127,3 +127,56 @@ stop_forcible_charge:
       selector:
         device:
           integration: huawei_solar
+
+reset_maximum_feed_grid_power:
+  name: Set Active Power Control to Unlimited mode
+  description: Set Active Power Control to the default Unlimited mode
+  fields:
+    device_id:
+      name: Battery
+      description: Must be a 'Connected Energy Storage' device
+      required: true
+      selector:
+        device:
+          integration: huawei_solar
+
+set_maximum_feed_grid_power:
+  name: Limit the power fed to the grid
+  description: Sets Active Power Control to 'Power-limited grid connection' with the given wattage
+  fields:
+    device_id:
+      name: Battery
+      description: Must be a 'Connected Energy Storage' device
+      required: true
+      selector:
+        device:
+          integration: huawei_solar
+    power:
+      name: Power
+      description: Maximum Wattage
+      required: true
+      default: 0
+      selector:
+        text:
+
+set_maximum_feed_grid_power_percent:
+  name: Limit the power fed to the grid
+  description: Sets Active Power Control to 'Power-limited grid connection (%)' with the given percentage
+  fields:
+    device_id:
+      name: Battery
+      description: Must be a 'Connected Energy Storage' device
+      required: true
+      selector:
+        device:
+          integration: huawei_solar
+    power_percentage:
+      name: Power Percentage
+      description: Maximum Percentage
+      required: true
+      default: 0
+      selector:
+        number:
+          min: 0
+          max: 100
+          unit_of_measurement: "%"
