@@ -4,7 +4,11 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 
-from homeassistant.components.number import NumberEntity, NumberEntityDescription, NumberMode
+from homeassistant.components.number import (
+    NumberEntity,
+    NumberEntityDescription,
+    NumberMode,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import PERCENTAGE, POWER_WATT
 from homeassistant.core import HomeAssistant
@@ -62,24 +66,6 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         native_min_value=0,
         maximum_key=rn.STORAGE_MAXIMUM_POWER_OF_CHARGE_FROM_GRID,
         name="Grid charge maximum power",
-        icon="mdi:battery-negative",
-        native_unit_of_measurement=POWER_WATT,
-        entity_category=EntityCategory.CONFIG,
-    ),
-    HuaweiSolarNumberEntityDescription(
-        key=rn.STORAGE_FORCIBLE_CHARGE_POWER,
-        native_min_value=0,
-        maximum_key=rn.STORAGE_MAXIMUM_CHARGE_POWER,
-        name="Forcible charge power",
-        icon="mdi:battery-positive",
-        native_unit_of_measurement=POWER_WATT,
-        entity_category=EntityCategory.CONFIG,
-    ),
-    HuaweiSolarNumberEntityDescription(
-        key=rn.STORAGE_FORCIBLE_DISCHARGE_POWER,
-        native_min_value=0,
-        maximum_key=rn.STORAGE_MAXIMUM_DISCHARGE_POWER,
-        name="Forcible discharge power",
         icon="mdi:battery-negative",
         native_unit_of_measurement=POWER_WATT,
         entity_category=EntityCategory.CONFIG,
@@ -174,10 +160,14 @@ class HuaweiSolarNumberEntity(HuaweiSolarEntity, NumberEntity):
         This async constructor fills in the necessary min/max values
         """
         if description.minimum_key:
-            description.native_min_value = (await bridge.client.get(description.minimum_key)).value
+            description.native_min_value = (
+                await bridge.client.get(description.minimum_key)
+            ).value
 
         if description.maximum_key:
-            description.native_max_value = (await bridge.client.get(description.maximum_key)).value
+            description.native_max_value = (
+                await bridge.client.get(description.maximum_key)
+            ).value
 
         # Assumption: these values are not updated outside of HA.
         # This should hold true as they typically can only be set via the Modbus-interface,
