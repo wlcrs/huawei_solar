@@ -19,29 +19,7 @@ This integration supports two connection modes to SUN2000 inverters:
 - direct serial connection to the RS485A1 and RS485B1 pins of the COM port (**Recommended**)
 - network connection
 
-### Serial connection
-
-To use the direct serial connection, you need an "USB to RS485 converter". These can be obtained relatively inexpensively, for example on [AliExpress](https://s.click.aliexpress.com/e/_DddQ7Ib) or [Amazon.de](https://amzn.to/3yJ9pCu).
-
-Connect the RS485A1 and RS485B1 pins from the COM-port of your (primary) inverter to the two screw terminals of the USB-adapter.
-
-Use the 'Device Commissioning' function of the FusionSolar app to login on your inverter (default password for the `installer` account is `00000a`). Go to *Settings → Communication configuration → RS485_1* and make sure that the parameters are set as follows:
-
-* Baud rate: `9600`
-* Protocol type: `MODBUS`
-* Com address: `1`
-* RS485 Bus Frame capture: `1`
-
-### Network connection
-
-Starting from firmware updates released in December 2021, Huawei has closed the Modbus-TCP interface on the network to which the inverter connects. While it is still possible to access a Modbus-TCP interface [when connecting to the SUN2000-xxx WiFi network broadcasted by the inverter](https://github.com/wlcrs/huawei_solar/wiki/Connecting-to-the-inverter#getting-connectivity-between-ha-on-your-home-network-and-the-inverter-ap), this method requires good computer networking knowledge and a device that is closely located to the inverter to connect to its AP.
-
-In some cases, it is still possible to connect via the network if your inverter has an SDongle connected to it. You need to make sure that it is properly configured to access it via your home network.
-Use the 'Device Commissioning' function of the FusionSolar app to login on your inverter (default password for the `installer` account is `00000a`).
-In Settings → Communication Configuration:
-- Set "Dongle Parameter Settings" → "Modbus TCP" → "Connection" to "Enabled (Unrestricted)"
-- Set "Parallel system communication parameter setting" → "Parallel communication mode" to "RS485"
-
+Detailed information can be found on the ['Connecting to the inverter' Wiki-page](https://github.com/wlcrs/huawei_solar/wiki/Connecting-to-the-inverter)
 
 ## Installation
 
