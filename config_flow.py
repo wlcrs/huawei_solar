@@ -9,10 +9,21 @@ import serial.tools.list_ports
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.components import usb
-from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT, CONF_TYPE, CONF_USERNAME
+from homeassistant.const import (
+    CONF_HOST,
+    CONF_PASSWORD,
+    CONF_PORT,
+    CONF_TYPE,
+    CONF_USERNAME,
+)
 from homeassistant.data_entry_flow import FlowResult
 
-from huawei_solar import ConnectionException, HuaweiSolarBridge, HuaweiSolarException, ReadException
+from huawei_solar import (
+    ConnectionException,
+    HuaweiSolarBridge,
+    HuaweiSolarException,
+    ReadException,
+)
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
@@ -69,7 +80,9 @@ async def validate_serial_setup(data: dict[str, Any]) -> dict[str, Any]:
         # Also validate the other slave-ids
         for slave_id in data[CONF_SLAVE_IDS][1:]:
             try:
-                slave_bridge = await HuaweiSolarBridge.create_extra_slave(bridge, slave_id)
+                slave_bridge = await HuaweiSolarBridge.create_extra_slave(
+                    bridge, slave_id
+                )
 
                 _LOGGER.info(
                     "Successfully connected to slave inverter %s: %s with SN %s",
@@ -123,7 +136,9 @@ async def validate_network_setup(data: dict[str, Any]) -> dict[str, Any]:
         # Also validate the other slave-ids
         for slave_id in data[CONF_SLAVE_IDS][1:]:
             try:
-                slave_bridge = await HuaweiSolarBridge.create_extra_slave(bridge, slave_id)
+                slave_bridge = await HuaweiSolarBridge.create_extra_slave(
+                    bridge, slave_id
+                )
 
                 _LOGGER.info(
                     "Successfully connected to slave inverter %s: %s with SN %s",
@@ -144,7 +159,9 @@ async def validate_network_setup(data: dict[str, Any]) -> dict[str, Any]:
             await bridge.stop()
 
 
-async def validate_network_setup_login(host: str, port: int, slave_id: int, login_data: dict[str, Any]) -> bool:
+async def validate_network_setup_login(
+    host: str, port: int, slave_id: int, login_data: dict[str, Any]
+) -> bool:
     """Verify the installer username/password and test if it can perform a write-operation."""
     bridge = None
     try:
@@ -188,7 +205,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Only used in reauth flows:
         self._reauth_entry: config_entries.ConfigEntry | None = None
 
-    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> FlowResult:
+    async def async_step_user(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
         """Step when user initializes a integration."""
         if user_input is not None:
             user_selection = user_input[CONF_TYPE]
@@ -202,8 +221,14 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         schema = vol.Schema({vol.Required(CONF_TYPE): vol.In(list_of_types)})
         return self.async_show_form(step_id="user", data_schema=schema)
 
-    async def async_step_setup_serial(self, user_input: dict[str, Any] | None = None) -> FlowResult:
+    async def async_step_setup_serial(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
         """Handles connection parameters when using ModbusRTU."""
+
+        # Parameter configuration is always possible over serial connection
+        self._enable_parameter_configuration = True
+
         errors = {}
 
         if user_input is not None:
@@ -213,10 +238,14 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 self._slave_ids = user_input[CONF_SLAVE_IDS]
                 return await self.async_step_setup_serial_manual_path()
 
-            user_input[CONF_PORT] = await self.hass.async_add_executor_job(usb.get_serial_by_id, user_input[CONF_PORT])
+            user_input[CONF_PORT] = await self.hass.async_add_executor_job(
+                usb.get_serial_by_id, user_input[CONF_PORT]
+            )
 
             try:
-                user_input[CONF_SLAVE_IDS] = list(map(int, user_input[CONF_SLAVE_IDS].split(",")))
+                user_input[CONF_SLAVE_IDS] = list(
+                    map(int, user_input[CONF_SLAVE_IDS].split(","))
+                )
             except ValueError:
                 errors["base"] = "invalid_slave_ids"
             else:
@@ -279,14 +308,18 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def async_step_setup_serial_manual_path(self, user_input: dict[str, Any] | None = None) -> FlowResult:
+    async def async_step_setup_serial_manual_path(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
         """Select path manually."""
         errors = {}
 
         if user_input is not None:
 
             try:
-                user_input[CONF_SLAVE_IDS] = list(map(int, user_input[CONF_SLAVE_IDS].split(",")))
+                user_input[CONF_SLAVE_IDS] = list(
+                    map(int, user_input[CONF_SLAVE_IDS].split(","))
+                )
             except ValueError:
                 errors["base"] = "invalid_slave_ids"
             else:
@@ -327,16 +360,22 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required(CONF_SLAVE_IDS, default=self._slave_ids): str,
             }
         )
-        return self.async_show_form(step_id="setup_serial_manual_path", data_schema=schema, errors=errors)
+        return self.async_show_form(
+            step_id="setup_serial_manual_path", data_schema=schema, errors=errors
+        )
 
-    async def async_step_setup_network(self, user_input: dict[str, Any] | None = None) -> FlowResult:
+    async def async_step_setup_network(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
         """Handles connection parameters when using ModbusTCP."""
 
         errors = {}
 
         if user_input is not None:
             try:
-                user_input[CONF_SLAVE_IDS] = list(map(int, user_input[CONF_SLAVE_IDS].split(",")))
+                user_input[CONF_SLAVE_IDS] = list(
+                    map(int, user_input[CONF_SLAVE_IDS].split(","))
+                )
             except ValueError:
                 errors["base"] = "invalid_slave_ids"
             else:
@@ -361,7 +400,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     self._host = user_input[CONF_HOST]
                     self._port = user_input[CONF_PORT]
                     self._slave_ids = user_input[CONF_SLAVE_IDS]
-                    self._enable_parameter_configuration = user_input[CONF_ENABLE_PARAMETER_CONFIGURATION]
+                    self._enable_parameter_configuration = user_input[
+                        CONF_ENABLE_PARAMETER_CONFIGURATION
+                    ]
 
                     self._inverter_info = info
                     self.context["title_placeholders"] = {"name": info["model_name"]}
@@ -369,8 +410,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     # Check if we need to ask for the login details
                     if (
                         self._enable_parameter_configuration
-                        and info["has_write_permission"]
-                        == False  # this can also be None, in which case login is not supported.
+                        # This can also be None, in which case login is not supported.
+                        and info["has_write_permission"] is not None
+                        and info["has_write_permission"] is False
                     ):
                         return await self.async_step_network_login()
 
@@ -383,7 +425,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def async_step_network_login(self, user_input: dict[str, Any] | None = None) -> FlowResult:
+    async def async_step_network_login(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
         """Handle username/password input."""
         assert self._host is not None
         assert self._port is not None
@@ -415,7 +459,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 _LOGGER.exception(exception)
                 errors["base"] = "unknown"
 
-        return self.async_show_form(step_id="network_login", data_schema=STEP_LOGIN_DATA_SCHEMA, errors=errors)
+        return self.async_show_form(
+            step_id="network_login", data_schema=STEP_LOGIN_DATA_SCHEMA, errors=errors
+        )
 
     async def _create_entry(self):
         """Create the entry."""
@@ -436,18 +482,26 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             await self.hass.config_entries.async_reload(self._reauth_entry.entry_id)
             return self.async_abort(reason="reauth_successful")
 
-        return self.async_create_entry(title=self._inverter_info["model_name"], data=data)
+        return self.async_create_entry(
+            title=self._inverter_info["model_name"], data=data
+        )
 
-    async def async_step_reauth(self, config: dict[str, Any] | None = None) -> FlowResult:
+    async def async_step_reauth(
+        self, config: dict[str, Any] | None = None
+    ) -> FlowResult:
         """Perform reauth upon an login error."""
         assert config is not None
 
         self._host = config.get(CONF_HOST)
         self._port = config.get(CONF_PORT)
         self._slave_ids = config.get(CONF_SLAVE_IDS)
-        self._enable_parameter_configuration = config.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False)
+        self._enable_parameter_configuration = config.get(
+            CONF_ENABLE_PARAMETER_CONFIGURATION, False
+        )
 
-        self._reauth_entry = self.hass.config_entries.async_get_entry(self.context["entry_id"])
+        self._reauth_entry = self.hass.config_entries.async_get_entry(
+            self.context["entry_id"]
+        )
         return await self.async_step_network_login()
 
 
