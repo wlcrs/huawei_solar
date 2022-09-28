@@ -16,7 +16,7 @@ configured  to allow immediate integration into the HA Energy view.
 ## Prerequisites
 
 This integration supports two connection modes to SUN2000 inverters:
-- direct serial connection to the RS485A1 and RS485B1 pins of the COM port (**Recommended**)
+- direct serial connection to the RS485A1 and RS485B1 pins of the COM port 
 - network connection
 
 Detailed information can be found on the ['Connecting to the inverter' Wiki-page](https://github.com/wlcrs/huawei_solar/wiki/Connecting-to-the-inverter)
