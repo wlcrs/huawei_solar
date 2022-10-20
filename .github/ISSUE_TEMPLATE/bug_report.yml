@@ -17,7 +17,14 @@ body:
 - type: textarea
   attributes:
     label: "Huawei Solar Setup"
-    description: "Describe your setup: which inverter(s) do you have? Do you have an SDongle? Is a power meter type present (single/three phase?)? Do you have a battery (which type?)?. Include the firmware versions if possible."
+    description: "Please be thorough when describing your setup"
+    value: |
+      Inverter Type:
+      Inverter Firmware version:
+      SDongle present: yes / no
+      Power meter present: three phase / single phase / no
+      Battery: LG RESU xxkWh / LUNA2000 xxkWh / None
+      Battery Firmware version:
   validations:
     required: true
 
