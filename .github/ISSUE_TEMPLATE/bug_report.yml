@@ -21,6 +21,19 @@ body:
   validations:
     required: true
 
+- type: dropdown
+  id: connection_method
+  attributes:
+    label: How do you connect to the inverter?
+    options:
+      - Over serial, with a serial-to-USB stick
+      - Over serial, with a serial-to-WiFi stick
+      - Via the `SUN2000-<serial_no>` WiFi 
+      - Via the SDongle, wireless connection
+      - Via the SDongle, wired connection
+  validations:
+    required: true
+
 - type: textarea
   attributes:
     label: "Describe the issue"
