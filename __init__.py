@@ -8,7 +8,13 @@ from typing import TypedDict, TypeVar
 
 import async_timeout
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT, CONF_USERNAME, Platform
+from homeassistant.const import (
+    CONF_HOST,
+    CONF_PASSWORD,
+    CONF_PORT,
+    CONF_USERNAME,
+    Platform,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.debounce import Debouncer
@@ -62,7 +68,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION):
                 if entry.data.get(CONF_USERNAME) and entry.data.get(CONF_PASSWORD):
                     try:
-                        await primary_bridge.login(entry.data[CONF_USERNAME], entry.data[CONF_PASSWORD])
+                        await primary_bridge.login(
+                            entry.data[CONF_USERNAME], entry.data[CONF_PASSWORD]
+                        )
                     except InvalidCredentials as err:
                         raise ConfigEntryAuthFailed() from err
 
@@ -71,12 +79,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             connecting_inverter_device_id=None,
         )
 
-        bridges_with_device_infos: list[tuple[HuaweiSolarBridge, HuaweiInverterBridgeDeviceInfos]] = [
-            (primary_bridge, primary_bridge_device_infos)
-        ]
+        bridges_with_device_infos: list[
+            tuple[HuaweiSolarBridge, HuaweiInverterBridgeDeviceInfos]
+        ] = [(primary_bridge, primary_bridge_device_infos)]
 
         for extra_slave_id in entry.data[CONF_SLAVE_IDS][1:]:
-            extra_bridge = await HuaweiSolarBridge.create_extra_slave(primary_bridge, extra_slave_id)
+            extra_bridge = await HuaweiSolarBridge.create_extra_slave(
+                primary_bridge, extra_slave_id
+            )
 
             extra_bridge_device_infos = await _compute_device_infos(
                 extra_bridge,
@@ -92,12 +102,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         update_coordinators = []
         optimizer_update_coordinators = []
         for bridge, device_infos in bridges_with_device_infos:
-            update_coordinators.append(await _create_update_coordinator(hass, bridge, device_infos, UPDATE_INTERVAL))
+            update_coordinators.append(
+                await _create_update_coordinator(
+                    hass, bridge, device_infos, UPDATE_INTERVAL
+                )
+            )
 
             if bridge.has_optimizers:
                 optimizers_device_infos = {}
                 try:
-                    optimizer_system_infos = await bridge.get_optimizer_system_information_data()
+                    optimizer_system_infos = (
+                        await bridge.get_optimizer_system_information_data()
+                    )
                     for optimizer_id, optimizer in optimizer_system_infos.items():
                         optimizers_device_infos[optimizer_id] = DeviceInfo(
                             identifiers={(DOMAIN, optimizer.sn)},
@@ -150,7 +166,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
-        update_coordinators = hass.data[DOMAIN][entry.entry_id][DATA_UPDATE_COORDINATORS]
+        update_coordinators = hass.data[DOMAIN][entry.entry_id][
+            DATA_UPDATE_COORDINATORS
+        ]
         for update_coordinator in update_coordinators:
             await update_coordinator.bridge.stop()
 
@@ -249,7 +267,9 @@ class HuaweiSolarUpdateCoordinator(DataUpdateCoordinator):
             async with async_timeout.timeout(20):
                 return await self.bridge.update()
         except HuaweiSolarException as err:
-            raise UpdateFailed(f"Could not update {self.bridge.serial_number} values: {err}") from err
+            raise UpdateFailed(
+                f"Could not update {self.bridge.serial_number} values: {err}"
+            ) from err
 
 
 async def _create_update_coordinator(
@@ -305,7 +325,9 @@ class HuaweiSolarOptimizerUpdateCoordinator(DataUpdateCoordinator):
             async with async_timeout.timeout(20):
                 return await self.bridge.get_latest_optimizer_history_data()
         except HuaweiSolarException as err:
-            raise UpdateFailed(f"Could not update {self.bridge.serial_number} optimizer values: {err}") from err
+            raise UpdateFailed(
+                f"Could not update {self.bridge.serial_number} optimizer values: {err}"
+            ) from err
 
 
 async def _create_optimizer_update_coordinator(

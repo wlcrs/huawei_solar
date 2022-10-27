@@ -3,7 +3,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorEntityDescription, SensorStateClass
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorEntityDescription,
+    SensorStateClass,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     ELECTRIC_CURRENT_AMPERE,
@@ -23,7 +28,11 @@ from huawei_solar import register_names as rn
 from huawei_solar import register_values as rv
 from huawei_solar.files import OptimizerRunningStatus
 
-from . import HuaweiSolarEntity, HuaweiSolarOptimizerUpdateCoordinator, HuaweiSolarUpdateCoordinator
+from . import (
+    HuaweiSolarEntity,
+    HuaweiSolarOptimizerUpdateCoordinator,
+    HuaweiSolarUpdateCoordinator,
+)
 from .const import DATA_OPTIMIZER_UPDATE_COORDINATORS, DATA_UPDATE_COORDINATORS, DOMAIN
 
 PARALLEL_UPDATES = 1
@@ -287,7 +296,9 @@ OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, 
 )
 
 
-SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
+SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
+    HuaweiSolarSensorEntityDescription, ...
+] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_A_VOLTAGE,
         name="Voltage",
@@ -362,7 +373,9 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription
 )
 
 
-THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
+THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
+    HuaweiSolarSensorEntityDescription, ...
+] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_A_VOLTAGE,
         name="Phase A voltage",
@@ -618,18 +631,24 @@ async def async_setup_entry(
 
         for entity_description in INVERTER_SENSOR_DESCRIPTIONS:
             slave_entities.append(
-                HuaweiSolarSensorEntity(update_coordinator, entity_description, device_infos["inverter"])
+                HuaweiSolarSensorEntity(
+                    update_coordinator, entity_description, device_infos["inverter"]
+                )
             )
 
         for entity_description in get_pv_entity_descriptions(bridge.pv_string_count):
             slave_entities.append(
-                HuaweiSolarSensorEntity(update_coordinator, entity_description, device_infos["inverter"])
+                HuaweiSolarSensorEntity(
+                    update_coordinator, entity_description, device_infos["inverter"]
+                )
             )
 
         if bridge.has_optimizers:
             for entity_description in OPTIMIZER_SENSOR_DESCRIPTIONS:
                 slave_entities.append(
-                    HuaweiSolarSensorEntity(update_coordinator, entity_description, device_infos["inverter"])
+                    HuaweiSolarSensorEntity(
+                        update_coordinator, entity_description, device_infos["inverter"]
+                    )
                 )
 
         if bridge.power_meter_type == rv.MeterType.SINGLE_PHASE:
@@ -721,7 +740,9 @@ class HuaweiSolarSensorEntity(CoordinatorEntity, HuaweiSolarEntity, SensorEntity
         return self.coordinator.data[self.entity_description.key].value
 
 
-class HuaweiSolarOptimizerSensorEntity(CoordinatorEntity, HuaweiSolarEntity, SensorEntity):
+class HuaweiSolarOptimizerSensorEntity(
+    CoordinatorEntity, HuaweiSolarEntity, SensorEntity
+):
     """Huawei Solar Optimizer Sensor which receives its data via an DataUpdateCoordinator."""
 
     entity_description: HuaweiSolarSensorEntityDescription
@@ -754,7 +775,8 @@ class HuaweiSolarOptimizerSensorEntity(CoordinatorEntity, HuaweiSolarEntity, Sen
             # optimizer is not offline
             and (
                 self.entity_description.key == "running_status"
-                or self.coordinator.data[self.optimizer_id].running_status != OptimizerRunningStatus.OFFLINE
+                or self.coordinator.data[self.optimizer_id].running_status
+                != OptimizerRunningStatus.OFFLINE
             )
         )
 
@@ -762,7 +784,9 @@ class HuaweiSolarOptimizerSensorEntity(CoordinatorEntity, HuaweiSolarEntity, Sen
     def native_value(self):
         """Native sensor value."""
         if self.optimizer_id in self.coordinator.data:
-            return getattr(self.coordinator.data[self.optimizer_id], self.entity_description.key)
+            return getattr(
+                self.coordinator.data[self.optimizer_id], self.entity_description.key
+            )
 
         else:
             return None
