@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import asyncio
 from collections.abc import Awaitable, Callable
 from datetime import timedelta
 from typing import TypedDict, TypeVar
@@ -144,11 +145,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             DATA_UPDATE_COORDINATORS: update_coordinators,
             DATA_OPTIMIZER_UPDATE_COORDINATORS: optimizer_update_coordinators,
         }
-    except HuaweiSolarException as err:
+    except (HuaweiSolarException, TimeoutError, asyncio.TimeoutError) as err:
         if primary_bridge is not None:
             await primary_bridge.stop()
 
         raise ConfigEntryNotReady from err
+
     except Exception as err:
         # always try to stop the bridge, as it will keep retrying
         # in the background otherwise!
