@@ -81,11 +81,12 @@ body:
     
 - type: checkboxes
   id: checks
-  attributes: Please confirm the following:
-  options:
-    - label: I did not find an existing issue describing this problem.
-    - label: I did upload the diagnostics-file that I could retrieve from  the 'Devices & Services Page'
-    - label: I increased the logging configuration, restarted HA, and have copied all relevant log lines from the 'Full Logs' into the textarea.
+  attributes:
+    label: Please confirm the following:
+    options:
+      - label: I did not find an existing issue describing this problem.
+      - label: I did upload the diagnostics-file that I could retrieve from  the 'Devices & Services Page'
+      - label: I increased the logging configuration, restarted HA, and have copied all relevant log lines from the 'Full Logs' into the textarea.
     
     
     
