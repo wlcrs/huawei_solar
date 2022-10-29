@@ -9,8 +9,8 @@ body:
       Before you open a new issue, search through the existing issues to see if others have had the same problem.
 - type: textarea
   attributes:
-    label: "System Health details"
-    description: "Paste the data from the System Health card in Home Assistant (https://www.home-assistant.io//more-info/system-health#github-issues)"
+    label: "Diagnostics"
+    description: "Go to Settings > Devices & Services, click the three dots on the 'Huawei Solar' tile and select 'Download diagnostis'. Drag the file into the textarea in this form to upload it."
   validations:
     required: true
 
