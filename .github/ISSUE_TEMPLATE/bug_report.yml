@@ -77,12 +77,11 @@ body:
     render: text
   validations:
     required: true
-    
-    
+ 
 - type: checkboxes
   id: checks
   attributes:
-    label: Please confirm the following:
+    label: "Please confirm the following:"
     options:
       - label: I did not find an existing issue describing this problem.
       - label: I did upload the diagnostics-file that I could retrieve from  the 'Devices & Services Page'
