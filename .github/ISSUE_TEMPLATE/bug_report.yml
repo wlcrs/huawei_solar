@@ -54,6 +54,8 @@ body:
 - type: markdown
   attributes:
     value: |
+      ## Relevant debug logs
+      
       **You MUST include relevant logfiles to debug your issue.**
 
       For instance: if the integration does not show up in the `+ Add Integration` list, then add any relevant lines you can find in `/config/home-assistant.log` after a full restart of your Home Assistant instance.
@@ -73,7 +75,6 @@ body:
 
 - type: textarea
   attributes:
-    label: "Relevant debug logs"
     render: text
   validations:
     required: true
