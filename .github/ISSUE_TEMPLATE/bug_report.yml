@@ -3,20 +3,18 @@ description: Create a report to help us improve
 title: "[Bug]: "
 labels: ["bug", "triage"]
 body:
-- type: markdown
-  attributes:
-    value: |
-      Before you open a new issue, search through the existing issues to see if others have had the same problem.
+
+      
 - type: textarea
   attributes:
-    label: "Diagnostics"
-    description: "Go to Settings > Devices & Services, click the three dots on the 'Huawei Solar' tile and select 'Download diagnostis'. Drag the file into the textarea in this form to upload it."
+    label: "Describe the issue"
+    description: "A clear and concise description of what the issue is."
   validations:
-    required: true
+    required: true      
 
 - type: textarea
   attributes:
-    label: "Huawei Solar Setup"
+    label: "Bescribe your Huawei Solar Setup"
     description: "Please be thorough when describing your setup"
     value: |
       Inverter Type:
@@ -43,8 +41,13 @@ body:
 
 - type: textarea
   attributes:
-    label: "Describe the issue"
-    description: "A clear and concise description of what the issue is."
+    label: "Upload your Diagnostics File"
+    description: |
+      1. "Go to Settings > Devices & Services
+      2. Click the three dots on the 'Huawei Solar' tile 
+      3. Select 'Download diagnostis'
+      4. Drag & drop the file into the textarea below to upload it."
+    value: Drag & Drop your Diagnostics File here.
   validations:
     required: true
 
@@ -74,3 +77,15 @@ body:
     render: text
   validations:
     required: true
+    
+    
+- type: checkboxes
+  id: checks
+  attributes: Please confirm the following:
+  options:
+    - label: I did not find an existing issue describing this problem.
+    - label: I did upload the diagnostics-file that I could retrieve from  the 'Devices & Services Page'
+    - label: I increased the logging configuration, restarted HA, and have copied all relevant log lines from the 'Full Logs' into the textarea.
+    
+    
+    
