@@ -43,10 +43,10 @@ body:
   attributes:
     label: "Upload your Diagnostics File"
     description: |
-      1. "Go to Settings > Devices & Services
+      1. In your Home Assistant, go to Settings > Devices & Services
       2. Click the three dots on the 'Huawei Solar' tile 
       3. Select 'Download diagnostis'
-      4. Drag & drop the file into the textarea below to upload it."
+      4. Click on the textarea below, drag & drop the file into the textarea to upload it.
     value: Drag & Drop your Diagnostics File here.
   validations:
     required: true
