@@ -3,17 +3,15 @@ from __future__ import annotations
 
 from typing import Any
 
-from homeassistant.components import diagnostics
-from . import HuaweiSolarUpdateCoordinator
-from .const import DATA_UPDATE_COORDINATORS, DOMAIN
-
 from homeassistant.components.diagnostics import async_redact_data
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.device_registry import DeviceEntry
-
 from homeassistant.const import CONF_PASSWORD
+from homeassistant.core import HomeAssistant
+
 from huawei_solar import HuaweiSolarBridge
+
+from . import HuaweiSolarUpdateCoordinator
+from .const import DATA_UPDATE_COORDINATORS, DOMAIN
 
 TO_REDACT = {CONF_PASSWORD}
 

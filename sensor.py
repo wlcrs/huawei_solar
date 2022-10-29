@@ -1,13 +1,9 @@
 """Support for Huawei inverter monitoring API."""
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
-from collections.abc import Callable
-
-from huawei_solar import register_names as rn
-from huawei_solar import register_values as rv
-from huawei_solar.files import OptimizerRunningStatus
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -29,6 +25,10 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+
+from huawei_solar import register_names as rn
+from huawei_solar import register_values as rv
+from huawei_solar.files import OptimizerRunningStatus
 
 from . import (
     HuaweiSolarEntity,
@@ -874,8 +874,7 @@ class HuaweiSolarOptimizerSensorEntity(
                 self.coordinator.data[self.optimizer_id], self.entity_description.key
             )
 
-        else:
-            return None
+        return None
 
 
 def get_pv_entity_descriptions(count: int) -> list[HuaweiSolarSensorEntityDescription]:

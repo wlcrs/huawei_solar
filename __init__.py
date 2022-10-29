@@ -1,40 +1,31 @@
 """The Huawei Solar integration."""
 from __future__ import annotations
 
-import logging
 import asyncio
+import logging
 from collections.abc import Awaitable, Callable
 from datetime import timedelta
 from typing import TypedDict, TypeVar
 
 import async_timeout
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (
-    CONF_HOST,
-    CONF_PASSWORD,
-    CONF_PORT,
-    CONF_USERNAME,
-    Platform,
-)
+from homeassistant.const import (CONF_HOST, CONF_PASSWORD, CONF_PORT,
+                                 CONF_USERNAME, Platform)
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.debounce import Debouncer
 from homeassistant.helpers.entity import DeviceInfo, Entity
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.helpers.update_coordinator import (DataUpdateCoordinator,
+                                                      UpdateFailed)
 
-from huawei_solar import HuaweiSolarBridge, HuaweiSolarException, InvalidCredentials
+from huawei_solar import (HuaweiSolarBridge, HuaweiSolarException,
+                          InvalidCredentials)
 from huawei_solar import register_values as rv
 
-from .const import (
-    CONF_ENABLE_PARAMETER_CONFIGURATION,
-    CONF_SLAVE_IDS,
-    DATA_OPTIMIZER_UPDATE_COORDINATORS,
-    DATA_UPDATE_COORDINATORS,
-    DOMAIN,
-    OPTIMIZER_UPDATE_INTERVAL,
-    SERVICES,
-    UPDATE_INTERVAL,
-)
+from .const import (CONF_ENABLE_PARAMETER_CONFIGURATION, CONF_SLAVE_IDS,
+                    DATA_OPTIMIZER_UPDATE_COORDINATORS,
+                    DATA_UPDATE_COORDINATORS, DOMAIN,
+                    OPTIMIZER_UPDATE_INTERVAL, SERVICES, UPDATE_INTERVAL)
 from .services import async_setup_services
 
 _LOGGER = logging.getLogger(__name__)

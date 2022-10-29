@@ -9,31 +9,16 @@ import serial.tools.list_ports
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.components import usb
-from homeassistant.const import (
-    CONF_HOST,
-    CONF_PASSWORD,
-    CONF_PORT,
-    CONF_TYPE,
-    CONF_USERNAME,
-)
+from homeassistant.const import (CONF_HOST, CONF_PASSWORD, CONF_PORT,
+                                 CONF_TYPE, CONF_USERNAME)
 from homeassistant.data_entry_flow import FlowResult
 
-from huawei_solar import (
-    ConnectionException,
-    HuaweiSolarBridge,
-    HuaweiSolarException,
-    ReadException,
-)
+from huawei_solar import (ConnectionException, HuaweiSolarBridge,
+                          HuaweiSolarException, ReadException)
 
-from .const import (
-    CONF_ENABLE_PARAMETER_CONFIGURATION,
-    CONF_SLAVE_IDS,
-    DEFAULT_PORT,
-    DEFAULT_SERIAL_SLAVE_ID,
-    DEFAULT_SLAVE_ID,
-    DEFAULT_USERNAME,
-    DOMAIN,
-)
+from .const import (CONF_ENABLE_PARAMETER_CONFIGURATION, CONF_SLAVE_IDS,
+                    DEFAULT_PORT, DEFAULT_SERIAL_SLAVE_ID, DEFAULT_SLAVE_ID,
+                    DEFAULT_USERNAME, DOMAIN)
 
 _LOGGER = logging.getLogger(__name__)
 
