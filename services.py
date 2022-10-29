@@ -14,13 +14,18 @@ from huawei_solar import HuaweiSolarBridge
 from huawei_solar import register_names as rn
 from huawei_solar import register_values as rv
 
-from .const import (CONF_ENABLE_PARAMETER_CONFIGURATION, DOMAIN,
-                    SERVICE_FORCIBLE_CHARGE, SERVICE_FORCIBLE_CHARGE_SOC,
-                    SERVICE_FORCIBLE_DISCHARGE, SERVICE_FORCIBLE_DISCHARGE_SOC,
-                    SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
-                    SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
-                    SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
-                    SERVICE_STOP_FORCIBLE_CHARGE)
+from .const import (
+    CONF_ENABLE_PARAMETER_CONFIGURATION,
+    DOMAIN,
+    SERVICE_FORCIBLE_CHARGE,
+    SERVICE_FORCIBLE_CHARGE_SOC,
+    SERVICE_FORCIBLE_DISCHARGE,
+    SERVICE_FORCIBLE_DISCHARGE_SOC,
+    SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
+    SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
+    SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
+    SERVICE_STOP_FORCIBLE_CHARGE,
+)
 
 if TYPE_CHECKING:
     from . import HuaweiInverterBridgeDeviceInfos
@@ -109,6 +114,23 @@ async def async_setup_services(
         raise HuaweiSolarServiceException(
             "Not a valid 'Connected Energy Storage' device"
         )
+
+    def get_inverter_bridge(service_call: ServiceCall):
+        dev_reg = device_registry.async_get(hass)
+        device_entry = dev_reg.async_get(service_call.data[DATA_DEVICE_ID])
+
+        if not device_entry:
+            raise HuaweiSolarServiceException("No such device found")
+
+        for bridge, device_infos in bridges_with_device_infos:
+
+            for identifier in device_infos["inverter"]["identifiers"]:
+                for device_identifier in device_entry.identifiers:
+                    if identifier == device_identifier:
+                        return bridge
+
+        _LOGGER.error("The provided device is not an inverter")
+        raise HuaweiSolarServiceException("Not a valid 'Inverter' device")
 
     async def _validate_power_value(
         power: Any, bridge: HuaweiSolarBridge, max_value_key
@@ -222,7 +244,7 @@ async def async_setup_services(
     async def reset_maximum_feed_grid_power(service_call: ServiceCall) -> None:
         """Sets Active Power Control to 'Power-limited grid connection' with the given wattage."""
 
-        bridge = get_battery_bridge(service_call)
+        bridge = get_inverter_bridge(service_call)
         await bridge.set(
             rn.ACTIVE_POWER_CONTROL_MODE,
             rv.ActivePowerControlMode.UNLIMITED,
@@ -236,7 +258,7 @@ async def async_setup_services(
     async def set_maximum_feed_grid_power(service_call: ServiceCall) -> None:
         """Sets Active Power Control to 'Power-limited grid connection' with the given wattage."""
 
-        bridge = get_battery_bridge(service_call)
+        bridge = get_inverter_bridge(service_call)
         power = await _validate_power_value(
             service_call.data[DATA_POWER], bridge, rn.P_MAX
         )
@@ -250,7 +272,7 @@ async def async_setup_services(
     async def set_maximum_feed_grid_power_percentage(service_call: ServiceCall) -> None:
         """Sets Active Power Control to 'Power-limited grid connection' with the given percentage."""
 
-        bridge = get_battery_bridge(service_call)
+        bridge = get_inverter_bridge(service_call)
         power_percentage = service_call.data[DATA_POWER_PERCENTAGE]
 
         await bridge.set(rn.MAXIMUM_FEED_GRID_POWER_PERCENT, power_percentage)
@@ -296,12 +318,12 @@ async def async_setup_services(
             DOMAIN,
             SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
             set_maximum_feed_grid_power,
-            schema=DEVICE_SCHEMA,
+            schema=MAXIMUM_FEED_GRID_POWER_SCHEMA,
         )
 
         hass.services.async_register(
             DOMAIN,
             SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
             set_maximum_feed_grid_power_percentage,
-            schema=DEVICE_SCHEMA,
+            schema=MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA,
         )

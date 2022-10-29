@@ -4,7 +4,7 @@ forcible_charge:
   fields:
     device_id:
       name: Battery
-      description: Must be a 'Connected Energy Storage' device
+      description: Must be a 'Battery' device
       required: true
       selector:
         device:
@@ -34,7 +34,7 @@ forcible_discharge:
   fields:
     device_id:
       name: Battery
-      description: Must be a 'Connected Energy Storage' device
+      description: Must be a 'Battery' device
       required: true
       selector:
         device:
@@ -64,7 +64,7 @@ forcible_charge_soc:
   fields:
     device_id:
       name: Battery
-      description: Must be a 'Connected Energy Storage' device
+      description: Must be a 'Battery' device
       required: true
       selector:
         device:
@@ -93,7 +93,7 @@ forcible_discharge_soc:
   fields:
     device_id:
       name: Battery
-      description: Must be a 'Connected Energy Storage' device
+      description: Must be a 'Battery' device
       required: true
       selector:
         device:
@@ -122,7 +122,7 @@ stop_forcible_charge:
   fields:
     device_id:
       name: Battery
-      description: Must be a 'Connected Energy Storage' device
+      description: Must be a 'Battery' device
       required: true
       selector:
         device:
@@ -133,8 +133,8 @@ reset_maximum_feed_grid_power:
   description: Set Active Power Control to the default Unlimited mode
   fields:
     device_id:
-      name: Battery
-      description: Must be a 'Connected Energy Storage' device
+      name: Inverter
+      description: Must be an 'Inverter' device
       required: true
       selector:
         device:
@@ -145,8 +145,8 @@ set_maximum_feed_grid_power:
   description: Sets Active Power Control to 'Power-limited grid connection' with the given wattage
   fields:
     device_id:
-      name: Battery
-      description: Must be a 'Connected Energy Storage' device
+      name: Inverter
+      description: Must be an 'Inverter' device
       required: true
       selector:
         device:
@@ -160,12 +160,12 @@ set_maximum_feed_grid_power:
         text:
 
 set_maximum_feed_grid_power_percent:
-  name: Limit the power fed to the grid
+  name: Limit the power fed to the grid to percentage
   description: Sets Active Power Control to 'Power-limited grid connection (%)' with the given percentage
   fields:
     device_id:
-      name: Battery
-      description: Must be a 'Connected Energy Storage' device
+      name: Inverter
+      description: Must be an 'Inverter' device
       required: true
       selector:
         device:
