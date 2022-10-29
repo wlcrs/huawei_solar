@@ -140,6 +140,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                         exc_info=exception,
                     )
                     optimizers_device_infos = None
+                except Exception as exc:  # pylint: disable=broad-except
+                    _LOGGER.exception(
+                        "Cannot create optimizer sensor entities due to an unexpected error",
+                        exc_info=exc,
+                    )
+                    optimizers_device_infos = {}
 
         hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {
             DATA_UPDATE_COORDINATORS: update_coordinators,

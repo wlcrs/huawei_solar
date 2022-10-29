@@ -2,6 +2,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
+from collections.abc import Callable
+
+from huawei_solar import register_names as rn
+from huawei_solar import register_values as rv
+from huawei_solar.files import OptimizerRunningStatus
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -24,10 +30,6 @@ from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from huawei_solar import register_names as rn
-from huawei_solar import register_values as rv
-from huawei_solar.files import OptimizerRunningStatus
-
 from . import (
     HuaweiSolarEntity,
     HuaweiSolarOptimizerUpdateCoordinator,
@@ -41,6 +43,8 @@ PARALLEL_UPDATES = 1
 @dataclass
 class HuaweiSolarSensorEntityDescription(SensorEntityDescription):
     """Huawei Solar Sensor Entity."""
+
+    value_conversion_function: Callable[[Any], str] | None = None
 
 
 # Every list in this file describes a group of entities which are related to each other.
@@ -212,6 +216,42 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.STATE_1,
+        name="Inverter state",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_conversion_function=", ".join,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.STATE_2 + "#0",
+        name="Locking status",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_conversion_function=lambda value: value[0],
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.STATE_2 + "#1",
+        name="PV connection status",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_conversion_function=lambda value: value[1],
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.STATE_2 + "#2",
+        name="DSP data collection",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_conversion_function=lambda value: value[2],
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.STATE_3 + "#0",
+        name="Off-grid status",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_conversion_function=lambda value: value[0],
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.STATE_3 + "#1",
+        name="Off-grid switch",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_conversion_function=lambda value: value[1],
     ),
 )
 
@@ -635,6 +675,9 @@ async def async_setup_entry(
                     update_coordinator, entity_description, device_infos["inverter"]
                 )
             )
+        slave_entities.append(
+            HuaweiSolarAlarmSensorEntity(update_coordinator, device_infos["inverter"])
+        )
 
         for entity_description in get_pv_entity_descriptions(bridge.pv_string_count):
             slave_entities.append(
@@ -734,10 +777,53 @@ class HuaweiSolarSensorEntity(CoordinatorEntity, HuaweiSolarEntity, SensorEntity
         self._attr_device_info = device_info
         self._attr_unique_id = f"{coordinator.bridge.serial_number}_{description.key}"
 
+        self._register_key = self.entity_description.key
+        if "#" in self._register_key:
+            self._register_key = self._register_key[0 : self._register_key.find("#")]
+
     @property
     def native_value(self):
         """Native sensor value."""
-        return self.coordinator.data[self.entity_description.key].value
+        value = self.coordinator.data[self._register_key].value
+        if self.entity_description.value_conversion_function:
+            value = self.entity_description.value_conversion_function(value)
+
+        return value
+
+
+class HuaweiSolarAlarmSensorEntity(HuaweiSolarSensorEntity):
+    """Huawei Solar Sensor for Alarm values, which are spread over three
+    registers that are received by the DataUpdateCoordinator"""
+
+    ALARM_REGISTERS = [rn.ALARM_1, rn.ALARM_2, rn.ALARM_3]
+
+    DESCRIPTION = HuaweiSolarSensorEntityDescription(
+        key="ALARMS",
+        name="Alarms",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    )
+
+    def __init__(
+        self,
+        coordinator: HuaweiSolarUpdateCoordinator,
+        device_info,
+    ):
+        """Huawei Solar Alarm Sensor Entity constructor."""
+        super().__init__(
+            coordinator, HuaweiSolarAlarmSensorEntity.DESCRIPTION, device_info
+        )
+
+    @property
+    def native_value(self):
+        """Native sensor value."""
+        alarms: list[rv.Alarm] = []
+        for alarm_register in HuaweiSolarAlarmSensorEntity.ALARM_REGISTERS:
+            alarms.extend(self.coordinator.data[alarm_register].value)
+        if len(alarms) == 0:
+            return "None"
+        return ", ".join(
+            [f"[{alarm.level}] {alarm.id}: {alarm.name}" for alarm in alarms]
+        )
 
 
 class HuaweiSolarOptimizerSensorEntity(
