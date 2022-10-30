@@ -7,6 +7,6 @@
   "requirements": ["huawei-solar==2.1.6"],
   "codeowners": ["@wlcrs"],
   "iot_class": "local_polling",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "loggers": ["huawei_solar", "pymodbus"]
 }
