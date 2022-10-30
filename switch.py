@@ -5,8 +5,7 @@ import logging
 from dataclasses import dataclass
 from typing import Generic, TypeVar
 
-from homeassistant.components.switch import (SwitchEntity,
-                                             SwitchEntityDescription)
+from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
@@ -17,8 +16,7 @@ from huawei_solar import register_names as rn
 from huawei_solar import register_values as rv
 
 from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinator
-from .const import (CONF_ENABLE_PARAMETER_CONFIGURATION,
-                    DATA_UPDATE_COORDINATORS, DOMAIN)
+from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -84,7 +82,7 @@ async def async_setup_entry(
                 bridge.slave_id,
             )
 
-            # Add suffix if multiple inverters are present
+        # Add suffix if multiple inverters are present
         if must_append_inverter_suffix:
             for entity in slave_entities:
                 entity.add_name_suffix(f" #{idx+1}")

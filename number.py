@@ -4,9 +4,11 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 
-from homeassistant.components.number import (NumberEntity,
-                                             NumberEntityDescription,
-                                             NumberMode)
+from homeassistant.components.number import (
+    NumberEntity,
+    NumberEntityDescription,
+    NumberMode,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import PERCENTAGE, POWER_WATT
 from homeassistant.core import HomeAssistant
@@ -18,8 +20,7 @@ from huawei_solar import register_names as rn
 from huawei_solar import register_values as rv
 
 from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinator
-from .const import (CONF_ENABLE_PARAMETER_CONFIGURATION,
-                    DATA_UPDATE_COORDINATORS, DOMAIN)
+from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
