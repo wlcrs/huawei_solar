@@ -185,6 +185,7 @@ class StorageModeSelectEntity(HuaweiSolarEntity, SelectEntity):
             entity_category=EntityCategory.CONFIG,
         )
         self._attr_device_info = device_info
+        self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
 
         # The options depend on the type of battery
         self.options_to_values = {}
