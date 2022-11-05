@@ -4,6 +4,8 @@
 [![GitHub release](https://img.shields.io/github/release/wlcrs/huawei_solar.svg)](https://GitHub.com/wlcrs/huawei_solar/releases/)
 ![](https://img.shields.io/badge/dynamic/json?color=41BDF5&logo=home-assistant&label=integration%20usage&suffix=%20installs&cacheSeconds=15600&url=https://analytics.home-assistant.io/custom_integrations.json&query=$.huawei_solar.total)
 
+## ⚠️ HA 2022.11 requires v1.1.6 of this integration ⚠️
+
 This integration splits out the various values that are fetched from your
 Huawei Solar inverter into separate HomeAssistant sensors. These are properly
 configured  to allow immediate integration into the HA Energy view.
