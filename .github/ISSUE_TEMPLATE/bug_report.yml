@@ -1,5 +1,5 @@
 name: Bug report
-description: Create a report to help us improve
+description: Is the integration crashing, or behaving incorrectly? Create a report to help us improve. Do not use for connectivity problems.
 title: "[Bug]: "
 labels: ["bug", "triage"]
 body:
