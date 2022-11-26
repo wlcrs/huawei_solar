@@ -54,6 +54,28 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     primary_bridge = None
     try:
+        # Multiple inverters can be connected to each other via a daisy chain,
+        # via an internal modbus-network (ie. not the same modbus network that we are
+        # using to talk to the inverter).
+        #
+        # Each inverter receives it's own 'slave id' in that case.
+        # The inverter that we use as 'gateway' will then forward the request to
+        # the proper inverter.
+
+        #               ┌─────────────┐
+        #               │  EXTERNAL   │
+        #               │ APPLICATION │
+        #               └──────┬──────┘
+        #                      │
+        #                 ┌────┴────┐
+        #                 │PRIMARY  │
+        #                 │INVERTER │
+        #                 └────┬────┘
+        #       ┌──────────────┼───────────────┐
+        #       │              │               │
+        #  ┌────┴────┐     ┌───┴─────┐    ┌────┴────┐
+        #  │ SLAVE X │     │ SLAVE Y │    │SLAVE ...│
+        #  └─────────┘     └─────────┘    └─────────┘
 
         if entry.data[CONF_HOST] is None:
             primary_bridge = await HuaweiSolarBridge.create_rtu(
@@ -208,7 +230,7 @@ async def _compute_device_infos(
         name="Inverter",
         manufacturer="Huawei",
         model=bridge.model_name,
-        via_device=connecting_inverter_device_id,  # type: ignore
+        via_device=connecting_inverter_device_id,  # type: ignore[typeddict-item]
     )
 
     # Add power meter device if a power meter is detected
