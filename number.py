@@ -70,6 +70,15 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         native_unit_of_measurement=POWER_WATT,
         entity_category=EntityCategory.CONFIG,
     ),
+     HuaweiSolarNumberEntityDescription(
+        key=rn.STORAGE_CAPACITY_CONTROL_SOC_PEAK_SHAVING,
+        native_min_value=0,
+        maximum_key=rn.STORAGE_CAPACITY_CONTROL_SOC_PEAK_SHAVING,
+        name="Peak Shaving SOC",
+        icon="mdi:battery-arrow-up",
+        native_unit_of_measurement=PERCENTAGE,
+        entity_category=EntityCategory.CONFIG,
+    ),
 )
 
 

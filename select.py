@@ -38,6 +38,12 @@ ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ..
         icon="mdi:battery-charging-medium",
         entity_category=EntityCategory.CONFIG,
     ),
+     HuaweiSolarSelectEntityDescription(
+        key=rn.STORAGE_CAPACITY_CONTROL_MODE,
+        name="Capacity Control Mode",
+        icon="mdi:battery-arrow-up",
+        entity_category=EntityCategory.CONFIG,
+    ),
 )
 
 
