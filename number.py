@@ -70,7 +70,9 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         native_unit_of_measurement=POWER_WATT,
         entity_category=EntityCategory.CONFIG,
     ),
-     HuaweiSolarNumberEntityDescription(
+)
+CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
+    HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_CAPACITY_CONTROL_SOC_PEAK_SHAVING,
         native_min_value=0,
         maximum_key=rn.STORAGE_CAPACITY_CONTROL_SOC_PEAK_SHAVING,
@@ -107,7 +109,7 @@ async def async_setup_entry(
         bridge = update_coordinator.bridge
         device_infos = update_coordinator.device_infos
 
-        if bridge.battery_1_type != rv.StorageProductModel.NONE:
+        if bridge.battery_type != rv.StorageProductModel.NONE:
             assert device_infos["connected_energy_storage"]
 
             for entity_description in ENERGY_STORAGE_NUMBER_DESCRIPTIONS:
@@ -118,6 +120,16 @@ async def async_setup_entry(
                         device_infos["connected_energy_storage"],
                     )
                 )
+
+            if bridge.supports_capacity_control:
+                for entity_description in CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
+                    slave_entities.append(
+                        await HuaweiSolarNumberEntity.create(
+                            bridge,
+                            entity_description,
+                            device_infos["connected_energy_storage"],
+                        )
+                    )
 
         else:
             _LOGGER.debug(

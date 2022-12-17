@@ -65,7 +65,7 @@ async def async_setup_entry(
         bridge = update_coordinator.bridge
         device_infos = update_coordinator.device_infos
 
-        if bridge.battery_1_type != rv.StorageProductModel.NONE:
+        if bridge.battery_type != rv.StorageProductModel.NONE:
             assert device_infos["connected_energy_storage"]
 
             for entity_description in ENERGY_STORAGE_SWITCH_DESCRIPTIONS:

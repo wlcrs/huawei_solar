@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Union
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -26,9 +26,17 @@ from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from huawei_solar import HuaweiSolarBridge
 from huawei_solar import register_names as rn
 from huawei_solar import register_values as rv
 from huawei_solar.files import OptimizerRunningStatus
+from huawei_solar.registers import (
+    ChargeDischargePeriod,
+    ChargeFlag,
+    HUAWEI_LUNA2000_TimeOfUsePeriod,
+    LG_RESU_TimeOfUsePeriod,
+    PeakSettingPeriod,
+)
 
 from . import (
     HuaweiSolarEntity,
@@ -713,12 +721,30 @@ async def async_setup_entry(
                     )
                 )
 
-        if bridge.battery_1_type != rv.StorageProductModel.NONE:
+        if bridge.battery_type != rv.StorageProductModel.NONE:
             for entity_description in BATTERY_SENSOR_DESCRIPTIONS:
                 slave_entities.append(
                     HuaweiSolarSensorEntity(
                         update_coordinator,
                         entity_description,
+                        device_infos["connected_energy_storage"],
+                    )
+                )
+            slave_entities.append(
+                HuaweiSolarTOUPricePeriodsSensorEntity(
+                    update_coordinator.bridge, device_infos["connected_energy_storage"]
+                )
+            )
+            slave_entities.append(
+                HuaweiSolarFixedChargingPeriodsSensorEntity(
+                    update_coordinator.bridge, device_infos["connected_energy_storage"]
+                )
+            )
+
+            if bridge.supports_capacity_control:
+                slave_entities.append(
+                    HuaweiSolarCapacityControlPeriodsSensorEntity(
+                        update_coordinator.bridge,
                         device_infos["connected_energy_storage"],
                     )
                 )
@@ -824,6 +850,177 @@ class HuaweiSolarAlarmSensorEntity(HuaweiSolarSensorEntity):
         return ", ".join(
             [f"[{alarm.level}] {alarm.id}: {alarm.name}" for alarm in alarms]
         )
+
+
+def _days_effective_to_str(days: tuple(bool, bool, bool, bool, bool, bool, bool)):
+    value = ""
+    for i in range(0, 7):  # Sunday is on index 0, but we want to name it day 7
+        if days[(i + 1) % 7]:
+            value += f"{i+1}"
+
+    return value
+
+
+def _time_int_to_str(time):
+    return f"{time//60:02d}:{time%60:02d}"
+
+
+class HuaweiSolarTOUPricePeriodsSensorEntity(HuaweiSolarEntity, SensorEntity):
+    """Huawei Solar Sensor for configured TOU periods.
+
+    It shows the number of configured TOU periods, and has the
+    contents of them as extended attributes"""
+
+    def __init__(
+        self,
+        bridge: HuaweiSolarBridge,
+        device_info,
+    ):
+        """Huawei Solar TOU Sensor Entity constructor."""
+
+        self.entity_description = HuaweiSolarSensorEntityDescription(
+            key=rn.STORAGE_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS,
+            name="Time Of use periods",
+            entity_category=EntityCategory.CONFIG,
+            icon="mdi:calendar-text",
+        )
+
+        self._bridge = bridge
+        self._attr_device_info = device_info
+        self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
+
+    def _lg_resu_period_to_text(self, period: LG_RESU_TimeOfUsePeriod):
+        return (
+            f"{_time_int_to_str(period.start_time)}-{_time_int_to_str(period.end_time)}"
+            f"/{period.electricity_price}"
+        )
+
+    def _huawei_luna2000_period_to_text(self, period: HUAWEI_LUNA2000_TimeOfUsePeriod):
+        return (
+            f"{_time_int_to_str(period.start_time)}-{_time_int_to_str(period.end_time)}"
+            f"/{_days_effective_to_str(period.days_effective)}"
+            f"/{'+' if period.charge_flag == ChargeFlag.CHARGE else '-'}"
+        )
+
+    async def async_update(self):
+        """Update Time of Use periods"""
+
+        data: Union[
+            list[LG_RESU_TimeOfUsePeriod], list[HUAWEI_LUNA2000_TimeOfUsePeriod]
+        ] = (
+            await self._bridge.client.get(
+                rn.STORAGE_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS
+            )
+        ).value
+        self._attr_native_value = len(data)
+
+        if len(data) == 0:
+            self._attr_extra_state_attributes = {}
+            return
+
+        if isinstance(data[0], LG_RESU_TimeOfUsePeriod):
+            self._attr_extra_state_attributes = {
+                f"Period {idx+1}": self._lg_resu_period_to_text(period)
+                for idx, period in enumerate(data)
+            }
+        elif isinstance(data[0], HUAWEI_LUNA2000_TimeOfUsePeriod):
+            self._attr_extra_state_attributes = {
+                f"Period {idx+1}": self._huawei_luna2000_period_to_text(period)
+                for idx, period in enumerate(data)
+            }
+
+
+class HuaweiSolarCapacityControlPeriodsSensorEntity(HuaweiSolarEntity, SensorEntity):
+    """Huawei Solar Sensor for configured Capacity Control periods.
+
+    It shows the number of configured capacity control periods, and has the
+    contents of them as extended attributes"""
+
+    def __init__(
+        self,
+        bridge: HuaweiSolarBridge,
+        device_info,
+    ):
+        """Huawei Solar Capacity Control Periods Sensor Entity constructor."""
+
+        self.entity_description = HuaweiSolarSensorEntityDescription(
+            key=rn.STORAGE_CAPACITY_CONTROL_PERIODS,
+            name="Capacity control periods",
+            entity_category=EntityCategory.CONFIG,
+            icon="mdi:calendar-text",
+        )
+
+        self._bridge = bridge
+        self._attr_device_info = device_info
+        self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
+
+    def _period_to_text(self, psp: PeakSettingPeriod):
+        return (
+            f"{_time_int_to_str(psp.start_time)}"
+            f"-{_time_int_to_str(psp.end_time)}"
+            f"/{_days_effective_to_str(psp.days_effective)}"
+            f"/{psp.power}W"
+        )
+
+    async def async_update(self):
+        """Update Time of Use periods"""
+
+        data: list[PeakSettingPeriod] = (
+            await self._bridge.client.get(rn.STORAGE_CAPACITY_CONTROL_PERIODS)
+        ).value
+        self._attr_native_value = len(data)
+
+        self._attr_extra_state_attributes = {
+            f"Period {idx+1}": self._period_to_text(period)
+            for idx, period in enumerate(data)
+        }
+
+
+class HuaweiSolarFixedChargingPeriodsSensorEntity(HuaweiSolarEntity, SensorEntity):
+    """Huawei Solar Sensor for configured Fixed Charging and Discharging periods.
+
+    It shows the number of configured fixed charging and discharging periods, and has the
+    contents of them as extended attributes"""
+
+    def __init__(
+        self,
+        bridge: HuaweiSolarBridge,
+        device_info,
+    ):
+        """Huawei Solar Capacity Control Periods Sensor Entity constructor."""
+
+        self.entity_description = HuaweiSolarSensorEntityDescription(
+            key=rn.STORAGE_FIXED_CHARGING_AND_DISCHARGING_PERIODS,
+            name="Fixed charging periods",
+            entity_category=EntityCategory.CONFIG,
+            icon="mdi:calendar-text",
+        )
+
+        self._bridge = bridge
+        self._attr_device_info = device_info
+        self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
+
+    def _period_to_text(self, cdp: ChargeDischargePeriod):
+        return (
+            f"{_time_int_to_str(cdp.start_time)}"
+            f"-{_time_int_to_str(cdp.end_time)}"
+            f"/{cdp.power}W"
+        )
+
+    async def async_update(self):
+        """Update Time of Use periods"""
+
+        data: list[ChargeDischargePeriod] = (
+            await self._bridge.client.get(
+                rn.STORAGE_FIXED_CHARGING_AND_DISCHARGING_PERIODS
+            )
+        ).value
+        self._attr_native_value = len(data)
+
+        self._attr_extra_state_attributes = {
+            f"Period {idx+1}": self._period_to_text(period)
+            for idx, period in enumerate(data)
+        }
 
 
 class HuaweiSolarOptimizerSensorEntity(

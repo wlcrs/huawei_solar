@@ -46,7 +46,6 @@ PLATFORMS: list[Platform] = [
     Platform.NUMBER,
     Platform.SWITCH,
     Platform.SELECT,
-    Platform.TEXT
 ]
 
 
@@ -249,7 +248,7 @@ async def _compute_device_infos(
     # Add battery device if a battery is detected
     battery_device_info = None
 
-    if bridge.battery_1_type != rv.StorageProductModel.NONE:
+    if bridge.battery_type != rv.StorageProductModel.NONE:
         battery_device_info = DeviceInfo(
             identifiers={
                 (DOMAIN, f"{bridge.serial_number}/connected_energy_storage"),

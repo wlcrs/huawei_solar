@@ -13,9 +13,9 @@ from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from huawei_solar import HuaweiSolarBridge
-from huawei_solar.registers import REGISTERS
 from huawei_solar import register_names as rn
 from huawei_solar import register_values as rv
+from huawei_solar.registers import REGISTERS
 
 from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinator
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
@@ -38,7 +38,10 @@ ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ..
         icon="mdi:battery-charging-medium",
         entity_category=EntityCategory.CONFIG,
     ),
-     HuaweiSolarSelectEntityDescription(
+)
+
+CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
+    HuaweiSolarSelectEntityDescription(
         key=rn.STORAGE_CAPACITY_CONTROL_MODE,
         name="Capacity Control Mode",
         icon="mdi:battery-arrow-up",
@@ -73,7 +76,7 @@ async def async_setup_entry(
         bridge = update_coordinator.bridge
         device_infos = update_coordinator.device_infos
 
-        if bridge.battery_1_type != rv.StorageProductModel.NONE:
+        if bridge.battery_type != rv.StorageProductModel.NONE:
             assert device_infos["connected_energy_storage"]
 
             for entity_description in ENERGY_STORAGE_SWITCH_DESCRIPTIONS:
@@ -89,6 +92,16 @@ async def async_setup_entry(
                     bridge, device_infos["connected_energy_storage"]
                 )
             )
+
+            if bridge.supports_capacity_control:
+                for entity_description in CAPACITY_CONTROL_SWITCH_DESCRIPTIONS:
+                    slave_entities.append(
+                        await HuaweiSolarSelectEntity.create(
+                            bridge,
+                            entity_description,
+                            device_infos["connected_energy_storage"],
+                        )
+                    )
 
         else:
             _LOGGER.debug(
@@ -195,13 +208,13 @@ class StorageModeSelectEntity(HuaweiSolarEntity, SelectEntity):
 
         # The options depend on the type of battery
         self.options_to_values = {}
-        if bridge.battery_1_type == rv.StorageProductModel.HUAWEI_LUNA2000:
+        if bridge.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000:
             self.options_to_values = {
                 "Maximise Self Consumption": rv.StorageWorkingModesC.MAXIMISE_SELF_CONSUMPTION,
                 "Time Of Use": rv.StorageWorkingModesC.TIME_OF_USE_LUNA2000,
                 "Fully Fed To Grid": rv.StorageWorkingModesC.FULLY_FED_TO_GRID,
             }
-        elif bridge.battery_1_type == rv.StorageProductModel.LG_RESU:
+        elif bridge.battery_type == rv.StorageProductModel.LG_RESU:
             self.options_to_values = {
                 "Maximise Self Consumption": rv.StorageWorkingModesC.MAXIMISE_SELF_CONSUMPTION,
                 "Time Of Use": rv.StorageWorkingModesC.TIME_OF_USE_LG,

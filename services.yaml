@@ -180,3 +180,60 @@ set_maximum_feed_grid_power_percent:
           min: 0
           max: 100
           unit_of_measurement: "%"
+
+set_tou_periods:
+  name: Set TOU Periods
+  description: Sets Time Of Use Periods
+  fields:
+    device_id:
+      name: Battery
+      description: Must be a 'Battery' device
+      required: true
+      selector:
+        device:
+          integration: huawei_solar
+    periods:
+      name: Periods
+      description: "One period per line. For Huawei LUNA2000 batteries: '<start time>-<end time>/<days effective>/<charge>' (example: '12:00-14:00/1234567/-'). For LG RESU batteries: '<start time>-<end time>/<electricity price>' (example: 13:00-14:00/0.50)"
+      required: true
+      selector:
+        text:
+          multiline: true
+
+set_capacity_control_periods:
+  name: Set Capacity Control Periods
+  description: Sets Capacity Control Periods
+  fields:
+    device_id:
+      name: Battery
+      description: Must be a 'Battery' device
+      required: true
+      selector:
+        device:
+          integration: huawei_solar
+    periods:
+      name: Periods
+      description: "One period per line. Format: '<start time>-<end time>/<days effective>/<power>W'. Example: '00:00-23:59/1234567/2500W'."
+      required: true
+      selector:
+        text:
+          multiline: true
+
+set_fixed_charge_periods:
+  name: Set Fixed Charge Periods
+  description: Sets Fixed Charge and Discharge Periods
+  fields:
+    device_id:
+      name: Battery
+      description: Must be a 'Battery' device
+      required: true
+      selector:
+        device:
+          integration: huawei_solar
+    periods:
+      name: Periods
+      description: "One period per line. Format: '<start time>-<end time>/<power>W'. Example: '12:00-15:59/-1000W'."
+      required: true
+      selector:
+        text:
+          multiline: true
