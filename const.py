@@ -13,9 +13,12 @@ CONF_ENABLE_PARAMETER_CONFIGURATION = "enable_parameter_configuration"
 
 
 DATA_UPDATE_COORDINATORS = "update_coordinators"
+DATA_CONFIGURATION_UPDATE_COORDINATORS = "configuration_update_coordinators"
 DATA_OPTIMIZER_UPDATE_COORDINATORS = "optimizer_update_coordinators"
 
 UPDATE_INTERVAL = timedelta(seconds=30)
+# configuration can only change when edited through FusionSolar web or app
+CONFIGURATION_UPDATE_INTERVAL = timedelta(minutes=15)
 # optimizer data is only refreshed every 5 minutes by the inverter.
 OPTIMIZER_UPDATE_INTERVAL = timedelta(minutes=5)
 

@@ -11,16 +11,26 @@ from homeassistant.components.number import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import PERCENTAGE, POWER_WATT
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from huawei_solar import HuaweiSolarBridge
 from huawei_solar import register_names as rn
 from huawei_solar import register_values as rv
 
-from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinator
-from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
+from . import (
+    HuaweiSolarConfigurationUpdateCoordinator,
+    HuaweiSolarEntity,
+    HuaweiSolarUpdateCoordinator,
+)
+from .const import (
+    CONF_ENABLE_PARAMETER_CONFIGURATION,
+    DATA_CONFIGURATION_UPDATE_COORDINATORS,
+    DATA_UPDATE_COORDINATORS,
+    DOMAIN,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -56,6 +66,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         key=rn.STORAGE_GRID_CHARGE_CUTOFF_STATE_OF_CHARGE,
         native_min_value=20,
         native_max_value=100,
+        native_step=0.1,
         name="Grid charge cutoff SOC",
         icon="mdi:battery-charging-50",
         native_unit_of_measurement=PERCENTAGE,
@@ -76,6 +87,7 @@ CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, 
         key=rn.STORAGE_CAPACITY_CONTROL_SOC_PEAK_SHAVING,
         native_min_value=0,
         maximum_key=rn.STORAGE_CAPACITY_CONTROL_SOC_PEAK_SHAVING,
+        native_step=0.1,
         name="Peak Shaving SOC",
         icon="mdi:battery-arrow-up",
         native_unit_of_measurement=PERCENTAGE,
@@ -99,12 +111,18 @@ async def async_setup_entry(
         DATA_UPDATE_COORDINATORS
     ]  # type: list[HuaweiSolarUpdateCoordinator]
 
+    configuration_update_coordinators = hass.data[DOMAIN][entry.entry_id][
+        DATA_CONFIGURATION_UPDATE_COORDINATORS
+    ]  # type: list[HuaweiSolarConfigurationUpdateCoordinator]
+
     # When more than one inverter is present, then we suffix all sensors with '#1', '#2', ...
     # The order for these suffixes is the order in which the user entered the slave-ids.
     must_append_inverter_suffix = len(update_coordinators) > 1
 
     entities_to_add: list[NumberEntity] = []
-    for idx, update_coordinator in enumerate(update_coordinators):
+    for idx, (update_coordinator, configuration_update_coordinator) in enumerate(
+        zip(update_coordinators, configuration_update_coordinators)
+    ):
         slave_entities: list[HuaweiSolarNumberEntity] = []
         bridge = update_coordinator.bridge
         device_infos = update_coordinator.device_infos
@@ -115,6 +133,7 @@ async def async_setup_entry(
             for entity_description in ENERGY_STORAGE_NUMBER_DESCRIPTIONS:
                 slave_entities.append(
                     await HuaweiSolarNumberEntity.create(
+                        configuration_update_coordinator,
                         bridge,
                         entity_description,
                         device_infos["connected_energy_storage"],
@@ -125,6 +144,7 @@ async def async_setup_entry(
                 for entity_description in CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
                     slave_entities.append(
                         await HuaweiSolarNumberEntity.create(
+                            configuration_update_coordinator,
                             bridge,
                             entity_description,
                             device_infos["connected_energy_storage"],
@@ -147,31 +167,34 @@ async def async_setup_entry(
     async_add_entities(entities_to_add)
 
 
-class HuaweiSolarNumberEntity(HuaweiSolarEntity, NumberEntity):
+class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity):
     """Huawei Solar Number Entity."""
 
     def __init__(
         self,
+        coordinator: HuaweiSolarConfigurationUpdateCoordinator,
         bridge: HuaweiSolarBridge,
         description: HuaweiSolarNumberEntityDescription,
         device_info: DeviceInfo,
-        initial_value: float,
     ) -> None:
         """Huawei Solar Number Entity constructor.
 
         Do not use directly. Use `.create` instead!
         """
+        super().__init__(coordinator)
+        self.coordinator = coordinator
+
         self.bridge = bridge
         self.entity_description = description
 
         self._attr_device_info = device_info
         self._attr_unique_id = f"{bridge.serial_number}_{description.key}"
-        self._attr_native_value = initial_value
         self._attr_mode = NumberMode.BOX  # Always allow a precise number
 
     @classmethod
     async def create(
         cls,
+        coordinator: HuaweiSolarConfigurationUpdateCoordinator,
         bridge: HuaweiSolarBridge,
         description: HuaweiSolarNumberEntityDescription,
         device_info: DeviceInfo,
@@ -190,12 +213,15 @@ class HuaweiSolarNumberEntity(HuaweiSolarEntity, NumberEntity):
                 await bridge.client.get(description.maximum_key)
             ).value
 
-        # Assumption: these values are not updated outside of HA.
-        # This should hold true as they typically can only be set via the Modbus-interface,
-        # which only allows one client at a time.
-        initial_value = (await bridge.client.get(description.key)).value
+        return cls(coordinator, bridge, description, device_info)
 
-        return cls(bridge, description, device_info, initial_value)
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self._attr_native_value = self.coordinator.data[
+            self.entity_description.key
+        ].value
+        self.async_write_ha_state()
 
     async def async_set_native_value(self, value: float) -> None:
         """Set a new value."""
