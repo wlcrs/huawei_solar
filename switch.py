@@ -1,6 +1,7 @@
 """This component provides switch entities for Huawei Solar."""
 from __future__ import annotations
 
+import asyncio
 import logging
 from dataclasses import dataclass
 from typing import Generic, TypeVar
@@ -81,6 +82,12 @@ async def async_setup_entry(
         bridge = update_coordinator.bridge
         device_infos = update_coordinator.device_infos
 
+        slave_entities.append(
+            HuaweiSolarOnOffSwitchEntity(
+                update_coordinator, bridge, device_infos["inverter"]
+            )
+        )
+
         if bridge.battery_type != rv.StorageProductModel.NONE:
             assert device_infos["connected_energy_storage"]
 
@@ -107,6 +114,10 @@ async def async_setup_entry(
         entities_to_add.extend(slave_entities)
 
     async_add_entities(entities_to_add)
+
+
+DEVICE_STATUS_OFF_RANGE_START = 0x3000
+DEVICE_STATUS_OFF_RANGE_END = 0x3FFF
 
 
 class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity):
@@ -151,3 +162,85 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
 
         if await self.bridge.set(self.entity_description.key, False):
             self._attr_is_on = False
+
+
+class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity):
+    """Huawei Solar Switch Entity."""
+
+    entity_description: HuaweiSolarSwitchEntityDescription
+
+    POLL_FREQUENCY_SECONDS = 15
+    MAX_STATUS_CHANGE_TIME_SECONDS = 3000  # Maximum status change time is 5 minutes
+
+    def __init__(
+        self,
+        coordinator: HuaweiSolarUpdateCoordinator,
+        bridge: HuaweiSolarBridge,
+        device_info: DeviceInfo,
+    ) -> None:
+        """Huawei Solar Switch Entity constructor.
+
+        Do not use directly. Use `.create` instead!
+        """
+        super().__init__(coordinator)
+        self.coordinator = coordinator
+
+        self.bridge = bridge
+        self.entity_description = SwitchEntityDescription(
+            rn.STARTUP,
+            name="Inverter ON/OFF",
+            icon="mdi:power-standby",
+            entity_category=EntityCategory.CONFIG,
+        )
+
+        self._attr_device_info = device_info
+        self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
+
+        self._change_lock = asyncio.Lock()
+
+    @staticmethod
+    def _is_off(device_status: str):
+        return device_status.startswith("Shutdown")
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        if self._change_lock.locked():
+            return  # Don't do status updates if async_turn_on or async_turn_off is running
+
+        device_status = self.coordinator.data[rn.DEVICE_STATUS].value
+
+        self._attr_is_on = not self._is_off(device_status)
+        self.async_write_ha_state()
+
+    async def async_turn_on(self, **kwargs) -> None:
+        """Turn the setting on."""
+        with self._change_lock:
+
+            await self.bridge.set(rn.STARTUP, 0)
+
+            # Turning on can take up to 5 minutes... We'll poll every 15 seconds
+            for _ in range(
+                self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
+            ):
+                asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
+                device_status = (await self.bridge.client.get(rn.DEVICE_STATUS)).value
+                if not self._is_off(device_status):
+                    self._attr_is_on = True
+                    return
+
+    async def async_turn_off(self, **kwargs) -> None:
+        """Turn the setting off."""
+
+        with self._change_lock:
+            await self.bridge.set(rn.SHUTDOWN, 0)
+
+            # Turning on can take up to 5 minutes... We'll poll every 15 seconds
+            for _ in range(
+                self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
+            ):
+                asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
+                device_status = (await self.bridge.client.get(rn.DEVICE_STATUS)).value
+                if self._is_off(device_status):
+                    self._attr_is_on = False
+                    return
