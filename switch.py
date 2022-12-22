@@ -3,8 +3,9 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, Any
 
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.config_entries import ConfigEntry
@@ -39,6 +40,9 @@ T = TypeVar("T")
 class HuaweiSolarSwitchEntityDescription(Generic[T], SwitchEntityDescription):
     """Huawei Solar Switch Entity Description."""
 
+    is_available_key: str | None = None
+    check_is_available_func: Callable[[Any], bool] | None = None
+
 
 ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     HuaweiSolarSwitchEntityDescription(
@@ -46,6 +50,10 @@ ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ..
         name="Charge from grid",
         icon="mdi:battery-charging-50",
         entity_category=EntityCategory.CONFIG,
+        is_available_key=rn.STORAGE_CAPACITY_CONTROL_MODE,
+        check_is_available_func=(
+            lambda ccm: ccm != rv.StorageCapacityControlMode.ACTIVE_CAPACITY_CONTROL
+        ),
     ),
 )
 
@@ -149,6 +157,15 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         self._attr_is_on = self.coordinator.data[self.entity_description.key].value
+
+        if self.entity_description.check_is_available_func:
+            is_available_register = self.coordinator.data[
+                self.entity_description.is_available_key
+            ]
+            self._attr_available = self.entity_description.check_is_available_func(
+                is_available_register.value if is_available_register else None
+            )
+
         self.async_write_ha_state()
 
     async def async_turn_on(self, **kwargs) -> None:
@@ -163,6 +180,17 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
         if await self.bridge.set(self.entity_description.key, False):
             self._attr_is_on = False
 
+    @property
+    def available(self) -> bool:
+        """Override available property (from CoordinatorEntity) to take into account
+        the custom check_is_available_func result"""
+        available = super().available
+
+        if self.entity_description.check_is_available_func and available:
+            return self._attr_available
+
+        return available
+
 
 class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity):
     """Huawei Solar Switch Entity."""
@@ -174,6 +202,8 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
 
     def __init__(
         self,
+        # not the HuaweiSolarConfigurationUpdateCoordinator as
+        # this entity depends on the 'Device Status' register
         coordinator: HuaweiSolarUpdateCoordinator,
         bridge: HuaweiSolarBridge,
         device_info: DeviceInfo,
@@ -227,7 +257,9 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
                 device_status = (await self.bridge.client.get(rn.DEVICE_STATUS)).value
                 if not self._is_off(device_status):
                     self._attr_is_on = True
-                    return
+                    break
+
+        await self.coordinator.async_request_refresh()
 
     async def async_turn_off(self, **kwargs) -> None:
         """Turn the setting off."""
@@ -243,4 +275,6 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
                 device_status = (await self.bridge.client.get(rn.DEVICE_STATUS)).value
                 if self._is_off(device_status):
                     self._attr_is_on = False
-                    return
+                    break
+
+        await self.coordinator.async_request_refresh()

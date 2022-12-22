@@ -39,15 +39,20 @@ _LOGGER = logging.getLogger(__name__)
 class HuaweiSolarNumberEntityDescription(NumberEntityDescription):
     """Huawei Solar Number Entity Description."""
 
-    minimum_key: str | None = None
-    maximum_key: str | None = None
+    # Used when the min/max cannot dynamically change
+    static_minimum_key: str | None = None
+    static_maximum_key: str | None = None
+
+    # Used when the min/max is influenced by other parameters
+    dynamic_minimum_key: str | None = None
+    dynamic_maximum_key: str | None = None
 
 
 ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_MAXIMUM_CHARGING_POWER,
         native_min_value=0,
-        maximum_key=rn.STORAGE_MAXIMUM_CHARGE_POWER,
+        static_maximum_key=rn.STORAGE_MAXIMUM_CHARGE_POWER,
         name="Maximum charging power",
         icon="mdi:battery-positive",
         native_unit_of_measurement=POWER_WATT,
@@ -56,10 +61,31 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_MAXIMUM_DISCHARGING_POWER,
         native_min_value=0,
-        maximum_key=rn.STORAGE_MAXIMUM_DISCHARGE_POWER,
+        static_maximum_key=rn.STORAGE_MAXIMUM_DISCHARGE_POWER,
         name="Maximum discharging power",
         icon="mdi:battery-negative",
         native_unit_of_measurement=POWER_WATT,
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.STORAGE_CHARGING_CUTOFF_CAPACITY,
+        native_min_value=90,
+        native_max_value=100,
+        native_step=0.1,
+        name="End-of-charge SOC",
+        icon="mdi:battery-positive",
+        native_unit_of_measurement=PERCENTAGE,
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.STORAGE_DISCHARGING_CUTOFF_CAPACITY,
+        native_min_value=12,
+        native_max_value=20,
+        dynamic_maximum_key=rn.STORAGE_CAPACITY_CONTROL_SOC_PEAK_SHAVING,
+        native_step=0.1,
+        name="End-of-discharge SOC",
+        icon="mdi:battery-negative",
+        native_unit_of_measurement=PERCENTAGE,
         entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarNumberEntityDescription(
@@ -75,7 +101,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_POWER_OF_CHARGE_FROM_GRID,
         native_min_value=0,
-        maximum_key=rn.STORAGE_MAXIMUM_POWER_OF_CHARGE_FROM_GRID,
+        dynamic_maximum_key=rn.STORAGE_MAXIMUM_POWER_OF_CHARGE_FROM_GRID,
         name="Grid charge maximum power",
         icon="mdi:battery-negative",
         native_unit_of_measurement=POWER_WATT,
@@ -85,8 +111,8 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
 CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_CAPACITY_CONTROL_SOC_PEAK_SHAVING,
-        native_min_value=0,
-        maximum_key=rn.STORAGE_CAPACITY_CONTROL_SOC_PEAK_SHAVING,
+        dynamic_minimum_key=rn.STORAGE_DISCHARGING_CUTOFF_CAPACITY,
+        native_max_value=100,
         native_step=0.1,
         name="Peak Shaving SOC",
         icon="mdi:battery-arrow-up",
@@ -170,6 +196,8 @@ async def async_setup_entry(
 class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity):
     """Huawei Solar Number Entity."""
 
+    entity_description: HuaweiSolarNumberEntityDescription
+
     def __init__(
         self,
         coordinator: HuaweiSolarConfigurationUpdateCoordinator,
@@ -191,6 +219,9 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
         self._attr_unique_id = f"{bridge.serial_number}_{description.key}"
         self._attr_mode = NumberMode.BOX  # Always allow a precise number
 
+        self._dynamic_min_value: float | None = None
+        self._dynamic_max_value: float | None = None
+
     @classmethod
     async def create(
         cls,
@@ -203,14 +234,14 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
 
         This async constructor fills in the necessary min/max values
         """
-        if description.minimum_key:
+        if description.static_minimum_key:
             description.native_min_value = (
-                await bridge.client.get(description.minimum_key)
+                await bridge.client.get(description.static_minimum_key)
             ).value
 
-        if description.maximum_key:
+        if description.static_maximum_key:
             description.native_max_value = (
-                await bridge.client.get(description.maximum_key)
+                await bridge.client.get(description.static_maximum_key)
             ).value
 
         return cls(coordinator, bridge, description, device_info)
@@ -221,9 +252,50 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
         self._attr_native_value = self.coordinator.data[
             self.entity_description.key
         ].value
+
+        if self.entity_description.dynamic_minimum_key:
+            min_register = self.coordinator.data[
+                self.entity_description.dynamic_minimum_key
+            ]
+
+            if min_register:
+                self._dynamic_min_value = min_register.value
+
+        if self.entity_description.dynamic_maximum_key:
+            max_register = self.coordinator.data[
+                self.entity_description.dynamic_maximum_key
+            ]
+
+            if max_register:
+                self._dynamic_max_value = max_register.value
+
         self.async_write_ha_state()
 
     async def async_set_native_value(self, value: float) -> None:
         """Set a new value."""
         if await self.bridge.set(self.entity_description.key, int(value)):
             self._attr_native_value = int(value)
+
+        await self.coordinator.async_request_refresh()
+
+    @property
+    def native_max_value(self) -> float:
+        native_max_value = super().native_max_value
+
+        if self._dynamic_max_value:
+            if native_max_value:
+                return min(self._dynamic_max_value, native_max_value)
+            return self._dynamic_max_value
+
+        return native_max_value
+
+    @property
+    def native_min_value(self) -> float:
+        native_min_value = super().native_min_value
+
+        if self._dynamic_min_value:
+            if native_min_value:
+                return max(self._dynamic_min_value, native_min_value)
+            return self._dynamic_min_value
+
+        return native_min_value

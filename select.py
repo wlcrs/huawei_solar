@@ -2,9 +2,10 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, Any
 
 from homeassistant.components.select import SelectEntity, SelectEntityDescription
 from homeassistant.config_entries import ConfigEntry
@@ -40,6 +41,9 @@ T = TypeVar("T")
 class HuaweiSolarSelectEntityDescription(Generic[T], SelectEntityDescription):
     """Huawei Solar Select Entity Description."""
 
+    is_available_key: str | None = None
+    check_is_available_func: Callable[[Any], bool] | None = None
+
 
 ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     HuaweiSolarSelectEntityDescription(
@@ -56,6 +60,9 @@ CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, 
         name="Capacity Control Mode",
         icon="mdi:battery-arrow-up",
         entity_category=EntityCategory.CONFIG,
+        # Active capacity control is only available is 'Charge from grid' is enabled
+        is_available_key=rn.STORAGE_CHARGE_FROM_GRID_FUNCTION,
+        check_is_available_func=lambda charge_from_grid: charge_from_grid,
     ),
 )
 
@@ -182,6 +189,15 @@ class HuaweiSolarSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity
         self._attr_current_option = self._friendly_format(
             self.coordinator.data[self.entity_description.key].value
         )
+
+        if self.entity_description.check_is_available_func:
+            is_available_register = self.coordinator.data[
+                self.entity_description.is_available_key
+            ]
+            self._attr_available = self.entity_description.check_is_available_func(
+                is_available_register.value if is_available_register else None
+            )
+
         self.async_write_ha_state()
 
     async def async_select_option(self, option) -> None:
@@ -189,6 +205,19 @@ class HuaweiSolarSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity
 
         await self.bridge.set(self.entity_description.key, self._to_enum(option))
         self._attr_current_option = option
+
+        await self.coordinator.async_request_refresh()
+
+    @property
+    def available(self) -> bool:
+        """Override available property (from CoordinatorEntity) to take into account
+        the custom check_is_available_func result"""
+        available = super().available
+
+        if self.entity_description.check_is_available_func and available:
+            return self._attr_available
+
+        return available
 
 
 class StorageModeSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity):
@@ -260,3 +289,5 @@ class StorageModeSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity
             rn.STORAGE_WORKING_MODE_SETTINGS, self.options_to_values[option]
         )
         self._attr_current_option = option
+
+        await self.coordinator.async_request_refresh()
