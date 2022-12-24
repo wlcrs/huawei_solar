@@ -4,6 +4,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, Union
+from itertools import zip_longest
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -682,7 +683,7 @@ async def async_setup_entry(
 
     entities_to_add: list[SensorEntity] = []
     for idx, (update_coordinator, configuration_update_coordinator) in enumerate(
-        zip(update_coordinators, configuration_update_coordinators)
+        zip_longest(update_coordinators, configuration_update_coordinators)
     ):
         slave_entities: list[HuaweiSolarSensorEntity] = []
 

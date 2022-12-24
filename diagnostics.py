@@ -1,6 +1,7 @@
 """Diagnostics support for Velbus."""
 from __future__ import annotations
 
+from itertools import zip_longest
 from typing import Any
 
 from homeassistant.components.diagnostics import async_redact_data
@@ -36,7 +37,9 @@ async def async_get_config_entry_diagnostics(
     diagnostics_data = {
         "config_entry_data": async_redact_data(dict(entry.data), TO_REDACT)
     }
-    for coordinator, config_coordinator in zip(coordinators, config_coordinators):
+    for coordinator, config_coordinator in zip_longest(
+        coordinators, config_coordinators
+    ):
         diagnostics_data[
             f"slave_{coordinator.bridge.slave_id}"
         ] = await _build_bridge_diagnostics_info(coordinator.bridge)

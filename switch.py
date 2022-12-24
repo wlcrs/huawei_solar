@@ -245,7 +245,7 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
 
     async def async_turn_on(self, **kwargs) -> None:
         """Turn the setting on."""
-        with self._change_lock:
+        async with self._change_lock:
 
             await self.bridge.set(rn.STARTUP, 0)
 
@@ -264,7 +264,7 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
     async def async_turn_off(self, **kwargs) -> None:
         """Turn the setting off."""
 
-        with self._change_lock:
+        async with self._change_lock:
             await self.bridge.set(rn.SHUTDOWN, 0)
 
             # Turning on can take up to 5 minutes... We'll poll every 15 seconds
