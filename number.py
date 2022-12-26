@@ -9,6 +9,7 @@ from homeassistant.components.number import (
     NumberEntityDescription,
     NumberMode,
 )
+from homeassistant.components.number.const import DEFAULT_MIN_VALUE, DEFAULT_MAX_VALUE
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import PERCENTAGE, POWER_WATT
 from homeassistant.core import HomeAssistant, callback
@@ -287,7 +288,9 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
                 return min(self._dynamic_max_value, native_max_value)
             return self._dynamic_max_value
 
-        return native_max_value
+        if native_max_value:
+            return native_max_value
+        return DEFAULT_MAX_VALUE
 
     @property
     def native_min_value(self) -> float:
@@ -298,4 +301,6 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
                 return max(self._dynamic_min_value, native_min_value)
             return self._dynamic_min_value
 
-        return native_min_value
+        if native_min_value:
+            return native_min_value
+        return DEFAULT_MIN_VALUE
