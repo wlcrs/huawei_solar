@@ -280,7 +280,7 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
 
     @property
     def native_max_value(self) -> float:
-        native_max_value = super().native_max_value
+        native_max_value = self.entity_description.native_max_value
 
         if self._dynamic_max_value:
             if native_max_value:
@@ -291,7 +291,7 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
 
     @property
     def native_min_value(self) -> float:
-        native_min_value = super().native_min_value
+        native_min_value = self.entity_description.native_min_value
 
         if self._dynamic_min_value:
             if native_min_value:
