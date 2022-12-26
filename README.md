@@ -44,7 +44,7 @@ repository into the `custom_components/huawei_solar` directory
 
 ### Network configuration
 
-5. Enter the IP address and port on which the Modbus-TCP interface is available (when connecting to the inverter AP the host IP is typically `192.168.200.1` and the port is either `502` or `6607`). The slave id is typically `0`. You should only check the `Advanced: elevate permissions` checkbox if you intend to dynamically change your battery settings or want access to the optimizer data.
+5. Enter the IP address and port on which the Modbus-TCP interface is available (when connecting to the inverter AP the host IP is typically `192.168.200.1` and the port is either `502` or `6607`). The slave id is typically `0`. You should only check the `Advanced: elevate permissions` checkbox if you intend to dynamically change your inverter and battery settings, or want access to the optimizer data.
 
 ![](images/network-configuration.png)
 

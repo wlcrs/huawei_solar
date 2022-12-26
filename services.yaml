@@ -194,7 +194,7 @@ set_tou_periods:
           integration: huawei_solar
     periods:
       name: Periods
-      description: "One period per line. For Huawei LUNA2000 batteries: '<start time>-<end time>/<days effective>/<charge>' (example: '12:00-14:00/1234567/-'). For LG RESU batteries: '<start time>-<end time>/<electricity price>' (example: 13:00-14:00/0.50)"
+      description: "One period per line. For Huawei LUNA2000 batteries: '<start time>-<end time>/<days effective>/<charge>', with 1=Monday, 7=Sunday (example: '12:00-14:00/1234567/-'). For LG RESU batteries: '<start time>-<end time>/<electricity price>' (example: 13:00-14:00/0.50)"
       required: true
       selector:
         text:
@@ -213,7 +213,7 @@ set_capacity_control_periods:
           integration: huawei_solar
     periods:
       name: Periods
-      description: "One period per line. Format: '<start time>-<end time>/<days effective>/<power>W'. Example: '00:00-23:59/1234567/2500W'."
+      description: "One period per line. Format: '<start time>-<end time>/<days effective>/<power>W', with 1=Monday, 7=Sunday. Example: '00:00-23:59/1234567/2500W'."
       required: true
       selector:
         text:
