@@ -11,11 +11,16 @@ from homeassistant.core import HomeAssistant
 
 from huawei_solar import HuaweiSolarBridge
 
-from . import HuaweiSolarUpdateCoordinator, HuaweiSolarConfigurationUpdateCoordinator
+from . import (
+    HuaweiSolarUpdateCoordinator,
+    HuaweiSolarConfigurationUpdateCoordinator,
+    HuaweiSolarOptimizerUpdateCoordinator,
+)
 from .const import (
     DATA_UPDATE_COORDINATORS,
     DOMAIN,
     DATA_CONFIGURATION_UPDATE_COORDINATORS,
+    DATA_OPTIMIZER_UPDATE_COORDINATORS,
 )
 
 TO_REDACT = {CONF_PASSWORD}
@@ -34,11 +39,15 @@ async def async_get_config_entry_diagnostics(
         DOMAIN
     ][entry.entry_id][DATA_CONFIGURATION_UPDATE_COORDINATORS]
 
+    optimizer_coordinators: list[HuaweiSolarOptimizerUpdateCoordinator] = hass.data[
+        DOMAIN
+    ][entry.entry_id][DATA_OPTIMIZER_UPDATE_COORDINATORS]
+
     diagnostics_data = {
         "config_entry_data": async_redact_data(dict(entry.data), TO_REDACT)
     }
-    for coordinator, config_coordinator in zip_longest(
-        coordinators, config_coordinators
+    for coordinator, config_coordinator, optimizer_coordinator in zip_longest(
+        coordinators, config_coordinators, optimizer_coordinators
     ):
         diagnostics_data[
             f"slave_{coordinator.bridge.slave_id}"
@@ -50,6 +59,11 @@ async def async_get_config_entry_diagnostics(
             diagnostics_data[
                 f"slave_{coordinator.bridge.slave_id}_config_data"
             ] = config_coordinator.data
+
+        if optimizer_coordinator:
+            diagnostics_data[
+                f"slave_{coordinator.bridge.slave_id}_optimizer_data"
+            ] = optimizer_coordinator.data
 
     return diagnostics_data
 
