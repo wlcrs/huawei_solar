@@ -4,9 +4,9 @@
   "config_flow": true,
   "documentation": "https://www.home-assistant.io/integrations/huawei_solar",
   "issue_tracker": "https://github.com/wlcrs/huawei_solar/issues",
-  "requirements": ["huawei-solar==2.2.0b8"],
+  "requirements": ["huawei-solar==2.2.0"],
   "codeowners": ["@wlcrs"],
   "iot_class": "local_polling",
-  "version": "1.2.0b7",
+  "version": "1.2.0",
   "loggers": ["huawei_solar", "pymodbus"]
 }
