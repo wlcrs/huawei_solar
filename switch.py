@@ -1,22 +1,34 @@
 """This component provides switch entities for Huawei Solar."""
 from __future__ import annotations
 
+import asyncio
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, Any
 
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from huawei_solar import HuaweiSolarBridge
 from huawei_solar import register_names as rn
 from huawei_solar import register_values as rv
 
-from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinator
-from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
+from . import (
+    HuaweiSolarConfigurationUpdateCoordinator,
+    HuaweiSolarEntity,
+    HuaweiSolarUpdateCoordinator,
+)
+from .const import (
+    CONF_ENABLE_PARAMETER_CONFIGURATION,
+    DATA_CONFIGURATION_UPDATE_COORDINATORS,
+    DATA_UPDATE_COORDINATORS,
+    DOMAIN,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -28,6 +40,9 @@ T = TypeVar("T")
 class HuaweiSolarSwitchEntityDescription(Generic[T], SwitchEntityDescription):
     """Huawei Solar Switch Entity Description."""
 
+    is_available_key: str | None = None
+    check_is_available_func: Callable[[Any], bool] | None = None
+
 
 ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     HuaweiSolarSwitchEntityDescription(
@@ -35,6 +50,10 @@ ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ..
         name="Charge from grid",
         icon="mdi:battery-charging-50",
         entity_category=EntityCategory.CONFIG,
+        is_available_key=rn.STORAGE_CAPACITY_CONTROL_MODE,
+        check_is_available_func=(
+            lambda ccm: ccm != rv.StorageCapacityControlMode.ACTIVE_CAPACITY_CONTROL
+        ),
     ),
 )
 
@@ -54,23 +73,36 @@ async def async_setup_entry(
         DATA_UPDATE_COORDINATORS
     ]  # type: list[HuaweiSolarUpdateCoordinator]
 
+    configuration_update_coordinators = hass.data[DOMAIN][entry.entry_id][
+        DATA_CONFIGURATION_UPDATE_COORDINATORS
+    ]  # type: list[HuaweiSolarConfigurationUpdateCoordinator]
+
     # When more than one inverter is present, then we suffix all sensors with '#1', '#2', ...
     # The order for these suffixes is the order in which the user entered the slave-ids.
     must_append_inverter_suffix = len(update_coordinators) > 1
 
     entities_to_add: list[SwitchEntity] = []
-    for idx, update_coordinator in enumerate(update_coordinators):
+    for idx, (update_coordinator, configuration_update_coordinator) in enumerate(
+        zip(update_coordinators, configuration_update_coordinators)
+    ):
         slave_entities: list[HuaweiSolarSwitchEntity] = []
 
         bridge = update_coordinator.bridge
         device_infos = update_coordinator.device_infos
 
-        if bridge.battery_1_type != rv.StorageProductModel.NONE:
+        slave_entities.append(
+            HuaweiSolarOnOffSwitchEntity(
+                update_coordinator, bridge, device_infos["inverter"]
+            )
+        )
+
+        if bridge.battery_type != rv.StorageProductModel.NONE:
             assert device_infos["connected_energy_storage"]
 
             for entity_description in ENERGY_STORAGE_SWITCH_DESCRIPTIONS:
                 slave_entities.append(
-                    await HuaweiSolarSwitchEntity.create(
+                    HuaweiSolarSwitchEntity(
+                        configuration_update_coordinator,
                         bridge,
                         entity_description,
                         device_infos["connected_energy_storage"],
@@ -92,47 +124,49 @@ async def async_setup_entry(
     async_add_entities(entities_to_add)
 
 
-class HuaweiSolarSwitchEntity(HuaweiSolarEntity, SwitchEntity):
+DEVICE_STATUS_OFF_RANGE_START = 0x3000
+DEVICE_STATUS_OFF_RANGE_END = 0x3FFF
+
+
+class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity):
     """Huawei Solar Switch Entity."""
 
     entity_description: HuaweiSolarSwitchEntityDescription
 
     def __init__(
         self,
+        coordinator: HuaweiSolarConfigurationUpdateCoordinator,
         bridge: HuaweiSolarBridge,
         description: HuaweiSolarSwitchEntityDescription,
         device_info: DeviceInfo,
-        initial_value: bool,
     ) -> None:
         """Huawei Solar Switch Entity constructor.
 
         Do not use directly. Use `.create` instead!
         """
+        super().__init__(coordinator)
+        self.coordinator = coordinator
+
         self.bridge = bridge
         self.entity_description = description
 
         self._attr_device_info = device_info
         self._attr_unique_id = f"{bridge.serial_number}_{description.key}"
-        self._attr_is_on = initial_value
 
-    @classmethod
-    async def create(
-        cls,
-        bridge: HuaweiSolarBridge,
-        description: HuaweiSolarSwitchEntityDescription,
-        device_info: DeviceInfo,
-    ):
-        """Huawei Solar Number Entity constructor.
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self._attr_is_on = self.coordinator.data[self.entity_description.key].value
 
-        This async constructor fills in the necessary min/max values
-        """
+        if self.entity_description.check_is_available_func:
+            is_available_register = self.coordinator.data[
+                self.entity_description.is_available_key
+            ]
+            self._attr_available = self.entity_description.check_is_available_func(
+                is_available_register.value if is_available_register else None
+            )
 
-        # Assumption: these values are not updated outside of HA.
-        # This should hold true as they typically can only be set via the Modbus-interface,
-        # which only allows one client at a time.
-        initial_value = (await bridge.client.get(description.key)).value
-
-        return cls(bridge, description, device_info, initial_value)
+        self.async_write_ha_state()
 
     async def async_turn_on(self, **kwargs) -> None:
         """Turn the setting on."""
@@ -145,3 +179,102 @@ class HuaweiSolarSwitchEntity(HuaweiSolarEntity, SwitchEntity):
 
         if await self.bridge.set(self.entity_description.key, False):
             self._attr_is_on = False
+
+    @property
+    def available(self) -> bool:
+        """Override available property (from CoordinatorEntity) to take into account
+        the custom check_is_available_func result"""
+        available = super().available
+
+        if self.entity_description.check_is_available_func and available:
+            return self._attr_available
+
+        return available
+
+
+class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity):
+    """Huawei Solar Switch Entity."""
+
+    entity_description: HuaweiSolarSwitchEntityDescription
+
+    POLL_FREQUENCY_SECONDS = 15
+    MAX_STATUS_CHANGE_TIME_SECONDS = 3000  # Maximum status change time is 5 minutes
+
+    def __init__(
+        self,
+        # not the HuaweiSolarConfigurationUpdateCoordinator as
+        # this entity depends on the 'Device Status' register
+        coordinator: HuaweiSolarUpdateCoordinator,
+        bridge: HuaweiSolarBridge,
+        device_info: DeviceInfo,
+    ) -> None:
+        """Huawei Solar Switch Entity constructor.
+
+        Do not use directly. Use `.create` instead!
+        """
+        super().__init__(coordinator)
+        self.coordinator = coordinator
+
+        self.bridge = bridge
+        self.entity_description = SwitchEntityDescription(
+            rn.STARTUP,
+            name="Inverter ON/OFF",
+            icon="mdi:power-standby",
+            entity_category=EntityCategory.CONFIG,
+        )
+
+        self._attr_device_info = device_info
+        self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
+
+        self._change_lock = asyncio.Lock()
+
+    @staticmethod
+    def _is_off(device_status: str):
+        return device_status.startswith("Shutdown")
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        if self._change_lock.locked():
+            return  # Don't do status updates if async_turn_on or async_turn_off is running
+
+        device_status = self.coordinator.data[rn.DEVICE_STATUS].value
+
+        self._attr_is_on = not self._is_off(device_status)
+        self.async_write_ha_state()
+
+    async def async_turn_on(self, **kwargs) -> None:
+        """Turn the setting on."""
+        async with self._change_lock:
+
+            await self.bridge.set(rn.STARTUP, 0)
+
+            # Turning on can take up to 5 minutes... We'll poll every 15 seconds
+            for _ in range(
+                self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
+            ):
+                asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
+                device_status = (await self.bridge.client.get(rn.DEVICE_STATUS)).value
+                if not self._is_off(device_status):
+                    self._attr_is_on = True
+                    break
+
+        await self.coordinator.async_request_refresh()
+
+    async def async_turn_off(self, **kwargs) -> None:
+        """Turn the setting off."""
+
+        async with self._change_lock:
+            await self.bridge.set(rn.SHUTDOWN, 0)
+
+            # Turning on can take up to 5 minutes... We'll poll every 15 seconds
+            for _ in range(
+                self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
+            ):
+                asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
+                device_status = (await self.bridge.client.get(rn.DEVICE_STATUS)).value
+                if self._is_off(device_status):
+                    self._attr_is_on = False
+                    break
+
+        await self.coordinator.async_request_refresh()
