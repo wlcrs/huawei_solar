@@ -133,7 +133,7 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         key=rn.PHASE_A_CURRENT,
         name="Phase A current",
         icon="mdi:lightning-bolt-outline",
-        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
         device_class=SensorDeviceClass.CURRENT,
         state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
@@ -181,7 +181,6 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.POWER_FACTOR,
         name="Power factor",
-        native_unit_of_measurement=PERCENTAGE,
         device_class=SensorDeviceClass.POWER_FACTOR,
         state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
@@ -421,9 +420,11 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_ACCUMULATED_REACTIVE_POWER,
-        name="Reactive power",
+        name="Reactive energy",
         native_unit_of_measurement="kVarh",
-        device_class=SensorDeviceClass.REACTIVE_POWER,
+        # Was SensorDeviceClass.REACTIVE_POWER, which only supports 'var' unit of measurement.
+        # We need a SensorDeviceClass.REACTIVE_ENERGY
+        device_class=None,
         state_class=SensorStateClass.TOTAL_INCREASING,
         entity_registry_enabled_default=False,
     ),
@@ -745,29 +746,31 @@ async def async_setup_entry(
                         device_infos["connected_energy_storage"],
                     )
                 )
-            slave_entities.append(
-                HuaweiSolarTOUPricePeriodsSensorEntity(
-                    configuration_update_coordinator,
-                    update_coordinator.bridge,
-                    device_infos["connected_energy_storage"],
-                )
-            )
-            slave_entities.append(
-                HuaweiSolarFixedChargingPeriodsSensorEntity(
-                    configuration_update_coordinator,
-                    update_coordinator.bridge,
-                    device_infos["connected_energy_storage"],
-                )
-            )
 
-            if bridge.supports_capacity_control:
+            if configuration_update_coordinator:
                 slave_entities.append(
-                    HuaweiSolarCapacityControlPeriodsSensorEntity(
+                    HuaweiSolarTOUPricePeriodsSensorEntity(
                         configuration_update_coordinator,
                         update_coordinator.bridge,
                         device_infos["connected_energy_storage"],
                     )
                 )
+                slave_entities.append(
+                    HuaweiSolarFixedChargingPeriodsSensorEntity(
+                        configuration_update_coordinator,
+                        update_coordinator.bridge,
+                        device_infos["connected_energy_storage"],
+                    )
+                )
+
+                if bridge.supports_capacity_control:
+                    slave_entities.append(
+                        HuaweiSolarCapacityControlPeriodsSensorEntity(
+                            configuration_update_coordinator,
+                            update_coordinator.bridge,
+                            device_infos["connected_energy_storage"],
+                        )
+                    )
 
         # Add suffix if multiple inverters are present
         if must_append_inverter_suffix:
