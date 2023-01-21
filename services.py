@@ -464,8 +464,6 @@ async def async_setup_services(
     if not entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
         return
 
-    primary_bridge, _ = bridges_with_device_infos[0]
-
     hass.services.async_register(
         DOMAIN,
         SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
@@ -487,7 +485,10 @@ async def async_setup_services(
         schema=MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA,
     )
 
-    if primary_bridge.battery_type != rv.StorageProductModel.NONE:
+    if any(
+        bridge.battery_type != rv.StorageProductModel.NONE
+        for bridge, _ in bridges_with_device_infos
+    ):
         hass.services.async_register(
             DOMAIN, SERVICE_FORCIBLE_CHARGE, forcible_charge, schema=DURATION_SCHEMA
         )
@@ -527,7 +528,9 @@ async def async_setup_services(
             schema=FIXED_CHARGE_PERIODS_SCHEMA,
         )
 
-        if primary_bridge.supports_capacity_control:
+        if any(
+            bridge.supports_capacity_control for bridge, _ in bridges_with_device_infos
+        ):
             hass.services.async_register(
                 DOMAIN,
                 SERVICE_SET_CAPACITY_CONTROL_PERIODS,
