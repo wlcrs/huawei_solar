@@ -80,7 +80,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_DISCHARGING_CUTOFF_CAPACITY,
-        native_min_value=12,
+        native_min_value=0,
         native_max_value=20,
         dynamic_maximum_key=rn.STORAGE_CAPACITY_CONTROL_SOC_PEAK_SHAVING,
         native_step=0.1,
