@@ -174,11 +174,15 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
         if await self.bridge.set(self.entity_description.key, True):
             self._attr_is_on = True
 
+        await self.coordinator.async_request_refresh()
+
     async def async_turn_off(self, **kwargs) -> None:
         """Turn the setting off."""
 
         if await self.bridge.set(self.entity_description.key, False):
             self._attr_is_on = False
+
+        await self.coordinator.async_request_refresh()
 
     @property
     def available(self) -> bool:
