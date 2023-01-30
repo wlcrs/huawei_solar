@@ -57,10 +57,10 @@ body:
       ## Relevant debug logs
       
       **You MUST include relevant logfiles to debug your issue.**
+      
+      The easiest way to provide debug logs is by using the `Enable/Disable debug logging` feature as described here: ['Debug Logs and Diagnostics' from the HA documentation](https://www.home-assistant.io/docs/configuration/troubleshooting/#debug-logs-and-diagnostics)
 
-      For instance: if the integration does not show up in the `+ Add Integration` list, then add any relevant lines you can find in `/config/home-assistant.log` after a full restart of your Home Assistant instance.
-
-      When you don't find any relevant logs, please increase your logging level and try again. To do this, add the following lines to your `/config/configuration.yaml` and restart HA:
+      If you are having problems during initial setup of this integration, you'll need to manually gather these logs. To do this, add the following lines to your `/config/configuration.yaml` and restart HA:
 
       ```yaml
       logger:
@@ -88,7 +88,7 @@ body:
       - label: The problem is still present in the latest release of this integration.
       - label: I did not find an existing issue describing this problem.
       - label: I did upload the diagnostics-file that I could retrieve from  the 'Devices & Services Page'
-      - label: I increased the logging configuration, restarted HA, and have copied all relevant log lines from the 'Full Logs' into the textarea.
+      - label: I did upload the relevant debug logs (via 'Enable Debug Logging'-feature or by manually configuring HA logging)
     
     
     
