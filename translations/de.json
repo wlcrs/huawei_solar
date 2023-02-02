@@ -1,0 +1,51 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Das Gerät ist bereits konfiguriert"
+        },
+        "error": {
+            "cannot_connect": "Verbindungsversuch fehlgeschlagen",
+            "invalid_auth": "Ungültige Authentifikation",
+            "invalid_slave_ids": "Slave IDs muss aus einer kommagetrennten Liste von Integern bestehen",
+            "read_error": "Auslesen des Inverters fehlgeschlagen.",
+            "slave_cannot_connect": "Verbindungsversuch mit Zusatz-Slave fehlgeschlagen",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "step": {
+            "network_login": {
+                "data": {
+                    "password": "Passwort",
+                    "username": "Benutzername"
+                },
+                "description": "Anmeldedaten eingeben"
+            },
+            "setup_network": {
+                "data": {
+                    "enable_parameter_configuration": "Fortgeschritten: Berechtigungen erhöhen",
+                    "host": "Host",
+                    "port": "Port",
+                    "slave_ids": "Slave IDs (kommagetrennt)"
+                }
+            },
+            "setup_serial": {
+                "data": {
+                    "port": "Gerät auswählen",
+                    "slave_ids": "Slave IDs (kommagetrennt)"
+                },
+                "title": "Gerät"
+            },
+            "setup_serial_manual_path": {
+                "data": {
+                    "port": "Pfad des USB Gerätes"
+                },
+                "title": "Pfad"
+            },
+            "user": {
+                "data": {
+                    "type": "Verbindungstyp"
+                },
+                "title": "Verbindungstyp auswählen"
+            }
+        }
+    }
+}
