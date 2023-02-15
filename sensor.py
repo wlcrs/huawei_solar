@@ -536,7 +536,9 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
         key=rn.GRID_ACCUMULATED_REACTIVE_POWER,
         name="Reactive power",
         native_unit_of_measurement="kVarh",
-        device_class=SensorDeviceClass.REACTIVE_POWER,
+        # Was SensorDeviceClass.REACTIVE_POWER, which only supports 'var' unit of measurement.
+        # We need a SensorDeviceClass.REACTIVE_ENERGY
+        device_class=None,
         state_class=SensorStateClass.TOTAL_INCREASING,
         entity_registry_enabled_default=False,
     ),
