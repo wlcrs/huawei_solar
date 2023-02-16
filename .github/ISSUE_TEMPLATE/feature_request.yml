@@ -8,11 +8,9 @@ body:
     value: |
       ### Scope of this integration
       
-      This integration aims to expose the information and functions made available by 
-      Huawei Solar inverters directly **over Modbus** in Home Assistant.
+      This integration aims to expose the information and functions made available by Huawei Solar inverters directly **over Modbus** in Home Assistant.
       
-      It does **NOT** do any interpretation of - or calculations with - this data. 
-      It does **NOT** interact with FusionSolar.
+      It does **NOT** do any interpretation of - or calculations with - this data. It does **NOT** interact with FusionSolar.
 
 - type: textarea
   attributes:
