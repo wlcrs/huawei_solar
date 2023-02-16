@@ -4,14 +4,24 @@
 [![GitHub release](https://img.shields.io/github/release/wlcrs/huawei_solar.svg)](https://GitHub.com/wlcrs/huawei_solar/releases/)
 ![](https://img.shields.io/badge/dynamic/json?color=41BDF5&logo=home-assistant&label=integration%20usage&suffix=%20installs&cacheSeconds=15600&url=https://analytics.home-assistant.io/custom_integrations.json&query=$.huawei_solar.total)
 
-This integration splits out the various values that are fetched from your
-Huawei Solar inverter into separate HomeAssistant sensors. These are properly
-configured  to allow immediate integration into the HA Energy view.
+This integration exposes the information and functions made available by Huawei Solar inverters directly via one of its Modbus interfaces in Home Assistant.
 
-![sensors](images/sensors-screenshot.png)
+## Screenshots
+
+| **Inverter**                                                           | **Battery**                                                  |
+|:----------------------------------------------------------------------:|:------------------------------------------------------------:|
+|![Inverter Sensors](images/inverter_sensors.png)                        | ![Battery Sensors](images/battery_sensors.png)               |
+|![Inverter Diagnostics](images/inverter_configuration_diagnostics.png)  | ![Battery Configuration](images/battery_configuration.png)   |
+
+
+|**Power Meter**                                          | **Optimizer**                                       |
+|:-------------------------------------------------------:|:---------------------------------------------------:|
+|![Power Meter Sensors](images/power_meter_sensors.png)   | ![Optimizer Sensors](images/optimizer_sensors.png)  |
+
+
+
+**HA Energy Dashboard**
 ![energy-config](images/energy-config.png)
-
-![](images/configuration-screenshot.png)
 
 ## Prerequisites
 
