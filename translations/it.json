@@ -1,0 +1,51 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Il dispositivo è già configurato"
+        },
+        "error": {
+            "cannot_connect": "Connessione fallita",
+            "invalid_auth": "Autenticazione non valida",
+            "invalid_slave_ids": "Gli slave ID devono essere numeri interi separati dalla virgola",
+            "read_error": "Lettura dall'inverter fallita.",
+            "slave_cannot_connect": "Impossibile connettersi allo slave aggiuntivo",
+            "unknown": "Errore inaspettato"
+        },
+        "step": {
+            "network_login": {
+                "data": {
+                    "password": "Password",
+                    "username": "Username"
+                },
+                "description": "Inserisci le credenziali Installatore"
+            },
+            "setup_network": {
+                "data": {
+                    "enable_parameter_configuration": "Avanzato: Permessi di accesso elevati",
+                    "host": "Host",
+                    "port": "Porta",
+                    "slave_ids": "Slave IDs (Separati dalla virgola)"
+                }
+            },
+            "setup_serial": {
+                "data": {
+                    "port": "Seleziona dispositivo",
+                    "slave_ids": "Slave IDs (Separato dalla virgola)"
+                },
+                "title": "Device"
+            },
+            "setup_serial_manual_path": {
+                "data": {
+                    "port": "Percorso dispositivo USB"
+                },
+                "title": "Percorso"
+            },
+            "user": {
+                "data": {
+                    "type": "Tipo di connessione"
+                },
+                "title": "Seleziona il tipo di connessione"
+            }
+        }
+    }
+}
