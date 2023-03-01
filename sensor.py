@@ -356,6 +356,13 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     HuaweiSolarSensorEntityDescription, ...
 ] = (
     HuaweiSolarSensorEntityDescription(
+        key=rn.METER_STATUS,
+        name="Meter Status",
+        icon="mdi:electric-switch",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
         key=rn.GRID_A_VOLTAGE,
         name="Voltage",
         icon="mdi:lightning-bolt",
@@ -434,6 +441,13 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
 THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     HuaweiSolarSensorEntityDescription, ...
 ] = (
+    HuaweiSolarSensorEntityDescription(
+        key=rn.METER_STATUS,
+        name="Status",
+        icon="mdi:electric-switch",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+    ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_A_VOLTAGE,
         name="Phase A voltage",
@@ -793,7 +807,6 @@ async def async_setup_entry(
 
         for entity_description in OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS:
             for optimizer_id, device_info in optimizer_device_infos.items():
-
                 optimizer_entities.append(
                     HuaweiSolarOptimizerSensorEntity(
                         update_coordinator,
@@ -872,10 +885,11 @@ class HuaweiSolarAlarmSensorEntity(HuaweiSolarSensorEntity):
         for alarm_register in HuaweiSolarAlarmSensorEntity.ALARM_REGISTERS:
             alarms.extend(self.coordinator.data[alarm_register].value)
         if len(alarms) == 0:
-            return "None"
-        self._attr_native_value = ", ".join(
-            [f"[{alarm.level}] {alarm.id}: {alarm.name}" for alarm in alarms]
-        )
+            self._attr_native_value = "None"
+        else:
+            self._attr_native_value = ", ".join(
+                [f"[{alarm.level}] {alarm.id}: {alarm.name}" for alarm in alarms]
+            )
 
         self.async_write_ha_state()
 
@@ -1126,7 +1140,6 @@ def get_pv_entity_descriptions(count: int) -> list[HuaweiSolarSensorEntityDescri
     result = []
 
     for idx in range(1, count + 1):
-
         result.extend(
             [
                 HuaweiSolarSensorEntityDescription(
