@@ -255,17 +255,17 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
         ].value
 
         if self.entity_description.dynamic_minimum_key:
-            min_register = self.coordinator.data[
+            min_register = self.coordinator.data.get(
                 self.entity_description.dynamic_minimum_key
-            ]
+            )
 
             if min_register:
                 self._dynamic_min_value = min_register.value
 
         if self.entity_description.dynamic_maximum_key:
-            max_register = self.coordinator.data[
+            max_register = self.coordinator.data.get(
                 self.entity_description.dynamic_maximum_key
-            ]
+            )
 
             if max_register:
                 self._dynamic_max_value = max_register.value
