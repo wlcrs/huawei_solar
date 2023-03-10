@@ -848,11 +848,19 @@ class HuaweiSolarSensorEntity(CoordinatorEntity, HuaweiSolarEntity, SensorEntity
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        value = self.coordinator.data[self._register_key].value
-        if self.entity_description.value_conversion_function:
-            value = self.entity_description.value_conversion_function(value)
 
-        self._attr_native_value = value
+        register = self.coordinator.data.get(self._register_key)
+        if register:
+            value = register.value
+            if self.entity_description.value_conversion_function:
+                value = self.entity_description.value_conversion_function(value)
+
+            self._attr_native_value = value
+            self._attr_available = True
+        else:
+            self._attr_native_value = None
+            self._attr_available = False
+
         self.async_write_ha_state()
 
 
@@ -883,7 +891,9 @@ class HuaweiSolarAlarmSensorEntity(HuaweiSolarSensorEntity):
         """Handle updated data from the coordinator."""
         alarms: list[rv.Alarm] = []
         for alarm_register in HuaweiSolarAlarmSensorEntity.ALARM_REGISTERS:
-            alarms.extend(self.coordinator.data[alarm_register].value)
+            alarm_register = self.coordinator.data.get(alarm_register)
+            if alarm_register:
+                alarms.extend(alarm_register.value)
         if len(alarms) == 0:
             self._attr_native_value = "None"
         else:
@@ -1021,14 +1031,20 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
 
         result = self.coordinator.data.get(rn.STORAGE_CAPACITY_CONTROL_PERIODS)
 
-        data: list[PeakSettingPeriod] = result.value if result else []
+        if result:
+            data: list[PeakSettingPeriod] = result.value
 
-        self._attr_native_value = len(data)
+            self._attr_native_value = len(data)
+            self._attr_extra_state_attributes = {
+                f"Period {idx+1}": self._period_to_text(period)
+                for idx, period in enumerate(data)
+            }
+            self._attr_available = True
+        else:
+            self._attr_native_value = None
+            self._attr_extra_state_attributes = None
+            self._attr_available = False
 
-        self._attr_extra_state_attributes = {
-            f"Period {idx+1}": self._period_to_text(period)
-            for idx, period in enumerate(data)
-        }
         self.async_write_ha_state()
 
 
@@ -1074,14 +1090,19 @@ class HuaweiSolarFixedChargingPeriodsSensorEntity(
         result: list[ChargeDischargePeriod] = self.coordinator.data.get(
             rn.STORAGE_FIXED_CHARGING_AND_DISCHARGING_PERIODS
         )
-        data = result.value if result else None
 
-        self._attr_native_value = len(data)
-
-        self._attr_extra_state_attributes = {
-            f"Period {idx+1}": self._period_to_text(period)
-            for idx, period in enumerate(data)
-        }
+        if result:
+            data = result.value
+            self._attr_native_value = len(data)
+            self._attr_extra_state_attributes = {
+                f"Period {idx+1}": self._period_to_text(period)
+                for idx, period in enumerate(data)
+            }
+            self._attr_available = True
+        else:
+            self._attr_native_value = None
+            self._attr_extra_state_attributes = None
+            self._attr_available = False
         self.async_write_ha_state()
 
 
