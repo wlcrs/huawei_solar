@@ -237,12 +237,12 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
         """
         if description.static_minimum_key:
             description.native_min_value = (
-                await bridge.client.get(description.static_minimum_key)
+                await bridge.client.get(description.static_minimum_key, bridge.slave_id)
             ).value
 
         if description.static_maximum_key:
             description.native_max_value = (
-                await bridge.client.get(description.static_maximum_key)
+                await bridge.client.get(description.static_maximum_key, bridge.slave_id)
             ).value
 
         return cls(coordinator, bridge, description, device_info)

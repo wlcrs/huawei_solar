@@ -258,7 +258,7 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
                 self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
             ):
                 asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
-                device_status = (await self.bridge.client.get(rn.DEVICE_STATUS)).value
+                device_status = (await self.bridge.client.get(rn.DEVICE_STATUS, bridge.slave_id)).value
                 if not self._is_off(device_status):
                     self._attr_is_on = True
                     break
@@ -276,7 +276,7 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
                 self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
             ):
                 asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
-                device_status = (await self.bridge.client.get(rn.DEVICE_STATUS)).value
+                device_status = (await self.bridge.client.get(rn.DEVICE_STATUS, bridge.slave_id)).value
                 if self._is_off(device_status):
                     self._attr_is_on = False
                     break
