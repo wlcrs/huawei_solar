@@ -548,7 +548,7 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_ACCUMULATED_REACTIVE_POWER,
-        name="Reactive power",
+        name="Reactive energy",
         native_unit_of_measurement="kVarh",
         # Was SensorDeviceClass.REACTIVE_POWER, which only supports 'var' unit of measurement.
         # We need a SensorDeviceClass.REACTIVE_ENERGY
