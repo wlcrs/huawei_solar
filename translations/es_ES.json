@@ -1,0 +1,51 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo ya configurado"
+        },
+        "error": {
+            "cannot_connect": "Error de conexión",
+            "invalid_auth": "Credenciales inválidas",
+            "invalid_slave_ids": "Los IDs esclavos deben estar separados por comas",
+            "read_error": "Lectura inválida",
+            "slave_cannot_connect": "Error de conexión al esclavo",
+            "unknown": "Error inesperado"
+        },
+        "step": {
+            "network_login": {
+                "data": {
+                    "password": "Usuario",
+                    "username": "Contraseña"
+                },
+                "description": "Introduce las credenciales del Instalador"
+            },
+            "setup_network": {
+                "data": {
+                    "enable_parameter_configuration": "Avanzado: permisos eleveados",
+                    "host": "Host",
+                    "port": "Puerto",
+                    "slave_ids": "IDs esclavos (separados por comas)"
+                }
+            },
+            "setup_serial": {
+                "data": {
+                    "port": "Selecciona un dispositivo",
+                    "slave_ids": "IDs esclavos (separados por comas)"
+                },
+                "title": "Dispositivo"
+            },
+            "setup_serial_manual_path": {
+                "data": {
+                    "port": "Path al dispositivo USB"
+                },
+                "title": "Path"
+            },
+            "user": {
+                "data": {
+                    "type": "Tipo de conexión"
+                },
+                "title": "Selecciona el tipo de conexión"
+            }
+        }
+    }
+}

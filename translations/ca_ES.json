@@ -1,0 +1,51 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositiu ja configurat"
+        },
+        "error": {
+            "cannot_connect": "Error de connexió",
+            "invalid_auth": "Credencials incorrectes",
+            "invalid_slave_ids": "Els IDs esclaus han d'estar separats per comes",
+            "read_error": "Error de lectura",
+            "slave_cannot_connect": "Error de connexió al dispositiu esclau",
+            "unknown": "Error insperat"
+        },
+        "step": {
+            "network_login": {
+                "data": {
+                    "password": "Usuari",
+                    "username": "Contrasenya"
+                },
+                "description": "Introdueix les credencials de l'Installer"
+            },
+            "setup_network": {
+                "data": {
+                    "enable_parameter_configuration": "Avançat: permisos elevats",
+                    "host": "Host",
+                    "port": "Port",
+                    "slave_ids": "IDs esclaus (separats per coma)"
+                }
+            },
+            "setup_serial": {
+                "data": {
+                    "port": "Selecciona un dispositiu",
+                    "slave_ids": "IDs esclaus (separats per coma)"
+                },
+                "title": "Dispositiu"
+            },
+            "setup_serial_manual_path": {
+                "data": {
+                    "port": "Ruta del dispositiu USB"
+                },
+                "title": "Ruta"
+            },
+            "user": {
+                "data": {
+                    "type": "Tipus de connexió"
+                },
+                "title": "Selecciona el tipus de connexió"
+            }
+        }
+    }
+}
