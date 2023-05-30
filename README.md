@@ -21,7 +21,16 @@ This integration exposes the information and functions made available by Huawei 
 
 
 **HA Energy Dashboard**
+
 ![energy-config](images/energy-config.png)
+
+**Services**
+
+This integration exposes multiple services, allowing you to [actively control the amount of electricity exported to the grid](https://github.com/wlcrs/huawei_solar/wiki/Changing-Active-Power-Control) and [forcibly charge/discharge your battery](https://github.com/wlcrs/huawei_solar/wiki/Force-charge-discharge-battery). 
+
+![services](images/services.png)
+
+To enable these advanced features, you need to select 'Elevate permissions' during the setup of this integration.
 
 ## Prerequisites
 
@@ -127,3 +136,11 @@ logger:
 ```
 
 By providing logs directly when creating the issue, you will likely get help much faster.
+
+---
+
+<a name="enable-elevated-permissions"></a>
+
+**Q**: I didn't check 'Advanced: Elevate permissions' during the initial setup of this integration and changed my mind. How do I change this?
+
+**A**: Uninstall and reinstall this integration. You will not lose the history of your sensors.
