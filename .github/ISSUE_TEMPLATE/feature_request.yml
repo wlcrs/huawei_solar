@@ -26,7 +26,7 @@ body:
     description: Please do not abuse this form to submit a problem that you are experiencing with this integration. The required fields in the 'Bug report' issue form are needed to understand your report. Your issue will be closed immediately without any reaction if you abuse this form.
 
     options:
-      - label: I confirm that this is not a bug report
+      - label: I confirm that this is not a bug report or support request
         required: true
       - label: I confirm that this feature request is within the stated scope of the integration
         required: true
