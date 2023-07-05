@@ -94,7 +94,7 @@ The integration will poll the inverter for new values every 30 seconds. If you w
   action:
     - service: homeassistant.update_entity
       target:
-        entity_id: sensor.daily_yield
+        entity_id: sensor.inverter_daily_yield
 ```
 
 Note that optimizer data is refreshed only every 5 minutes, which matches how frequently the inverter refreshes this data.
