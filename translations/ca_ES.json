@@ -14,8 +14,8 @@
         "step": {
             "network_login": {
                 "data": {
-                    "password": "Usuari",
-                    "username": "Contrasenya"
+                    "password": "Contrasenya",
+                    "username": "Nom d'usuari"
                 },
                 "description": "Introdueix les credencials de l'Installer"
             },
