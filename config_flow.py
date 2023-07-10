@@ -23,6 +23,7 @@ from huawei_solar import (
     HuaweiSolarBridge,
     HuaweiSolarException,
     ReadException,
+    InvalidCredentials
 )
 
 from .const import (
@@ -154,7 +155,7 @@ async def validate_network_setup(data: dict[str, Any]) -> dict[str, Any]:
         return result
 
     finally:
-        if bridge is not None:
+        if bridge:
             # Cleanup this inverter object explicitly to prevent it from trying to maintain a modbus connection
             await bridge.stop()
 
@@ -177,7 +178,8 @@ async def validate_network_setup_login(
         # verify that we have write-permission now
 
         return await bridge.has_write_permission()
-
+    except InvalidCredentials:
+        return False
     finally:
         if bridge is not None:
             # Cleanup this inverter object explicitly to prevent it from trying to maintain a modbus connection
