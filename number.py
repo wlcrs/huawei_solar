@@ -90,6 +90,17 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarNumberEntityDescription(
+        key=rn.STORAGE_BACKUP_POWER_STATE_OF_CHARGE,
+        native_min_value=20,
+        native_max_value=100,
+        native_step=0.1,
+        name="Backup power SOC",
+        icon="mdi:battery-negative",
+        native_unit_of_measurement=PERCENTAGE,
+        entity_category=EntityCategory.CONFIG,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_GRID_CHARGE_CUTOFF_STATE_OF_CHARGE,
         native_min_value=20,
         native_max_value=100,
