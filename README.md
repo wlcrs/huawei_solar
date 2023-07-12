@@ -77,7 +77,7 @@ repository into the `custom_components/huawei_solar` directory
 6. When using the `elevate permissions` feature in combination with certain connection methods (most TCP-connections, not for serial connections), 
    you will be asked to enter the credentials to the `installer` account in a next step. These are the
 credentials used to connect to the inverter in the "Device Commissioning" section of
-the FusionSolar App. The default password is `00000a`. If necessary, you can [perform a password reset](https://support.huawei.com/enterprise/en/doc/EDOC1100136173/8aa1f88a/resetting-password). This will not reset other parameters like the FusionSolar cloud connection or other changes made by the firm which did your solar installation.
+the FusionSolar App. The default password is either `00000a` or `0000000a`. If necessary, you can [perform a password reset](https://support.huawei.com/enterprise/en/doc/EDOC1100136173/8aa1f88a/resetting-password). This will not reset other parameters like the FusionSolar cloud connection or other changes made by the firm which did your solar installation.
 
 
 ## Inverter polling frequency
