@@ -9,7 +9,7 @@ import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, ServiceCall
-from homeassistant.helpers import device_registry
+from homeassistant.helpers import device_registry as dr
 
 from huawei_solar import HuaweiSolarBridge
 from huawei_solar import register_names as rn
@@ -30,13 +30,13 @@ from .const import (
     SERVICE_FORCIBLE_DISCHARGE,
     SERVICE_FORCIBLE_DISCHARGE_SOC,
     SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
-    SERVICE_SET_DI_ACTIVE_POWER_SCHEDULING,
-    SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
     SERVICE_SET_CAPACITY_CONTROL_PERIODS,
+    SERVICE_SET_DI_ACTIVE_POWER_SCHEDULING,
     SERVICE_SET_FIXED_CHARGE_PERIODS,
     SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
     SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
     SERVICE_SET_TOU_PERIODS,
+    SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
     SERVICE_STOP_FORCIBLE_CHARGE,
 )
 
@@ -95,7 +95,7 @@ TOU_PERIODS_SCHEMA = DEVICE_SCHEMA.extend(
     {
         vol.Required(DATA_PERIODS): vol.All(
             cv.string,
-            vol.Match((HUAWEI_LUNA2000_TOU_PATTERN + r"|" + LG_RESU_TOU_PATTERN)),
+            vol.Match(HUAWEI_LUNA2000_TOU_PATTERN + r"|" + LG_RESU_TOU_PATTERN),
         )
     }
 )
@@ -149,7 +149,7 @@ def _parse_time(value: str):
     return minutes_since_midnight
 
 
-async def async_setup_services(
+async def async_setup_services(  # noqa: C901
     hass: HomeAssistant,
     entry: ConfigEntry,
     bridges_with_device_infos: list[
@@ -159,7 +159,7 @@ async def async_setup_services(
     """Huawei Solar Services Setup."""
 
     def get_battery_bridge(service_call: ServiceCall):
-        dev_reg = device_registry.async_get(hass)
+        dev_reg = dr.async_get(hass)
         device_entry = dev_reg.async_get(service_call.data[DATA_DEVICE_ID])
 
         if not device_entry:
@@ -182,14 +182,13 @@ async def async_setup_services(
         )
 
     def get_inverter_bridge(service_call: ServiceCall):
-        dev_reg = device_registry.async_get(hass)
+        dev_reg = dr.async_get(hass)
         device_entry = dev_reg.async_get(service_call.data[DATA_DEVICE_ID])
 
         if not device_entry:
             raise HuaweiSolarServiceException("No such device found")
 
         for bridge, device_infos in bridges_with_device_infos:
-
             for identifier in device_infos["inverter"]["identifiers"]:
                 for device_identifier in device_entry.identifiers:
                     if identifier == device_identifier:
@@ -293,7 +292,7 @@ async def async_setup_services(
         )
 
     async def stop_forcible_charge(service_call: ServiceCall) -> None:
-        """Stops a forcible charge or discharge."""
+        """Stop a forcible charge or discharge."""
 
         bridge = get_battery_bridge(service_call)
         await bridge.set(
@@ -308,7 +307,7 @@ async def async_setup_services(
         await bridge.set(rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE, 0)
 
     async def reset_maximum_feed_grid_power(service_call: ServiceCall) -> None:
-        """Sets Active Power Control to 'Unlimited'"""
+        """Set Active Power Control to 'Unlimited'."""
 
         bridge = get_inverter_bridge(service_call)
         await bridge.set(
@@ -322,7 +321,7 @@ async def async_setup_services(
         )
 
     async def set_di_active_power_scheduling(service_call: ServiceCall) -> None:
-        """Sets Active Power Control to 'DI active scheduling'"""
+        """Set Active Power Control to 'DI active scheduling'."""
 
         bridge = get_inverter_bridge(service_call)
         await bridge.set(
@@ -336,7 +335,7 @@ async def async_setup_services(
         )
 
     async def set_zero_power_grid_connection(service_call: ServiceCall) -> None:
-        """Sets Active Power Control to 'Zero-Power Grid Connection'"""
+        """Set Active Power Control to 'Zero-Power Grid Connection'."""
 
         bridge = get_inverter_bridge(service_call)
         await bridge.set(
@@ -349,9 +348,8 @@ async def async_setup_services(
             0,
         )
 
-
     async def set_maximum_feed_grid_power(service_call: ServiceCall) -> None:
-        """Sets Active Power Control to 'Power-limited grid connection' with the given wattage."""
+        """Set Active Power Control to 'Power-limited grid connection' with the given wattage."""
 
         bridge = get_inverter_bridge(service_call)
         power = await _validate_power_value(
@@ -365,7 +363,7 @@ async def async_setup_services(
         )
 
     async def set_maximum_feed_grid_power_percentage(service_call: ServiceCall) -> None:
-        """Sets Active Power Control to 'Power-limited grid connection' with the given percentage."""
+        """Set Active Power Control to 'Power-limited grid connection' with the given percentage."""
 
         bridge = get_inverter_bridge(service_call)
         power_percentage = service_call.data[DATA_POWER_PERCENTAGE]

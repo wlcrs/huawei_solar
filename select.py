@@ -1,11 +1,11 @@
-"""This component provides switch entities for Huawei Solar."""
+"""Switch entities for Huawei Solar."""
 from __future__ import annotations
 
 import logging
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Generic, TypeVar, Any
+from typing import Any, Generic, TypeVar, TYPE_CHECKING
 
 from homeassistant.components.select import SelectEntity, SelectEntityDescription
 from homeassistant.config_entries import ConfigEntry
@@ -19,17 +19,16 @@ from huawei_solar import register_names as rn
 from huawei_solar import register_values as rv
 from huawei_solar.registers import REGISTERS
 
-from . import (
-    HuaweiSolarConfigurationUpdateCoordinator,
-    HuaweiSolarEntity,
-    HuaweiSolarUpdateCoordinator,
-)
+from . import HuaweiSolarConfigurationUpdateCoordinator, HuaweiSolarEntity
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
     DATA_CONFIGURATION_UPDATE_COORDINATORS,
     DATA_UPDATE_COORDINATORS,
     DOMAIN,
 )
+
+if TYPE_CHECKING:
+    from . import HuaweiSolarUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -78,13 +77,13 @@ async def async_setup_entry(
         _LOGGER.info("Skipping select setup, as parameter configuration is not enabled")
         return
 
-    update_coordinators = hass.data[DOMAIN][entry.entry_id][
-        DATA_UPDATE_COORDINATORS
-    ]  # type: list[HuaweiSolarUpdateCoordinator]
+    update_coordinators: list[HuaweiSolarUpdateCoordinator] = hass.data[DOMAIN][
+        entry.entry_id
+    ][DATA_UPDATE_COORDINATORS]
 
-    configuration_update_coordinators = hass.data[DOMAIN][entry.entry_id][
-        DATA_CONFIGURATION_UPDATE_COORDINATORS
-    ]
+    configuration_update_coordinators: list[
+        HuaweiSolarConfigurationUpdateCoordinator
+    ] = hass.data[DOMAIN][entry.entry_id][DATA_CONFIGURATION_UPDATE_COORDINATORS]
 
     # When more than one inverter is present, then we suffix all sensors with '#1', '#2', ...
     # The order for these suffixes is the order in which the user entered the slave-ids.
@@ -94,7 +93,7 @@ async def async_setup_entry(
     for idx, (update_coordinator, configuration_update_coordinator) in enumerate(
         zip(update_coordinators, configuration_update_coordinators)
     ):
-        slave_entities: list[HuaweiSolarSelectEntity] = []
+        slave_entities: list[HuaweiSolarSelectEntity | StorageModeSelectEntity] = []
 
         bridge = update_coordinator.bridge
         device_infos = update_coordinator.device_infos
@@ -210,8 +209,7 @@ class HuaweiSolarSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity
 
     @property
     def available(self) -> bool:
-        """Override available property (from CoordinatorEntity) to take into account
-        the custom check_is_available_func result"""
+        """Override available property (from CoordinatorEntity) to take into account the custom check_is_available_func result."""
         available = super().available
 
         if self.entity_description.check_is_available_func and available:

@@ -22,8 +22,8 @@ from huawei_solar import (
     ConnectionException,
     HuaweiSolarBridge,
     HuaweiSolarException,
+    InvalidCredentials,
     ReadException,
-    InvalidCredentials
 )
 
 from .const import (
@@ -226,7 +226,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_setup_serial(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        """Handles connection parameters when using ModbusRTU."""
+        """Handle connection parameters when using ModbusRTU."""
 
         # Parameter configuration is always possible over serial connection
         self._enable_parameter_configuration = True
@@ -234,7 +234,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
 
         if user_input is not None:
-
             user_selection = user_input[CONF_PORT]
             if user_selection == CONF_MANUAL_PATH:
                 self._slave_ids = user_input[CONF_SLAVE_IDS]
@@ -251,7 +250,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             except ValueError:
                 errors["base"] = "invalid_slave_ids"
             else:
-
                 try:
                     info = await validate_serial_setup(user_input)
 
@@ -317,7 +315,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
 
         if user_input is not None:
-
             try:
                 user_input[CONF_SLAVE_IDS] = list(
                     map(int, user_input[CONF_SLAVE_IDS].split(","))
@@ -369,7 +366,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_setup_network(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        """Handles connection parameters when using ModbusTCP."""
+        """Handle connection parameters when using ModbusTCP."""
 
         errors = {}
 
@@ -381,7 +378,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             except ValueError:
                 errors["base"] = "invalid_slave_ids"
             else:
-
                 try:
                     info = await validate_network_setup(user_input)
 

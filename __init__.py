@@ -171,7 +171,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                         "Consider enabling elevated permissions to get more optimizer data",
                         exc_info=exception,
                     )
-                    optimizers_device_infos = None
+                    optimizers_device_infos = {}
                 except Exception as exc:  # pylint: disable=broad-except
                     _LOGGER.exception(
                         "Cannot create optimizer sensor entities due to an unexpected error",
@@ -319,7 +319,6 @@ async def _create_update_coordinator(
     device_infos: HuaweiInverterBridgeDeviceInfos,
     update_interval,
 ):
-
     coordinator = HuaweiSolarUpdateCoordinator(
         hass,
         _LOGGER,
@@ -377,7 +376,6 @@ async def _create_optimizer_update_coordinator(
     optimizer_device_infos: dict[int, DeviceInfo],
     update_interval,
 ):
-
     coordinator = HuaweiSolarOptimizerUpdateCoordinator(
         hass,
         _LOGGER,
@@ -434,7 +432,6 @@ async def _create_configuration_update_coordinator(
     device_infos: HuaweiInverterBridgeDeviceInfos,
     update_interval,
 ):
-
     coordinator = HuaweiSolarConfigurationUpdateCoordinator(
         hass,
         _LOGGER,

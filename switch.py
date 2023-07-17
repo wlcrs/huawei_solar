@@ -1,11 +1,11 @@
-"""This component provides switch entities for Huawei Solar."""
+"""Switch entities for Huawei Solar."""
 from __future__ import annotations
 
 import asyncio
 import logging
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Generic, TypeVar, Any
+from typing import Any, Generic, TypeVar
 
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.config_entries import ConfigEntry
@@ -85,7 +85,9 @@ async def async_setup_entry(
     for idx, (update_coordinator, configuration_update_coordinator) in enumerate(
         zip(update_coordinators, configuration_update_coordinators)
     ):
-        slave_entities: list[HuaweiSolarSwitchEntity] = []
+        slave_entities: list[
+            HuaweiSolarSwitchEntity | HuaweiSolarOnOffSwitchEntity
+        ] = []
 
         bridge = update_coordinator.bridge
         device_infos = update_coordinator.device_infos
@@ -186,8 +188,7 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
 
     @property
     def available(self) -> bool:
-        """Override available property (from CoordinatorEntity) to take into account
-        the custom check_is_available_func result"""
+        """Override available property (from CoordinatorEntity) to take into account the custom check_is_available_func result."""
         available = super().available
 
         if self.entity_description.check_is_available_func and available:
@@ -198,8 +199,6 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
 
 class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity):
     """Huawei Solar Switch Entity."""
-
-    entity_description: HuaweiSolarSwitchEntityDescription
 
     POLL_FREQUENCY_SECONDS = 15
     MAX_STATUS_CHANGE_TIME_SECONDS = 3000  # Maximum status change time is 5 minutes
@@ -250,15 +249,16 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
     async def async_turn_on(self, **kwargs) -> None:
         """Turn the setting on."""
         async with self._change_lock:
-
             await self.bridge.set(rn.STARTUP, 0)
 
             # Turning on can take up to 5 minutes... We'll poll every 15 seconds
             for _ in range(
                 self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
             ):
-                asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
-                device_status = (await self.bridge.client.get(rn.DEVICE_STATUS, bridge.slave_id)).value
+                await asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
+                device_status = (
+                    await self.bridge.client.get(rn.DEVICE_STATUS, self.bridge.slave_id)
+                ).value
                 if not self._is_off(device_status):
                     self._attr_is_on = True
                     break
@@ -275,8 +275,10 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
             for _ in range(
                 self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
             ):
-                asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
-                device_status = (await self.bridge.client.get(rn.DEVICE_STATUS, bridge.slave_id)).value
+                await asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
+                device_status = (
+                    await self.bridge.client.get(rn.DEVICE_STATUS, self.bridge.slave_id)
+                ).value
                 if self._is_off(device_status):
                     self._attr_is_on = False
                     break

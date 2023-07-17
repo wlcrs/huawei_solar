@@ -1,4 +1,4 @@
-"""This component provides number entities for Huawei Solar."""
+"""Number entities for Huawei Solar."""
 from __future__ import annotations
 
 import logging
@@ -9,7 +9,7 @@ from homeassistant.components.number import (
     NumberEntityDescription,
     NumberMode,
 )
-from homeassistant.components.number.const import DEFAULT_MIN_VALUE, DEFAULT_MAX_VALUE
+from homeassistant.components.number.const import DEFAULT_MAX_VALUE, DEFAULT_MIN_VALUE
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import PERCENTAGE, POWER_WATT
 from homeassistant.core import HomeAssistant, callback
@@ -21,11 +21,7 @@ from huawei_solar import HuaweiSolarBridge
 from huawei_solar import register_names as rn
 from huawei_solar import register_values as rv
 
-from . import (
-    HuaweiSolarConfigurationUpdateCoordinator,
-    HuaweiSolarEntity,
-    HuaweiSolarUpdateCoordinator,
-)
+from . import HuaweiSolarConfigurationUpdateCoordinator, HuaweiSolarEntity
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
     DATA_CONFIGURATION_UPDATE_COORDINATORS,
@@ -292,6 +288,7 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
 
     @property
     def native_max_value(self) -> float:
+        """Maximum value, possibly determined dynamically using _dynamic_max_value."""
         native_max_value = self.entity_description.native_max_value
 
         if self._dynamic_max_value:
@@ -305,6 +302,7 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
 
     @property
     def native_min_value(self) -> float:
+        """Minimum value, possibly determined dynamically using _dynamic_min_value."""
         native_min_value = self.entity_description.native_min_value
 
         if self._dynamic_min_value:

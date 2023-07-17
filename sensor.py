@@ -4,7 +4,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 from itertools import zip_longest
-from typing import Any, Union
+from typing import Any
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -28,7 +28,7 @@ from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from huawei_solar import HuaweiSolarBridge
+from huawei_solar import HuaweiSolarBridge, Result
 from huawei_solar import register_names as rn
 from huawei_solar import register_values as rv
 from huawei_solar.files import OptimizerRunningStatus
@@ -704,7 +704,12 @@ async def async_setup_entry(
     for idx, (update_coordinator, configuration_update_coordinator) in enumerate(
         zip_longest(update_coordinators, configuration_update_coordinators)
     ):
-        slave_entities: list[HuaweiSolarSensorEntity] = []
+        slave_entities: list[
+            HuaweiSolarSensorEntity
+            | HuaweiSolarTOUPricePeriodsSensorEntity
+            | HuaweiSolarFixedChargingPeriodsSensorEntity
+            | HuaweiSolarCapacityControlPeriodsSensorEntity
+        ] = []
 
         bridge = update_coordinator.bridge
         device_infos = update_coordinator.device_infos
@@ -799,7 +804,7 @@ async def async_setup_entry(
         DATA_OPTIMIZER_UPDATE_COORDINATORS
     ]  # type: list[HuaweiSolarOptimizerUpdateCoordinator]
 
-    for idx, update_coordinator in enumerate(optimizer_update_coordinators):
+    for update_coordinator in optimizer_update_coordinators:
         optimizer_entities: list[HuaweiSolarOptimizerSensorEntity] = []
 
         bridge = update_coordinator.bridge
@@ -865,8 +870,7 @@ class HuaweiSolarSensorEntity(CoordinatorEntity, HuaweiSolarEntity, SensorEntity
 
 
 class HuaweiSolarAlarmSensorEntity(HuaweiSolarSensorEntity):
-    """Huawei Solar Sensor for Alarm values, which are spread over three
-    registers that are received by the DataUpdateCoordinator"""
+    """Huawei Solar Sensor for Alarm values, which are spread over three registers that are received by the DataUpdateCoordinator."""
 
     ALARM_REGISTERS = [rn.ALARM_1, rn.ALARM_2, rn.ALARM_3]
 
@@ -904,7 +908,7 @@ class HuaweiSolarAlarmSensorEntity(HuaweiSolarSensorEntity):
         self.async_write_ha_state()
 
 
-def _days_effective_to_str(days: tuple(bool, bool, bool, bool, bool, bool, bool)):
+def _days_effective_to_str(days: tuple[bool, bool, bool, bool, bool, bool, bool]):
     value = ""
     for i in range(0, 7):  # Sunday is on index 0, but we want to name it day 7
         if days[(i + 1) % 7]:
@@ -923,7 +927,8 @@ class HuaweiSolarTOUPricePeriodsSensorEntity(
     """Huawei Solar Sensor for configured TOU periods.
 
     It shows the number of configured TOU periods, and has the
-    contents of them as extended attributes"""
+    contents of them as extended attributes
+    """
 
     def __init__(
         self,
@@ -963,17 +968,17 @@ class HuaweiSolarTOUPricePeriodsSensorEntity(
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
 
-        result: Union[
-            list[LG_RESU_TimeOfUsePeriod], list[HUAWEI_LUNA2000_TimeOfUsePeriod]
-        ] = self.coordinator.data.get(
+        result: Result = self.coordinator.data.get(
             rn.STORAGE_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS
         )
-        data = result.value if result else []
+        data: list[LG_RESU_TimeOfUsePeriod] | list[HUAWEI_LUNA2000_TimeOfUsePeriod] = (
+            result.value if result else []
+        )
 
         self._attr_native_value = len(data)
 
         if len(data) == 0:
-            self._attr_extra_state_attributes = {}
+            self._attr_extra_state_attributes.clear()
         else:
             if isinstance(data[0], LG_RESU_TimeOfUsePeriod):
                 self._attr_extra_state_attributes = {
@@ -994,7 +999,8 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
     """Huawei Solar Sensor for configured Capacity Control periods.
 
     It shows the number of configured capacity control periods, and has the
-    contents of them as extended attributes"""
+    contents of them as extended attributes
+    """
 
     def __init__(
         self,
@@ -1042,7 +1048,7 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
             self._attr_available = True
         else:
             self._attr_native_value = None
-            self._attr_extra_state_attributes = None
+            self._attr_extra_state_attributes.clear()
             self._attr_available = False
 
         self.async_write_ha_state()
@@ -1054,7 +1060,8 @@ class HuaweiSolarFixedChargingPeriodsSensorEntity(
     """Huawei Solar Sensor for configured Fixed Charging and Discharging periods.
 
     It shows the number of configured fixed charging and discharging periods, and has the
-    contents of them as extended attributes"""
+    contents of them as extended attributes
+    """
 
     def __init__(
         self,
@@ -1087,12 +1094,12 @@ class HuaweiSolarFixedChargingPeriodsSensorEntity(
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        result: list[ChargeDischargePeriod] = self.coordinator.data.get(
+        result: Result = self.coordinator.data.get(
             rn.STORAGE_FIXED_CHARGING_AND_DISCHARGING_PERIODS
         )
 
         if result:
-            data = result.value
+            data: list[ChargeDischargePeriod] = result.value
             self._attr_native_value = len(data)
             self._attr_extra_state_attributes = {
                 f"Period {idx+1}": self._period_to_text(period)
@@ -1101,7 +1108,7 @@ class HuaweiSolarFixedChargingPeriodsSensorEntity(
             self._attr_available = True
         else:
             self._attr_native_value = None
-            self._attr_extra_state_attributes = None
+            self._attr_extra_state_attributes.clear()
             self._attr_available = False
         self.async_write_ha_state()
 

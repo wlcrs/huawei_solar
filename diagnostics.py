@@ -12,15 +12,15 @@ from homeassistant.core import HomeAssistant
 from huawei_solar import HuaweiSolarBridge
 
 from . import (
-    HuaweiSolarUpdateCoordinator,
     HuaweiSolarConfigurationUpdateCoordinator,
     HuaweiSolarOptimizerUpdateCoordinator,
+    HuaweiSolarUpdateCoordinator,
 )
 from .const import (
-    DATA_UPDATE_COORDINATORS,
-    DOMAIN,
     DATA_CONFIGURATION_UPDATE_COORDINATORS,
     DATA_OPTIMIZER_UPDATE_COORDINATORS,
+    DATA_UPDATE_COORDINATORS,
+    DOMAIN,
 )
 
 TO_REDACT = {CONF_PASSWORD}
@@ -69,7 +69,6 @@ async def async_get_config_entry_diagnostics(
 
 
 async def _build_bridge_diagnostics_info(bridge: HuaweiSolarBridge) -> dict[str, Any]:
-
     diagnostics_data = {
         "model_name": bridge.model_name,
         "pv_string_count": bridge.pv_string_count,
