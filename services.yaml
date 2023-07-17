@@ -140,6 +140,30 @@ reset_maximum_feed_grid_power:
         device:
           integration: huawei_solar
 
+set_di_active_power_scheduling:
+  name: Set Active Power Control to Unlimited mode
+  description: Set Active Power Control to 'DI active scheduling'
+  fields:
+    device_id:
+      name: Inverter
+      description: Must be an 'Inverter' device
+      required: true
+      selector:
+        device:
+          integration: huawei_solar
+
+set_zero_power_grid_connection:
+  name: Set Active Power Control to Unlimited mode
+  description: Set Active Power Control to 'Zero power grid connection'
+  fields:
+    device_id:
+      name: Inverter
+      description: Must be an 'Inverter' device
+      required: true
+      selector:
+        device:
+          integration: huawei_solar
+
 set_maximum_feed_grid_power:
   name: Limit the power fed to the grid
   description: Sets Active Power Control to 'Power-limited grid connection' with the given wattage

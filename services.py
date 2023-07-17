@@ -30,6 +30,8 @@ from .const import (
     SERVICE_FORCIBLE_DISCHARGE,
     SERVICE_FORCIBLE_DISCHARGE_SOC,
     SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
+    SERVICE_SET_DI_ACTIVE_POWER_SCHEDULING,
+    SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
     SERVICE_SET_CAPACITY_CONTROL_PERIODS,
     SERVICE_SET_FIXED_CHARGE_PERIODS,
     SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
@@ -306,7 +308,7 @@ async def async_setup_services(
         await bridge.set(rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE, 0)
 
     async def reset_maximum_feed_grid_power(service_call: ServiceCall) -> None:
-        """Sets Active Power Control to 'Power-limited grid connection' with the given wattage."""
+        """Sets Active Power Control to 'Unlimited'"""
 
         bridge = get_inverter_bridge(service_call)
         await bridge.set(
@@ -318,6 +320,35 @@ async def async_setup_services(
             rn.MAXIMUM_FEED_GRID_POWER_PERCENT,
             0,
         )
+
+    async def set_di_active_power_scheduling(service_call: ServiceCall) -> None:
+        """Sets Active Power Control to 'DI active scheduling'"""
+
+        bridge = get_inverter_bridge(service_call)
+        await bridge.set(
+            rn.ACTIVE_POWER_CONTROL_MODE,
+            rv.ActivePowerControlMode.DI_ACTIVE_SCHEDULING,
+        )
+        await bridge.set(rn.MAXIMUM_FEED_GRID_POWER_WATT, 0)
+        await bridge.set(
+            rn.MAXIMUM_FEED_GRID_POWER_PERCENT,
+            0,
+        )
+
+    async def set_zero_power_grid_connection(service_call: ServiceCall) -> None:
+        """Sets Active Power Control to 'Zero-Power Grid Connection'"""
+
+        bridge = get_inverter_bridge(service_call)
+        await bridge.set(
+            rn.ACTIVE_POWER_CONTROL_MODE,
+            rv.ActivePowerControlMode.ZERO_POWER_GRID_CONNECTION,
+        )
+        await bridge.set(rn.MAXIMUM_FEED_GRID_POWER_WATT, 0)
+        await bridge.set(
+            rn.MAXIMUM_FEED_GRID_POWER_PERCENT,
+            0,
+        )
+
 
     async def set_maximum_feed_grid_power(service_call: ServiceCall) -> None:
         """Sets Active Power Control to 'Power-limited grid connection' with the given wattage."""
@@ -468,6 +499,20 @@ async def async_setup_services(
         DOMAIN,
         SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
         reset_maximum_feed_grid_power,
+        schema=DEVICE_SCHEMA,
+    )
+
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_SET_DI_ACTIVE_POWER_SCHEDULING,
+        set_di_active_power_scheduling,
+        schema=DEVICE_SCHEMA,
+    )
+
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
+        set_zero_power_grid_connection,
         schema=DEVICE_SCHEMA,
     )
 
