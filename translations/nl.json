@@ -1,0 +1,51 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Apparaat is reeds geconfigureerd"
+        },
+        "error": {
+            "cannot_connect": "Verbinden mislukt",
+            "invalid_auth": "Ongeldige authenticatie",
+            "invalid_slave_ids": "Slave IDs moeten een kommagescheiden lijst van gehele getallen zijn",
+            "read_error": "Lezen van de inverter is mislukt.",
+            "slave_cannot_connect": "Verbinden met extra slave mislukt",
+            "unknown": "Onverwachte fout"
+        },
+        "step": {
+            "network_login": {
+                "data": {
+                    "password": "Wachtwoord",
+                    "username": "Gebruikersnaam"
+                },
+                "description": "Vul de 'Installer' inlogggegevens in"
+            },
+            "setup_network": {
+                "data": {
+                    "enable_parameter_configuration": "Geavanceerd: Verhoog rechten",
+                    "host": "Host",
+                    "port": "Poort",
+                    "slave_ids": "Slave IDs (kommagescheiden)"
+                }
+            },
+            "setup_serial": {
+                "data": {
+                    "port": "Selecteer toestel",
+                    "slave_ids": "Slave IDs (kommagescheiden)"
+                },
+                "title": "Toestel"
+            },
+            "setup_serial_manual_path": {
+                "data": {
+                    "port": "Pad van het USB Toestel"
+                },
+                "title": "Pad"
+            },
+            "user": {
+                "data": {
+                    "type": "Verbindingstype"
+                },
+                "title": "Selecteer verbindingstype"
+            }
+        }
+    }
+}
