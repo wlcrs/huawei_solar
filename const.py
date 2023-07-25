@@ -12,6 +12,7 @@ CONF_SLAVE_IDS = "slave_ids"
 CONF_ENABLE_PARAMETER_CONFIGURATION = "enable_parameter_configuration"
 
 
+DATA_BRIDGES_WITH_DEVICEINFOS = "bridges"
 DATA_UPDATE_COORDINATORS = "update_coordinators"
 DATA_CONFIGURATION_UPDATE_COORDINATORS = "configuration_update_coordinators"
 DATA_OPTIMIZER_UPDATE_COORDINATORS = "optimizer_update_coordinators"

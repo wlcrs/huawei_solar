@@ -129,7 +129,7 @@ stop_forcible_charge:
           integration: huawei_solar
 
 reset_maximum_feed_grid_power:
-  name: Set Active Power Control to Unlimited mode
+  name: Set Active Power Control to Maximum Feed Grid Power
   description: Set Active Power Control to the default Unlimited mode
   fields:
     device_id:
@@ -141,7 +141,7 @@ reset_maximum_feed_grid_power:
           integration: huawei_solar
 
 set_di_active_power_scheduling:
-  name: Set Active Power Control to Unlimited mode
+  name: Set Active Power Control to 'DI active scheduling'
   description: Set Active Power Control to 'DI active scheduling'
   fields:
     device_id:
@@ -153,7 +153,7 @@ set_di_active_power_scheduling:
           integration: huawei_solar
 
 set_zero_power_grid_connection:
-  name: Set Active Power Control to Unlimited mode
+  name: Set Active Power Control to 'Zero power grid connection'
   description: Set Active Power Control to 'Zero power grid connection'
   fields:
     device_id:
