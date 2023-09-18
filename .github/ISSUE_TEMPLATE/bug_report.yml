@@ -31,6 +31,7 @@ body:
   attributes:
     label: How do you connect to the inverter?
     options:
+      - Please select your connection method
       - Over serial, with a serial-to-USB stick
       - Over serial, with a serial-to-WiFi stick
       - Via the `SUN2000-<serial_no>` WiFi 
@@ -43,10 +44,12 @@ body:
   attributes:
     label: "Upload your Diagnostics File"
     description: |
+      ![Download diagnostics menu entry](.github/ISSUE_TEMPLATE/images/download-diagnostics.png)
       1. In your Home Assistant, go to Settings > Devices & Services
-      2. Click the three dots on the 'Huawei Solar' tile 
-      3. Select 'Download diagnostis'
-      4. Click on the textarea below, drag & drop the file into the textarea to upload it.
+      2. Click on the 'Huawei Solar' tile 
+      3. Click on the three dots next to the integration entry
+      4. Select 'Download diagnostis'
+      5. Click on the textarea below, drag & drop the file into the textarea to upload it.
     value: Drag & Drop your Diagnostics File here.
   validations:
     required: true
@@ -59,6 +62,8 @@ body:
       **You MUST include relevant logfiles to debug your issue.**
       
       The easiest way to provide debug logs is by using the `Enable/Disable debug logging` feature as described here: ['Debug Logs and Diagnostics' from the HA documentation](https://www.home-assistant.io/docs/configuration/troubleshooting/#debug-logs-and-diagnostics)
+
+      ![Enable Debug Logging menu entry](.github/ISSUE_TEMPLATE/images/enable-debug-logging.png)
 
       If you are having problems during initial setup of this integration, you'll need to manually gather these logs. To do this, add the following lines to your `/config/configuration.yaml` and restart HA:
 
