@@ -44,7 +44,7 @@ body:
   attributes:
     label: "Upload your Diagnostics File"
     description: |
-      ![Download diagnostics menu entry](.github/ISSUE_TEMPLATE/images/download-diagnostics.png)
+      ![Download diagnostics menu entry](https://raw.githubusercontent.com/wlcrs/huawei_solar/main/.github/ISSUE_TEMPLATE/images/download-diagnostics.png)
       1. In your Home Assistant, go to Settings > Devices & Services
       2. Click on the 'Huawei Solar' tile 
       3. Click on the three dots next to the integration entry
@@ -63,7 +63,7 @@ body:
       
       The easiest way to provide debug logs is by using the `Enable/Disable debug logging` feature as described here: ['Debug Logs and Diagnostics' from the HA documentation](https://www.home-assistant.io/docs/configuration/troubleshooting/#debug-logs-and-diagnostics)
 
-      ![Enable Debug Logging menu entry](.github/ISSUE_TEMPLATE/images/enable-debug-logging.png)
+      ![Enable Debug Logging menu entry](https://raw.githubusercontent.com/wlcrs/huawei_solar/main/.github/ISSUE_TEMPLATE/images/enable-debug-logging.png)
 
       If you are having problems during initial setup of this integration, you'll need to manually gather these logs. To do this, add the following lines to your `/config/configuration.yaml` and restart HA:
 
