@@ -17,11 +17,11 @@
                     "password": "Contraseña",
                     "username": "Nombre de usuario"
                 },
-                "description": "Introduce las credenciales del Instalador"
+                "description": "Introduce las credenciales de Instalador"
             },
             "setup_network": {
                 "data": {
-                    "enable_parameter_configuration": "Avanzado: permisos eleveados",
+                    "enable_parameter_configuration": "Avanzado: elevar permisos",
                     "host": "Host",
                     "port": "Puerto",
                     "slave_ids": "IDs esclavos (separados por comas)"
