@@ -17,11 +17,11 @@
                     "password": "Contrasenya",
                     "username": "Nom d'usuari"
                 },
-                "description": "Introdueix les credencials de l'Installer"
+                "description": "Introdueix les credencials d'instal·lador"
             },
             "setup_network": {
                 "data": {
-                    "enable_parameter_configuration": "Avançat: permisos elevats",
+                    "enable_parameter_configuration": "Avançat: elevar permisos",
                     "host": "Host",
                     "port": "Port",
                     "slave_ids": "IDs esclaus (separats per coma)"
