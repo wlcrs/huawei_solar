@@ -66,7 +66,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_CHARGING_CUTOFF_CAPACITY,
-        native_min_value=90,
+        native_min_value=75,
         native_max_value=100,
         native_step=0.1,
         name="End-of-charge SOC",
