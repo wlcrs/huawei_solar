@@ -951,7 +951,6 @@ class HuaweiSolarTOUPricePeriodsSensorEntity(
         self.entity_description = HuaweiSolarSensorEntityDescription(
             key=rn.STORAGE_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS,
             name="Time Of use periods",
-            entity_category=EntityCategory.CONFIG,
             icon="mdi:calendar-text",
         )
 
@@ -1022,7 +1021,6 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
         self.entity_description = HuaweiSolarSensorEntityDescription(
             key=rn.STORAGE_CAPACITY_CONTROL_PERIODS,
             name="Capacity control periods",
-            entity_category=EntityCategory.CONFIG,
             icon="mdi:calendar-text",
         )
 
@@ -1083,7 +1081,6 @@ class HuaweiSolarFixedChargingPeriodsSensorEntity(
         self.entity_description = HuaweiSolarSensorEntityDescription(
             key=rn.STORAGE_FIXED_CHARGING_AND_DISCHARGING_PERIODS,
             name="Fixed charging periods",
-            entity_category=EntityCategory.CONFIG,
             icon="mdi:calendar-text",
         )
 
