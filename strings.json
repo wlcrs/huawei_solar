@@ -1,47 +1,458 @@
 {
     "config": {
+        "abort": {
+            "already_configured": "Device is already configured"
+        },
+        "error": {
+            "cannot_connect": "Failed to connect",
+            "invalid_auth": "Invalid authentication",
+            "invalid_slave_ids": "Slave IDs must be comma-separated list of ints",
+            "read_error": "Reading from the inverter failed.",
+            "slave_cannot_connect": "Failed to connect to additional slave",
+            "unknown": "Unexpected error"
+        },
         "step": {
-            "user": {
-                "data": {"type": "Connection type"},
-                "title": "Select connection type",
+            "network_login": {
+                "data": {
+                    "password": "Password",
+                    "username": "Username"
+                },
+                "description": "Please enter the Installer credentials"
+            },
+            "setup_network": {
+                "data": {
+                    "enable_parameter_configuration": "Advanced: elevate permissions",
+                    "host": "Host",
+                    "port": "Port",
+                    "slave_ids": "Slave IDs (Comma separated)"
+                }
             },
             "setup_serial": {
                 "data": {
                     "port": "Select device",
-                    "slave_ids": "Slave IDs (Comma separated)",
+                    "slave_ids": "Slave IDs (Comma separated)"
                 },
-                "title": "Device",
+                "title": "Device"
             },
             "setup_serial_manual_path": {
-                "data": {"port": "[%key:common::config_flow::data::usb_path%]"},
-                "title": "Path",
-            },
-            "setup_network": {
                 "data": {
-                    "host": "[%key:common::config_flow::data::host%]",
-                    "port": "[%key:common::config_flow::data::port%]",
-                    "slave_ids": "Slave IDs (Comma separated)",
-                    "enable_parameter_configuration": "Advanced: elevate permissions",
-                }
-            },
-            "network_login": {
-                "description": "Please enter the Installer credentials",
-                "data": {
-                    "username": "[%key:common::config_flow::data::username%]",
-                    "password": "[%key:common::config_flow::data::password%]",
+                    "port": "USB Device Path"
                 },
+                "title": "Path"
             },
+            "user": {
+                "data": {
+                    "type": "Connection type"
+                },
+                "title": "Select connection type"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "input_power": {
+                "name": "Input power"
+            },
+            "line_voltage_A_B": {
+                "name": "A-B line voltage"
+            },
+            "line_voltage_B_C": {
+                "name": "B-C line voltage"
+            },
+            "line_voltage_C_A": {
+                "name": "C-A line voltage"
+            },
+            "phase_A_voltage": {
+                "name": "Phase A voltage"
+            },
+            "phase_B_voltage": {
+                "name": "Phase B voltage"
+            },
+            "phase_C_voltage": {
+                "name": "Phase C voltage"
+            },
+            "phase_A_current": {
+                "name": "Phase A current"
+            },
+            "phase_B_current": {
+                "name": "Phase B current"
+            },
+            "phase_C_current": {
+                "name": "Phase C current"
+            },
+            "day_active_power_peak": {
+                "name": "Day active power peak"
+            },
+            "active_power": {
+                "name": "Active power"
+            },
+            "reactive_power": {
+                "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
+            },
+            "power_factor": {
+                "name": "[%key:component::sensor::entity_component::power_factor::name%]"
+            },
+            "efficiency": {
+                "name": "Efficiency"
+            },
+            "internal_temperature": {
+                "name": "Internal temperature"
+            },
+            "device_status": {
+                "name": "Device status"
+            },
+            "startup_time": {
+                "name": "Startup time"
+            },
+            "shutdown_time": {
+                "name": "Shutdown time"
+            },
+            "accumulated_yield_energy": {
+                "name": "Total yield"
+            },
+            "daily_yield_energy": {
+                "name": "Daily yield"
+            },
+            "state_1": {
+                "name": "Inverter state"
+            },
+            "state_2#0": {
+                "name": "Locking status"
+            },
+            "state_2#1": {
+                "name": "PV connection status"
+            },
+            "state_2#2": {
+                "name": "DSP data collection"
+            },
+            "state_3#0": {
+                "name": "Off-grid status"
+            },
+            "state_3#1": {
+                "name": "Off-grid switch"
+            },
+            "nb_online_optimizers": {
+                "name": "Optimizers online"
+            },
+            "output_power": {
+                "name": "Output power"
+            },
+            "voltage_to_ground": {
+                "name": "Voltage to ground"
+            },
+            "output_voltage": {
+                "name": "Output voltage"
+            },
+            "output_current": {
+                "name": "Output current"
+            },
+            "input_voltage": {
+                "name": "Input voltage"
+            },
+            "input_current": {
+                "name": "Input current"
+            },
+            "tempreature": {
+                "name": "[%key:component::sensor::entity_component::temperature::name%]"
+            },
+            "running_status": {
+                "name": "Running status"
+            },
+            "accumulated_energy_yield": {
+                "name": "Accumulated energy yield"
+            },
+            "alarm": {
+                "name": "Alarm"
+            },
+            "meter_status": {
+                "name": "Meter status"
+            },
+            "single_phase_meter_voltage": {
+                "name": "[%key:component::sensor::entity_component::voltage::name%]"
+            },
+            "single_phase_meter_current": {
+                "name": "[%key:component::sensor::entity_component::current::name%]"
+            },
+            "power_meter_active_power": {
+                "name": "Active power"
+            },
+            "power_meter_reactive_power": {
+                "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
+            },
+            "active_grid_power_factor": {
+                "name": "Power factor"
+            },
+            "active_grid_frequency": {
+                "name": "[%key:component::sensor::entity_component::frequency::name%]"
+            },
+            "grid_exported_energy": {
+                "name": "Exported"
+            },
+            "grid_accumulated_energy": {
+                "name": "Consumption"
+            },
+            "grid_accumulated_reactive_power": {
+                "name": "Reactive energy"
+            },
+            "grid_A_voltage": {
+                "name": "Phase A voltage"
+            },
+            "grid_B_voltage": {
+                "name": "Phase B voltage"
+            },
+            "grid_C_voltage": {
+                "name": "Phase C voltage"
+            },
+            "grid_A_current": {
+                "name": "Phase A current"
+            },
+            "grid_B_current": {
+                "name": "Phase B current"
+            },
+            "grid_C_current": {
+                "name": "Phase C current"
+            },
+            "active_grid_A_B_voltage": {
+                "name": "A-B line voltage"
+            },
+            "active_grid_B_C_voltage": {
+                "name": "B-C line voltage"
+            },
+            "active_grid_C_A_voltage": {
+                "name": "C-A line voltage"
+            },
+            "active_grid_A_power": {
+                "name": "Phase A active power"
+            },
+            "active_grid_B_power": {
+                "name": "Phase B active power"
+            },
+            "active_grid_C_power": {
+                "name": "Phase C active power"
+            },
+            "storage_state_of_capacity": {
+                "name": "State of capacity"
+            },
+            "storage_running_status": {
+                "name": "Status"
+            },
+            "storage_bus_voltage": {
+                "name": "Bus voltage"
+            },
+            "storage_bus_current": {
+                "name": "Bus current"
+            },
+            "storage_charge_discharge_power": {
+                "name": "Charge/Discharge power"
+            },
+            "storage_total_charge": {
+                "name": "Total charge"
+            },
+            "storage_total_discharge": {
+                "name": "Total discharge"
+            },
+            "storage_current_day_charge_capacity": {
+                "name": "Day charge"
+            },
+            "storage_current_day_discharge_capacity": {
+                "name": "Day discharge"
+            },
+            "alarms": {
+                "name": "Alarms"
+            },
+            "storage_time_of_use_charging_and_discharging_periods": {
+                "name": "Time Of use periods"
+            },
+            "storage_capacity_control_periods": {
+                "name": "Capacity control periods"
+            },
+            "storage_fixed_charging_and_discharging_periods": {
+                "name": "Fixed charging periods"
+            }
+        }
+    },
+    "services": {
+        "forcible_charge": {
+            "name": "Forcible Charge",
+            "description": "Forcible Charge of the battery for a certain time",
+            "fields": {
+                "device_id": {
+                    "name": "Battery",
+                    "description": "Must be a 'Battery' device"
+                },
+                "duration": {
+                    "name": "Duration",
+                    "description": "Duration of the charge"
+                },
+                "power": {
+                    "name": "Power",
+                    "description": "Wattage used for the charge"
+                }
+            }
         },
-        "error": {
-            "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
-            "slave_cannot_connect": "Failed to connect to additional slave",
-            "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
-            "unknown": "[%key:common::config_flow::error::unknown%]",
-            "read_error": "Reading from the inverter failed.",
-            "invalid_slave_ids": "Slave IDs must be comma-separated list of ints",
+        "forcible_discharge": {
+            "name": "Forcible Discharge",
+            "description": "Forcible Discharge of the battery for a certain time",
+            "fields": {
+                "device_id": {
+                    "name": "Battery",
+                    "description": "Must be a 'Battery' device"
+                },
+                "duration": {
+                    "name": "Duration",
+                    "description": "Duration of the discharge"
+                },
+                "power": {
+                    "name": "Power",
+                    "description": "Wattage used for the discharge"
+                }
+            }
         },
-        "abort": {
-            "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+        "forcible_charge_soc": {
+            "name": "Forcible Charge to a SoC level",
+            "description": "Forcible Charge of the battery to a certain State of Charge level",
+            "fields": {
+                "device_id": {
+                    "name": "Battery",
+                    "description": "Must be a 'Battery' device"
+                },
+                "target_soc": {
+                    "name": "Target SoC",
+                    "description": "State of Charge that must be reached"
+                },
+                "power": {
+                    "name": "Power",
+                    "description": "Wattage used for the charge"
+                }
+            }
         },
+        "forcible_discharge_soc": {
+            "name": "Forcible Discharge to a SoC level",
+            "description": "Forcible Discharge of the battery to a certain State of Charge level",
+            "fields": {
+                "device_id": {
+                    "name": "Battery",
+                    "description": "Must be a 'Battery' device"
+                },
+                "target_soc": {
+                    "name": "Target SoC",
+                    "description": "State of Charge that must be reached"
+                },
+                "power": {
+                    "name": "Power",
+                    "description": "Wattage used for the discharge"
+                }
+            }
+        },
+        "stop_forcible_charge": {
+            "name": "Stop the forcible charge or discharge",
+            "description": "Cancel the running forcible charge command",
+            "fields": {
+                "device_id": {
+                    "name": "Battery",
+                    "description": "Must be a 'Battery' device"
+                }
+            }
+        },
+        "reset_maximum_feed_grid_power": {
+            "name": "Set Active Power Control to Maximum Feed Grid Power",
+            "description": "Set Active Power Control to the default Unlimited mode",
+            "fields": {
+                "device_id": {
+                    "name": "Inverter",
+                    "description": "Must be a 'Inverter' device"
+                }
+            }
+        },
+        "set_di_active_power_scheduling": {
+            "name": "Set Active Power Control to 'DI active scheduling'",
+            "description": "Set Active Power Control to 'DI active scheduling'",
+            "fields": {
+                "device_id": {
+                    "name": "Inverter",
+                    "description": "Must be a 'Inverter' device"
+                }
+            }
+        },
+        "set_zero_power_grid_connection": {
+            "name": "Set Active Power Control to 'Zero power grid connection'",
+            "description": "Set Active Power Control to 'Zero power grid connection'",
+            "fields": {
+                "device_id": {
+                    "name": "Inverter",
+                    "description": "Must be a 'Inverter' device"
+                }
+            }
+        },
+        "set_maximum_feed_grid_power": {
+            "name": "Limit the power fed to the grid",
+            "description": "Sets Active Power Control to 'Power-limited grid connection' with the given wattage",
+            "fields": {
+                "device_id": {
+                    "name": "Inverter",
+                    "description": "Must be a 'Inverter' device"
+                },
+                "power": {
+                    "name": "Power",
+                    "description": "Maximum Wattage"
+                }
+            }
+        },
+        "set_maximum_feed_grid_power_percent": {
+            "name": "Limit the power fed to the grid to percentage",
+            "description": "Sets Active Power Control to 'Power-limited grid connection (%)' with the given percentage",
+            "fields": {
+                "device_id": {
+                    "name": "Inverter",
+                    "description": "Must be a 'Inverter' device"
+                },
+                "power_percentage": {
+                    "name": "Power Percentage",
+                    "description": "Maximum Percentage"
+                }
+            }
+        },
+        "set_tou_periods": {
+            "name": "Set TOU Periods",
+            "description": "Sets Time Of Use Periods",
+            "fields": {
+                "device_id": {
+                    "name": "Battery",
+                    "description": "Must be a 'Battery' device"
+                },
+                "periods": {
+                    "name": "Periods",
+                    "description": "One period per line. For Huawei LUNA2000 batteries: '<start time>-<end time>/<days effective>/<charge>', with 1=Monday, 7=Sunday (example: '12:00-14:00/1234567/-'). For LG RESU batteries: '<start time>-<end time>/<electricity price>' (example: 13:00-14:00/0.50)"
+                }
+            }
+        },
+        "set_capacity_control_periods": {
+            "name": "Set Capacity Control Periods",
+            "description": "Set Capacity Control Periods",
+            "fields": {
+                "device_id": {
+                    "name": "Battery",
+                    "description": "Must be a 'Battery' device"
+                },
+                "periods": {
+                    "name": "Periods",
+                    "description": "One period per line. Format: '<start time>-<end time>/<days effective>/<power>W', with 1=Monday, 7=Sunday. Example: '00:00-23:59/1234567/2500W'."
+                }
+            }
+        },
+        "set_fixed_charge_periods": {
+            "name": "Set Fixed Charge Periods",
+            "description": "Sets Fixed Charge and Discharge Periods",
+            "fields": {
+                "device_id": {
+                    "name": "Battery",
+                    "description": "Must be a 'Battery' device"
+                },
+                "periods": {
+                    "name": "Periods",
+                    "description": "One period per line. Format: '<start time>-<end time>/<power>W'. Example: '12:00-15:59/-1000W'."
+                }
+            }
+        }
     }
 }

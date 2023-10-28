@@ -64,6 +64,10 @@ class HuaweiSolarSensorEntityDescription(SensorEntityDescription):
 
     value_conversion_function: Callable[[Any], str] | None = None
 
+    def __post_init__(self):
+        """Defaults the translation_key to the sensor key."""
+        self.translation_key = self.translation_key or self.key
+
 
 # Every list in this file describes a group of entities which are related to each other.
 # The order of these lists matters, as they need to be in ascending order wrt. to their modbus-register.
@@ -72,14 +76,12 @@ class HuaweiSolarSensorEntityDescription(SensorEntityDescription):
 INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.INPUT_POWER,
-        name="Input power",
         native_unit_of_measurement=POWER_WATT,
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.LINE_VOLTAGE_A_B,
-        name="A-B line voltage",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -88,7 +90,6 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.LINE_VOLTAGE_B_C,
-        name="B-C line voltage",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -97,7 +98,6 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.LINE_VOLTAGE_C_A,
-        name="C-A line voltage",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -106,7 +106,6 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.PHASE_A_VOLTAGE,
-        name="Phase A voltage",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -115,7 +114,6 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.PHASE_B_VOLTAGE,
-        name="Phase B voltage",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -124,7 +122,6 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.PHASE_C_VOLTAGE,
-        name="Phase C voltage",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -133,7 +130,6 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.PHASE_A_CURRENT,
-        name="Phase A current",
         icon="mdi:lightning-bolt-outline",
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
         device_class=SensorDeviceClass.CURRENT,
@@ -142,7 +138,6 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.PHASE_B_CURRENT,
-        name="Phase B current",
         icon="mdi:lightning-bolt-outline",
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
         device_class=SensorDeviceClass.CURRENT,
@@ -151,7 +146,6 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.PHASE_C_CURRENT,
-        name="Phase C current",
         icon="mdi:lightning-bolt-outline",
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
         device_class=SensorDeviceClass.CURRENT,
@@ -160,21 +154,18 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.DAY_ACTIVE_POWER_PEAK,
-        name="Day active power peak",
         native_unit_of_measurement=POWER_WATT,
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_POWER,
-        name="Active power",
         native_unit_of_measurement=POWER_WATT,
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.REACTIVE_POWER,
-        name="Reactive power",
         native_unit_of_measurement=POWER_VOLT_AMPERE_REACTIVE,
         device_class=SensorDeviceClass.REACTIVE_POWER,
         state_class=SensorStateClass.MEASUREMENT,
@@ -182,20 +173,17 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.POWER_FACTOR,
-        name="Power factor",
         device_class=SensorDeviceClass.POWER_FACTOR,
         state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.EFFICIENCY,
-        name="Efficiency",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.INTERNAL_TEMPERATURE,
-        name="Internal temperature",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         device_class=SensorDeviceClass.TEMPERATURE,
         state_class=SensorStateClass.MEASUREMENT,
@@ -203,33 +191,28 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.DEVICE_STATUS,
-        name="Device status",
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STARTUP_TIME,
-        name="Startup time",
         icon="mdi:weather-sunset-up",
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.SHUTDOWN_TIME,
-        name="Shutdown time",
         icon="mdi:weather-sunset-down",
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACCUMULATED_YIELD_ENERGY,
-        name="Total yield",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.DAILY_YIELD_ENERGY,
-        name="Daily yield",
         icon="mdi:solar-power",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
@@ -237,37 +220,31 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STATE_1,
-        name="Inverter state",
         entity_category=EntityCategory.DIAGNOSTIC,
         value_conversion_function=", ".join,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STATE_2 + "#0",
-        name="Locking status",
         entity_category=EntityCategory.DIAGNOSTIC,
         value_conversion_function=lambda value: value[0],
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STATE_2 + "#1",
-        name="PV connection status",
         entity_category=EntityCategory.DIAGNOSTIC,
         value_conversion_function=lambda value: value[1],
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STATE_2 + "#2",
-        name="DSP data collection",
         entity_category=EntityCategory.DIAGNOSTIC,
         value_conversion_function=lambda value: value[2],
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STATE_3 + "#0",
-        name="Off-grid status",
         entity_category=EntityCategory.DIAGNOSTIC,
         value_conversion_function=lambda value: value[0],
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STATE_3 + "#1",
-        name="Off-grid switch",
         entity_category=EntityCategory.DIAGNOSTIC,
         value_conversion_function=lambda value: value[1],
     ),
@@ -276,7 +253,6 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
 OPTIMIZER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.NB_ONLINE_OPTIMIZERS,
-        name="Optimizers online",
         icon="mdi:solar-panel",
         state_class=SensorStateClass.MEASUREMENT,
     ),
@@ -285,7 +261,6 @@ OPTIMIZER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = 
 OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key="output_power",
-        name="Output power",
         icon="mdi:flash",
         native_unit_of_measurement=POWER_WATT,
         device_class=SensorDeviceClass.POWER,
@@ -293,7 +268,6 @@ OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, 
     ),
     HuaweiSolarSensorEntityDescription(
         key="voltage_to_ground",
-        name="Voltage to ground",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -302,7 +276,6 @@ OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, 
     ),
     HuaweiSolarSensorEntityDescription(
         key="output_voltage",
-        name="Output voltage",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -310,7 +283,6 @@ OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, 
     ),
     HuaweiSolarSensorEntityDescription(
         key="output_current",
-        name="Output current",
         icon="mdi:lightning-bolt-outline",
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
         device_class=SensorDeviceClass.CURRENT,
@@ -318,7 +290,6 @@ OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, 
     ),
     HuaweiSolarSensorEntityDescription(
         key="input_voltage",
-        name="Input voltage",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -326,7 +297,6 @@ OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, 
     ),
     HuaweiSolarSensorEntityDescription(
         key="input_current",
-        name="Input current",
         icon="mdi:lightning-bolt-outline",
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
         device_class=SensorDeviceClass.CURRENT,
@@ -334,26 +304,22 @@ OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, 
     ),
     HuaweiSolarSensorEntityDescription(
         key="temperature",
-        name="Temperature",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         device_class=SensorDeviceClass.TEMPERATURE,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
         key="running_status",
-        name="Running status",
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HuaweiSolarSensorEntityDescription(
         key="accumulated_energy_yield",
-        name="Accumulated energy yield",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL,
     ),
     HuaweiSolarSensorEntityDescription(
         key="alarm",
-        name="Alarm",
         entity_category=EntityCategory.DIAGNOSTIC,
         value_conversion_function=lambda alarms: ", ".join(alarms) if len(alarms) else "None"
     ),
@@ -365,14 +331,13 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
 ] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.METER_STATUS,
-        name="Meter Status",
         icon="mdi:electric-switch",
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_A_VOLTAGE,
-        name="Voltage",
+        translation_key="single_phase_voltage",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -381,7 +346,6 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_GRID_A_CURRENT,
-        name="Current",
         icon="mdi:lightning-bolt-outline",
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
         device_class=SensorDeviceClass.CURRENT,
@@ -390,7 +354,6 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.POWER_METER_ACTIVE_POWER,
-        name="Active power",
         icon="mdi:flash",
         native_unit_of_measurement=POWER_WATT,
         device_class=SensorDeviceClass.POWER,
@@ -398,7 +361,6 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.POWER_METER_REACTIVE_POWER,
-        name="Reactive power",
         icon="mdi:flash",
         native_unit_of_measurement=POWER_VOLT_AMPERE_REACTIVE,
         device_class=SensorDeviceClass.REACTIVE_POWER,
@@ -407,13 +369,11 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_GRID_POWER_FACTOR,
-        name="Power factor",
         device_class=SensorDeviceClass.POWER_FACTOR,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_GRID_FREQUENCY,
-        name="Frequency",
         native_unit_of_measurement=UnitOfFrequency.HERTZ,
         device_class=SensorDeviceClass.FREQUENCY,
         state_class=SensorStateClass.MEASUREMENT,
@@ -421,21 +381,18 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_EXPORTED_ENERGY,
-        name="Exported",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_ACCUMULATED_ENERGY,
-        name="Consumption",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_ACCUMULATED_REACTIVE_POWER,
-        name="Reactive energy",
         native_unit_of_measurement="kVarh",
         # Was SensorDeviceClass.REACTIVE_POWER, which only supports 'var' unit of measurement.
         # We need a SensorDeviceClass.REACTIVE_ENERGY
@@ -451,14 +408,12 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
 ] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.METER_STATUS,
-        name="Status",
         icon="mdi:electric-switch",
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_A_VOLTAGE,
-        name="Phase A voltage",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -467,7 +422,6 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_B_VOLTAGE,
-        name="Phase B voltage",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -476,7 +430,6 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_C_VOLTAGE,
-        name="Phase C voltage",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -485,7 +438,6 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_GRID_A_CURRENT,
-        name="Phase A current",
         icon="mdi:lightning-bolt-outline",
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
         device_class=SensorDeviceClass.CURRENT,
@@ -494,7 +446,6 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_GRID_B_CURRENT,
-        name="Phase B current",
         icon="mdi:lightning-bolt-outline",
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
         device_class=SensorDeviceClass.CURRENT,
@@ -503,7 +454,6 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_GRID_C_CURRENT,
-        name="Phase C current",
         icon="mdi:lightning-bolt-outline",
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
         device_class=SensorDeviceClass.CURRENT,
@@ -512,7 +462,6 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.POWER_METER_ACTIVE_POWER,
-        name="Active power",
         icon="mdi:flash",
         native_unit_of_measurement=POWER_WATT,
         device_class=SensorDeviceClass.POWER,
@@ -520,7 +469,6 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.POWER_METER_REACTIVE_POWER,
-        name="Reactive power",
         icon="mdi:flash",
         native_unit_of_measurement=POWER_VOLT_AMPERE_REACTIVE,
         device_class=SensorDeviceClass.REACTIVE_POWER,
@@ -529,34 +477,29 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_GRID_POWER_FACTOR,
-        name="Power factor",
         device_class=SensorDeviceClass.POWER_FACTOR,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_GRID_FREQUENCY,
-        name="Frequency",
         native_unit_of_measurement=UnitOfFrequency.HERTZ,
         device_class=SensorDeviceClass.FREQUENCY,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_EXPORTED_ENERGY,
-        name="Exported",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_ACCUMULATED_ENERGY,
-        name="Consumption",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_ACCUMULATED_REACTIVE_POWER,
-        name="Reactive energy",
         native_unit_of_measurement="kVarh",
         # Was SensorDeviceClass.REACTIVE_POWER, which only supports 'var' unit of measurement.
         # We need a SensorDeviceClass.REACTIVE_ENERGY
@@ -566,7 +509,6 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_GRID_A_B_VOLTAGE,
-        name="A-B line voltage",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -575,7 +517,6 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_GRID_B_C_VOLTAGE,
-        name="B-C line voltage",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -584,7 +525,6 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_GRID_C_A_VOLTAGE,
-        name="C-A line voltage",
         icon="mdi:lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -593,7 +533,6 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_GRID_A_POWER,
-        name="Phase A active power",
         icon="mdi:flash",
         native_unit_of_measurement=POWER_WATT,
         device_class=SensorDeviceClass.POWER,
@@ -601,7 +540,6 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_GRID_B_POWER,
-        name="Phase B active power",
         icon="mdi:flash",
         native_unit_of_measurement=POWER_WATT,
         device_class=SensorDeviceClass.POWER,
@@ -609,7 +547,6 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_GRID_C_POWER,
-        name="Phase C active power",
         icon="mdi:flash",
         native_unit_of_measurement=POWER_WATT,
         device_class=SensorDeviceClass.POWER,
@@ -620,19 +557,16 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
 BATTERY_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_STATE_OF_CAPACITY,
-        name="State of capacity",
         icon="mdi:home-battery",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_RUNNING_STATUS,
-        name="Status",
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_BUS_VOLTAGE,
-        name="Bus voltage",
         icon="mdi:home-lightning-bolt",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
@@ -640,7 +574,6 @@ BATTERY_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_BUS_CURRENT,
-        name="Bus current",
         icon="mdi:home-lightning-bolt-outline",
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
         device_class=SensorDeviceClass.CURRENT,
@@ -648,7 +581,6 @@ BATTERY_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_CHARGE_DISCHARGE_POWER,
-        name="Charge/Discharge power",
         icon="mdi:home-battery-outline",
         native_unit_of_measurement=POWER_WATT,
         state_class=SensorStateClass.MEASUREMENT,
@@ -656,7 +588,6 @@ BATTERY_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_TOTAL_CHARGE,
-        name="Total charge",
         icon="mdi:battery-plus-variant",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         state_class=SensorStateClass.TOTAL,
@@ -664,7 +595,6 @@ BATTERY_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_TOTAL_DISCHARGE,
-        name="Total discharge",
         icon="mdi:battery-minus-variant",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         state_class=SensorStateClass.TOTAL,
@@ -672,7 +602,6 @@ BATTERY_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_CURRENT_DAY_CHARGE_CAPACITY,
-        name="Day charge",
         icon="mdi:battery-plus-variant",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         state_class=SensorStateClass.TOTAL_INCREASING,
@@ -680,7 +609,6 @@ BATTERY_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_CURRENT_DAY_DISCHARGE_CAPACITY,
-        name="Day discharge",
         icon="mdi:battery-minus-variant",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         state_class=SensorStateClass.TOTAL_INCREASING,
@@ -884,7 +812,7 @@ class HuaweiSolarAlarmSensorEntity(HuaweiSolarSensorEntity):
 
     DESCRIPTION = HuaweiSolarSensorEntityDescription(
         key="ALARMS",
-        name="Alarms",
+        translation_key="alarms",
         entity_category=EntityCategory.DIAGNOSTIC,
     )
 
@@ -950,7 +878,6 @@ class HuaweiSolarTOUPricePeriodsSensorEntity(
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
             key=rn.STORAGE_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS,
-            name="Time Of use periods",
             icon="mdi:calendar-text",
         )
 
@@ -1020,7 +947,6 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
             key=rn.STORAGE_CAPACITY_CONTROL_PERIODS,
-            name="Capacity control periods",
             icon="mdi:calendar-text",
         )
 
@@ -1080,7 +1006,6 @@ class HuaweiSolarFixedChargingPeriodsSensorEntity(
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
             key=rn.STORAGE_FIXED_CHARGING_AND_DISCHARGING_PERIODS,
-            name="Fixed charging periods",
             icon="mdi:calendar-text",
         )
 
@@ -1181,7 +1106,7 @@ def get_pv_entity_descriptions(count: int) -> list[HuaweiSolarSensorEntityDescri
             [
                 HuaweiSolarSensorEntityDescription(
                     key=getattr(rn, f"PV_{idx:02}_VOLTAGE"),
-                    name=f"PV {idx} Voltage",
+                    name=f"PV {idx} voltage",
                     icon="mdi:lightning-bolt",
                     native_unit_of_measurement=UnitOfElectricPotential.VOLT,
                     device_class=SensorDeviceClass.VOLTAGE,
@@ -1189,7 +1114,7 @@ def get_pv_entity_descriptions(count: int) -> list[HuaweiSolarSensorEntityDescri
                 ),
                 HuaweiSolarSensorEntityDescription(
                     key=getattr(rn, f"PV_{idx:02}_CURRENT"),
-                    name=f"PV {idx} Current",
+                    name=f"PV {idx} current",
                     icon="mdi:lightning-bolt-outline",
                     native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
                     device_class=SensorDeviceClass.CURRENT,

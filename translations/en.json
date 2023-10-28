@@ -48,188 +48,411 @@
             }
         }
     },
+    "entity": {
+        "sensor": {
+            "accumulated_energy_yield": {
+                "name": "Accumulated energy yield"
+            },
+            "accumulated_yield_energy": {
+                "name": "Total yield"
+            },
+            "active_grid_A_B_voltage": {
+                "name": "A-B line voltage"
+            },
+            "active_grid_A_power": {
+                "name": "Phase A active power"
+            },
+            "active_grid_B_C_voltage": {
+                "name": "B-C line voltage"
+            },
+            "active_grid_B_power": {
+                "name": "Phase B active power"
+            },
+            "active_grid_C_A_voltage": {
+                "name": "C-A line voltage"
+            },
+            "active_grid_C_power": {
+                "name": "Phase C active power"
+            },
+            "active_grid_frequency": {
+                "name": "Frequency"
+            },
+            "active_grid_power_factor": {
+                "name": "Power factor"
+            },
+            "active_power": {
+                "name": "Active power"
+            },
+            "alarm": {
+                "name": "Alarm"
+            },
+            "alarms": {
+                "name": "Alarms"
+            },
+            "daily_yield_energy": {
+                "name": "Daily yield"
+            },
+            "day_active_power_peak": {
+                "name": "Day active power peak"
+            },
+            "device_status": {
+                "name": "Device status"
+            },
+            "efficiency": {
+                "name": "Efficiency"
+            },
+            "grid_A_current": {
+                "name": "Phase A current"
+            },
+            "grid_A_voltage": {
+                "name": "Phase A voltage"
+            },
+            "grid_B_current": {
+                "name": "Phase B current"
+            },
+            "grid_B_voltage": {
+                "name": "Phase B voltage"
+            },
+            "grid_C_current": {
+                "name": "Phase C current"
+            },
+            "grid_C_voltage": {
+                "name": "Phase C voltage"
+            },
+            "grid_accumulated_energy": {
+                "name": "Consumption"
+            },
+            "grid_accumulated_reactive_power": {
+                "name": "Reactive energy"
+            },
+            "grid_exported_energy": {
+                "name": "Exported"
+            },
+            "input_current": {
+                "name": "Input current"
+            },
+            "input_power": {
+                "name": "Input power"
+            },
+            "input_voltage": {
+                "name": "Input voltage"
+            },
+            "internal_temperature": {
+                "name": "Internal temperature"
+            },
+            "line_voltage_A_B": {
+                "name": "A-B line voltage"
+            },
+            "line_voltage_B_C": {
+                "name": "B-C line voltage"
+            },
+            "line_voltage_C_A": {
+                "name": "C-A line voltage"
+            },
+            "meter_status": {
+                "name": "Meter status"
+            },
+            "nb_online_optimizers": {
+                "name": "Optimizers online"
+            },
+            "output_current": {
+                "name": "Output current"
+            },
+            "output_power": {
+                "name": "Output power"
+            },
+            "output_voltage": {
+                "name": "Output voltage"
+            },
+            "phase_A_current": {
+                "name": "Phase A current"
+            },
+            "phase_A_voltage": {
+                "name": "Phase A voltage"
+            },
+            "phase_B_current": {
+                "name": "Phase B current"
+            },
+            "phase_B_voltage": {
+                "name": "Phase B voltage"
+            },
+            "phase_C_current": {
+                "name": "Phase C current"
+            },
+            "phase_C_voltage": {
+                "name": "Phase C voltage"
+            },
+            "power_factor": {
+                "name": "Power factor"
+            },
+            "power_meter_active_power": {
+                "name": "Active power"
+            },
+            "power_meter_reactive_power": {
+                "name": "Reactive power"
+            },
+            "reactive_power": {
+                "name": "Reactive power"
+            },
+            "running_status": {
+                "name": "Running status"
+            },
+            "shutdown_time": {
+                "name": "Shutdown time"
+            },
+            "single_phase_meter_current": {
+                "name": "Current"
+            },
+            "single_phase_meter_voltage": {
+                "name": "Voltage"
+            },
+            "startup_time": {
+                "name": "Startup time"
+            },
+            "state_1": {
+                "name": "Inverter state"
+            },
+            "state_2#0": {
+                "name": "Locking status"
+            },
+            "state_2#1": {
+                "name": "PV connection status"
+            },
+            "state_2#2": {
+                "name": "DSP data collection"
+            },
+            "state_3#0": {
+                "name": "Off-grid status"
+            },
+            "state_3#1": {
+                "name": "Off-grid switch"
+            },
+            "storage_bus_current": {
+                "name": "Bus current"
+            },
+            "storage_bus_voltage": {
+                "name": "Bus voltage"
+            },
+            "storage_capacity_control_periods": {
+                "name": "Capacity control periods"
+            },
+            "storage_charge_discharge_power": {
+                "name": "Charge/Discharge power"
+            },
+            "storage_current_day_charge_capacity": {
+                "name": "Day charge"
+            },
+            "storage_current_day_discharge_capacity": {
+                "name": "Day discharge"
+            },
+            "storage_fixed_charging_and_discharging_periods": {
+                "name": "Fixed charging periods"
+            },
+            "storage_running_status": {
+                "name": "Status"
+            },
+            "storage_state_of_capacity": {
+                "name": "State of capacity"
+            },
+            "storage_time_of_use_charging_and_discharging_periods": {
+                "name": "Time Of use periods"
+            },
+            "storage_total_charge": {
+                "name": "Total charge"
+            },
+            "storage_total_discharge": {
+                "name": "Total discharge"
+            },
+            "tempreature": {
+                "name": "Temperature"
+            },
+            "voltage_to_ground": {
+                "name": "Voltage to ground"
+            }
+        }
+    },
     "services": {
         "forcible_charge": {
-            "name": "Forcible Charge",
             "description": "Forcible Charge of the battery for a certain time",
             "fields": {
                 "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
+                    "description": "Must be a 'Battery' device",
+                    "name": "Battery"
                 },
                 "duration": {
-                    "name": "Duration",
-                    "description": "Duration of the charge"
+                    "description": "Duration of the charge",
+                    "name": "Duration"
                 },
                 "power": {
-                    "name": "Power",
-                    "description": "Wattage used for the charge"
+                    "description": "Wattage used for the charge",
+                    "name": "Power"
                 }
-            }
-        },
-        "forcible_discharge": {
-            "name": "Forcible Discharge",
-            "description": "Forcible Discharge of the battery for a certain time",
-            "fields": {
-                "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
-                },
-                "duration": {
-                    "name": "Duration",
-                    "description": "Duration of the discharge"
-                },
-                "power": {
-                    "name": "Power",
-                    "description": "Wattage used for the discharge"
-                }
-            }
+            },
+            "name": "Forcible Charge"
         },
         "forcible_charge_soc": {
-            "name": "Forcible Charge to a SoC level",
             "description": "Forcible Charge of the battery to a certain State of Charge level",
             "fields": {
                 "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
-                },
-                "target_soc": {
-                    "name": "Target SoC",
-                    "description": "State of Charge that must be reached"
+                    "description": "Must be a 'Battery' device",
+                    "name": "Battery"
                 },
                 "power": {
-                    "name": "Power",
-                    "description": "Wattage used for the charge"
+                    "description": "Wattage used for the charge",
+                    "name": "Power"
+                },
+                "target_soc": {
+                    "description": "State of Charge that must be reached",
+                    "name": "Target SoC"
                 }
-            }
+            },
+            "name": "Forcible Charge to a SoC level"
+        },
+        "forcible_discharge": {
+            "description": "Forcible Discharge of the battery for a certain time",
+            "fields": {
+                "device_id": {
+                    "description": "Must be a 'Battery' device",
+                    "name": "Battery"
+                },
+                "duration": {
+                    "description": "Duration of the discharge",
+                    "name": "Duration"
+                },
+                "power": {
+                    "description": "Wattage used for the discharge",
+                    "name": "Power"
+                }
+            },
+            "name": "Forcible Discharge"
         },
         "forcible_discharge_soc": {
-            "name": "Forcible Discharge to a SoC level",
             "description": "Forcible Discharge of the battery to a certain State of Charge level",
             "fields": {
                 "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
-                },
-                "target_soc": {
-                    "name": "Target SoC",
-                    "description": "State of Charge that must be reached"
+                    "description": "Must be a 'Battery' device",
+                    "name": "Battery"
                 },
                 "power": {
-                    "name": "Power",
-                    "description": "Wattage used for the discharge"
+                    "description": "Wattage used for the discharge",
+                    "name": "Power"
+                },
+                "target_soc": {
+                    "description": "State of Charge that must be reached",
+                    "name": "Target SoC"
                 }
-            }
-        },
-        "stop_forcible_charge": {
-            "name": "Stop the forcible charge or discharge",
-            "description": "Cancel the running forcible charge command",
-            "fields": {
-                "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
-                }
-            }
+            },
+            "name": "Forcible Discharge to a SoC level"
         },
         "reset_maximum_feed_grid_power": {
-            "name": "Set Active Power Control to Maximum Feed Grid Power",
             "description": "Set Active Power Control to the default Unlimited mode",
             "fields": {
                 "device_id": {
-                    "name": "Inverter",
-                    "description": "Must be a 'Inverter' device"
+                    "description": "Must be a 'Inverter' device",
+                    "name": "Inverter"
                 }
-            }
-        },
-        "set_di_active_power_scheduling": {
-            "name": "Set Active Power Control to 'DI active scheduling'",
-            "description": "Set Active Power Control to 'DI active scheduling'",
-            "fields": {
-                "device_id": {
-                    "name": "Inverter",
-                    "description": "Must be a 'Inverter' device"
-                }
-            }
-        },
-        "set_zero_power_grid_connection": {
-            "name": "Set Active Power Control to 'Zero power grid connection'",
-            "description": "Set Active Power Control to 'Zero power grid connection'",
-            "fields": {
-                "device_id": {
-                    "name": "Inverter",
-                    "description": "Must be a 'Inverter' device"
-                }
-            }
-        },
-        "set_maximum_feed_grid_power": {
-            "name": "Limit the power fed to the grid",
-            "description": "Sets Active Power Control to 'Power-limited grid connection' with the given wattage",
-            "fields": {
-                "device_id": {
-                    "name": "Inverter",
-                    "description": "Must be a 'Inverter' device"
-                },
-                "power": {
-                    "name": "Power",
-                    "description": "Maximum Wattage"
-                }
-            }
-        },
-        "set_maximum_feed_grid_power_percent": {
-            "name": "Limit the power fed to the grid to percentage",
-            "description": "Sets Active Power Control to 'Power-limited grid connection (%)' with the given percentage",
-            "fields": {
-                "device_id": {
-                    "name": "Inverter",
-                    "description": "Must be a 'Inverter' device"
-                },
-                "power_percentage": {
-                    "name": "Power Percentage",
-                    "description": "Maximum Percentage"
-                }
-            }
-        },
-        "set_tou_periods": {
-            "name": "Set TOU Periods",
-            "description": "Sets Time Of Use Periods",
-            "fields": {
-                "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
-                },
-                "periods": {
-                    "name": "Periods",
-                    "description": "One period per line. For Huawei LUNA2000 batteries: '<start time>-<end time>/<days effective>/<charge>', with 1=Monday, 7=Sunday (example: '12:00-14:00/1234567/-'). For LG RESU batteries: '<start time>-<end time>/<electricity price>' (example: 13:00-14:00/0.50)"
-                }
-            }
+            },
+            "name": "Set Active Power Control to Maximum Feed Grid Power"
         },
         "set_capacity_control_periods": {
-            "name": "Set Capacity Control Periods",
             "description": "Set Capacity Control Periods",
             "fields": {
                 "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
+                    "description": "Must be a 'Battery' device",
+                    "name": "Battery"
                 },
                 "periods": {
-                    "name": "Periods",
-                    "description": "One period per line. Format: '<start time>-<end time>/<days effective>/<power>W', with 1=Monday, 7=Sunday. Example: '00:00-23:59/1234567/2500W'."
+                    "description": "One period per line. Format: '<start time>-<end time>/<days effective>/<power>W', with 1=Monday, 7=Sunday. Example: '00:00-23:59/1234567/2500W'.",
+                    "name": "Periods"
                 }
-            }
+            },
+            "name": "Set Capacity Control Periods"
+        },
+        "set_di_active_power_scheduling": {
+            "description": "Set Active Power Control to 'DI active scheduling'",
+            "fields": {
+                "device_id": {
+                    "description": "Must be a 'Inverter' device",
+                    "name": "Inverter"
+                }
+            },
+            "name": "Set Active Power Control to 'DI active scheduling'"
         },
         "set_fixed_charge_periods": {
-            "name": "Set Fixed Charge Periods",
             "description": "Sets Fixed Charge and Discharge Periods",
             "fields": {
                 "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
+                    "description": "Must be a 'Battery' device",
+                    "name": "Battery"
                 },
                 "periods": {
-                    "name": "Periods",
-                    "description": "One period per line. Format: '<start time>-<end time>/<power>W'. Example: '12:00-15:59/-1000W'."
+                    "description": "One period per line. Format: '<start time>-<end time>/<power>W'. Example: '12:00-15:59/-1000W'.",
+                    "name": "Periods"
                 }
-            }
+            },
+            "name": "Set Fixed Charge Periods"
+        },
+        "set_maximum_feed_grid_power": {
+            "description": "Sets Active Power Control to 'Power-limited grid connection' with the given wattage",
+            "fields": {
+                "device_id": {
+                    "description": "Must be a 'Inverter' device",
+                    "name": "Inverter"
+                },
+                "power": {
+                    "description": "Maximum Wattage",
+                    "name": "Power"
+                }
+            },
+            "name": "Limit the power fed to the grid"
+        },
+        "set_maximum_feed_grid_power_percent": {
+            "description": "Sets Active Power Control to 'Power-limited grid connection (%)' with the given percentage",
+            "fields": {
+                "device_id": {
+                    "description": "Must be a 'Inverter' device",
+                    "name": "Inverter"
+                },
+                "power_percentage": {
+                    "description": "Maximum Percentage",
+                    "name": "Power Percentage"
+                }
+            },
+            "name": "Limit the power fed to the grid to percentage"
+        },
+        "set_tou_periods": {
+            "description": "Sets Time Of Use Periods",
+            "fields": {
+                "device_id": {
+                    "description": "Must be a 'Battery' device",
+                    "name": "Battery"
+                },
+                "periods": {
+                    "description": "One period per line. For Huawei LUNA2000 batteries: '<start time>-<end time>/<days effective>/<charge>', with 1=Monday, 7=Sunday (example: '12:00-14:00/1234567/-'). For LG RESU batteries: '<start time>-<end time>/<electricity price>' (example: 13:00-14:00/0.50)",
+                    "name": "Periods"
+                }
+            },
+            "name": "Set TOU Periods"
+        },
+        "set_zero_power_grid_connection": {
+            "description": "Set Active Power Control to 'Zero power grid connection'",
+            "fields": {
+                "device_id": {
+                    "description": "Must be a 'Inverter' device",
+                    "name": "Inverter"
+                }
+            },
+            "name": "Set Active Power Control to 'Zero power grid connection'"
+        },
+        "stop_forcible_charge": {
+            "description": "Cancel the running forcible charge command",
+            "fields": {
+                "device_id": {
+                    "description": "Must be a 'Battery' device",
+                    "name": "Battery"
+                }
+            },
+            "name": "Stop the forcible charge or discharge"
         }
     }
 }
