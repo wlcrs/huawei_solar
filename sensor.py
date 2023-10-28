@@ -349,6 +349,12 @@ OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, 
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL,
     ),
+    HuaweiSolarSensorEntityDescription(
+        key="alarm",
+        name="Alarm",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_conversion_function=lambda alarms: ", ".join(alarms) if len(alarms) else "None"
+    ),
 )
 
 
@@ -1153,9 +1159,14 @@ class HuaweiSolarOptimizerSensorEntity(
         )
 
         if self.optimizer_id in self.coordinator.data:
-            self._attr_native_value = getattr(
+            value = getattr(
                 self.coordinator.data[self.optimizer_id], self.entity_description.key
             )
+            if self.entity_description.value_conversion_function:
+                value = self.entity_description.value_conversion_function(value)
+
+            self._attr_native_value = value
+
         else:
             self._attr_native_value = None
 
