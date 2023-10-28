@@ -4,9 +4,9 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-import homeassistant.helpers.config_validation as cv
 import serial.tools.list_ports
 import voluptuous as vol
+
 from homeassistant import config_entries
 from homeassistant.components import usb
 from homeassistant.const import (
@@ -17,7 +17,7 @@ from homeassistant.const import (
     CONF_USERNAME,
 )
 from homeassistant.data_entry_flow import FlowResult
-
+import homeassistant.helpers.config_validation as cv
 from huawei_solar import (
     ConnectionException,
     HuaweiSolarBridge,

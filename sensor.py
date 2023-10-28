@@ -27,10 +27,12 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-
-from huawei_solar import HuaweiSolarBridge, Result
-from huawei_solar import register_names as rn
-from huawei_solar import register_values as rv
+from huawei_solar import (
+    HuaweiSolarBridge,
+    Result,
+    register_names as rn,
+    register_values as rv,
+)
 from huawei_solar.files import OptimizerRunningStatus
 from huawei_solar.registers import (
     ChargeDischargePeriod,
@@ -985,17 +987,16 @@ class HuaweiSolarTOUPricePeriodsSensorEntity(
 
         if len(data) == 0:
             self._attr_extra_state_attributes.clear()
-        else:
-            if isinstance(data[0], LG_RESU_TimeOfUsePeriod):
-                self._attr_extra_state_attributes = {
-                    f"Period {idx+1}": self._lg_resu_period_to_text(period)
-                    for idx, period in enumerate(data)
-                }
-            elif isinstance(data[0], HUAWEI_LUNA2000_TimeOfUsePeriod):
-                self._attr_extra_state_attributes = {
-                    f"Period {idx+1}": self._huawei_luna2000_period_to_text(period)
-                    for idx, period in enumerate(data)
-                }
+        elif isinstance(data[0], LG_RESU_TimeOfUsePeriod):
+            self._attr_extra_state_attributes = {
+                f"Period {idx+1}": self._lg_resu_period_to_text(period)
+                for idx, period in enumerate(data)
+            }
+        elif isinstance(data[0], HUAWEI_LUNA2000_TimeOfUsePeriod):
+            self._attr_extra_state_attributes = {
+                f"Period {idx+1}": self._huawei_luna2000_period_to_text(period)
+                for idx, period in enumerate(data)
+            }
         self.async_write_ha_state()
 
 

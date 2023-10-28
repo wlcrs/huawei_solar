@@ -2,12 +2,11 @@
 from __future__ import annotations
 
 import asyncio
-import logging
 from collections.abc import Awaitable, Callable
 from datetime import timedelta
+import logging
 from typing import TypedDict, TypeVar
 
-import async_timeout
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONF_HOST,
@@ -21,9 +20,12 @@ from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.debounce import Debouncer
 from homeassistant.helpers.entity import DeviceInfo, Entity
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-
-from huawei_solar import HuaweiSolarBridge, HuaweiSolarException, InvalidCredentials
-from huawei_solar import register_values as rv
+from huawei_solar import (
+    HuaweiSolarBridge,
+    HuaweiSolarException,
+    InvalidCredentials,
+    register_values as rv,
+)
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
@@ -35,10 +37,9 @@ from .const import (
     DATA_UPDATE_COORDINATORS,
     DOMAIN,
     OPTIMIZER_UPDATE_INTERVAL,
-    SERVICES,
     UPDATE_INTERVAL,
 )
-from .services import async_setup_services, async_cleanup_services
+from .services import async_cleanup_services, async_setup_services
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -305,7 +306,7 @@ class HuaweiSolarUpdateCoordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         try:
-            async with async_timeout.timeout(20):
+            async with asyncio.timeout(20):
                 return await self.bridge.update()
         except HuaweiSolarException as err:
             raise UpdateFailed(
@@ -362,7 +363,7 @@ class HuaweiSolarOptimizerUpdateCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Retrieve the latest values from the optimizers."""
         try:
-            async with async_timeout.timeout(20):
+            async with asyncio.timeout(20):
                 return await self.bridge.get_latest_optimizer_history_data()
         except HuaweiSolarException as err:
             raise UpdateFailed(
@@ -418,7 +419,7 @@ class HuaweiSolarConfigurationUpdateCoordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         try:
-            async with async_timeout.timeout(20):
+            async with asyncio.timeout(20):
                 return await self.bridge.update_configuration_registers()
         except HuaweiSolarException as err:
             raise UpdateFailed(

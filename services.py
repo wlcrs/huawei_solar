@@ -6,15 +6,13 @@ import logging
 import re
 from typing import TYPE_CHECKING, Any
 
-import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import async_get_hass, callback, HomeAssistant, ServiceCall
-from homeassistant.helpers import device_registry as dr
 
-from huawei_solar import HuaweiSolarBridge
-from huawei_solar import register_names as rn
-from huawei_solar import register_values as rv
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant, ServiceCall, async_get_hass, callback
+from homeassistant.helpers import device_registry as dr
+import homeassistant.helpers.config_validation as cv
+from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
 from huawei_solar.registers import (
     ChargeDischargePeriod,
     ChargeFlag,
@@ -43,7 +41,7 @@ from .const import (
 )
 
 if TYPE_CHECKING:
-    from . import HuaweiInverterBridgeDeviceInfos
+    pass
 
 
 ALL_SERVICES = [
@@ -70,22 +68,22 @@ DATA_TARGET_SOC = "target_soc"
 DATA_PERIODS = "periods"
 
 def validate_battery_device_id(device_id: str) -> str:
-    """Validate whether the device_id refers to a 'Connected Energy Storage' device"""
+    """Validate whether the device_id refers to a 'Connected Energy Storage' device."""
     hass = async_get_hass()
     try:
         _get_battery_bridge(hass, device_id)
         return device_id
     except HuaweiSolarServiceException as err:
-        raise vol.Invalid(str(err))
+        raise vol.Invalid(str(err)) from err
 
 def validate_inverter_device_id(device_id: str) -> str:
-    """Validate whether the device_id refers to an 'Inverter' device"""
+    """Validate whether the device_id refers to an 'Inverter' device."""
     hass = async_get_hass()
     try:
         _get_inverter_bridge(hass, device_id)
         return device_id
     except HuaweiSolarServiceException as err:
-        raise vol.Invalid(str(err))
+        raise vol.Invalid(str(err)) from err
 
 
 INVERTER_DEVICE_SCHEMA = vol.Schema(
@@ -218,7 +216,7 @@ def _get_battery_bridge(hass: HomeAssistant, device_id: str):
 def get_battery_bridge(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> HuaweiSolarBridge:
-    """Returns the HuaweiSolarBridge associated with the battery device_id in the service call"""
+    """Return the HuaweiSolarBridge associated with the battery device_id in the service call."""
     device_id = service_call.data[DATA_DEVICE_ID]
     return _get_battery_bridge(hass, device_id)
 
@@ -244,7 +242,7 @@ def _get_inverter_bridge(hass: HomeAssistant, device_id: str):
 
 @callback
 def get_inverter_bridge(hass: HomeAssistant, service_call: ServiceCall):
-    """Returns the HuaweiSolarBridge associated with the inverter device_id in the service call"""
+    """Return the HuaweiSolarBridge associated with the inverter device_id in the service call."""
     device_id = service_call.data[DATA_DEVICE_ID]
     return _get_inverter_bridge(hass, device_id)
 
@@ -446,7 +444,7 @@ async def set_maximum_feed_grid_power_percentage(
 
 
 async def set_tou_periods(hass: HomeAssistant, service_call: ServiceCall) -> None:
-    """Set the TOU periods of the battery"""
+    """Set the TOU periods of the battery."""
 
     def _parse_huawei_luna2000_periods(
         text,
@@ -508,7 +506,7 @@ async def set_tou_periods(hass: HomeAssistant, service_call: ServiceCall) -> Non
 async def set_capacity_control_periods(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> None:
-    """Set the Capacity Control Periods of the battery"""
+    """Set the Capacity Control Periods of the battery."""
 
     def _parse_periods(text) -> list[PeakSettingPeriod]:
         result = []
@@ -542,7 +540,7 @@ async def set_capacity_control_periods(
 async def set_fixed_charge_periods(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> None:
-    """Set the fixed charging periods of the battery"""
+    """Set the fixed charging periods of the battery."""
 
     def _parse_periods(text) -> list[ChargeDischargePeriod]:
         result = []
@@ -676,7 +674,7 @@ async def async_setup_services(  # noqa: C901
             )
 
 async def async_cleanup_services( hass: HomeAssistant):
-    """Cleanup all Huawei Solar service (if all config entries unloaded)"""
+    """Cleanup all Huawei Solar service (if all config entries unloaded)."""
     if len(hass.data[DOMAIN]) == 1:
         for service in ALL_SERVICES:
             if hass.services.has_service(DOMAIN, service):

@@ -1,11 +1,11 @@
 """Switch entities for Huawei Solar."""
 from __future__ import annotations
 
-import logging
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Any, Generic, TypeVar, TYPE_CHECKING
+import logging
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
 from homeassistant.components.select import SelectEntity, SelectEntityDescription
 from homeassistant.config_entries import ConfigEntry
@@ -13,10 +13,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-
-from huawei_solar import HuaweiSolarBridge
-from huawei_solar import register_names as rn
-from huawei_solar import register_values as rv
+from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
 from huawei_solar.registers import REGISTERS
 
 from . import HuaweiSolarConfigurationUpdateCoordinator, HuaweiSolarEntity

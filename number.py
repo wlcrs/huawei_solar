@@ -1,8 +1,8 @@
 """Number entities for Huawei Solar."""
 from __future__ import annotations
 
-import logging
 from dataclasses import dataclass
+import logging
 
 from homeassistant.components.number import (
     NumberEntity,
@@ -16,10 +16,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-
-from huawei_solar import HuaweiSolarBridge
-from huawei_solar import register_names as rn
-from huawei_solar import register_values as rv
+from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
 
 from . import HuaweiSolarConfigurationUpdateCoordinator, HuaweiSolarEntity
 from .const import (
