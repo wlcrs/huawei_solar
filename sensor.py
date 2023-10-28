@@ -66,7 +66,7 @@ class HuaweiSolarSensorEntityDescription(SensorEntityDescription):
 
     def __post_init__(self):
         """Defaults the translation_key to the sensor key."""
-        self.translation_key = self.translation_key or self.key
+        self.translation_key = self.translation_key or self.key.replace('#','_').lower()
 
 
 # Every list in this file describes a group of entities which are related to each other.

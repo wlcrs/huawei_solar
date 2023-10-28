@@ -1,6 +1,9 @@
 {
     "domain": "huawei_solar",
     "name": "Huawei Solar",
+    "after_dependencies": [
+        "usb"
+    ],
     "config_flow": true,
     "documentation": "https://github.com/wlcrs/huawei_solar/wiki",
     "issue_tracker": "https://github.com/wlcrs/huawei_solar/issues",

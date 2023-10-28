@@ -56,22 +56,22 @@
             "accumulated_yield_energy": {
                 "name": "Total yield"
             },
-            "active_grid_A_B_voltage": {
+            "active_grid_a_b_voltage": {
                 "name": "A-B line voltage"
             },
-            "active_grid_A_power": {
+            "active_grid_a_power": {
                 "name": "Phase A active power"
             },
-            "active_grid_B_C_voltage": {
+            "active_grid_b_c_voltage": {
                 "name": "B-C line voltage"
             },
-            "active_grid_B_power": {
+            "active_grid_b_power": {
                 "name": "Phase B active power"
             },
-            "active_grid_C_A_voltage": {
+            "active_grid_c_a_voltage": {
                 "name": "C-A line voltage"
             },
-            "active_grid_C_power": {
+            "active_grid_c_power": {
                 "name": "Phase C active power"
             },
             "active_grid_frequency": {
@@ -101,29 +101,29 @@
             "efficiency": {
                 "name": "Efficiency"
             },
-            "grid_A_current": {
+            "grid_a_current": {
                 "name": "Phase A current"
             },
-            "grid_A_voltage": {
+            "grid_a_voltage": {
                 "name": "Phase A voltage"
-            },
-            "grid_B_current": {
-                "name": "Phase B current"
-            },
-            "grid_B_voltage": {
-                "name": "Phase B voltage"
-            },
-            "grid_C_current": {
-                "name": "Phase C current"
-            },
-            "grid_C_voltage": {
-                "name": "Phase C voltage"
             },
             "grid_accumulated_energy": {
                 "name": "Consumption"
             },
             "grid_accumulated_reactive_power": {
                 "name": "Reactive energy"
+            },
+            "grid_b_current": {
+                "name": "Phase B current"
+            },
+            "grid_b_voltage": {
+                "name": "Phase B voltage"
+            },
+            "grid_c_current": {
+                "name": "Phase C current"
+            },
+            "grid_c_voltage": {
+                "name": "Phase C voltage"
             },
             "grid_exported_energy": {
                 "name": "Exported"
@@ -140,13 +140,13 @@
             "internal_temperature": {
                 "name": "Internal temperature"
             },
-            "line_voltage_A_B": {
+            "line_voltage_a_b": {
                 "name": "A-B line voltage"
             },
-            "line_voltage_B_C": {
+            "line_voltage_b_c": {
                 "name": "B-C line voltage"
             },
-            "line_voltage_C_A": {
+            "line_voltage_c_a": {
                 "name": "C-A line voltage"
             },
             "meter_status": {
@@ -164,22 +164,22 @@
             "output_voltage": {
                 "name": "Output voltage"
             },
-            "phase_A_current": {
+            "phase_a_current": {
                 "name": "Phase A current"
             },
-            "phase_A_voltage": {
+            "phase_a_voltage": {
                 "name": "Phase A voltage"
             },
-            "phase_B_current": {
+            "phase_b_current": {
                 "name": "Phase B current"
             },
-            "phase_B_voltage": {
+            "phase_b_voltage": {
                 "name": "Phase B voltage"
             },
-            "phase_C_current": {
+            "phase_c_current": {
                 "name": "Phase C current"
             },
-            "phase_C_voltage": {
+            "phase_c_voltage": {
                 "name": "Phase C voltage"
             },
             "power_factor": {
@@ -212,19 +212,19 @@
             "state_1": {
                 "name": "Inverter state"
             },
-            "state_2#0": {
+            "state_2_0": {
                 "name": "Locking status"
             },
-            "state_2#1": {
+            "state_2_1": {
                 "name": "PV connection status"
             },
-            "state_2#2": {
+            "state_2_2": {
                 "name": "DSP data collection"
             },
-            "state_3#0": {
+            "state_3_0": {
                 "name": "Off-grid status"
             },
-            "state_3#1": {
+            "state_3_1": {
                 "name": "Off-grid switch"
             },
             "storage_bus_current": {
@@ -362,7 +362,7 @@
                     "name": "Battery"
                 },
                 "periods": {
-                    "description": "One period per line. Format: '<start time>-<end time>/<days effective>/<power>W', with 1=Monday, 7=Sunday. Example: '00:00-23:59/1234567/2500W'.",
+                    "description": "One period per line. Format: '[start time]-[end time]/[days effective]/[power]W', with 1=Monday, 7=Sunday. Example: '00:00-23:59/1234567/2500W'.",
                     "name": "Periods"
                 }
             },
@@ -386,7 +386,7 @@
                     "name": "Battery"
                 },
                 "periods": {
-                    "description": "One period per line. Format: '<start time>-<end time>/<power>W'. Example: '12:00-15:59/-1000W'.",
+                    "description": "One period per line. Format: '[start time]-[end time]/[power]W'. Example: '12:00-15:59/-1000W'.",
                     "name": "Periods"
                 }
             },
@@ -428,7 +428,7 @@
                     "name": "Battery"
                 },
                 "periods": {
-                    "description": "One period per line. For Huawei LUNA2000 batteries: '<start time>-<end time>/<days effective>/<charge>', with 1=Monday, 7=Sunday (example: '12:00-14:00/1234567/-'). For LG RESU batteries: '<start time>-<end time>/<electricity price>' (example: 13:00-14:00/0.50)",
+                    "description": "One period per line. For Huawei LUNA2000 batteries: '[start time]-[end time]/[days effective]/[charge]', with 1=Monday, 7=Sunday (example: '12:00-14:00/1234567/-'). For LG RESU batteries: '[start time]-[end time]/[electricity price]' (example: 13:00-14:00/0.50)",
                     "name": "Periods"
                 }
             },
