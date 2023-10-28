@@ -1,17 +1,11 @@
 forcible_charge:
-  name: Forcible Charge
-  description: Forcible Charge of the battery for a certain time
   fields:
     device_id:
-      name: Battery
-      description: Must be a 'Battery' device
       required: true
       selector:
         device:
           integration: huawei_solar
     duration:
-      name: Duration
-      description: Duration of the charge
       required: true
       default: 60
       selector:
@@ -21,27 +15,19 @@ forcible_charge:
           unit_of_measurement: "minutes"
           mode: box
     power:
-      name: Power
-      description: Wattage used for the charge
       required: true
       default: 1000
       selector:
         text:
 
 forcible_discharge:
-  name: Forcible Discharge
-  description: Forcible Discharge of the battery for a certain time
   fields:
     device_id:
-      name: Battery
-      description: Must be a 'Battery' device
       required: true
       selector:
         device:
           integration: huawei_solar
     duration:
-      name: Duration
-      description: Duration of the discharge
       required: true
       default: 60
       selector:
@@ -51,27 +37,19 @@ forcible_discharge:
           unit_of_measurement: "minutes"
           mode: box
     power:
-      name: Power
-      description: Wattage used for the discharge
       required: true
       default: 1000
       selector:
         text:
 
 forcible_charge_soc:
-  name: Forcible Charge to a SoC level
-  description: Forcible Charge of the battery to a certain State of Charge level
   fields:
     device_id:
-      name: Battery
-      description: Must be a 'Battery' device
       required: true
       selector:
         device:
           integration: huawei_solar
     target_soc:
-      name: Target SoC
-      description: State of Charge that must be reached
       required: true
       default: 50
       selector:
@@ -80,27 +58,19 @@ forcible_charge_soc:
           max: 100
           unit_of_measurement: "%"
     power:
-      name: Power
-      description: Wattage used for the charge
       required: true
       default: 1000
       selector:
         text:
 
 forcible_discharge_soc:
-  name: Forcible Discharge to a SoC level
-  description: Forcible Discharge of the battery to a certain State of Charge level
   fields:
     device_id:
-      name: Battery
-      description: Must be a 'Battery' device
       required: true
       selector:
         device:
           integration: huawei_solar
     target_soc:
-      name: Target SoC
-      description: State of Charge that must be reached
       required: true
       default: 15
       selector:
@@ -109,94 +79,64 @@ forcible_discharge_soc:
           max: 100
           unit_of_measurement: "%"
     power:
-      name: Power
-      description: Wattage used for the discharge
       required: true
       default: 1000
       selector:
         text:
 
 stop_forcible_charge:
-  name: Stop the forcible charge or discharge
-  description: Cancel the running forcible charge command
   fields:
     device_id:
-      name: Battery
-      description: Must be a 'Battery' device
       required: true
       selector:
         device:
           integration: huawei_solar
 
 reset_maximum_feed_grid_power:
-  name: Set Active Power Control to Maximum Feed Grid Power
-  description: Set Active Power Control to the default Unlimited mode
   fields:
     device_id:
-      name: Inverter
-      description: Must be an 'Inverter' device
       required: true
       selector:
         device:
           integration: huawei_solar
 
 set_di_active_power_scheduling:
-  name: Set Active Power Control to 'DI active scheduling'
-  description: Set Active Power Control to 'DI active scheduling'
   fields:
     device_id:
-      name: Inverter
-      description: Must be an 'Inverter' device
       required: true
       selector:
         device:
           integration: huawei_solar
 
 set_zero_power_grid_connection:
-  name: Set Active Power Control to 'Zero power grid connection'
-  description: Set Active Power Control to 'Zero power grid connection'
   fields:
     device_id:
-      name: Inverter
-      description: Must be an 'Inverter' device
       required: true
       selector:
         device:
           integration: huawei_solar
 
 set_maximum_feed_grid_power:
-  name: Limit the power fed to the grid
-  description: Sets Active Power Control to 'Power-limited grid connection' with the given wattage
   fields:
     device_id:
-      name: Inverter
-      description: Must be an 'Inverter' device
       required: true
       selector:
         device:
           integration: huawei_solar
     power:
-      name: Power
-      description: Maximum Wattage
       required: true
       default: 0
       selector:
         text:
 
 set_maximum_feed_grid_power_percent:
-  name: Limit the power fed to the grid to percentage
-  description: Sets Active Power Control to 'Power-limited grid connection (%)' with the given percentage
   fields:
     device_id:
-      name: Inverter
-      description: Must be an 'Inverter' device
       required: true
       selector:
         device:
           integration: huawei_solar
     power_percentage:
-      name: Power Percentage
-      description: Maximum Percentage
       required: true
       default: 0
       selector:
@@ -206,57 +146,39 @@ set_maximum_feed_grid_power_percent:
           unit_of_measurement: "%"
 
 set_tou_periods:
-  name: Set TOU Periods
-  description: Sets Time Of Use Periods
   fields:
     device_id:
-      name: Battery
-      description: Must be a 'Battery' device
       required: true
       selector:
         device:
           integration: huawei_solar
     periods:
-      name: Periods
-      description: "One period per line. For Huawei LUNA2000 batteries: '<start time>-<end time>/<days effective>/<charge>', with 1=Monday, 7=Sunday (example: '12:00-14:00/1234567/-'). For LG RESU batteries: '<start time>-<end time>/<electricity price>' (example: 13:00-14:00/0.50)"
       required: true
       selector:
         text:
           multiline: true
 
 set_capacity_control_periods:
-  name: Set Capacity Control Periods
-  description: Sets Capacity Control Periods
   fields:
     device_id:
-      name: Battery
-      description: Must be a 'Battery' device
       required: true
       selector:
         device:
           integration: huawei_solar
     periods:
-      name: Periods
-      description: "One period per line. Format: '<start time>-<end time>/<days effective>/<power>W', with 1=Monday, 7=Sunday. Example: '00:00-23:59/1234567/2500W'."
       required: true
       selector:
         text:
           multiline: true
 
 set_fixed_charge_periods:
-  name: Set Fixed Charge Periods
-  description: Sets Fixed Charge and Discharge Periods
   fields:
     device_id:
-      name: Battery
-      description: Must be a 'Battery' device
       required: true
       selector:
         device:
           integration: huawei_solar
     periods:
-      name: Periods
-      description: "One period per line. Format: '<start time>-<end time>/<power>W'. Example: '12:00-15:59/-1000W'."
       required: true
       selector:
         text:
