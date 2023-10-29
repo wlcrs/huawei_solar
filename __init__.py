@@ -242,6 +242,7 @@ async def _compute_device_infos(
         name="Inverter",
         manufacturer="Huawei",
         model=bridge.model_name,
+        serial_number=bridge.serial_number,
         via_device=connecting_inverter_device_id,  # type: ignore[typeddict-item]
     )
 

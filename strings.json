@@ -49,6 +49,32 @@
         }
     },
     "entity": {
+        "number": {
+            "storage_maximum_charge_power": {
+                "name": "Maximum charging power"
+            },
+            "storage_maximum_discharge_power": {
+                "name": "Maximum discharging power"
+            },
+            "storage_charging_cutoff_capacity": {
+                "name": "End-of-charge SOC"
+            },
+            "storage_discharging_cutoff_capacity": {
+                "name": "End-of-discharge SOC"
+            },
+            "storage_backup_power_state_of_charge": {
+                "name": "Backup power SOC"
+            },
+            "storage_grid_charge_cutoff_state_of_charge": {
+                "name": "Grid charge cutoff SOC"
+            },
+            "storage_power_of_charge_from_grid": {
+                "name": "Grid charge maximum power"
+            },
+            "storage_capacity_control_soc_peak_shaving": {
+                "name": "Peak Shaving SOC"
+            }
+        },
         "sensor": {
             "input_power": {
                 "name": "Input power"
@@ -152,7 +178,7 @@
             "input_current": {
                 "name": "Input current"
             },
-            "tempreature": {
+            "temperature": {
                 "name": "[%key:component::sensor::entity_component::temperature::name%]"
             },
             "running_status": {
@@ -268,6 +294,180 @@
             },
             "storage_fixed_charging_and_discharging_periods": {
                 "name": "Fixed charging periods"
+            },
+            "pv_01_voltage": {
+                "name": "PV 1 voltage"
+            },
+            "pv_01_current": {
+                "name": "PV 1 current"
+            },
+            "pv_02_voltage": {
+                "name": "PV 2 voltage"
+            },
+            "pv_02_current": {
+                "name": "PV 2 current"
+            },
+            "pv_03_voltage": {
+                "name": "PV 3 voltage"
+            },
+            "pv_03_current": {
+                "name": "PV 3 current"
+            },
+            "pv_04_voltage": {
+                "name": "PV 4 voltage"
+            },
+            "pv_04_current": {
+                "name": "PV 4 current"
+            },
+            "pv_05_voltage": {
+                "name": "PV 5 voltage"
+            },
+            "pv_05_current": {
+                "name": "PV 5 current"
+            },
+            "pv_06_voltage": {
+                "name": "PV 6 voltage"
+            },
+            "pv_06_current": {
+                "name": "PV 6 current"
+            },
+            "pv_07_voltage": {
+                "name": "PV 7 voltage"
+            },
+            "pv_07_current": {
+                "name": "PV 7 current"
+            },
+            "pv_08_voltage": {
+                "name": "PV 8 voltage"
+            },
+            "pv_08_current": {
+                "name": "PV 8 current"
+            },
+            "pv_09_voltage": {
+                "name": "PV 9 voltage"
+            },
+            "pv_09_current": {
+                "name": "PV 9 current"
+            },
+            "pv_10_voltage": {
+                "name": "PV 10 voltage"
+            },
+            "pv_10_current": {
+                "name": "PV 10 current"
+            },
+            "pv_11_current": {
+                "name": "PV 11 current"
+            },
+            "pv_12_voltage": {
+                "name": "PV 12 voltage"
+            },
+            "pv_12_current": {
+                "name": "PV 12 current"
+            },
+            "pv_13_voltage": {
+                "name": "PV 13 voltage"
+            },
+            "pv_13_current": {
+                "name": "PV 13 current"
+            },
+            "pv_14_voltage": {
+                "name": "PV 14 voltage"
+            },
+            "pv_14_current": {
+                "name": "PV 14 current"
+            },
+            "pv_15_voltage": {
+                "name": "PV 15 voltage"
+            },
+            "pv_15_current": {
+                "name": "PV 15 current"
+            },
+            "pv_16_voltage": {
+                "name": "PV 16 voltage"
+            },
+            "pv_16_current": {
+                "name": "PV 16 current"
+            },
+            "pv_17_voltage": {
+                "name": "PV 17 voltage"
+            },
+            "pv_17_current": {
+                "name": "PV 17 current"
+            },
+            "pv_18_voltage": {
+                "name": "PV 18 voltage"
+            },
+            "pv_18_current": {
+                "name": "PV 18 current"
+            },
+            "pv_19_voltage": {
+                "name": "PV 19 voltage"
+            },
+            "pv_19_current": {
+                "name": "PV 19 current"
+            },
+            "pv_20_voltage": {
+                "name": "PV 20 voltage"
+            },
+            "pv_20_current": {
+                "name": "PV 20 current"
+            },
+            "pv_21_current": {
+                "name": "PV 21 current"
+            },
+            "pv_22_voltage": {
+                "name": "PV 22 voltage"
+            },
+            "pv_22_current": {
+                "name": "PV 22 current"
+            },
+            "pv_23_voltage": {
+                "name": "PV 23 voltage"
+            },
+            "pv_23_current": {
+                "name": "PV 23 current"
+            },
+            "pv_24_voltage": {
+                "name": "PV 24 voltage"
+            },
+            "pv_24_current": {
+                "name": "PV 24 current"
+            }
+        },
+        "select": {
+            "storage_excess_pv_energy_use_in_tou": {
+                "name": "Excess PV energy use in TOU",
+                "state": {
+                    "fed_to_grid": "Fed to grid",
+                    "charge": "Charge"
+                }
+            },
+            "storage_capacity_control_mode": {
+                "name": "Capacity Control Mode",
+                "state": {
+                    "disable": "Disable",
+                    "active_capacity_control": "Active capacity control",
+                    "apparent_power_limit": "Apparent power limit"
+                }
+            },
+            "storage_working_mode_settings": {
+                "name": "Working Mode",
+                "state": {
+                    "adaptive": "Adaptive",
+                    "fixed_charge_discharge": "Fixed charge discharge",
+                    "maximise_self_consumption": "Maximise self consumption",
+                    "time_of_use_lg": "Time of use",
+                    "fully_fed_to_grid": "Fully fed to grid",
+                    "time_of_use_luna2000": "Time of use"
+                }
+            }
+        },
+        "switch": {
+            "storage_charge_from_grid_function": {
+                "name": "Charge from grid"
+            },
+            "startup": {
+                "name": "Inverter ON/OFF"
             }
         }
     },
@@ -295,8 +495,8 @@
             "description": "Forcible Discharge of the battery for a certain time",
             "fields": {
                 "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
+                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
+                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
                 },
                 "duration": {
                     "name": "Duration",
@@ -313,8 +513,8 @@
             "description": "Forcible Charge of the battery to a certain State of Charge level",
             "fields": {
                 "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
+                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
+                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
                 },
                 "target_soc": {
                     "name": "Target SoC",
@@ -331,12 +531,12 @@
             "description": "Forcible Discharge of the battery to a certain State of Charge level",
             "fields": {
                 "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
+                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
+                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
                 },
                 "target_soc": {
-                    "name": "Target SoC",
-                    "description": "State of Charge that must be reached"
+                    "name": "[%key:component::huawei_solar::services::forcible_charge_soc::fields::target_soc::name%]",
+                    "description": "[%key:component::huawei_solar::services::forcible_charge_soc::fields::target_soc::description%]"
                 },
                 "power": {
                     "name": "Power",
@@ -349,8 +549,8 @@
             "description": "Cancel the running forcible charge command",
             "fields": {
                 "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
+                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
+                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
                 }
             }
         },
@@ -369,8 +569,8 @@
             "description": "Set Active Power Control to 'DI active scheduling'",
             "fields": {
                 "device_id": {
-                    "name": "Inverter",
-                    "description": "Must be a 'Inverter' device"
+                    "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
+                    "description": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::description%]"
                 }
             }
         },
@@ -379,8 +579,8 @@
             "description": "Set Active Power Control to 'Zero power grid connection'",
             "fields": {
                 "device_id": {
-                    "name": "Inverter",
-                    "description": "Must be a 'Inverter' device"
+                    "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
+                    "description": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::description%]"
                 }
             }
         },
@@ -389,8 +589,8 @@
             "description": "Sets Active Power Control to 'Power-limited grid connection' with the given wattage",
             "fields": {
                 "device_id": {
-                    "name": "Inverter",
-                    "description": "Must be a 'Inverter' device"
+                    "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
+                    "description": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::description%]"
                 },
                 "power": {
                     "name": "Power",
@@ -403,8 +603,8 @@
             "description": "Sets Active Power Control to 'Power-limited grid connection (%)' with the given percentage",
             "fields": {
                 "device_id": {
-                    "name": "Inverter",
-                    "description": "Must be a 'Inverter' device"
+                    "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
+                    "description": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::description%]"
                 },
                 "power_percentage": {
                     "name": "Power Percentage",
@@ -417,8 +617,8 @@
             "description": "Sets Time Of Use Periods",
             "fields": {
                 "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
+                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
+                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
                 },
                 "periods": {
                     "name": "Periods",
@@ -431,8 +631,8 @@
             "description": "Set Capacity Control Periods",
             "fields": {
                 "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
+                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
+                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
                 },
                 "periods": {
                     "name": "Periods",
@@ -445,8 +645,8 @@
             "description": "Sets Fixed Charge and Discharge Periods",
             "fields": {
                 "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
+                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
+                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
                 },
                 "periods": {
                     "name": "Periods",

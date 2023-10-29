@@ -40,11 +40,13 @@ class HuaweiSolarSwitchEntityDescription(Generic[T], SwitchEntityDescription):
     is_available_key: str | None = None
     check_is_available_func: Callable[[Any], bool] | None = None
 
+    def __post_init__(self):
+        """Defaults the translation_key to the switch key."""
+        self.translation_key = self.translation_key or self.key.replace('#','_').lower()
 
 ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     HuaweiSolarSwitchEntityDescription(
         key=rn.STORAGE_CHARGE_FROM_GRID_FUNCTION,
-        name="Charge from grid",
         icon="mdi:battery-charging-50",
         entity_category=EntityCategory.CONFIG,
         is_available_key=rn.STORAGE_CAPACITY_CONTROL_MODE,
@@ -218,7 +220,6 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
         self.bridge = bridge
         self.entity_description = SwitchEntityDescription(
             rn.STARTUP,
-            name="Inverter ON/OFF",
             icon="mdi:power-standby",
             entity_category=EntityCategory.CONFIG,
         )

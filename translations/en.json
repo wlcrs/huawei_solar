@@ -49,6 +49,60 @@
         }
     },
     "entity": {
+        "number": {
+            "storage_backup_power_state_of_charge": {
+                "name": "Backup power SOC"
+            },
+            "storage_capacity_control_soc_peak_shaving": {
+                "name": "Peak Shaving SOC"
+            },
+            "storage_charging_cutoff_capacity": {
+                "name": "End-of-charge SOC"
+            },
+            "storage_discharging_cutoff_capacity": {
+                "name": "End-of-discharge SOC"
+            },
+            "storage_grid_charge_cutoff_state_of_charge": {
+                "name": "Grid charge cutoff SOC"
+            },
+            "storage_maximum_charge_power": {
+                "name": "Maximum charging power"
+            },
+            "storage_maximum_discharge_power": {
+                "name": "Maximum discharging power"
+            },
+            "storage_power_of_charge_from_grid": {
+                "name": "Grid charge maximum power"
+            }
+        },
+        "select": {
+            "storage_capacity_control_mode": {
+                "name": "Capacity Control Mode",
+                "state": {
+                    "active_capacity_control": "Active capacity control",
+                    "apparent_power_limit": "Apparent power limit",
+                    "disable": "Disable"
+                }
+            },
+            "storage_excess_pv_energy_use_in_tou": {
+                "name": "Excess PV energy use in TOU",
+                "state": {
+                    "charge": "Charge",
+                    "fed_to_grid": "Fed to grid"
+                }
+            },
+            "storage_working_mode_settings": {
+                "name": "Working Mode",
+                "state": {
+                    "adaptive": "Adaptive",
+                    "fixed_charge_discharge": "Fixed charge discharge",
+                    "fully_fed_to_grid": "Fully fed to grid",
+                    "maximise_self_consumption": "Maximise self consumption",
+                    "time_of_use_lg": "Time of use",
+                    "time_of_use_luna2000": "Time of use"
+                }
+            }
+        },
         "sensor": {
             "accumulated_energy_yield": {
                 "name": "Accumulated energy yield"
@@ -191,6 +245,144 @@
             "power_meter_reactive_power": {
                 "name": "Reactive power"
             },
+            "pv_01_current": {
+                "name": "PV 1 current"
+            },
+            "pv_01_voltage": {
+                "name": "PV 1 voltage"
+            },
+            "pv_02_current": {
+                "name": "PV 2 current"
+            },
+            "pv_02_voltage": {
+                "name": "PV 2 voltage"
+            },
+            "pv_03_current": {
+                "name": "PV 3 current"
+            },
+            "pv_03_voltage": {
+                "name": "PV 3 voltage"
+            },
+            "pv_04_current": {
+                "name": "PV 4 current"
+            },
+            "pv_04_voltage": {
+                "name": "PV 4 voltage"
+            },
+            "pv_05_current": {
+                "name": "PV 5 current"
+            },
+            "pv_05_voltage": {
+                "name": "PV 5 voltage"
+            },
+            "pv_06_current": {
+                "name": "PV 6 current"
+            },
+            "pv_06_voltage": {
+                "name": "PV 6 voltage"
+            },
+            "pv_07_current": {
+                "name": "PV 7 current"
+            },
+            "pv_07_voltage": {
+                "name": "PV 7 voltage"
+            },
+            "pv_08_current": {
+                "name": "PV 8 current"
+            },
+            "pv_08_voltage": {
+                "name": "PV 8 voltage"
+            },
+            "pv_09_current": {
+                "name": "PV 9 current"
+            },
+            "pv_09_voltage": {
+                "name": "PV 9 voltage"
+            },
+            "pv_10_current": {
+                "name": "PV 10 current"
+            },
+            "pv_10_voltage": {
+                "name": "PV 10 voltage"
+            },
+            "pv_11_current": {
+                "name": "PV 11 current"
+            },
+            "pv_12_current": {
+                "name": "PV 12 current"
+            },
+            "pv_12_voltage": {
+                "name": "PV 12 voltage"
+            },
+            "pv_13_current": {
+                "name": "PV 13 current"
+            },
+            "pv_13_voltage": {
+                "name": "PV 13 voltage"
+            },
+            "pv_14_current": {
+                "name": "PV 14 current"
+            },
+            "pv_14_voltage": {
+                "name": "PV 14 voltage"
+            },
+            "pv_15_current": {
+                "name": "PV 15 current"
+            },
+            "pv_15_voltage": {
+                "name": "PV 15 voltage"
+            },
+            "pv_16_current": {
+                "name": "PV 16 current"
+            },
+            "pv_16_voltage": {
+                "name": "PV 16 voltage"
+            },
+            "pv_17_current": {
+                "name": "PV 17 current"
+            },
+            "pv_17_voltage": {
+                "name": "PV 17 voltage"
+            },
+            "pv_18_current": {
+                "name": "PV 18 current"
+            },
+            "pv_18_voltage": {
+                "name": "PV 18 voltage"
+            },
+            "pv_19_current": {
+                "name": "PV 19 current"
+            },
+            "pv_19_voltage": {
+                "name": "PV 19 voltage"
+            },
+            "pv_20_current": {
+                "name": "PV 20 current"
+            },
+            "pv_20_voltage": {
+                "name": "PV 20 voltage"
+            },
+            "pv_21_current": {
+                "name": "PV 21 current"
+            },
+            "pv_22_current": {
+                "name": "PV 22 current"
+            },
+            "pv_22_voltage": {
+                "name": "PV 22 voltage"
+            },
+            "pv_23_current": {
+                "name": "PV 23 current"
+            },
+            "pv_23_voltage": {
+                "name": "PV 23 voltage"
+            },
+            "pv_24_current": {
+                "name": "PV 24 current"
+            },
+            "pv_24_voltage": {
+                "name": "PV 24 voltage"
+            },
             "reactive_power": {
                 "name": "Reactive power"
             },
@@ -263,11 +455,19 @@
             "storage_total_discharge": {
                 "name": "Total discharge"
             },
-            "tempreature": {
+            "temperature": {
                 "name": "Temperature"
             },
             "voltage_to_ground": {
                 "name": "Voltage to ground"
+            }
+        },
+        "switch": {
+            "startup": {
+                "name": "Inverter ON/OFF"
+            },
+            "storage_charge_from_grid_function": {
+                "name": "Charge from grid"
             }
         }
     },

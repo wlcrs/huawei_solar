@@ -1106,7 +1106,6 @@ def get_pv_entity_descriptions(count: int) -> list[HuaweiSolarSensorEntityDescri
             [
                 HuaweiSolarSensorEntityDescription(
                     key=getattr(rn, f"PV_{idx:02}_VOLTAGE"),
-                    name=f"PV {idx} voltage",
                     icon="mdi:lightning-bolt",
                     native_unit_of_measurement=UnitOfElectricPotential.VOLT,
                     device_class=SensorDeviceClass.VOLTAGE,
@@ -1114,7 +1113,6 @@ def get_pv_entity_descriptions(count: int) -> list[HuaweiSolarSensorEntityDescri
                 ),
                 HuaweiSolarSensorEntityDescription(
                     key=getattr(rn, f"PV_{idx:02}_CURRENT"),
-                    name=f"PV {idx} current",
                     icon="mdi:lightning-bolt-outline",
                     native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
                     device_class=SensorDeviceClass.CURRENT,
