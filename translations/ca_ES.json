@@ -5,11 +5,11 @@
         },
         "error": {
             "cannot_connect": "Error de connexió",
-            "invalid_auth": "Credencials incorrectes",
+            "invalid_auth": "Credencials no vàlides",
             "invalid_slave_ids": "Els IDs esclaus han d'estar separats per comes",
             "read_error": "Error de lectura",
             "slave_cannot_connect": "Error de connexió al dispositiu esclau",
-            "unknown": "Error insperat"
+            "unknown": "Error inesperat"
         },
         "step": {
             "network_login": {
@@ -24,19 +24,19 @@
                     "enable_parameter_configuration": "Avançat: elevar permisos",
                     "host": "Host",
                     "port": "Port",
-                    "slave_ids": "IDs esclaus (separats per coma)"
+                    "slave_ids": "IDs d'esclaus (separats per comes)"
                 }
             },
             "setup_serial": {
                 "data": {
                     "port": "Selecciona un dispositiu",
-                    "slave_ids": "IDs esclaus (separats per coma)"
+                    "slave_ids": "IDs d'esclaus (separats per comes)"
                 },
                 "title": "Dispositiu"
             },
             "setup_serial_manual_path": {
                 "data": {
-                    "port": "Ruta del dispositiu USB"
+                    "port": "Ruta al dispositiu USB"
                 },
                 "title": "Ruta"
             },
@@ -46,6 +46,613 @@
                 },
                 "title": "Selecciona el tipus de connexió"
             }
+        }
+    },
+    "entity": {
+        "number": {
+            "storage_backup_power_state_of_charge": {
+                "name": "Càrrega de reserva SoC"
+            },
+            "storage_capacity_control_soc_peak_shaving": {
+                "name": "Raspat de pic SoC"
+            },
+            "storage_charging_cutoff_capacity": {
+                "name": "Fi de càrrega SoC"
+            },
+            "storage_discharging_cutoff_capacity": {
+                "name": "Fi de descàrrega SoC"
+            },
+            "storage_grid_charge_cutoff_state_of_charge": {
+                "name": "Tall de càrrega de xarxa SoC"
+            },
+            "storage_maximum_charge_power": {
+                "name": "Potència màxima de càrrega"
+            },
+            "storage_maximum_discharge_power": {
+                "name": "Potència màxima de descàrrega"
+            },
+            "storage_power_of_charge_from_grid": {
+                "name": "Potència màxima de càrrega des de la xarxa"
+            }
+        },
+        "select": {
+            "storage_capacity_control_mode": {
+                "name": "Mode de control de capacitat",
+                "state": {
+                    "active_capacity_control": "Control de capacitat actiu",
+                    "apparent_power_limit": "Límit de potència aparent",
+                    "disable": "Desactivar"
+                }
+            },
+            "storage_excess_pv_energy_use_in_tou": {
+                "name": "Ús d'energia FV excedent en TOU",
+                "state": {
+                    "charge": "Càrrega",
+                    "fed_to_grid": "Vertir a la xarxa"
+                }
+            },
+            "storage_working_mode_settings": {
+                "name": "Mode de funcionament",
+                "state": {
+                    "adaptive": "Adaptatiu",
+                    "fixed_charge_discharge": "Càrrega i descàrrega fixa",
+                    "fully_fed_to_grid": "Vertit complet a la xarxa",
+                    "maximise_self_consumption": "Maximitzar l'autoconsum",
+                    "time_of_use_lg": "Horari d'ús",
+                    "time_of_use_luna2000": "Horari d'ús"
+                }
+            }
+        },
+        "sensor": {
+            "accumulated_energy_yield": {
+                "name": "Rendiment acumulat d'energia"
+            },
+            "accumulated_yield_energy": {
+                "name": "Rendiment total"
+            },
+            "active_grid_a_b_voltage": {
+                "name": "Tensió de línia A-B"
+            },
+            "active_grid_a_power": {
+                "name": "Potència activa de fase A"
+            },
+            "active_grid_b_c_voltage": {
+                "name": "Tensió de línia B-C"
+            },
+            "active_grid_b_power": {
+                "name": "Potència activa de fase B"
+            },
+            "active_grid_c_a_voltage": {
+                "name": "Tensió de línia C-A"
+            },
+            "active_grid_c_power": {
+                "name": "Potència activa de fase C"
+            },
+            "active_grid_frequency": {
+                "name": "Frequència"
+            },
+            "active_grid_power_factor": {
+                "name": "Factor de potència"
+            },
+            "active_power": {
+                "name": "Potència activa"
+            },
+            "alarm": {
+                "name": "Alarma"
+            },
+            "alarms": {
+                "name": "Alarmes"
+            },
+            "daily_yield_energy": {
+                "name": "Rendiment diari"
+            },
+            "day_active_power_peak": {
+                "name": "Pic de potència diürna"
+            },
+            "device_status": {
+                "name": "Estat del dispositiu"
+            },
+            "efficiency": {
+                "name": "Eficiència"
+            },
+            "grid_a_current": {
+                "name": "Corrent de fase A"
+            },
+            "grid_a_voltage": {
+                "name": "Tensió de fase A"
+            },
+            "grid_accumulated_energy": {
+                "name": "Consum"
+            },
+            "grid_accumulated_reactive_power": {
+                "name": "Energia reactiva acumulada"
+            },
+            "grid_b_current": {
+                "name": "Corrent de fase B"
+            },
+            "grid_b_voltage": {
+                "name": "Tensió de fase B"
+            },
+            "grid_c_current": {
+                "name": "Corrent de fase C"
+            },
+            "grid_c_voltage": {
+                "name": "Tensió de fase C"
+            },
+            "grid_exported_energy": {
+                "name": "Energia exportada"
+            },
+            "input_current": {
+                "name": "Corrent d'entrada"
+            },
+            "input_power": {
+                "name": "Potència d'entrada"
+            },
+            "input_voltage": {
+                "name": "Tensió d'entrada"
+            },
+            "internal_temperature": {
+                "name": "Temperatura interna"
+            },
+            "line_voltage_a_b": {
+                "name": "Tensió de línia A-B"
+            },
+            "line_voltage_b_c": {
+                "name": "Tensió de línia B-C"
+            },
+            "line_voltage_c_a": {
+                "name": "Tensió de línia C-A"
+            },
+            "meter_status": {
+                "name": "Estat del comptador"
+            },
+            "nb_online_optimizers": {
+                "name": "Optimitzadors en línia"
+            },
+            "output_current": {
+                "name": "Corrent de sortida"
+            },
+            "output_power": {
+                "name": "Potència de sortida"
+            },
+            "output_voltage": {
+                "name": "Tensió de sortida"
+            },
+            "phase_a_current": {
+                "name": "Corrent de fase A"
+            },
+            "phase_a_voltage": {
+                "name": "Tensió de fase A"
+            },
+            "phase_b_current": {
+                "name": "Corrent de fase B"
+            },
+            "phase_b_voltage": {
+                "name": "Tensió de fase B"
+            },
+            "phase_c_current": {
+                "name": "Corrent de fase C"
+            },
+            "phase_c_voltage": {
+                "name": "Tensió de fase C"
+            },
+            "power_factor": {
+                "name": "Factor de potència"
+            },
+            "power_meter_active_power": {
+                "name": "Potència activa"
+            },
+            "power_meter_reactive_power": {
+                "name": "Potència reactiva"
+            },
+            "pv_01_current": {
+                "name": "Corrent FV 1"
+            },
+            "pv_01_voltage": {
+                "name": "Tensió FV 1"
+            },
+            "pv_02_current": {
+                "name": "Corrent FV 2"
+            },
+            "pv_02_voltage": {
+                "name": "Tensió FV 2"
+            },
+            "pv_03_current": {
+                "name": "Corrent FV 3"
+            },
+            "pv_03_voltage": {
+                "name": "Tensió FV 3"
+            },
+            "pv_04_current": {
+                "name": "Corrent FV 4"
+            },
+            "pv_04_voltage": {
+                "name": "Tensió FV 4"
+            },
+            "pv_05_current": {
+                "name": "Corrent FV 5"
+            },
+            "pv_05_voltage": {
+                "name": "Tensió FV 5"
+            },
+            "pv_06_current": {
+                "name": "Corrent FV 6"
+            },
+            "pv_06_voltage": {
+                "name": "Tensió FV 6"
+            },
+            "pv_07_current": {
+                "name": "Corrent FV 7"
+            },
+            "pv_07_voltage": {
+                "name": "Tensió FV 7"
+            },
+            "pv_08_current": {
+                "name": "Corrent FV 8"
+            },
+            "pv_08_voltage": {
+                "name": "Tensió FV 8"
+            },
+            "pv_09_current": {
+                "name": "Corrent FV 9"
+            },
+            "pv_09_voltage": {
+                "name": "Tensió FV 9"
+            },
+            "pv_10_current": {
+                "name": "Corrent FV 10"
+            },
+            "pv_10_voltage": {
+                "name": "Tensió FV 10"
+            },
+            "pv_11_current": {
+                "name": "Corrent FV 11"
+            },
+            "pv_12_current": {
+                "name": "Corrent FV 12"
+            },
+            "pv_12_voltage": {
+                "name": "Tensió FV 12"
+            },
+            "pv_13_current": {
+                "name": "Corrent FV 13"
+            },
+            "pv_13_voltage": {
+                "name": "Tensió FV 13"
+            },
+            "pv_14_current": {
+                "name": "Corrent FV 14"
+            },
+            "pv_14_voltage": {
+                "name": "Tensió FV 14"
+            },
+            "pv_15_current": {
+                "name": "Corrent FV 15"
+            },
+            "pv_15_voltage": {
+                "name": "Tensió FV 15"
+            },
+            "pv_16_current": {
+                "name": "Corrent FV 16"
+            },
+            "pv_16_voltage": {
+                "name": "Tensió FV 16"
+            },
+            "pv_17_current": {
+                "name": "Corrent FV 17"
+            },
+            "pv_17_voltage": {
+                "name": "Tensió FV 17"
+            },
+            "pv_18_current": {
+                "name": "Corrent FV 18"
+            },
+            "pv_18_voltage": {
+                "name": "Tensió FV 18"
+            },
+            "pv_19_current": {
+                "name": "Corrent FV 19"
+            },
+            "pv_19_voltage": {
+                "name": "Tensió FV 19"
+            },
+            "pv_20_current": {
+                "name": "Corrent FV 20"
+            },
+            "pv_20_voltage": {
+                "name": "Tensió FV 20"
+            },
+            "pv_21_current": {
+                "name": "Corrent FV 21"
+            },
+            "pv_22_current": {
+                "name": "Corrent FV 22"
+            },
+            "pv_22_voltage": {
+                "name": "Tensió FV 22"
+            },
+            "pv_23_current": {
+                "name": "Corrent FV 23"
+            },
+            "pv_23_voltage": {
+                "name": "Tensió FV 23"
+            },
+            "pv_24_current": {
+                "name": "Corrent FV 24"
+            },
+            "pv_24_voltage": {
+                "name": "Tensió FV 24"
+            },
+            "reactive_power": {
+                "name": "Potència reactiva"
+            },
+            "running_status": {
+                "name": "Estat de funcionament"
+            },
+            "shutdown_time": {
+                "name": "Hora d'apagat"
+            },
+            "single_phase_meter_current": {
+                "name": "Corrent"
+            },
+            "single_phase_meter_voltage": {
+                "name": "Tensió"
+            },
+            "startup_time": {
+                "name": "Hora d'inici"
+            },
+            "state_1": {
+                "name": "Estat de l'inversor"
+            },
+            "state_2_0": {
+                "name": "Estat de bloqueig"
+            },
+            "state_2_1": {
+                "name": "Estat de connexió FV"
+            },
+            "state_2_2": {
+                "name": "Recopilació de dades DSP"
+            },
+            "state_3_0": {
+                "name": "Estat off-grid"
+            },
+            "state_3_1": {
+                "name": "Interruptor off-grid"
+            },
+            "storage_bus_current": {
+                "name": "Corrent del bus"
+            },
+            "storage_bus_voltage": {
+                "name": "Tensió del bus"
+            },
+            "storage_capacity_control_periods": {
+                "name": "Períodes de control de capacitat"
+            },
+            "storage_charge_discharge_power": {
+                "name": "Potència de càrrega/descàrrega"
+            },
+            "storage_current_day_charge_capacity": {
+                "name": "Càrrega diària"
+            },
+            "storage_current_day_discharge_capacity": {
+                "name": "Descàrrega diària"
+            },
+            "storage_fixed_charging_and_discharging_periods": {
+                "name": "Períodes de càrrega i descàrrega fixa"
+            },
+            "storage_running_status": {
+                "name": "Estat"
+            },
+            "storage_state_of_capacity": {
+                "name": "Estat de la capacitat"
+            },
+            "storage_time_of_use_charging_and_discharging_periods": {
+                "name": "Períodes d'horari d'ús"
+            },
+            "storage_total_charge": {
+                "name": "Càrrega total"
+            },
+            "storage_total_discharge": {
+                "name": "Descàrrega total"
+            },
+            "temperature": {
+                "name": "Temperatura"
+            },
+            "voltage_to_ground": {
+                "name": "Tensió a terra"
+            }
+        },
+        "switch": {
+            "startup": {
+                "name": "Engegat/Apagat de l'inversor"
+            },
+            "storage_charge_from_grid_function": {
+                "name": "Càrrega des de la xarxa"
+            }
+        }
+    },
+    "services": {
+        "forcible_charge": {
+            "description": "Càrrega forçada de la bateria durant un cert temps",
+            "fields": {
+                "device_id": {
+                    "description": "Ha de ser un dispositiu 'Bateria'",
+                    "name": "Bateria"
+                },
+                "duration": {
+                    "description": "Durada de la càrrega",
+                    "name": "Durada"
+                },
+                "power": {
+                    "description": "Potència utilitzada per a la càrrega",
+                    "name": "Potència"
+                }
+            },
+            "name": "Càrrega Forçada"
+        },
+        "forcible_charge_soc": {
+            "description": "Càrrega forçada de la bateria fins a un cert nivell de SoC",
+            "fields": {
+                "device_id": {
+                    "description": "Ha de ser un dispositiu 'Bateria'",
+                    "name": "Bateria"
+                },
+                "power": {
+                    "description": "Potència utilitzada per a la càrrega",
+                    "name": "Potència"
+                },
+                "target_soc": {
+                    "description": "SoC que s'ha d'assolir",
+                    "name": "SoC Objectiu"
+                }
+            },
+            "name": "Càrrega Forçada a un Nivell de SoC"
+        },
+        "forcible_discharge": {
+            "description": "Descàrrega forçada de la bateria durant un cert temps",
+            "fields": {
+                "device_id": {
+                    "description": "Ha de ser un dispositiu 'Bateria'",
+                    "name": "Bateria"
+                },
+                "duration": {
+                    "description": "Durada de la descàrrega",
+                    "name": "Durada"
+                },
+                "power": {
+                    "description": "Potència utilitzada per a la descàrrega",
+                    "name": "Potència"
+                }
+            },
+            "name": "Descàrrega Forçada"
+        },
+        "forcible_discharge_soc": {
+            "description": "Descàrrega forçada de la bateria fins a un cert nivell de SoC",
+            "fields": {
+                "device_id": {
+                    "description": "Ha de ser un dispositiu 'Bateria'",
+                    "name": "Bateria"
+                },
+                "power": {
+                    "description": "Potència utilitzada per a la descàrrega",
+                    "name": "Potència"
+                },
+                "target_soc": {
+                    "description": "SoC que s'ha d'assolir",
+                    "name": "SoC objectiu"
+                }
+            },
+            "name": "Descàrrega Forçada a un Nivell de SoC"
+        },
+        "reset_maximum_feed_grid_power": {
+            "description": "Restableix el control de potència activa al mode il·limitat per defecte",
+            "fields": {
+                "device_id": {
+                    "description": "Ha de ser un dispositiu 'Inversor'",
+                    "name": "Inversor"
+                }
+            },
+            "name": "Restablir control de potència activa a màxima alimentació a la xarxa"
+        },
+        "set_capacity_control_periods": {
+            "description": "Estableix els períodes de control de capacitat",
+            "fields": {
+                "device_id": {
+                    "description": "Ha de ser un dispositiu 'Bateria'",
+                    "name": "Bateria"
+                },
+                "periods": {
+                    "description": "Un període per línia. Format: '[hora inici]-[hora fi]/[dies efectius]/[potència]W', amb 1=dilluns, 7=diumenge. Exemple: '00:00-23:59/1234567/2500W'.",
+                    "name": "Períodes"
+                }
+            },
+            "name": "Establir períodes de control de capacitat"
+        },
+        "set_di_active_power_scheduling": {
+            "description": "Estableix el control de potència activa a 'Programació Activa DI'",
+            "fields": {
+                "device_id": {
+                    "description": "Ha de ser un dispositiu 'Inversor'",
+                    "name": "Inversor"
+                }
+            },
+            "name": "Establir control de potència activa a 'Programació Activa DI'"
+        },
+        "set_fixed_charge_periods": {
+            "description": "Estableix els períodes de càrrega i descàrrega fixa",
+            "fields": {
+                "device_id": {
+                    "description": "Ha de ser un dispositiu 'Bateria'",
+                    "name": "Bateria"
+                },
+                "periods": {
+                    "description": "Un període per línia. Format: '[hora inici]-[hora fi]/[potència]W'. Exemple: '12:00-15:59/-1000W'.",
+                    "name": "Períodes"
+                }
+            },
+            "name": "Establir períodes de càrrega i descàrrega fixa"
+        },
+        "set_maximum_feed_grid_power": {
+            "description": "Estableix el Control de Potència Activa a 'Connexió a la xarxa Limitada per Potència' a la potència en watts especificada",
+            "fields": {
+                "device_id": {
+                    "description": "Ha de ser un dispositiu 'Inversor'",
+                    "name": "Inversor"
+                },
+                "power": {
+                    "description": "Potència màxima en Watts",
+                    "name": "Potència"
+                }
+            },
+            "name": "Limitar la potència alimentada a la xarxa"
+        },
+        "set_maximum_feed_grid_power_percent": {
+            "description": "Estableix el Control de Potència Activa a 'Connexió a la xarxa limitada per Potència (%)' al percentatge especificat",
+            "fields": {
+                "device_id": {
+                    "description": "Ha de ser un dispositiu 'Inversor'",
+                    "name": "Inversor"
+                },
+                "power_percentage": {
+                    "description": "Percentatge màxim",
+                    "name": "Percentatge de Potència"
+                }
+            },
+            "name": "Limitar la potència alimentada a la xarxa a un percentatge"
+        },
+        "set_tou_periods": {
+            "description": "Estableix els períodes d'ús",
+            "fields": {
+                "device_id": {
+                    "description": "Ha de ser un dispositiu 'Bateria'",
+                    "name": "Bateria"
+                },
+                "periods": {
+                    "description": "Un període per línia. Per a bateries Huawei LUNA2000: '[hora inici]-[hora fi]/[dies efectius]/[càrrega]', amb 1=dilluns, 7=diumenge (exemple: '12:00-14:00/1234567/-'). Per a bateries LG RESU: '[hora inici]-[hora fi]/[preu de l'electricitat]' (exemple: 13:00-14:00/0.50)",
+                    "name": "Períodes"
+                }
+            },
+            "name": "Establir els períodes d'ús"
+        },
+        "set_zero_power_grid_connection": {
+            "description": "Estableix el Control de Potència Activa a 'Connexió a la xarxa amb injecció zero'",
+            "fields": {
+                "device_id": {
+                    "description": "Ha de ser un dispositiu 'Inversor'",
+                    "name": "Inversor"
+                }
+            },
+            "name": "Establir Control de Potència Activa a 'Connexió a la xarxa amb injecció zero'"
+        },
+        "stop_forcible_charge": {
+            "description": "Cancelar el comandament de càrrega forçada en execució",
+            "fields": {
+                "device_id": {
+                    "description": "Ha de ser un dispositiu 'Bateria'",
+                    "name": "Bateria"
+                }
+            },
+            "name": "Aturar la càrrega o descàrrega forçada"
         }
     }
 }
