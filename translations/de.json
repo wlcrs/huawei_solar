@@ -430,7 +430,7 @@
             },
             "storage_charge_discharge_power": {
                 "name": "Lade-/Entladeleistung"
-            },    
+            },
             "storage_current_day_charge_capacity": {
                 "name": "Tagesladung"
             },
@@ -462,201 +462,196 @@
                 "name": "Spannung zu Erde"
             }
         },
-        "Schalter": {
-            "Startup": {
+        "switch": {
+            "startup": {
                 "name": "Inverter EIN/AUS"
             },
             "storage_charge_from_grid_function": {
                 "name": "Laden aus dem Netz"
             }
         },
-        "Dienste": {
-            "zwangsweise_ladung": {
+        "services": {
+            "forcible_charge": {
                 "description": "Erzwungenes Laden der Batterie für eine bestimmte Zeit",
                 "fields": {
-                "device_id": {
-                    "description": "Muss ein 'Batterie'-Gerät sein",
-                    "name": "Batterie"
+                    "device_id": {
+                        "description": "Muss ein 'Batterie'-Gerät sein",
+                        "name": "Batterie"
+                    },
+                    "duration": {
+                        "description": "Dauer der Ladung",
+                        "name": "Dauer"
+                    },
+                    "power": {
+                        "description": "Verwendete Leistung für die Ladung",
+                        "name": "Leistung"
+                    }
                 },
-                "duration": {
-                    "description": "Dauer der Ladung",
-                    "name": "Dauer"
+                "name": "Erzwungenes Laden"
+            },
+            "forcible_charge_soc": {
+                "description": "Erzwungenes Laden der Batterie auf einen bestimmten Ladestand",
+                "fields": {
+                    "device_id": {
+                        "description": "Muss ein 'Batterie'-Gerät sein",
+                        "name": "Batterie"
+                    },
+                    "power": {
+                        "description": "Verwendete Leistung für die Ladung",
+                        "name": "Leistung"
+                    },
+                    "target_soc": {
+                        "description": "Ladestand, der erreicht werden muss",
+                        "name": "Ziel-SoC"
+                    }
                 },
-                "power": {
-                    "description": "Verwendete Leistung für die Ladung",
-                    "name": "Leistung"
-                }
+                "name": "Zwangsweises Laden auf ein bestimmten Ladestand"
             },
-            "name": "Erzwungenes Laden"
-        },
-        "zwangsweise_ladung_soc": {
-            "description": "Erzwungenes Laden der Batterie auf einen bestimmten Ladestand",
-            "fields": {
-                "device_id": {
-                    "description": "Muss ein 'Batterie'-Gerät sein",
-                    "name": "Batterie"
+            "forcible_discharge": {
+                "description": "Erzwungenes Entladen der Batterie für eine bestimmte Zeit",
+                "fields": {
+                    "device_id": {
+                        "description": "Muss ein 'Batterie'-Gerät sein",
+                        "name": "Batterie"
+                    },
+                    "duration": {
+                        "description": "Dauer der Entladung",
+                        "name": "Dauer"
+                    },
+                    "power": {
+                        "description": "Verwendete Leistung für die Entladung",
+                        "name": "Leistung"
+                    }
                 },
-                "power": {
-                    "description": "Verwendete Leistung für die Ladung",
-                    "name": "Leistung"
+                "name": "Erzwungenes Entladen"
+            },
+            "forcible_discharge_soc": {
+                "description": "Erzwungenes Entladen der Batterie auf einen bestimmten Ladestand",
+                "fields": {
+                    "device_id": {
+                        "description": "Muss ein 'Batterie'-Gerät sein",
+                        "name": "Batterie"
+                    },
+                    "power": {
+                        "description": "Verwendete Leistung für die Entladung",
+                        "name": "Leistung"
+                    },
+                    "target_soc": {
+                        "description": "Ladestand, der erreicht werden muss",
+                        "name": "Ziel-SoC"
+                    }
                 },
-                "target_soc": {
-                    "description": "Ladestand, der erreicht werden muss",
-                    "name": "Ziel-SoC"
-                }
+                "name": "Zwangsweises Entladen auf ein Ladezustand"
             },
-            "name": "Zwangsweises Laden auf ein bestimmten Ladestand"
-        },
-        "zwangsweise_entladung": {
-            "description": "Erzwungenes Entladen der Batterie für eine bestimmte Zeit",
-            "fields": {
-                "device_id": {
-                    "description": "Muss ein 'Batterie'-Gerät sein",
-                    "name": "Batterie"
+            "reset_maximum_feed_grid_power": {
+                "description": "Setzen der aktiven Leistungsregelung auf den Standardmodus 'Unbegrenzt'",
+                "fields": {
+                    "device_id": {
+                        "description": "Muss ein 'Inverter'-Gerät sein",
+                        "name": "Inverter"
+                    }
                 },
-                "duration": {
-                    "description": "Dauer der Entladung",
-                    "name": "Dauer"
+                "name": "Setzen der aktiven Leistungsregelung auf 'Maximale Netzeinspeisung'"
+            },
+            "set_capacity_control_periods": {
+                "description": "Setzen von Kapazitätsregelungsperioden",
+                "fields": {
+                    "device_id": {
+                        "description": "Muss ein 'Batterie'-Gerät sein",
+                        "name": "Batterie"
+                    },
+                    "periods": {
+                        "description": "Eine Periode pro Zeile. Format: '[Startzeit]-[Endzeit]/[wirksame Tage]/[Leistung]W', mit 1=Montag, 7=Sonntag. Beispiel: '00:00-23:59/1234567/2500W'.",
+                        "name": "Perioden"
+                    }
                 },
-                "power": {
-                    "description": "Verwendete Leistung für die Entladung",
-                    "name": "Leistung"
-                }
+                "name": "Setzen von Kapazitätsregelungsperioden"
             },
-            "name": "Erzwungenes Entladen"
-        },
-        "zwangsweise_entladung_soc": {
-            "description": "Erzwungenes Entladen der Batterie auf einen bestimmten Ladestand",
-            "fields": {
-                "device_id": {
-                    "description": "Muss ein 'Batterie'-Gerät sein",
-                    "name": "Batterie"
+            "set_di_active_power_scheduling": {
+                "description": "Setzen der aktiven Leistungsregelung auf 'DI aktive Planung'",
+                "fields": {
+                    "device_id": {
+                        "description": "Muss ein 'Inverter'-Gerät sein",
+                        "name": "Inverter"
+                    }
                 },
-                "power": {
-                    "description": "Verwendete Leistung für die Entladung",
-                    "name": "Leistung"
+                "name": "Setzen der aktiven Leistungsregelung auf 'DI aktive Planung'"
+            },
+            "set_fixed_charge_periods": {
+                "description": "Setzen von festen Lade- und Entladungsperioden",
+                "fields": {
+                    "device_id": {
+                        "description": "Muss ein 'Batterie'-Gerät sein",
+                        "name": "Batterie"
+                    },
+                    "periods": {
+                        "description": "Eine Periode pro Zeile. Format: '[Startzeit]-[Endzeit]/[Leistung]W'. Beispiel: '12:00-15:59/-1000W'.",
+                        "name": "Perioden"
+                    }
                 },
-                "target_soc": {
-                    "description": "Ladestand, der erreicht werden muss",
-                    "name": "Ziel-SoC"
-                }
+                "name": "Setzen von festen Ladeperioden"
             },
-            "name": "Zwangsweises Entladen auf ein Ladezustand"
-        },
-        "reset_maximum_feed_grid_power": {
-            "description": "Setzen der aktiven Leistungsregelung auf den Standardmodus 'Unbegrenzt'",
-            "fields": {
-                "device_id": {
-                    "description": "Muss ein 'Inverter'-Gerät sein",
-                    "name": "Inverter"
-                }
-            },
-            "name": "Setzen der aktiven Leistungsregelung auf 'Maximale Netzeinspeisung'"
-        },
-        "set_capacity_control_periods": {
-            "description": "Setzen von Kapazitätsregelungsperioden",
-            "fields": {
-                "device_id": {
-                    "description": "Muss ein 'Batterie'-Gerät sein",
-                    "name": "Batterie"
+            "set_maximum_feed_grid_power": {
+                "description": "Setzen der aktiven Leistungsregelung auf 'Leistungsbeschränkte Netzeinspeisung' mit der angegebenen Leistung",
+                "fields": {
+                    "device_id": {
+                        "description": "Muss ein 'Inverter'-Gerät sein",
+                        "name": "Inverter"
+                    },
+                    "power": {
+                        "description": "Maximale Leistung",
+                        "name": "Leistung"
+                    }
                 },
-                "periods": {
-                    "description": "Eine Periode pro Zeile. Format: '[Startzeit]-[Endzeit]/[wirksame Tage]/[Leistung]W', mit 1=Montag, 7=Sonntag. Beispiel: '00:00-23:59/1234567/2500W'.",
-                    "name": "Perioden"
-                }
+                "name": "Begrenzen der Netzeinspeisung"
             },
-            "name": "Setzen von Kapazitätsregelungsperioden"
-        },
-        "set_di_active_power_scheduling": {
-            "description": "Setzen der aktiven Leistungsregelung auf 'DI aktive Planung'",
-            "fields": {
-                "device_id": {
-                    "description": "Muss ein 'Inverter'-Gerät sein",
-                    "name": "Inverter"
-                }
-            },
-            "name": "Setzen der aktiven Leistungsregelung auf 'DI aktive Planung'"
-        },
-        "set_fixed_charge_periods": {
-            "description": "Setzen von festen Lade- und Entladungsperioden",
-            "fields": {
-                "device_id": {
-                    "description": "Muss ein 'Batterie'-Gerät sein",
-                    "name": "Batterie"
+            "set_maximum_feed_grid_power_percent": {
+                "description": "Setzen der aktiven Leistungsregelung auf 'Leistungsbeschränkte Netzeinspeisung (%)' mit dem angegebenen Prozentsatz",
+                "fields": {
+                    "device_id": {
+                        "description": "Muss ein 'Inverter'-Gerät sein",
+                        "name": "Inverter"
+                    },
+                    "power_percentage": {
+                        "description": "Maximaler Prozentsatz",
+                        "name": "Leistungsprozentsatz"
+                    }
                 },
-                "periods": {
-                    "description": "Eine Periode pro Zeile. Format: '[Startzeit]-[Endzeit]/[Leistung]W'. Beispiel: '12:00-15:59/-1000W'.",
-                    "name": "Perioden"
-                }
+                "name": "Begrenzen der Netzeinspeisung auf Prozentsatz"
             },
-            "name": "Setzen von festen Ladeperioden"
-        },
-        "set_maximum_feed_grid_power": {
-            "description": "Setzen der aktiven Leistungsregelung auf 'Leistungsbeschränkte Netzeinspeisung' mit der angegebenen Leistung",
-            "fields": {
-                "device_id": {
-                    "description": "Muss ein 'Inverter'-Gerät sein",
-                    "name": "Inverter"
+            "set_tou_periods": {
+                "description": "Setzen von Zeiten der nutzungsabhängigen Perioden",
+                "fields": {
+                    "device_id": {
+                        "description": "Muss ein 'Batterie'-Gerät sein",
+                        "name": "Batterie"
+                    },
+                    "periods": {
+                        "description": "Eine Periode pro Zeile. Für Huawei LUNA2000-Batterien: '[Startzeit]-[Endzeit]/[wirksame Tage]/[Ladung]', mit 1=Montag, 7=Sonntag (Beispiel: '12:00-14:00/1234567/-'). Für LG RESU-Batterien: '[Startzeit]-[Endzeit]/[Strompreis]' (Beispiel: 13:00-14:00/0,50)",
+                        "name": "Perioden"
+                    }
                 },
-                "power": {
-                    "description": "Maximale Leistung",
-                    "name": "Leistung"
-                }
+                "name": "Setzen von nutzungsabhängigen Perioden"
             },
-            "name": "Begrenzen der Netzeinspeisung"
-        },
-        "set_maximum_feed_grid_power_percent": {
-            "description": "Setzen der aktiven Leistungsregelung auf 'Leistungsbeschränkte Netzeinspeisung (%)' mit dem angegebenen Prozentsatz",
-            "fields": {
-                "device_id": {
-                    "description": "Muss ein 'Inverter'-Gerät sein",
-                    "name": "Inverter"
+            "set_zero_power_grid_connection": {
+                "description": "Setzen der aktiven Leistungsregelung auf 'Netzeinspeisung mit null Leistung'",
+                "fields": {
+                    "device_id": {
+                        "description": "Muss ein 'Inverter'-Gerät sein",
+                        "name": "Inverter"
+                    }
                 },
-                "power_percentage": {
-                    "description": "Maximaler Prozentsatz",
-                    "name": "Leistungsprozentsatz"
-                }
+                "name": "Setzen der aktiven Leistungsregelung auf 'Netzeinspeisung mit null Leistung'"
             },
-            "name": "Begrenzen der Netzeinspeisung auf Prozentsatz"
-        },
-        "set_tou_periods": {
-            "description": "Setzen von Zeiten der nutzungsabhängigen Perioden",
-            "fields": {
-                "device_id": {
-                    "description": "Muss ein 'Batterie'-Gerät sein",
-                    "name": "Batterie"
+            "stop_forcible_charge": {
+                "description": "Abbrechen des laufenden erzwungnen Ladebefehls",
+                "fields": {
+                    "device_id": {
+                        "description": "Muss ein 'Batterie'-Gerät sein",
+                        "name": "Batterie"
+                    }
                 },
-                "periods": {
-                    "description": "Eine Periode pro Zeile. Für Huawei LUNA2000-Batterien: '[Startzeit]-[Endzeit]/[wirksame Tage]/[Ladung]', mit 1=Montag, 7=Sonntag (Beispiel: '12:00-14:00/1234567/-'). Für LG RESU-Batterien: '[Startzeit]-[Endzeit]/[Strompreis]' (Beispiel: 13:00-14:00/0,50)",
-                    "name": "Perioden"
-                }
-            },
-            "name": "Setzen von nutzungsabhängigen Perioden"
-        },
-        "set_zero_power_grid_connection": {
-            "description": "Setzen der aktiven Leistungsregelung auf 'Netzeinspeisung mit null Leistung'",
-            "fields": {
-                "device_id": {
-                    "description": "Muss ein 'Inverter'-Gerät sein",
-                    "name": "Inverter"
-                }
-            },
-            "name": "Setzen der aktiven Leistungsregelung auf 'Netzeinspeisung mit null Leistung'"
-        },
-        "stop_forcible_charge": {
-            "description": "Abbrechen des laufenden erzwungnen Ladebefehls",
-            "fields": {
-                "device_id": {
-                    "description": "Muss ein 'Batterie'-Gerät sein",
-                    "name": "Batterie"
-                }
-            },
-            "name": "Abbrechen des erzwungenen Ladens oder Entladens"
-        }
-    }
-}
-
-                
+                "name": "Abbrechen des erzwungenen Ladens oder Entladens"
             }
         }
     }
