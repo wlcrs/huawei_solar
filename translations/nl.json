@@ -7,7 +7,7 @@
             "cannot_connect": "Verbinden mislukt",
             "invalid_auth": "Ongeldige authenticatie",
             "invalid_slave_ids": "Slave IDs moeten een kommagescheiden lijst van gehele getallen zijn",
-            "read_error": "Lezen van de inverter is mislukt.",
+            "read_error": "Lezen van de omvormer is mislukt.",
             "slave_cannot_connect": "Verbinden met extra slave mislukt",
             "unknown": "Onverwachte fout"
         },
@@ -105,7 +105,7 @@
         },
         "sensor": {
             "accumulated_energy_yield": {
-                "name": "Geaccumuleerde enerieopbrengst"
+                "name": "Geaccumuleerde energieopbrengst"
             },
             "accumulated_yield_energy": {
                 "name": "Totale opbrengst"
@@ -141,7 +141,7 @@
                 "name": "Alarm"
             },
             "alarms": {
-                "name": "Alarms"
+                "name": "Alarmen"
             },
             "daily_yield_energy": {
                 "name": "Dagelijkse opbrengst"
@@ -180,7 +180,7 @@
                 "name": "Fase C spanning"
             },
             "grid_exported_energy": {
-                "name": "Geexporteerd"
+                "name": "Geëxporteerd"
             },
             "input_current": {
                 "name": "Ingangsstroom"
@@ -231,7 +231,7 @@
                 "name": "Fase B spanning"
             },
             "phase_c_current": {
-                "name": "Fase C curre stroom"
+                "name": "Fase C stroom"
             },
             "phase_c_voltage": {
                 "name": "Fase C spanning"
