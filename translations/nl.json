@@ -51,19 +51,19 @@
     "entity": {
         "number": {
             "storage_backup_power_state_of_charge": {
-                "name": "Noodvermogen laadstatus"
+                "name": "Noodvermogen batterijpercentage"
             },
             "storage_capacity_control_soc_peak_shaving": {
-                "name": "Belastingafschakeling laadstatus"
+                "name": "Piekvermogen gereserveerd batterijpercentage"
             },
             "storage_charging_cutoff_capacity": {
-                "name": "Einde-lading laadstatus"
+                "name": "Maximum batterijpercentage"
             },
             "storage_discharging_cutoff_capacity": {
-                "name": "Einde-ontlading laadstatus"
+                "name": "Minimum batterijpercentage"
             },
             "storage_grid_charge_cutoff_state_of_charge": {
-                "name": "Afsluiting netlading laadstatus"
+                "name": "Maximum batterijpercentage van stroomnet"
             },
             "storage_maximum_charge_power": {
                 "name": "Maximum laadvermogen"
@@ -72,7 +72,7 @@
                 "name": "Maximum ontlaadvermogen"
             },
             "storage_power_of_charge_from_grid": {
-                "name": "Maximum laadvmorgen van net"
+                "name": "Maximum laadvermogen van stroomnet"
             }
         },
         "select": {
@@ -87,8 +87,8 @@
             "storage_excess_pv_energy_use_in_tou": {
                 "name": "Gebruik overtollige PV-energie in gebruikstijdmodus",
                 "state": {
-                    "charge": "Laad",
-                    "fed_to_grid": "Voed aan stroomnet"
+                    "charge": "Laden",
+                    "fed_to_grid": "Voeden aan stroomnet"
                 }
             },
             "storage_working_mode_settings": {
@@ -111,19 +111,19 @@
                 "name": "Totale opbrengst"
             },
             "active_grid_a_b_voltage": {
-                "name": "A-B lijn spanning"
+                "name": "A-B lijnspanning"
             },
             "active_grid_a_power": {
                 "name": "Fase A werkelijk vermogen"
             },
             "active_grid_b_c_voltage": {
-                "name": "B-C lijn spanning"
+                "name": "B-C lijnspanning"
             },
             "active_grid_b_power": {
                 "name": "Fase B werkelijk vermogen"
             },
             "active_grid_c_a_voltage": {
-                "name": "C-A lijn spanning"
+                "name": "C-A lijnspanning"
             },
             "active_grid_c_power": {
                 "name": "Fase C werkelijk vermogen"
@@ -147,7 +147,7 @@
                 "name": "Dagelijkse opbrengst"
             },
             "day_active_power_peak": {
-                "name": "Dagelijkse piek werkelijk vermogen"
+                "name": "Dagelijkse piek vermogen"
             },
             "device_status": {
                 "name": "Toestel status"
@@ -195,13 +195,13 @@
                 "name": "Interne temperatuur"
             },
             "line_voltage_a_b": {
-                "name": "A-B line spanning"
+                "name": "A-B lijnspanning"
             },
             "line_voltage_b_c": {
-                "name": "B-C line spanning"
+                "name": "B-C lijnspanning"
             },
             "line_voltage_c_a": {
-                "name": "C-A line spanning"
+                "name": "C-A lijnspanning"
             },
             "meter_status": {
                 "name": "Meter status"
@@ -240,7 +240,7 @@
                 "name": "Arbeidsfactor"
             },
             "power_meter_active_power": {
-                "name": "Werkelijk vermogen"
+                "name": "Vermogen"
             },
             "power_meter_reactive_power": {
                 "name": "Schijnbaar vermogen"
@@ -396,7 +396,7 @@
                 "name": "Operationele status"
             },
             "shutdown_time": {
-                "name": "Afsluit tijd"
+                "name": "Afsluittijd"
             },
             "single_phase_meter_current": {
                 "name": "Stroom"
@@ -405,16 +405,16 @@
                 "name": "Spanning"
             },
             "startup_time": {
-                "name": "Opstart tijd"
+                "name": "Opstarttijd"
             },
             "state_1": {
-                "name": "Inverter status"
+                "name": "Inverterstatus"
             },
             "state_2_0": {
                 "name": "Vergrendelstatus"
             },
             "state_2_1": {
-                "name": "PV connectie status"
+                "name": "PV connectiestatus"
             },
             "state_2_2": {
                 "name": "DSP gegevensverzameling"
@@ -426,13 +426,13 @@
                 "name": "Off-grid schakelaar"
             },
             "storage_bus_current": {
-                "name": "Bus stroom"
+                "name": "Busstroom"
             },
             "storage_bus_voltage": {
-                "name": "Bus spanning"
+                "name": "Busspanning"
             },
             "storage_capacity_control_periods": {
-                "name": "Capaciteitscontrole periodes"
+                "name": "Dagelijkse piek vermogen"
             },
             "storage_charge_discharge_power": {
                 "name": "Laad/Ontlaad vermogen"
@@ -444,13 +444,13 @@
                 "name": "Dag Ontlading"
             },
             "storage_fixed_charging_and_discharging_periods": {
-                "name": "Vaste laad periodes"
+                "name": "Vaste laadperiodes"
             },
             "storage_running_status": {
                 "name": "Status"
             },
             "storage_state_of_capacity": {
-                "name": "Laadstatus"
+                "name": "Batterijpercentage"
             },
             "storage_time_of_use_charging_and_discharging_periods": {
                 "name": "Gebruikstijd periodes"
@@ -473,7 +473,7 @@
                 "name": "Omvormer AAN/UIT"
             },
             "storage_charge_from_grid_function": {
-                "name": "Laden van net"
+                "name": "Laden van stroomnet"
             }
         }
     },
@@ -658,7 +658,7 @@
                     "name": "Batterij"
                 }
             },
-            "name": "Stop geforceerd ladenn"
+            "name": "Stop geforceerd laden"
         }
     }
 }
