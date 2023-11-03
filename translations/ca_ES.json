@@ -308,6 +308,9 @@
             "pv_11_current": {
                 "name": "Corrent FV 11"
             },
+            "pv_11_voltage": {
+                "name": "Tensió FV 11"
+            },
             "pv_12_current": {
                 "name": "Corrent FV 12"
             },
@@ -364,6 +367,9 @@
             },
             "pv_21_current": {
                 "name": "Corrent FV 21"
+            },
+            "pv_21_voltage": {
+                "name": "Tensió FV 21"
             },
             "pv_22_current": {
                 "name": "Corrent FV 22"
