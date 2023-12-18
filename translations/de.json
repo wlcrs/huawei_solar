@@ -308,6 +308,9 @@
             "pv_11_current": {
                 "name": "PV 11 Strom"
             },
+            "pv_11_voltage": {
+                "name": "PV 11 Spannung"
+            },
             "pv_12_current": {
                 "name": "PV 12 Strom"
             },
@@ -364,6 +367,9 @@
             },
             "pv_21_current": {
                 "name": "PV 21 Strom"
+            },
+            "pv_21_voltage": {
+                "name": "PV 21 Spannung"
             },
             "pv_22_current": {
                 "name": "PV 22 Strom"
