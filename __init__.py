@@ -455,7 +455,3 @@ class HuaweiSolarEntity(Entity):
     """Huawei Solar Entity."""
 
     _attr_has_entity_name = True
-
-    def add_name_suffix(self, suffix) -> None:
-        """Add a suffix after the current entity name."""
-        self._attr_name = f"{self.name}{suffix}"

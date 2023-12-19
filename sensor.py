@@ -632,10 +632,6 @@ async def async_setup_entry(
         DATA_CONFIGURATION_UPDATE_COORDINATORS
     ]  # type: list[HuaweiSolarConfigurationUpdateCoordinator]
 
-    # When more than one inverter is present, then we suffix all sensors with '#1', '#2', ...
-    # The order for these suffixes is the order in which the user entered the slave-ids.
-    must_append_inverter_suffix = len(update_coordinators) > 1
-
     entities_to_add: list[SensorEntity] = []
     for idx, (update_coordinator, configuration_update_coordinator) in enumerate(
         zip_longest(update_coordinators, configuration_update_coordinators)
@@ -728,11 +724,6 @@ async def async_setup_entry(
                             device_infos["connected_energy_storage"],
                         )
                     )
-
-        # Add suffix if multiple inverters are present
-        if must_append_inverter_suffix:
-            for entity in slave_entities:
-                entity.add_name_suffix(f" #{idx+1}")
 
         entities_to_add.extend(slave_entities)
 
