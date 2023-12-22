@@ -65,10 +65,10 @@
             "storage_grid_charge_cutoff_state_of_charge": {
                 "name": "Lmit ładowania z sieci SOC"
             },
-            "storage_maximum_charge_power": {
+            "storage_maximum_charging_power": {
                 "name": "Maksymalna moc ładowania"
             },
-            "storage_maximum_discharge_power": {
+            "storage_maximum_discharging_power": {
                 "name": "Maksymalna moc rozładowania"
             },
             "storage_power_of_charge_from_grid": {

@@ -65,10 +65,10 @@
             "storage_grid_charge_cutoff_state_of_charge": {
                 "name": "Corte de carga de red SoC"
             },
-            "storage_maximum_charge_power": {
+            "storage_maximum_charging_power": {
                 "name": "Potencia máxima de carga"
             },
-            "storage_maximum_discharge_power": {
+            "storage_maximum_discharging_power": {
                 "name": "Potencia máxima de descarga"
             },
             "storage_power_of_charge_from_grid": {

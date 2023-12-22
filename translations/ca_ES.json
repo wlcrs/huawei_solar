@@ -65,10 +65,10 @@
             "storage_grid_charge_cutoff_state_of_charge": {
                 "name": "Tall de càrrega de xarxa SoC"
             },
-            "storage_maximum_charge_power": {
+            "storage_maximum_charging_power": {
                 "name": "Potència màxima de càrrega"
             },
-            "storage_maximum_discharge_power": {
+            "storage_maximum_discharging_power": {
                 "name": "Potència màxima de descàrrega"
             },
             "storage_power_of_charge_from_grid": {
