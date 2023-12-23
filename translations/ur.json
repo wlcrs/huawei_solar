@@ -1,0 +1,664 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "ڈیوائس پہلے سے تشکیل شدہ ہے"
+        },
+        "error": {
+            "cannot_connect": "رابطہ قائم کرنے میں ناکام",
+            "invalid_auth": "غلط تصدیق",
+            "invalid_slave_ids": "Slave IDs must be comma-separated list of ints",
+            "read_error": "انورٹر سے پڑھنا ناکام رہا.",
+            "slave_cannot_connect": "اضافی غلام سے منسلک ہونے میں ناکام",
+            "unknown": "غیر متوقع خرابی"
+        },
+        "step": {
+            "network_login": {
+                "data": {
+                    "password": "Password",
+                    "username": "Username"
+                },
+                "description": "براہ کرم انسٹالر کی اسناد درج کریں۔"
+            },
+            "setup_network": {
+                "data": {
+                    "enable_parameter_configuration": "اعلی درجے کی: اجازتیں بلند کریں۔",
+                    "host": "Host",
+                    "port": "Port",
+                    "slave_ids": "غلام کی شناختیں (کوما سے الگ)"
+                }
+            },
+            "setup_serial": {
+                "data": {
+                    "port": "آلہ منتخب کریں",
+                    "slave_ids": "غلام کی شناختیں (کوما سے الگ)"
+                },
+                "title": "آلہ"
+            },
+            "setup_serial_manual_path": {
+                "data": {
+                    "port": "USB ڈیوائس کا راستہ"
+                },
+                "title": "راہ"
+            },
+            "user": {
+                "data": {
+                    "type": "کنکشن کی قسم"
+                },
+                "title": "کنکشن کی قسم منتخب کریں۔"
+            }
+        }
+    },
+    "entity": {
+        "number": {
+            "storage_backup_power_state_of_charge": {
+                "name": "بیک اپ پاور ایس او سی"
+            },
+            "storage_capacity_control_soc_peak_shaving": {
+                "name": "چوٹی شیونگ SOC"
+            },
+            "storage_charging_cutoff_capacity": {
+                "name": "اختتامی چارج ایس او سی"
+            },
+            "storage_discharging_cutoff_capacity": {
+                "name": "اخراج کے اختتام پر ایس او سی"
+            },
+            "storage_grid_charge_cutoff_state_of_charge": {
+                "name": "گرڈ چارج کٹ آف ایس او سی"
+            },
+            "storage_maximum_charging_power": {
+                "name": "زیادہ سے زیادہ چارج کرنے کی طاقت"
+            },
+            "storage_maximum_discharging_power": {
+                "name": "زیادہ سے زیادہ ڈسچارج پاور"
+            },
+            "storage_power_of_charge_from_grid": {
+                "name": "گرڈ چارج زیادہ سے زیادہ طاقت"
+            }
+        },
+        "select": {
+            "storage_capacity_control_mode": {
+                "name": "صلاحیت کنٹرول موڈ",
+                "state": {
+                    "active_capacity_control": "فعال صلاحیت کا کنٹرول",
+                    "apparent_power_limit": "طاقت کی ظاہری حد",
+                    "disable": "Disable"
+                }
+            },
+            "storage_excess_pv_energy_use_in_tou": {
+                "name": "TOU میں اضافی PV توانائی کا استعمال",
+                "state": {
+                    "charge": "چارج",
+                    "fed_to_grid": "گرڈ کو فیڈ"
+                }
+            },
+            "storage_working_mode_settings": {
+                "name": "کام کرنے کا موڈ",
+                "state": {
+                    "adaptive": "موافق",
+                    "fixed_charge_discharge": "فکسڈ چارج ڈسچارج",
+                    "fully_fed_to_grid": "Fully fed to grid",
+                    "maximise_self_consumption": "زیادہ سے زیادہ خود استعمال کریں۔",
+                    "time_of_use_lg": "استعمال کا وقت",
+                    "time_of_use_luna2000": "استعمال کا وقت"
+                }
+            }
+        },
+        "sensor": {
+            "accumulated_energy_yield": {
+                "name": "جمع شدہ توانائی کی پیداوار"
+            },
+            "accumulated_yield_energy": {
+                "name": "کُل پیداوار"
+            },
+            "active_grid_a_b_voltage": {
+                "name": "اے بی لائن وولٹیج"
+            },
+            "active_grid_a_power": {
+                "name": "فیز اے ایکٹو پاور"
+            },
+            "active_grid_b_c_voltage": {
+                "name": "ب - سی لائن وولٹیج"
+            },
+            "active_grid_b_power": {
+                "name": "فیز بی فعال طاقت"
+            },
+            "active_grid_c_a_voltage": {
+                "name": "سی - اے لائن وولٹیج"
+            },
+            "active_grid_c_power": {
+                "name": "فیز سی فعال طاقت"
+            },
+            "active_grid_frequency": {
+                "name": "فریکوئنسی"
+            },
+            "active_grid_power_factor": {
+                "name": "طاقت کا عنصر"
+            },
+            "active_power": {
+                "name": "فعال طاقت"
+            },
+            "alarm": {
+                "name": "الارم"
+            },
+            "alarms": {
+                "name": "الارم"
+            },
+            "daily_yield_energy": {
+                "name": "روزانہ کی پیداوار"
+            },
+            "day_active_power_peak": {
+                "name": "دن کی فعال طاقت کی چوٹی"
+            },
+            "device_status": {
+                "name": "آلہ کی حیثیت"
+            },
+            "efficiency": {
+                "name": "افادیت"
+            },
+            "grid_a_current": {
+                "name": "فیز اے کرنٹ"
+            },
+            "grid_a_voltage": {
+                "name": "فیز اے وولٹیج"
+            },
+            "grid_accumulated_energy": {
+                "name": "کھپت"
+            },
+            "grid_accumulated_reactive_power": {
+                "name": "رد عمل والی توانائی"
+            },
+            "grid_b_current": {
+                "name": "فیز بی کرنٹ"
+            },
+            "grid_b_voltage": {
+                "name": "فیز بی وولٹیج"
+            },
+            "grid_c_current": {
+                "name": "فیز سی کرنٹ"
+            },
+            "grid_c_voltage": {
+                "name": "فیز سی وولٹیج"
+            },
+            "grid_exported_energy": {
+                "name": "برآمد"
+            },
+            "input_current": {
+                "name": "ان پٹ کرنٹ"
+            },
+            "input_power": {
+                "name": "ان پٹ پاورr"
+            },
+            "input_voltage": {
+                "name": "ان پٹ وولٹیج"
+            },
+            "internal_temperature": {
+                "name": "اندرونی درجہ حرارت"
+            },
+            "line_voltage_a_b": {
+                "name": "اے بی لائن وولٹیج"
+            },
+            "line_voltage_b_c": {
+                "name": "بی سی لائن وولٹیج"
+            },
+            "line_voltage_c_a": {
+                "name": "سی اے لائن وولٹیج"
+            },
+            "meter_status": {
+                "name": "میٹر کی حیثیت"
+            },
+            "nb_online_optimizers": {
+                "name": "اصلاح کنندگان آن لائن"
+            },
+            "output_current": {
+                "name": "آؤٹ پٹ کرنٹ"
+            },
+            "output_power": {
+                "name": "پیداوار طاقت"
+            },
+            "output_voltage": {
+                "name": "آؤٹ پٹ وولٹیج"
+            },
+            "phase_a_current": {
+                "name": "فیز اے کرنٹ"
+            },
+            "phase_a_voltage": {
+                "name": "فیز اے وولٹیج"
+            },
+            "phase_b_current": {
+                "name": "فیز بی کرنٹ"
+            },
+            "phase_b_voltage": {
+                "name": "فیز بی وولٹیج"
+            },
+            "phase_c_current": {
+                "name": "فیز سی کرنٹ"
+            },
+            "phase_c_voltage": {
+                "name": "فیز سی وولٹیج"
+            },
+            "power_factor": {
+                "name": "طاقت کا عنصر"
+            },
+            "power_meter_active_power": {
+                "name": "فعال طاقت"
+            },
+            "power_meter_reactive_power": {
+                "name": "رد عمل کی طاقت"
+            },
+            "pv_01_current": {
+                "name": "پی وی 1 کرنٹ"
+            },
+            "pv_01_voltage": {
+                "name": "پی وی 1 وولٹیج"
+            },
+            "pv_02_current": {
+                "name": "پی وی 2 کرنٹ"
+            },
+            "pv_02_voltage": {
+                "name": "پی وی 2 وولٹیج"
+            },
+            "pv_03_current": {
+                "name": "پی وی 3 کرنٹ"
+            },
+            "pv_03_voltage": {
+                "name": "پی وی 3 وولٹیج"
+            },
+            "pv_04_current": {
+                "name": "پی وی 4 کرنٹ"
+            },
+            "pv_04_voltage": {
+                "name": "پی وی 4 وولٹیج"
+            },
+            "pv_05_current": {
+                "name": "پی وی 5 کرنٹ"
+            },
+            "pv_05_voltage": {
+                "name": "پی وی 5 وولٹیج"
+            },
+            "pv_06_current": {
+                "name": "پی وی 6 کرنٹ"
+            },
+            "pv_06_voltage": {
+                "name": "پی وی 6 وولٹیج"
+            },
+            "pv_07_current": {
+                "name": "پی وی 7 کرنٹ"
+            },
+            "pv_07_voltage": {
+                "name": "پی وی 7 وولٹیج"
+            },
+            "pv_08_current": {
+                "name": "پی وی 8 کرنٹ"
+            },
+            "pv_08_voltage": {
+                "name": "پی وی 8 وولٹیج"
+            },
+            "pv_09_current": {
+                "name": "پی وی 9 کرنٹ"
+            },
+            "pv_09_voltage": {
+                "name": "پی وی 9 وولٹیج"
+            },
+            "pv_10_current": {
+                "name": "پی وی 10 کرنٹ"
+            },
+            "pv_10_voltage": {
+                "name": "پی وی 10 وولٹیج"
+            },
+            "pv_11_current": {
+                "name": "پی وی 11 کرنٹ"
+            },
+            "pv_11_voltage": {
+                "name": "پی وی 11 وولٹیج"
+            },
+            "pv_12_current": {
+                "name": "پی وی 12 کرنٹ"
+            },
+            "pv_12_voltage": {
+                "name": "پی وی 12 وولٹیج"
+            },
+            "pv_13_current": {
+                "name": "پی وی 13 کرنٹ"
+            },
+            "pv_13_voltage": {
+                "name": "پی وی 13 وولٹیج"
+            },
+            "pv_14_current": {
+                "name": "پی وی 14 کرنٹ"
+            },
+            "pv_14_voltage": {
+                "name": "پی وی 14 وولٹیج"
+            },
+            "pv_15_current": {
+                "name": "پی وی 15 کرنٹ"
+            },
+            "pv_15_voltage": {
+                "name": "پی وی 15 وولٹیج"
+            },
+            "pv_16_current": {
+                "name": "پی وی 16 کرنٹ"
+            },
+            "pv_16_voltage": {
+                "name": "پی وی 16 وولٹیج"
+            },
+            "pv_17_current": {
+                "name": "پی وی 17 کرنٹ"
+            },
+            "pv_17_voltage": {
+                "name": "پی وی 17 وولٹیج"
+            },
+            "pv_18_current": {
+                "name": "پی وی 18 کرنٹ"
+            },
+            "pv_18_voltage": {
+                "name": "پی وی 18 وولٹیج"
+            },
+            "pv_19_current": {
+                "name": "پی وی 19 کرنٹ"
+            },
+            "pv_19_voltage": {
+                "name": "پی وی 19 وولٹیج"
+            },
+            "pv_20_current": {
+                "name": "پی وی 20 کرنٹ"
+            },
+            "pv_20_voltage": {
+                "name": "پی وی 20 وولٹیج"
+            },
+            "pv_21_current": {
+                "name": "پی وی 21 کرنٹ"
+            },
+            "pv_21_voltage": {
+                "name": "پی وی 21 وولٹیج"
+            },
+            "pv_22_current": {
+                "name": "پی وی 22 کرنٹ"
+            },
+            "pv_22_voltage": {
+                "name": "پی وی 22 وولٹیجe"
+            },
+            "pv_23_current": {
+                "name": "پی وی 23 کرنٹ"
+            },
+            "pv_23_voltage": {
+                "name": "پی وی 23 وولٹیج"
+            },
+            "pv_24_current": {
+                "name": "پی وی 24 کرنٹ"
+            },
+            "pv_24_voltage": {
+                "name": "پی وی 24 وولٹیج"
+            },
+            "reactive_power": {
+                "name": "رد عمل کی طاقت"
+            },
+            "running_status": {
+                "name": "چلنے کی حیثیت"
+            },
+            "shutdown_time": {
+                "name": "بند ہونے کا وقت"
+            },
+            "single_phase_meter_current": {
+                "name": "کرنٹ"
+            },
+            "single_phase_meter_voltage": {
+                "name": "وولٹیج"
+            },
+            "startup_time": {
+                "name": "آغاز کا وقت"
+            },
+            "state_1": {
+                "name": "انورٹر کی حالت"
+            },
+            "state_2_0": {
+                "name": "تالا لگانے کی حیثیت"
+            },
+            "state_2_1": {
+                "name": "پی وی کنکشن کی حیثیت"
+            },
+            "state_2_2": {
+                "name": "DSP ڈیٹا اکٹھا کرنا"
+            },
+            "state_3_0": {
+                "name": "آف گرڈ اسٹیٹس"
+            },
+            "state_3_1": {
+                "name": "آف گرڈ سوئچ"
+            },
+            "storage_bus_current": {
+                "name": "بس کرنٹ"
+            },
+            "storage_bus_voltage": {
+                "name": "بس وولٹیج"
+            },
+            "storage_capacity_control_periods": {
+                "name": "صلاحیت کنٹرول ادوار"
+            },
+            "storage_charge_discharge_power": {
+                "name": "چارج / خارج ہونے والی طاقت"
+            },
+            "storage_current_day_charge_capacity": {
+                "name": "دن کا چارج"
+            },
+            "storage_current_day_discharge_capacity": {
+                "name": "دن کا اخراج"
+            },
+            "storage_fixed_charging_and_discharging_periods": {
+                "name": "مقررہ چارجنگ ادوار"
+            },
+            "storage_running_status": {
+                "name": "حالت"
+            },
+            "storage_state_of_capacity": {
+                "name": "صلاحیت کی حالت"
+            },
+            "storage_time_of_use_charging_and_discharging_periods": {
+                "name": "استعمال کی مدت"
+            },
+            "storage_total_charge": {
+                "name": "کُل چارج"
+            },
+            "storage_total_discharge": {
+                "name": "کل ڈسچارج"
+            },
+            "temperature": {
+                "name": "درجہ حرارت"
+            },
+            "voltage_to_ground": {
+                "name": "زمین پر وولٹیج"
+            }
+        },
+        "switch": {
+            "startup": {
+                "name": "انورٹر آن/آف"
+            },
+            "storage_charge_from_grid_function": {
+                "name": "گرڈ سے چارج کریں۔"
+            }
+        }
+    },
+    "services": {
+        "forcible_charge": {
+            "description": "ایک خاص وقت کے لیے بیٹری کو زبردستی چارج کرنا",
+            "fields": {
+                "device_id": {
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "name": "بیٹری"
+                },
+                "duration": {
+                    "description": "چارج کی مدت",
+                    "name": "مدت"
+                },
+                "power": {
+                    "description": "چارج کے لیے استعمال ہونے والا واٹ",
+                    "name": "طاقت"
+                }
+            },
+            "name": "زبردستی چارج"
+        },
+        "forcible_charge_soc": {
+            "description": "بیٹری کو ایک خاص حالت میں چارج کی سطح تک زبردستی چارج کرنا",
+            "fields": {
+                "device_id": {
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "name": "بیٹری"
+                },
+                "power": {
+                    "description": "چارج کے لیے استعمال ہونے والا واٹ",
+                    "name": "طاقت"
+                },
+                "target_soc": {
+                    "description": "چارج کی حالت جس تک پہنچنا ضروری ہے۔",
+                    "name": "ہدف SoC"
+                }
+            },
+            "name": "ایس او سی لیول تک زبردستی چارج کرنا"
+        },
+        "forcible_discharge": {
+            "description": "ایک خاص وقت کے لیے بیٹری کا زبردستی خارج ہونا",
+            "fields": {
+                "device_id": {
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "name": "بیٹری"
+                },
+                "duration": {
+                    "description": "خارج ہونے کا دورانیہ",
+                    "name": "دورانیہ"
+                },
+                "power": {
+                    "description": "ڈسچارج کے لیے استعمال ہونے والا واٹ",
+                    "name": "طاقت"
+                }
+            },
+            "name": "زبردستی خارج ہونا"
+        },
+        "forcible_discharge_soc": {
+            "description": "چارج کی ایک خاص حالت پر بیٹری کا زبردستی خارج ہونا",
+            "fields": {
+                "device_id": {
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "name": "بیٹری"
+                },
+                "power": {
+                    "description": "ڈسچارج کے لیے استعمال ہونے والا واٹ",
+                    "name": "طاقت"
+                },
+                "target_soc": {
+                    "description": "چارج کی حالت جس تک پہنچنا ضروری ہے۔",
+                    "name": "ہدف SoC"
+                }
+            },
+            "name": "ایک SoC سطح پر زبردستی خارج ہونا"
+        },
+        "reset_maximum_feed_grid_power": {
+            "description": "ایکٹو پاور کنٹرول کو ڈیفالٹ لامحدود موڈ پر سیٹ کریں۔",
+            "fields": {
+                "device_id": {
+                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
+                    "name": "انورٹر"
+                }
+            },
+            "name": "ایکٹو پاور کنٹرول کو زیادہ سے زیادہ فیڈ گرڈ پاور پر سیٹ کریں۔"
+        },
+        "set_capacity_control_periods": {
+            "description": "صلاحیت کنٹرول کی مدت مقرر کریں",
+            "fields": {
+                "device_id": {
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "name": "بیٹری"
+                },
+                "periods": {
+                    "description": "فی لائن ایک مدت۔ فارمیٹ: '[آغاز وقت]-[اختتام کا وقت]/[دن مؤثر]/[طاقت]W'، 1=پیر، 7=اتوار کے ساتھ۔ مثال: '00:00-23:59/1234567/2500W'.",
+                    "name": "ادوار"
+                }
+            },
+            "name": "صلاحیت کنٹرول کی مدت مقرر کریں"
+        },
+        "set_di_active_power_scheduling": {
+            "description": "ایکٹو پاور کنٹرول کو 'DI ایکٹو شیڈولنگ پر سیٹ کریں۔'",
+            "fields": {
+                "device_id": {
+                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
+                    "name": "انورٹر"
+                }
+            },
+            "name": "ایکٹو پاور کنٹرول کو 'DI ایکٹو شیڈولنگ پر سیٹ کریں۔'"
+        },
+        "set_fixed_charge_periods": {
+            "description": "فکسڈ چارج اور ڈسچارج کی مدت مقرر کرتا ہے۔",
+            "fields": {
+                "device_id": {
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "name": "بیٹری"
+                },
+                "periods": {
+                    "description": "فی لائن ایک مدت۔ فارمیٹ: '[اسٹارٹ ٹائم]-[اختتام کا وقت]/[power]W'۔ مثال: '12:00-15:59/-1000W'"،
+                     "name": "مدت"
+                }
+            },
+            "name": "فکسڈ چارج پیریڈس سیٹ کریں۔"
+        },
+        "set_maximum_feed_grid_power": {
+            "description": "دی گئی واٹج کے ساتھ ایکٹو پاور کنٹرول کو 'پاور لمیٹڈ گرڈ کنکشن' پر سیٹ کرتا ہے۔",
+            "fields": {
+                "device_id": {
+                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
+                    "name": "انورٹر"
+                },
+                "power": {
+                    "description": "زیادہ سے زیادہ واٹج",
+                    "name": "طاقت"
+                }
+            },
+            "name": "گرڈ کو دی جانے والی بجلی کو محدود کریں۔"
+        },
+        "set_maximum_feed_grid_power_percent": {
+            "description": "ایکٹو پاور کنٹرول کو دی گئی فیصد کے ساتھ 'پاور لمیٹڈ گرڈ کنکشن (%)' پر سیٹ کرتا ہے۔",
+            "fields": {
+                "device_id": {
+                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
+                    "name": "انورٹر"
+                },
+                "power_percentage": {
+                    "description": "زیادہ سے زیادہ فیصد",
+                    "name": "طاقت کا فیصد"
+                }
+            },
+            "name": "گرڈ کو دی جانے والی بجلی کو فیصد تک محدود کریں۔"
+        },
+        "set_tou_periods": {
+            "description": "استعمال کے ادوار کا وقت مقرر کرتا ہے۔",
+            "fields": {
+                "device_id": {
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "name": "بیٹری"
+                },
+                "periods": {
+                    "description": "فی لائن ایک مدت۔ Huawei LUNA2000 بیٹریوں کے لیے: '[شروع وقت]-[اختتام کا وقت]/[دن مؤثر]/[چارج]'، 1=پیر، 7=اتوار کے ساتھ (مثال: '12:00-14:00/1234567/-' )۔ LG RESU بیٹریوں کے لیے: '[اسٹارٹ ٹائم]-[آخر کا وقت]/[بجلی کی قیمت]' (مثال: 13:00-14:00/0.50)",
+                    "name": "ادوار"
+                }
+            },
+            "name": "TOU کی مدت مقرر کریں۔"
+        },
+        "set_zero_power_grid_connection": {
+            "description": "ایکٹو پاور کنٹرول کو 'زیرو پاور گرڈ کنکشن' پر سیٹ کریں۔'",
+            "fields": {
+                "device_id": {
+                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
+                    "name": "انورٹر"
+                }
+            },
+            "name": "ایکٹو پاور کنٹرول کو 'زیرو پاور گرڈ کنکشن' پر سیٹ کریں۔'"
+        },
+        "stop_forcible_charge": {
+            "description": "چل رہی زبردستی چارج کمانڈ کو منسوخ کریں۔",
+            "fields": {
+                "device_id": {
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "name": "بیٹری"
+                }
+            },
+            "name": "زبردستی چارج یا ڈسچارج کو روکیں۔"
+        }
+    }
+}
