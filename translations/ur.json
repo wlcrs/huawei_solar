@@ -65,10 +65,10 @@
             "storage_grid_charge_cutoff_state_of_charge": {
                 "name": "گرڈ چارج کٹ آف ایس او سی"
             },
-            "storage_maximum_charge_power": {
+            "storage_maximum_charging_power": {
                 "name": "زیادہ سے زیادہ چارج کرنے کی طاقت"
             },
-            "storage_maximum_discharge_power": {
+            "storage_maximum_discharging_power": {
                 "name": "زیادہ سے زیادہ ڈسچارج پاور"
             },
             "storage_power_of_charge_from_grid": {
