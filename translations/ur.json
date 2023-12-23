@@ -512,153 +512,153 @@
                     "name": "ہدف SoC"
                 }
             },
-            "name": "Forcible Charge to a SoC level"
+            "name": "ایس او سی لیول تک زبردستی چارج کرنا"
         },
         "forcible_discharge": {
-            "description": "Forcible Discharge of the battery for a certain time",
+            "description": "ایک خاص وقت کے لیے بیٹری کا زبردستی خارج ہونا",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Battery' device",
-                    "name": "Battery"
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "name": "بیٹری"
                 },
                 "duration": {
-                    "description": "Duration of the discharge",
-                    "name": "Duration"
+                    "description": "خارج ہونے کا دورانیہ",
+                    "name": "دورانیہ"
                 },
                 "power": {
-                    "description": "Wattage used for the discharge",
-                    "name": "Power"
+                    "description": "ڈسچارج کے لیے استعمال ہونے والا واٹ",
+                    "name": "طاقت"
                 }
             },
-            "name": "Forcible Discharge"
+            "name": "زبردستی خارج ہونا"
         },
         "forcible_discharge_soc": {
-            "description": "Forcible Discharge of the battery to a certain State of Charge level",
+            "description": "چارج کی ایک خاص حالت پر بیٹری کا زبردستی خارج ہونا",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Battery' device",
-                    "name": "Battery"
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "name": "بیٹری"
                 },
                 "power": {
-                    "description": "Wattage used for the discharge",
-                    "name": "Power"
+                    "description": "ڈسچارج کے لیے استعمال ہونے والا واٹ",
+                    "name": "طاقت"
                 },
                 "target_soc": {
-                    "description": "State of Charge that must be reached",
-                    "name": "Target SoC"
+                    "description": "چارج کی حالت جس تک پہنچنا ضروری ہے۔",
+                    "name": "ہدف SoC"
                 }
             },
-            "name": "Forcible Discharge to a SoC level"
+            "name": "ایک SoC سطح پر زبردستی خارج ہونا"
         },
         "reset_maximum_feed_grid_power": {
-            "description": "Set Active Power Control to the default Unlimited mode",
+            "description": "ایکٹو پاور کنٹرول کو ڈیفالٹ لامحدود موڈ پر سیٹ کریں۔",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Inverter' device",
-                    "name": "Inverter"
+                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
+                    "name": "انورٹر"
                 }
             },
-            "name": "Set Active Power Control to Maximum Feed Grid Power"
+            "name": "ایکٹو پاور کنٹرول کو زیادہ سے زیادہ فیڈ گرڈ پاور پر سیٹ کریں۔"
         },
         "set_capacity_control_periods": {
-            "description": "Set Capacity Control Periods",
+            "description": "صلاحیت کنٹرول کی مدت مقرر کریں",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Battery' device",
-                    "name": "Battery"
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "name": "بیٹری"
                 },
                 "periods": {
-                    "description": "One period per line. Format: '[start time]-[end time]/[days effective]/[power]W', with 1=Monday, 7=Sunday. Example: '00:00-23:59/1234567/2500W'.",
-                    "name": "Periods"
+                    "description": "فی لائن ایک مدت۔ فارمیٹ: '[آغاز وقت]-[اختتام کا وقت]/[دن مؤثر]/[طاقت]W'، 1=پیر، 7=اتوار کے ساتھ۔ مثال: '00:00-23:59/1234567/2500W'.",
+                    "name": "ادوار"
                 }
             },
-            "name": "Set Capacity Control Periods"
+            "name": "صلاحیت کنٹرول کی مدت مقرر کریں"
         },
         "set_di_active_power_scheduling": {
-            "description": "Set Active Power Control to 'DI active scheduling'",
+            "description": "ایکٹو پاور کنٹرول کو 'DI ایکٹو شیڈولنگ پر سیٹ کریں۔'",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Inverter' device",
-                    "name": "Inverter"
+                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
+                    "name": "انورٹر"
                 }
             },
-            "name": "Set Active Power Control to 'DI active scheduling'"
+            "name": "ایکٹو پاور کنٹرول کو 'DI ایکٹو شیڈولنگ پر سیٹ کریں۔'"
         },
         "set_fixed_charge_periods": {
-            "description": "Sets Fixed Charge and Discharge Periods",
+            "description": "فکسڈ چارج اور ڈسچارج کی مدت مقرر کرتا ہے۔",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Battery' device",
-                    "name": "Battery"
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "name": "بیٹری"
                 },
                 "periods": {
-                    "description": "One period per line. Format: '[start time]-[end time]/[power]W'. Example: '12:00-15:59/-1000W'.",
-                    "name": "Periods"
+                    "description": "فی لائن ایک مدت۔ فارمیٹ: '[اسٹارٹ ٹائم]-[اختتام کا وقت]/[power]W'۔ مثال: '12:00-15:59/-1000W'"،
+                     "name": "مدت"
                 }
             },
-            "name": "Set Fixed Charge Periods"
+            "name": "فکسڈ چارج پیریڈس سیٹ کریں۔"
         },
         "set_maximum_feed_grid_power": {
-            "description": "Sets Active Power Control to 'Power-limited grid connection' with the given wattage",
+            "description": "دی گئی واٹج کے ساتھ ایکٹو پاور کنٹرول کو 'پاور لمیٹڈ گرڈ کنکشن' پر سیٹ کرتا ہے۔",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Inverter' device",
-                    "name": "Inverter"
+                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
+                    "name": "انورٹر"
                 },
                 "power": {
-                    "description": "Maximum Wattage",
-                    "name": "Power"
+                    "description": "زیادہ سے زیادہ واٹج",
+                    "name": "طاقت"
                 }
             },
-            "name": "Limit the power fed to the grid"
+            "name": "گرڈ کو دی جانے والی بجلی کو محدود کریں۔"
         },
         "set_maximum_feed_grid_power_percent": {
-            "description": "Sets Active Power Control to 'Power-limited grid connection (%)' with the given percentage",
+            "description": "ایکٹو پاور کنٹرول کو دی گئی فیصد کے ساتھ 'پاور لمیٹڈ گرڈ کنکشن (%)' پر سیٹ کرتا ہے۔",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Inverter' device",
-                    "name": "Inverter"
+                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
+                    "name": "انورٹر"
                 },
                 "power_percentage": {
-                    "description": "Maximum Percentage",
-                    "name": "Power Percentage"
+                    "description": "زیادہ سے زیادہ فیصد",
+                    "name": "طاقت کا فیصد"
                 }
             },
-            "name": "Limit the power fed to the grid to percentage"
+            "name": "گرڈ کو دی جانے والی بجلی کو فیصد تک محدود کریں۔"
         },
         "set_tou_periods": {
-            "description": "Sets Time Of Use Periods",
+            "description": "استعمال کے ادوار کا وقت مقرر کرتا ہے۔",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Battery' device",
-                    "name": "Battery"
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "name": "بیٹری"
                 },
                 "periods": {
-                    "description": "One period per line. For Huawei LUNA2000 batteries: '[start time]-[end time]/[days effective]/[charge]', with 1=Monday, 7=Sunday (example: '12:00-14:00/1234567/-'). For LG RESU batteries: '[start time]-[end time]/[electricity price]' (example: 13:00-14:00/0.50)",
-                    "name": "Periods"
+                    "description": "فی لائن ایک مدت۔ Huawei LUNA2000 بیٹریوں کے لیے: '[شروع وقت]-[اختتام کا وقت]/[دن مؤثر]/[چارج]'، 1=پیر، 7=اتوار کے ساتھ (مثال: '12:00-14:00/1234567/-' )۔ LG RESU بیٹریوں کے لیے: '[اسٹارٹ ٹائم]-[آخر کا وقت]/[بجلی کی قیمت]' (مثال: 13:00-14:00/0.50)",
+                    "name": "ادوار"
                 }
             },
-            "name": "Set TOU Periods"
+            "name": "TOU کی مدت مقرر کریں۔"
         },
         "set_zero_power_grid_connection": {
-            "description": "Set Active Power Control to 'Zero power grid connection'",
+            "description": "ایکٹو پاور کنٹرول کو 'زیرو پاور گرڈ کنکشن' پر سیٹ کریں۔'",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Inverter' device",
-                    "name": "Inverter"
+                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
+                    "name": "انورٹر"
                 }
             },
-            "name": "Set Active Power Control to 'Zero power grid connection'"
+            "name": "ایکٹو پاور کنٹرول کو 'زیرو پاور گرڈ کنکشن' پر سیٹ کریں۔'"
         },
         "stop_forcible_charge": {
-            "description": "Cancel the running forcible charge command",
+            "description": "چل رہی زبردستی چارج کمانڈ کو منسوخ کریں۔",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Battery' device",
-                    "name": "Battery"
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "name": "بیٹری"
                 }
             },
-            "name": "Stop the forcible charge or discharge"
+            "name": "زبردستی چارج یا ڈسچارج کو روکیں۔"
         }
     }
 }
