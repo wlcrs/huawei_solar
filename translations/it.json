@@ -51,33 +51,33 @@
     "entity": {
         "number": {
             "storage_backup_power_state_of_charge": {
-                "name": "Alimentazione backup SOC"
+                "name": "Alimentazione backup SOC batteria"
             },
             "storage_capacity_control_soc_peak_shaving": {
-                "name": "Taglio del picco SOC"
+                "name": "Taglio del picco SOC batteria"
             },
             "storage_charging_cutoff_capacity": {
-                "name": "Termine della carica SOC"
+                "name": "Termine della carica batteria SOC"
             },
             "storage_discharging_cutoff_capacity": {
-                "name": "Termine dello scaricamento SOC"
+                "name": "Termine dello scaricamento batteria SOC"
             },
             "storage_grid_charge_cutoff_state_of_charge": {
-                "name": "Interruz. carica dalla rete SOC"
+                "name": "Interruz. carica batteria dalla rete SOC"
             },
             "storage_maximum_charging_power": {
-                "name": "Potenza massima di carica"
+                "name": "Potenza massima di carica batteria"
             },
             "storage_maximum_discharging_power": {
-                "name": "Potenza massima di scaricamento"
+                "name": "Potenza massima di scaricamento batteria"
             },
             "storage_power_of_charge_from_grid": {
-                "name": "Potenza massima di carica dalla rete"
+                "name": "Potenza massima di carica batteria dalla rete"
             }
         },
         "select": {
             "storage_capacity_control_mode": {
-                "name": "Modalità di controllo capacità",
+                "name": "Modalità di controllo capacità di carica batteria",
                 "state": {
                     "active_capacity_control": "Controllo capacità attivo",
                     "apparent_power_limit": "Limite di potenza apparente",
@@ -92,7 +92,7 @@
                 }
             },
             "storage_working_mode_settings": {
-                "name": "Modalità di funzionamento",
+                "name": "Modalità di funzionamento batteria",
                 "state": {
                     "adaptive": "Adattativo",
                     "fixed_charge_discharge": "Carica e scarica fissi",
@@ -162,10 +162,10 @@
                 "name": "Tensione di Fase A"
             },
             "grid_accumulated_energy": {
-                "name": "Consumo"
+                "name": "Energia importata dalla rete"
             },
             "grid_accumulated_reactive_power": {
-                "name": "Energia reattiva accumulata"
+                "name": "Energia reattiva importata dalla rete"
             },
             "grid_b_current": {
                 "name": "Corrente di Fase B"
@@ -180,7 +180,7 @@
                 "name": "Tensione di Fase C"
             },
             "grid_exported_energy": {
-                "name": "Esportata"
+                "name": "Energia immessa in rete"
             },
             "input_current": {
                 "name": "Corrente in ingresso"
@@ -189,7 +189,7 @@
                 "name": "Potenza in ingresso"
             },
             "input_voltage": {
-                "name": "tensione in ingresso"
+                "name": "Tensione in ingresso"
             },
             "internal_temperature": {
                 "name": "Internal temperature"
@@ -447,7 +447,7 @@
                 "name": "Tempi di carica e scarica predefiniti"
             },
             "storage_running_status": {
-                "name": "Stato"
+                "name": "Stato funzionamento"
             },
             "storage_state_of_capacity": {
                 "name": "Stato della capacità"
