@@ -27,7 +27,7 @@ This integration exposes the information and functions made available by Huawei 
 
 **Services**
 
-This integration exposes multiple services, allowing you to [actively control the amount of electricity exported to the grid](https://github.com/wlcrs/huawei_solar/wiki/Changing-Active-Power-Control) and [forcibly charge/discharge your battery](https://github.com/wlcrs/huawei_solar/wiki/Force-charge-discharge-battery). 
+This integration exposes multiple services, allowing you to [actively control the amount of electricity exported to the grid](https://github.com/wlcrs/huawei_solar/wiki/Changing-Active-Power-Control) and [forcibly charge/discharge your battery](https://github.com/wlcrs/huawei_solar/wiki/Force-charge-discharge-battery).
 
 ![services](images/services.png)
 
@@ -35,11 +35,19 @@ To enable these advanced features, you need to select 'Elevate permissions' duri
 
 ## Prerequisites
 
+**Connection**
+
 This integration supports two connection modes to SUN2000 inverters:
-- direct serial connection to the RS485A1 and RS485B1 pins of the COM port 
+- direct serial connection to the RS485A1 and RS485B1 pins of the COM port
 - network connection
 
 Detailed information can be found on the ['Connecting to the inverter' Wiki-page](https://github.com/wlcrs/huawei_solar/wiki/Connecting-to-the-inverter)
+
+**Firmware**
+
+This integration supports inverters running **V200**R001C00 firmware.
+If you are running an older *V100*R001C00 firmware, then please consult the "Upgrade guide" included
+with *V200*R001C00 firmware versions to check if your inverter is eligibile for an upgrade.
 
 ## Installation
 
@@ -66,16 +74,16 @@ repository into the `custom_components/huawei_solar` directory
 
 5. Enter the IP address and port on which the Modbus-TCP interface is available. Some pointers:
    - The port is either `502` or `6607`.
-   - When connecting to the inverter AP the host IP is typically `192.168.200.1` and the slave id is typically `0`. 
+   - When connecting to the inverter AP the host IP is typically `192.168.200.1` and the slave id is typically `0`.
    - When connecting to an SDongle, the slave id is typically `1`. Make sure to give this device a fixed IP!
-   
+
    Checking the `Advanced: elevate permissions` checkbox will:
    - give you access to optimizer data
    - enable you to dynamically change your inverter and battery settings
 
 ![](images/network-configuration.png)
 
-6. When using the `elevate permissions` feature in combination with certain connection methods (most TCP-connections, not for serial connections), 
+6. When using the `elevate permissions` feature in combination with certain connection methods (most TCP-connections, not for serial connections),
    you will be asked to enter the credentials to the `installer` account in a next step. These are the
 credentials used to connect to the inverter in the "Device Commissioning" section of
 the FusionSolar App. The default password is either `00000a` or `0000000a`. If necessary, you can [perform a password reset](https://support.huawei.com/enterprise/en/doc/EDOC1100136173/8aa1f88a/resetting-password). This will not reset other parameters like the FusionSolar cloud connection or other changes made by the firm which did your solar installation.
