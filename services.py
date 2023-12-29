@@ -248,16 +248,15 @@ def get_inverter_bridge(hass: HomeAssistant, service_call: ServiceCall):
 
 
 async def _validate_power_value(power: Any, bridge: HuaweiSolarBridge, max_value_key):
-    # these are already checked by voluptuous:
+    # this already checked by voluptuous:
     assert isinstance(power, int)
-    assert power >= 0
 
     maximum_active_power = (
         await bridge.client.get(max_value_key, bridge.slave_id)
     ).value
 
-    if not (0 <= power <= maximum_active_power):
-        raise ValueError(f"Power must be between 0 and {maximum_active_power}")
+    if not power <= maximum_active_power:
+        raise ValueError(f"Power cannot be more than {maximum_active_power}W")
 
     return power
 
