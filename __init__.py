@@ -8,24 +8,13 @@ import logging
 from typing import TypedDict, TypeVar
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (
-    CONF_HOST,
-    CONF_PASSWORD,
-    CONF_PORT,
-    CONF_USERNAME,
-    Platform,
-)
+from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT, CONF_USERNAME, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.debounce import Debouncer
 from homeassistant.helpers.entity import DeviceInfo, Entity
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-from huawei_solar import (
-    HuaweiSolarBridge,
-    HuaweiSolarException,
-    InvalidCredentials,
-    register_values as rv,
-)
+from huawei_solar import HuaweiSolarBridge, HuaweiSolarException, InvalidCredentials, register_values as rv
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
@@ -58,7 +47,6 @@ PLATFORMS: list[Platform] = [
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Huawei Solar from a config entry."""
-
     primary_bridge = None
     try:
         # Multiple inverters can be connected to each other via a daisy chain,
@@ -239,7 +227,6 @@ async def _compute_device_infos(
     connecting_inverter_device_id: tuple[str, str] | None,
 ) -> HuaweiInverterBridgeDeviceInfos:
     """Create the correct DeviceInfo-objects, which can be used to correctly assign to entities in this integration."""
-
     inverter_device_info = DeviceInfo(
         identifiers={(DOMAIN, bridge.serial_number)},
         name="Inverter",

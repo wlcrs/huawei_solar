@@ -15,11 +15,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
 
-from . import (
-    HuaweiSolarConfigurationUpdateCoordinator,
-    HuaweiSolarEntity,
-    HuaweiSolarUpdateCoordinator,
-)
+from . import HuaweiSolarConfigurationUpdateCoordinator, HuaweiSolarEntity, HuaweiSolarUpdateCoordinator
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
     DATA_CONFIGURATION_UPDATE_COORDINATORS,
@@ -63,7 +59,6 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Huawei Solar Switch Entities Setup."""
-
     if not entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
         _LOGGER.info("Skipping switch setup, as parameter configuration is not enabled")
         return
@@ -75,11 +70,10 @@ async def async_setup_entry(
     configuration_update_coordinators = hass.data[DOMAIN][entry.entry_id][
         DATA_CONFIGURATION_UPDATE_COORDINATORS
     ]  # type: list[HuaweiSolarConfigurationUpdateCoordinator]
-    
+
     entities_to_add: list[SwitchEntity] = []
-    for idx, (update_coordinator, configuration_update_coordinator) in enumerate(
-        zip(update_coordinators, configuration_update_coordinators)
-    ):
+    for (update_coordinator, configuration_update_coordinator) in \
+        zip(update_coordinators, configuration_update_coordinators):
         slave_entities: list[
             HuaweiSolarSwitchEntity | HuaweiSolarOnOffSwitchEntity
         ] = []
@@ -162,7 +156,6 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
 
     async def async_turn_on(self, **kwargs) -> None:
         """Turn the setting on."""
-
         if await self.bridge.set(self.entity_description.key, True):
             self._attr_is_on = True
 
@@ -170,7 +163,6 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
 
     async def async_turn_off(self, **kwargs) -> None:
         """Turn the setting off."""
-
         if await self.bridge.set(self.entity_description.key, False):
             self._attr_is_on = False
 
@@ -178,7 +170,11 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
 
     @property
     def available(self) -> bool:
-        """Override available property (from CoordinatorEntity) to take into account the custom check_is_available_func result."""
+        """Is the entity available.
+
+        Override available property (from CoordinatorEntity) to
+        take into account the custom check_is_available_func result.
+        """
         available = super().available
 
         if self.entity_description.check_is_available_func and available:
@@ -256,7 +252,6 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
 
     async def async_turn_off(self, **kwargs) -> None:
         """Turn the setting off."""
-
         async with self._change_lock:
             await self.bridge.set(rn.SHUTDOWN, 0)
 

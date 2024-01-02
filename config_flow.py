@@ -9,22 +9,10 @@ import voluptuous as vol
 
 from homeassistant import config_entries
 from homeassistant.components import usb
-from homeassistant.const import (
-    CONF_HOST,
-    CONF_PASSWORD,
-    CONF_PORT,
-    CONF_TYPE,
-    CONF_USERNAME,
-)
+from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT, CONF_TYPE, CONF_USERNAME
 from homeassistant.data_entry_flow import FlowResult
 import homeassistant.helpers.config_validation as cv
-from huawei_solar import (
-    ConnectionException,
-    HuaweiSolarBridge,
-    HuaweiSolarException,
-    InvalidCredentials,
-    ReadException,
-)
+from huawei_solar import ConnectionException, HuaweiSolarBridge, HuaweiSolarException, InvalidCredentials, ReadException
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
@@ -59,7 +47,6 @@ CONF_MANUAL_PATH = "Enter Manually"
 
 async def validate_serial_setup(data: dict[str, Any]) -> dict[str, Any]:
     """Validate the serial device that was passed by the user."""
-
     bridge = None
     try:
         bridge = await HuaweiSolarBridge.create_rtu(
@@ -109,7 +96,6 @@ async def validate_network_setup(data: dict[str, Any]) -> dict[str, Any]:
 
     Data has the keys from STEP_SETUP_NETWORK_DATA_SCHEMA with values provided by the user.
     """
-
     bridge = None
     try:
         bridge = await HuaweiSolarBridge.create(
@@ -193,7 +179,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     def __init__(self) -> None:
         """Initialize flow."""
-
         self._host: str | None = None
         self._port: int | None = None
         self._slave_ids: list[int] | None = None
@@ -227,7 +212,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Handle connection parameters when using ModbusRTU."""
-
         # Parameter configuration is always possible over serial connection
         self._enable_parameter_configuration = True
 
@@ -367,7 +351,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Handle connection parameters when using ModbusTCP."""
-
         errors = {}
 
         if user_input is not None:

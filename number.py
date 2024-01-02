@@ -4,14 +4,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 import logging
 
-from homeassistant.components.number import (
-    NumberEntity,
-    NumberEntityDescription,
-    NumberMode,
-)
+from homeassistant.components.number import NumberEntity, NumberEntityDescription, NumberMode
 from homeassistant.components.number.const import DEFAULT_MAX_VALUE, DEFAULT_MIN_VALUE
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import PERCENTAGE, POWER_WATT
+from homeassistant.const import PERCENTAGE, UnitOfPower
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -51,7 +47,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         native_min_value=0,
         static_maximum_key=rn.STORAGE_MAXIMUM_CHARGE_POWER,
         icon="mdi:battery-positive",
-        native_unit_of_measurement=POWER_WATT,
+        native_unit_of_measurement=UnitOfPower.WATT,
         entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarNumberEntityDescription(
@@ -59,7 +55,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         native_min_value=0,
         static_maximum_key=rn.STORAGE_MAXIMUM_DISCHARGE_POWER,
         icon="mdi:battery-negative",
-        native_unit_of_measurement=POWER_WATT,
+        native_unit_of_measurement=UnitOfPower.WATT,
         entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarNumberEntityDescription(
@@ -105,7 +101,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         native_min_value=0,
         dynamic_maximum_key=rn.STORAGE_MAXIMUM_POWER_OF_CHARGE_FROM_GRID,
         icon="mdi:battery-negative",
-        native_unit_of_measurement=POWER_WATT,
+        native_unit_of_measurement=UnitOfPower.WATT,
         entity_category=EntityCategory.CONFIG,
     ),
 )
@@ -128,7 +124,6 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Huawei Solar Number entities Setup."""
-
     if not entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION):
         _LOGGER.info("Skipping number setup, as parameter configuration is not enabled")
         return
@@ -142,9 +137,8 @@ async def async_setup_entry(
     ]  # type: list[HuaweiSolarConfigurationUpdateCoordinator]
 
     entities_to_add: list[NumberEntity] = []
-    for idx, (update_coordinator, configuration_update_coordinator) in enumerate(
-        zip(update_coordinators, configuration_update_coordinators)
-    ):
+    for (update_coordinator, configuration_update_coordinator) in \
+        zip(update_coordinators, configuration_update_coordinators):
         slave_entities: list[HuaweiSolarNumberEntity] = []
         bridge = update_coordinator.bridge
         device_infos = update_coordinator.device_infos

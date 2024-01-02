@@ -309,7 +309,6 @@ async def forcible_discharge(hass: HomeAssistant, service_call: ServiceCall) -> 
 
 async def forcible_charge_soc(hass: HomeAssistant, service_call: ServiceCall) -> None:
     """Start a forcible charge on the battery until the target SOC is hit."""
-
     bridge = get_battery_bridge(hass, service_call)
     target_soc = service_call.data[DATA_TARGET_SOC]
     power = await _validate_power_value(
@@ -329,7 +328,6 @@ async def forcible_discharge_soc(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> None:
     """Start a forcible discharge on the battery until the target SOC is hit."""
-
     bridge = get_battery_bridge(hass, service_call)
     target_soc = service_call.data[DATA_TARGET_SOC]
     power = await _validate_power_value(
@@ -347,7 +345,6 @@ async def forcible_discharge_soc(
 
 async def stop_forcible_charge(hass: HomeAssistant, service_call: ServiceCall) -> None:
     """Stop a forcible charge or discharge."""
-
     bridge = get_battery_bridge(hass, service_call)
     await bridge.set(
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
@@ -365,7 +362,6 @@ async def reset_maximum_feed_grid_power(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> None:
     """Set Active Power Control to 'Unlimited'."""
-
     bridge = get_inverter_bridge(hass, service_call)
     await bridge.set(
         rn.ACTIVE_POWER_CONTROL_MODE,
@@ -382,7 +378,6 @@ async def set_di_active_power_scheduling(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> None:
     """Set Active Power Control to 'DI active scheduling'."""
-
     bridge = get_inverter_bridge(hass, service_call)
     await bridge.set(
         rn.ACTIVE_POWER_CONTROL_MODE,
@@ -399,7 +394,6 @@ async def set_zero_power_grid_connection(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> None:
     """Set Active Power Control to 'Zero-Power Grid Connection'."""
-
     bridge = get_inverter_bridge(hass, service_call)
     await bridge.set(
         rn.ACTIVE_POWER_CONTROL_MODE,
@@ -416,7 +410,6 @@ async def set_maximum_feed_grid_power(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> None:
     """Set Active Power Control to 'Power-limited grid connection' with the given wattage."""
-
     bridge = get_inverter_bridge(hass, service_call)
     power = await _validate_power_value(service_call.data[DATA_POWER], bridge, rn.P_MAX)
 
@@ -431,7 +424,6 @@ async def set_maximum_feed_grid_power_percentage(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> None:
     """Set Active Power Control to 'Power-limited grid connection' with the given percentage."""
-
     bridge = get_inverter_bridge(hass, service_call)
     power_percentage = service_call.data[DATA_POWER_PERCENTAGE]
 

@@ -29,7 +29,6 @@ async def async_get_config_entry_diagnostics(
     hass: HomeAssistant, entry: ConfigEntry
 ) -> dict[str, Any]:
     """Return diagnostics for a config entry."""
-
     coordinators: list[HuaweiSolarUpdateCoordinator] = hass.data[DOMAIN][
         entry.entry_id
     ][DATA_UPDATE_COORDINATORS]

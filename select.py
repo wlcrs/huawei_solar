@@ -71,7 +71,6 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Huawei Solar Select Entities Setup."""
-
     if not entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
         _LOGGER.info("Skipping select setup, as parameter configuration is not enabled")
         return
@@ -85,9 +84,8 @@ async def async_setup_entry(
     ] = hass.data[DOMAIN][entry.entry_id][DATA_CONFIGURATION_UPDATE_COORDINATORS]
 
     entities_to_add: list[SelectEntity] = []
-    for idx, (update_coordinator, configuration_update_coordinator) in enumerate(
-        zip(update_coordinators, configuration_update_coordinators)
-    ):
+    for (update_coordinator, configuration_update_coordinator) in \
+        zip(update_coordinators, configuration_update_coordinators):
         slave_entities: list[HuaweiSolarSelectEntity | StorageModeSelectEntity] = []
 
         bridge = update_coordinator.bridge
@@ -191,7 +189,6 @@ class HuaweiSolarSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity
 
     async def async_select_option(self, option) -> None:
         """Change the selected option."""
-
         await self.bridge.set(self.entity_description.key, self._to_enum(option))
         self._attr_current_option = option
 
@@ -199,7 +196,11 @@ class HuaweiSolarSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity
 
     @property
     def available(self) -> bool:
-        """Override available property (from CoordinatorEntity) to take into account the custom check_is_available_func result."""
+        """Is the entity available.
+
+        Override available property (from CoordinatorEntity) to take into
+        account the custom check_is_available_func result.
+        """
         available = super().available
 
         if self.entity_description.check_is_available_func and available:
@@ -257,7 +258,6 @@ class StorageModeSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity
 
     async def async_select_option(self, option) -> None:
         """Change the selected option."""
-
         await self.bridge.set(
             rn.STORAGE_WORKING_MODE_SETTINGS, getattr(rv.StorageWorkingModesC, option.upper())
         )
