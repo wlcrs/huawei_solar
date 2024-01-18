@@ -240,10 +240,10 @@
                 "name": "Fattore di potenza"
             },
             "power_meter_active_power": {
-                "name": "Potenza attiva"
+                "name": "Power Meter Potenza attiva"
             },
             "power_meter_reactive_power": {
-                "name": "Potenza reattiva"
+                "name": "Power Meter Potenza reattiva"
             },
             "pv_01_current": {
                 "name": "Corrente FV 1"
