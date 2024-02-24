@@ -15,7 +15,11 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
 
-from . import HuaweiSolarConfigurationUpdateCoordinator, HuaweiSolarEntity, HuaweiSolarUpdateCoordinator
+from . import (
+    HuaweiSolarConfigurationUpdateCoordinator,
+    HuaweiSolarEntity,
+    HuaweiSolarUpdateCoordinator,
+)
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
     DATA_CONFIGURATION_UPDATE_COORDINATORS,
@@ -38,7 +42,10 @@ class HuaweiSolarSwitchEntityDescription(Generic[T], SwitchEntityDescription):
 
     def __post_init__(self):
         """Defaults the translation_key to the switch key."""
-        self.translation_key = self.translation_key or self.key.replace('#','_').lower()
+        self.translation_key = (
+            self.translation_key or self.key.replace("#", "_").lower()
+        )
+
 
 ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     HuaweiSolarSwitchEntityDescription(
@@ -63,17 +70,16 @@ async def async_setup_entry(
         _LOGGER.info("Skipping switch setup, as parameter configuration is not enabled")
         return
 
-    update_coordinators = hass.data[DOMAIN][entry.entry_id][
-        DATA_UPDATE_COORDINATORS
-    ]  # type: list[HuaweiSolarUpdateCoordinator]
+    update_coordinators = hass.data[DOMAIN][entry.entry_id][DATA_UPDATE_COORDINATORS]  # type: list[HuaweiSolarUpdateCoordinator]
 
     configuration_update_coordinators = hass.data[DOMAIN][entry.entry_id][
         DATA_CONFIGURATION_UPDATE_COORDINATORS
     ]  # type: list[HuaweiSolarConfigurationUpdateCoordinator]
 
     entities_to_add: list[SwitchEntity] = []
-    for (update_coordinator, configuration_update_coordinator) in \
-        zip(update_coordinators, configuration_update_coordinators):
+    for update_coordinator, configuration_update_coordinator in zip(
+        update_coordinators, configuration_update_coordinators
+    ):
         slave_entities: list[
             HuaweiSolarSwitchEntity | HuaweiSolarOnOffSwitchEntity
         ] = []
@@ -206,7 +212,7 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
 
         self.bridge = bridge
         self.entity_description = SwitchEntityDescription(
-            rn.STARTUP,
+            key=rn.STARTUP,
             icon="mdi:power-standby",
             entity_category=EntityCategory.CONFIG,
         )
