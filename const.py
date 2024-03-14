@@ -10,7 +10,9 @@ DEFAULT_PASSWORD = "00000a"
 
 CONF_SLAVE_IDS = "slave_ids"
 CONF_ENABLE_PARAMETER_CONFIGURATION = "enable_parameter_configuration"
-
+CONF_EXCLUDE_BATTERY = "exclude_battery"
+CONF_EXCLUDE_OPTIMIZERS = "exclude_optimizers"
+CONF_EXCLUDE_POWER_METER = "exclude_power_meter"
 
 DATA_BRIDGES_WITH_DEVICEINFOS = "bridges"
 DATA_UPDATE_COORDINATORS = "update_coordinators"

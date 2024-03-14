@@ -39,6 +39,8 @@ from . import (
     HuaweiSolarUpdateCoordinator,
 )
 from .const import (
+    CONF_EXCLUDE_BATTERY,
+    CONF_EXCLUDE_POWER_METER,
     DATA_CONFIGURATION_UPDATE_COORDINATORS,
     DATA_OPTIMIZER_UPDATE_COORDINATORS,
     DATA_UPDATE_COORDINATORS,
@@ -659,26 +661,30 @@ async def async_setup_entry(
                     )
                 )
 
-        if bridge.power_meter_type == rv.MeterType.SINGLE_PHASE:
-            for entity_description in SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS:
-                slave_entities.append(
-                    HuaweiSolarSensorEntity(
-                        update_coordinator,
-                        entity_description,
-                        device_infos["power_meter"],
+        if not entry.data.get(CONF_EXCLUDE_POWER_METER):
+            if bridge.power_meter_type == rv.MeterType.SINGLE_PHASE:
+                for entity_description in SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS:
+                    slave_entities.append(
+                        HuaweiSolarSensorEntity(
+                            update_coordinator,
+                            entity_description,
+                            device_infos["power_meter"],
+                        )
                     )
-                )
-        elif bridge.power_meter_type == rv.MeterType.THREE_PHASE:
-            for entity_description in THREE_PHASE_METER_ENTITY_DESCRIPTIONS:
-                slave_entities.append(
-                    HuaweiSolarSensorEntity(
-                        update_coordinator,
-                        entity_description,
-                        device_infos["power_meter"],
+            elif bridge.power_meter_type == rv.MeterType.THREE_PHASE:
+                for entity_description in THREE_PHASE_METER_ENTITY_DESCRIPTIONS:
+                    slave_entities.append(
+                        HuaweiSolarSensorEntity(
+                            update_coordinator,
+                            entity_description,
+                            device_infos["power_meter"],
+                        )
                     )
-                )
 
-        if bridge.battery_type != rv.StorageProductModel.NONE:
+        if (
+            not entry.data.get(CONF_EXCLUDE_BATTERY)
+            and bridge.battery_type != rv.StorageProductModel.NONE
+        ):
             for entity_description in BATTERY_SENSOR_DESCRIPTIONS:
                 slave_entities.append(
                     HuaweiSolarSensorEntity(
