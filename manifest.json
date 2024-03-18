@@ -8,7 +8,8 @@
     "documentation": "https://github.com/wlcrs/huawei_solar/wiki",
     "issue_tracker": "https://github.com/wlcrs/huawei_solar/issues",
     "requirements": [
-        "huawei-solar==2.2.9"
+        "huawei-solar==2.2.9",
+        "pymodbus<=3.6.5"
     ],
     "codeowners": [
         "@wlcrs"
