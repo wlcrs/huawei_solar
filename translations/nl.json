@@ -104,11 +104,11 @@
             }
         },
         "sensor": {
-            "accumulated_energy_yield": {
-                "name": "Geaccumuleerde energieopbrengst"
-            },
             "accumulated_yield_energy": {
                 "name": "Totale opbrengst"
+            },
+            "total_dc_input_power": {
+                "name": "Totale DC ingangsenergie"
             },
             "active_grid_a_b_voltage": {
                 "name": "A-B lijnspanning"
@@ -142,6 +142,12 @@
             },
             "alarms": {
                 "name": "Alarmen"
+            },
+            "current_electricity_generation_statistics_time": {
+                "name": "Huidige energieopwekkingstatistiekentijd"
+            },
+            "hourly_yield_energy": {
+                "name": "Uur opbrengst"
             },
             "daily_yield_energy": {
                 "name": "Dagelijkse opbrengst"

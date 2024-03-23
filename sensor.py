@@ -6,7 +6,12 @@ from dataclasses import dataclass
 from itertools import zip_longest
 from typing import Any, cast
 
-from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorEntityDescription, SensorStateClass
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorEntityDescription,
+    SensorStateClass,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     PERCENTAGE,
@@ -22,7 +27,12 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from huawei_solar import HuaweiSolarBridge, Result, register_names as rn, register_values as rv
+from huawei_solar import (
+    HuaweiSolarBridge,
+    Result,
+    register_names as rn,
+    register_values as rv,
+)
 from huawei_solar.files import OptimizerRunningStatus
 from huawei_solar.registers import (
     ChargeDischargePeriod,
@@ -56,7 +66,9 @@ class HuaweiSolarSensorEntityDescription(SensorEntityDescription):
 
     def __post_init__(self):
         """Defaults the translation_key to the sensor key."""
-        self.translation_key = self.translation_key or self.key.replace('#','_').lower()
+        self.translation_key = (
+            self.translation_key or self.key.replace("#", "_").lower()
+        )
 
 
 # Every list in this file describes a group of entities which are related to each other.
@@ -202,6 +214,25 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         state_class=SensorStateClass.TOTAL,
     ),
     HuaweiSolarSensorEntityDescription(
+        key=rn.TOTAL_DC_INPUT_POWER,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CURRENT_ELECTRICITY_GENERATION_STATISTICS_TIME,
+        device_class=SensorDeviceClass.TIMESTAMP,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.HOURLY_YIELD_ENERGY,
+        icon="mdi:solar-power",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+    ),
+    HuaweiSolarSensorEntityDescription(
         key=rn.DAILY_YIELD_ENERGY,
         icon="mdi:solar-power",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
@@ -311,7 +342,9 @@ OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, 
     HuaweiSolarSensorEntityDescription(
         key="alarm",
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_conversion_function=lambda alarms: ", ".join(alarms) if len(alarms) else "None"
+        value_conversion_function=lambda alarms: ", ".join(alarms)
+        if len(alarms)
+        else "None",
     ),
 )
 
@@ -613,17 +646,16 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Add Huawei Solar entry."""
-    update_coordinators = hass.data[DOMAIN][entry.entry_id][
-        DATA_UPDATE_COORDINATORS
-    ]  # type: list[HuaweiSolarUpdateCoordinator]
+    update_coordinators = hass.data[DOMAIN][entry.entry_id][DATA_UPDATE_COORDINATORS]  # type: list[HuaweiSolarUpdateCoordinator]
 
     configuration_update_coordinators = hass.data[DOMAIN][entry.entry_id][
         DATA_CONFIGURATION_UPDATE_COORDINATORS
     ]  # type: list[HuaweiSolarConfigurationUpdateCoordinator]
 
     entities_to_add: list[SensorEntity] = []
-    for (update_coordinator, configuration_update_coordinator) in \
-        zip_longest(update_coordinators, configuration_update_coordinators):
+    for update_coordinator, configuration_update_coordinator in zip_longest(
+        update_coordinators, configuration_update_coordinators
+    ):
         slave_entities: list[
             HuaweiSolarSensorEntity
             | HuaweiSolarTOUPricePeriodsSensorEntity
@@ -895,7 +927,9 @@ class HuaweiSolarTOUPricePeriodsSensorEntity(
             self._attr_extra_state_attributes.clear()
         elif isinstance(data[0], LG_RESU_TimeOfUsePeriod):
             self._attr_extra_state_attributes = {
-                f"Period {idx+1}": self._lg_resu_period_to_text(cast(LG_RESU_TimeOfUsePeriod, period))
+                f"Period {idx+1}": self._lg_resu_period_to_text(
+                    cast(LG_RESU_TimeOfUsePeriod, period)
+                )
                 for idx, period in enumerate(data)
             }
         elif isinstance(data[0], HUAWEI_LUNA2000_TimeOfUsePeriod):
