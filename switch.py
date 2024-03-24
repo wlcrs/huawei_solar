@@ -5,7 +5,7 @@ import asyncio
 from collections.abc import Callable
 from dataclasses import dataclass
 import logging
-from typing import Any, Generic, TypeVar
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.config_entries import ConfigEntry
@@ -18,14 +18,12 @@ from huawei_solar import HuaweiSolarBridge, register_names as rn, register_value
 from . import (
     HuaweiSolarConfigurationUpdateCoordinator,
     HuaweiSolarEntity,
-    HuaweiSolarUpdateCoordinator,
+    HuaweiSolarInverterUpdateCoordinator,
 )
-from .const import (
-    CONF_ENABLE_PARAMETER_CONFIGURATION,
-    DATA_CONFIGURATION_UPDATE_COORDINATORS,
-    DATA_UPDATE_COORDINATORS,
-    DOMAIN,
-)
+from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
+
+if TYPE_CHECKING:
+    from . import HuaweiSolarUpdateCoordinators
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -70,45 +68,43 @@ async def async_setup_entry(
         _LOGGER.info("Skipping switch setup, as parameter configuration is not enabled")
         return
 
-    update_coordinators = hass.data[DOMAIN][entry.entry_id][DATA_UPDATE_COORDINATORS]  # type: list[HuaweiSolarUpdateCoordinator]
-
-    configuration_update_coordinators = hass.data[DOMAIN][entry.entry_id][
-        DATA_CONFIGURATION_UPDATE_COORDINATORS
-    ]  # type: list[HuaweiSolarConfigurationUpdateCoordinator]
+    update_coordinators: list[HuaweiSolarUpdateCoordinators] = hass.data[DOMAIN][
+        entry.entry_id
+    ][DATA_UPDATE_COORDINATORS]
 
     entities_to_add: list[SwitchEntity] = []
-    for update_coordinator, configuration_update_coordinator in zip(
-        update_coordinators, configuration_update_coordinators
-    ):
+    for ucs in update_coordinators:
+        if not ucs.configuration_update_coordinator:
+            continue
+
         slave_entities: list[
             HuaweiSolarSwitchEntity | HuaweiSolarOnOffSwitchEntity
         ] = []
 
-        bridge = update_coordinator.bridge
-        device_infos = update_coordinator.device_infos
-
         slave_entities.append(
             HuaweiSolarOnOffSwitchEntity(
-                update_coordinator, bridge, device_infos["inverter"]
+                ucs.inverter_update_coordinator,
+                ucs.bridge,
+                ucs.device_infos["inverter"],
             )
         )
 
-        if bridge.battery_type != rv.StorageProductModel.NONE:
-            assert device_infos["connected_energy_storage"]
+        if ucs.bridge.battery_type != rv.StorageProductModel.NONE:
+            assert ucs.device_infos["connected_energy_storage"]
 
             for entity_description in ENERGY_STORAGE_SWITCH_DESCRIPTIONS:
                 slave_entities.append(
                     HuaweiSolarSwitchEntity(
-                        configuration_update_coordinator,
-                        bridge,
+                        ucs.configuration_update_coordinator,
+                        ucs.bridge,
                         entity_description,
-                        device_infos["connected_energy_storage"],
+                        ucs.device_infos["connected_energy_storage"],
                     )
                 )
         else:
             _LOGGER.debug(
                 "No battery detected on slave %s. Skipping energy storage switch entities",
-                bridge.slave_id,
+                ucs.bridge.slave_id,
             )
 
         entities_to_add.extend(slave_entities)
@@ -199,7 +195,7 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
         self,
         # not the HuaweiSolarConfigurationUpdateCoordinator as
         # this entity depends on the 'Device Status' register
-        coordinator: HuaweiSolarUpdateCoordinator,
+        coordinator: HuaweiSolarInverterUpdateCoordinator,
         bridge: HuaweiSolarBridge,
         device_info: DeviceInfo,
     ) -> None:

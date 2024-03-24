@@ -17,15 +17,10 @@ from huawei_solar import HuaweiSolarBridge, register_names as rn, register_value
 from huawei_solar.registers import REGISTERS
 
 from . import HuaweiSolarConfigurationUpdateCoordinator, HuaweiSolarEntity
-from .const import (
-    CONF_ENABLE_PARAMETER_CONFIGURATION,
-    DATA_CONFIGURATION_UPDATE_COORDINATORS,
-    DATA_UPDATE_COORDINATORS,
-    DOMAIN,
-)
+from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
 
 if TYPE_CHECKING:
-    from . import HuaweiSolarUpdateCoordinator
+    from . import HuaweiSolarUpdateCoordinators
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -42,7 +37,9 @@ class HuaweiSolarSelectEntityDescription(Generic[T], SelectEntityDescription):
 
     def __post_init__(self):
         """Defaults the translation_key to the select key."""
-        self.translation_key = self.translation_key or self.key.replace('#','_').lower()
+        self.translation_key = (
+            self.translation_key or self.key.replace("#", "_").lower()
+        )
 
 
 ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
@@ -75,57 +72,52 @@ async def async_setup_entry(
         _LOGGER.info("Skipping select setup, as parameter configuration is not enabled")
         return
 
-    update_coordinators: list[HuaweiSolarUpdateCoordinator] = hass.data[DOMAIN][
+    update_coordinators: list[HuaweiSolarUpdateCoordinators] = hass.data[DOMAIN][
         entry.entry_id
     ][DATA_UPDATE_COORDINATORS]
 
-    configuration_update_coordinators: list[
-        HuaweiSolarConfigurationUpdateCoordinator
-    ] = hass.data[DOMAIN][entry.entry_id][DATA_CONFIGURATION_UPDATE_COORDINATORS]
-
     entities_to_add: list[SelectEntity] = []
-    for (update_coordinator, configuration_update_coordinator) in \
-        zip(update_coordinators, configuration_update_coordinators):
+    for ucs in update_coordinators:
+        if not ucs.configuration_update_coordinator:
+            continue
+
         slave_entities: list[HuaweiSolarSelectEntity | StorageModeSelectEntity] = []
 
-        bridge = update_coordinator.bridge
-        device_infos = update_coordinator.device_infos
-
-        if bridge.battery_type != rv.StorageProductModel.NONE:
-            assert device_infos["connected_energy_storage"]
+        if ucs.bridge.battery_type != rv.StorageProductModel.NONE:
+            assert ucs.device_infos["connected_energy_storage"]
 
             for entity_description in ENERGY_STORAGE_SWITCH_DESCRIPTIONS:
                 slave_entities.append(
                     HuaweiSolarSelectEntity(
-                        configuration_update_coordinator,
-                        bridge,
+                        ucs.configuration_update_coordinator,
+                        ucs.bridge,
                         entity_description,
-                        device_infos["connected_energy_storage"],
+                        ucs.device_infos["connected_energy_storage"],
                     )
                 )
             slave_entities.append(
                 StorageModeSelectEntity(
-                    configuration_update_coordinator,
-                    bridge,
-                    device_infos["connected_energy_storage"],
+                    ucs.configuration_update_coordinator,
+                    ucs.bridge,
+                    ucs.device_infos["connected_energy_storage"],
                 )
             )
 
-            if bridge.supports_capacity_control:
+            if ucs.bridge.supports_capacity_control:
                 for entity_description in CAPACITY_CONTROL_SWITCH_DESCRIPTIONS:
                     slave_entities.append(
                         HuaweiSolarSelectEntity(
-                            configuration_update_coordinator,
-                            bridge,
+                            ucs.configuration_update_coordinator,
+                            ucs.bridge,
                             entity_description,
-                            device_infos["connected_energy_storage"],
+                            ucs.device_infos["connected_energy_storage"],
                         )
                     )
 
         else:
             _LOGGER.debug(
                 "No battery detected on slave %s. Skipping energy storage select entities",
-                bridge.slave_id,
+                ucs.bridge.slave_id,
             )
 
         entities_to_add.extend(slave_entities)
@@ -239,7 +231,9 @@ class StorageModeSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity
         self._attr_device_info = device_info
         self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
 
-        self._attr_current_option = self.coordinator.data[self.entity_description.key].value.name.lower()
+        self._attr_current_option = self.coordinator.data[
+            self.entity_description.key
+        ].value.name.lower()
         # The options depend on the type of battery
         available_options = [swm.name for swm in rv.StorageWorkingModesC]
         if bridge.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000:
@@ -252,14 +246,16 @@ class StorageModeSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        self._attr_current_option = self.coordinator.data[self.entity_description.key].value.name.lower()
+        self._attr_current_option = self.coordinator.data[
+            self.entity_description.key
+        ].value.name.lower()
         self.async_write_ha_state()
-
 
     async def async_select_option(self, option) -> None:
         """Change the selected option."""
         await self.bridge.set(
-            rn.STORAGE_WORKING_MODE_SETTINGS, getattr(rv.StorageWorkingModesC, option.upper())
+            rn.STORAGE_WORKING_MODE_SETTINGS,
+            getattr(rv.StorageWorkingModesC, option.upper()),
         )
         self._attr_current_option = option
 

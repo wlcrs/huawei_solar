@@ -4,7 +4,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 import logging
 
-from homeassistant.components.number import NumberEntity, NumberEntityDescription, NumberMode
+from homeassistant.components.number import (
+    NumberEntity,
+    NumberEntityDescription,
+    NumberMode,
+)
 from homeassistant.components.number.const import DEFAULT_MAX_VALUE, DEFAULT_MIN_VALUE
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import PERCENTAGE, UnitOfPower
@@ -14,10 +18,13 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
 
-from . import HuaweiSolarConfigurationUpdateCoordinator, HuaweiSolarEntity
+from . import (
+    HuaweiSolarConfigurationUpdateCoordinator,
+    HuaweiSolarEntity,
+    HuaweiSolarUpdateCoordinators,
+)
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
-    DATA_CONFIGURATION_UPDATE_COORDINATORS,
     DATA_UPDATE_COORDINATORS,
     DOMAIN,
 )
@@ -39,7 +46,10 @@ class HuaweiSolarNumberEntityDescription(NumberEntityDescription):
 
     def __post_init__(self):
         """Defaults the translation_key to the number key."""
-        self.translation_key = self.translation_key or self.key.replace('#','_').lower()
+        self.translation_key = (
+            self.translation_key or self.key.replace("#", "_").lower()
+        )
+
 
 ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
@@ -128,49 +138,45 @@ async def async_setup_entry(
         _LOGGER.info("Skipping number setup, as parameter configuration is not enabled")
         return
 
-    update_coordinators = hass.data[DOMAIN][entry.entry_id][
-        DATA_UPDATE_COORDINATORS
-    ]  # type: list[HuaweiSolarUpdateCoordinator]
-
-    configuration_update_coordinators = hass.data[DOMAIN][entry.entry_id][
-        DATA_CONFIGURATION_UPDATE_COORDINATORS
-    ]  # type: list[HuaweiSolarConfigurationUpdateCoordinator]
+    update_coordinators: list[HuaweiSolarUpdateCoordinators] = hass.data[DOMAIN][
+        entry.entry_id
+    ][DATA_UPDATE_COORDINATORS]
 
     entities_to_add: list[NumberEntity] = []
-    for (update_coordinator, configuration_update_coordinator) in \
-        zip(update_coordinators, configuration_update_coordinators):
-        slave_entities: list[HuaweiSolarNumberEntity] = []
-        bridge = update_coordinator.bridge
-        device_infos = update_coordinator.device_infos
+    for ucs in update_coordinators:
+        if not ucs.configuration_update_coordinator:
+            continue
 
-        if bridge.battery_type != rv.StorageProductModel.NONE:
-            assert device_infos["connected_energy_storage"]
+        slave_entities: list[HuaweiSolarNumberEntity] = []
+
+        if ucs.bridge.battery_type != rv.StorageProductModel.NONE:
+            assert ucs.device_infos["connected_energy_storage"]
 
             for entity_description in ENERGY_STORAGE_NUMBER_DESCRIPTIONS:
                 slave_entities.append(
                     await HuaweiSolarNumberEntity.create(
-                        configuration_update_coordinator,
-                        bridge,
+                        ucs.configuration_update_coordinator,
+                        ucs.bridge,
                         entity_description,
-                        device_infos["connected_energy_storage"],
+                        ucs.device_infos["connected_energy_storage"],
                     )
                 )
 
-            if bridge.supports_capacity_control:
+            if ucs.bridge.supports_capacity_control:
                 for entity_description in CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
                     slave_entities.append(
                         await HuaweiSolarNumberEntity.create(
-                            configuration_update_coordinator,
-                            bridge,
+                            ucs.configuration_update_coordinator,
+                            ucs.bridge,
                             entity_description,
-                            device_infos["connected_energy_storage"],
+                            ucs.device_infos["connected_energy_storage"],
                         )
                     )
 
         else:
             _LOGGER.debug(
                 "No battery detected on slave %s. Skipping energy storage number entities",
-                bridge.slave_id,
+                ucs.bridge.slave_id,
             )
 
         entities_to_add.extend(slave_entities)

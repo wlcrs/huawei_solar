@@ -1,7 +1,6 @@
-"""Diagnostics support for Velbus."""
+"""Diagnostics support for Huawei Solar."""
 from __future__ import annotations
 
-from itertools import zip_longest
 from typing import Any
 
 from homeassistant.components.diagnostics import async_redact_data
@@ -10,17 +9,8 @@ from homeassistant.const import CONF_PASSWORD
 from homeassistant.core import HomeAssistant
 from huawei_solar import HuaweiSolarBridge
 
-from . import (
-    HuaweiSolarConfigurationUpdateCoordinator,
-    HuaweiSolarOptimizerUpdateCoordinator,
-    HuaweiSolarUpdateCoordinator,
-)
-from .const import (
-    DATA_CONFIGURATION_UPDATE_COORDINATORS,
-    DATA_OPTIMIZER_UPDATE_COORDINATORS,
-    DATA_UPDATE_COORDINATORS,
-    DOMAIN,
-)
+from . import HuaweiSolarUpdateCoordinators
+from .const import DATA_UPDATE_COORDINATORS, DOMAIN
 
 TO_REDACT = {CONF_PASSWORD}
 
@@ -29,39 +19,41 @@ async def async_get_config_entry_diagnostics(
     hass: HomeAssistant, entry: ConfigEntry
 ) -> dict[str, Any]:
     """Return diagnostics for a config entry."""
-    coordinators: list[HuaweiSolarUpdateCoordinator] = hass.data[DOMAIN][
+    coordinators: list[HuaweiSolarUpdateCoordinators] = hass.data[DOMAIN][
         entry.entry_id
     ][DATA_UPDATE_COORDINATORS]
-
-    config_coordinators: list[HuaweiSolarConfigurationUpdateCoordinator] = hass.data[
-        DOMAIN
-    ][entry.entry_id][DATA_CONFIGURATION_UPDATE_COORDINATORS]
-
-    optimizer_coordinators: list[HuaweiSolarOptimizerUpdateCoordinator] = hass.data[
-        DOMAIN
-    ][entry.entry_id][DATA_OPTIMIZER_UPDATE_COORDINATORS]
 
     diagnostics_data = {
         "config_entry_data": async_redact_data(dict(entry.data), TO_REDACT)
     }
-    for coordinator, config_coordinator, optimizer_coordinator in zip_longest(
-        coordinators, config_coordinators, optimizer_coordinators
-    ):
+    for ucs in coordinators:
         diagnostics_data[
-            f"slave_{coordinator.bridge.slave_id}"
-        ] = await _build_bridge_diagnostics_info(coordinator.bridge)
+            f"slave_{ucs.bridge.slave_id}"
+        ] = await _build_bridge_diagnostics_info(ucs.bridge)
 
-        diagnostics_data[f"slave_{coordinator.bridge.slave_id}_data"] = coordinator.data
+        diagnostics_data[
+            f"slave_{ucs.bridge.slave_id}_inverter_data"
+        ] = ucs.inverter_update_coordinator.data
 
-        if config_coordinator:
+        if ucs.power_meter_update_coordinator:
             diagnostics_data[
-                f"slave_{coordinator.bridge.slave_id}_config_data"
-            ] = config_coordinator.data
+                f"slave_{ucs.bridge.slave_id}_power_meter_data"
+            ] = ucs.power_meter_update_coordinator.data
 
-        if optimizer_coordinator:
+        if ucs.energy_storage_update_coordinator:
             diagnostics_data[
-                f"slave_{coordinator.bridge.slave_id}_optimizer_data"
-            ] = optimizer_coordinator.data
+                f"slave_{ucs.bridge.slave_id}_battery_data"
+            ] = ucs.energy_storage_update_coordinator.data
+
+        if ucs.configuration_update_coordinator:
+            diagnostics_data[
+                f"slave_{ucs.bridge.slave_id}_config_data"
+            ] = ucs.configuration_update_coordinator.data
+
+        if ucs.optimizer_update_coordinator:
+            diagnostics_data[
+                f"slave_{ucs.bridge.slave_id}_optimizer_data"
+            ] = ucs.optimizer_update_coordinator.data
 
     return diagnostics_data
 

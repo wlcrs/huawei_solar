@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from itertools import zip_longest
 from typing import Any, cast
 
 from homeassistant.components.sensor import (
@@ -44,16 +43,14 @@ from huawei_solar.registers import (
 
 from . import (
     HuaweiSolarConfigurationUpdateCoordinator,
+    HuaweiSolarEnergyStorageUpdateCoordinator,
     HuaweiSolarEntity,
+    HuaweiSolarInverterUpdateCoordinator,
     HuaweiSolarOptimizerUpdateCoordinator,
-    HuaweiSolarUpdateCoordinator,
+    HuaweiSolarPowerMeterUpdateCoordinator,
+    HuaweiSolarUpdateCoordinators,
 )
-from .const import (
-    DATA_CONFIGURATION_UPDATE_COORDINATORS,
-    DATA_OPTIMIZER_UPDATE_COORDINATORS,
-    DATA_UPDATE_COORDINATORS,
-    DOMAIN,
-)
+from .const import DATA_UPDATE_COORDINATORS, DOMAIN
 
 PARALLEL_UPDATES = 1
 
@@ -646,129 +643,104 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Add Huawei Solar entry."""
-    update_coordinators = hass.data[DOMAIN][entry.entry_id][DATA_UPDATE_COORDINATORS]  # type: list[HuaweiSolarUpdateCoordinator]
-
-    configuration_update_coordinators = hass.data[DOMAIN][entry.entry_id][
-        DATA_CONFIGURATION_UPDATE_COORDINATORS
-    ]  # type: list[HuaweiSolarConfigurationUpdateCoordinator]
+    update_coordinators: list[HuaweiSolarUpdateCoordinators] = hass.data[DOMAIN][
+        entry.entry_id
+    ][DATA_UPDATE_COORDINATORS]
 
     entities_to_add: list[SensorEntity] = []
-    for update_coordinator, configuration_update_coordinator in zip_longest(
-        update_coordinators, configuration_update_coordinators
-    ):
-        slave_entities: list[
-            HuaweiSolarSensorEntity
-            | HuaweiSolarTOUPricePeriodsSensorEntity
-            | HuaweiSolarFixedChargingPeriodsSensorEntity
-            | HuaweiSolarCapacityControlPeriodsSensorEntity
-        ] = []
-
-        bridge = update_coordinator.bridge
-        device_infos = update_coordinator.device_infos
-
+    for ucs in update_coordinators:
         for entity_description in INVERTER_SENSOR_DESCRIPTIONS:
-            slave_entities.append(
+            entities_to_add.append(
                 HuaweiSolarSensorEntity(
-                    update_coordinator, entity_description, device_infos["inverter"]
+                    ucs.inverter_update_coordinator, entity_description
                 )
             )
-        slave_entities.append(
-            HuaweiSolarAlarmSensorEntity(update_coordinator, device_infos["inverter"])
+        entities_to_add.append(
+            HuaweiSolarAlarmSensorEntity(
+                ucs.inverter_update_coordinator, ucs.device_infos["inverter"]
+            )
         )
 
-        for entity_description in get_pv_entity_descriptions(bridge.pv_string_count):
-            slave_entities.append(
+        for entity_description in get_pv_entity_descriptions(
+            ucs.bridge.pv_string_count
+        ):
+            entities_to_add.append(
                 HuaweiSolarSensorEntity(
-                    update_coordinator, entity_description, device_infos["inverter"]
+                    ucs.inverter_update_coordinator, entity_description
                 )
             )
 
-        if bridge.has_optimizers:
+        if ucs.bridge.has_optimizers:
             for entity_description in OPTIMIZER_SENSOR_DESCRIPTIONS:
-                slave_entities.append(
+                entities_to_add.append(
                     HuaweiSolarSensorEntity(
-                        update_coordinator, entity_description, device_infos["inverter"]
+                        ucs.inverter_update_coordinator, entity_description
                     )
                 )
 
-        if bridge.power_meter_type == rv.MeterType.SINGLE_PHASE:
+        if ucs.bridge.power_meter_type == rv.MeterType.SINGLE_PHASE:
+            assert ucs.power_meter_update_coordinator
             for entity_description in SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS:
-                slave_entities.append(
+                entities_to_add.append(
                     HuaweiSolarSensorEntity(
-                        update_coordinator,
-                        entity_description,
-                        device_infos["power_meter"],
+                        ucs.power_meter_update_coordinator, entity_description
                     )
                 )
-        elif bridge.power_meter_type == rv.MeterType.THREE_PHASE:
+        elif ucs.bridge.power_meter_type == rv.MeterType.THREE_PHASE:
+            assert ucs.power_meter_update_coordinator
             for entity_description in THREE_PHASE_METER_ENTITY_DESCRIPTIONS:
-                slave_entities.append(
+                entities_to_add.append(
                     HuaweiSolarSensorEntity(
-                        update_coordinator,
-                        entity_description,
-                        device_infos["power_meter"],
+                        ucs.power_meter_update_coordinator, entity_description
                     )
                 )
 
-        if bridge.battery_type != rv.StorageProductModel.NONE:
+        if ucs.bridge.battery_type != rv.StorageProductModel.NONE:
+            assert ucs.energy_storage_update_coordinator
             for entity_description in BATTERY_SENSOR_DESCRIPTIONS:
-                slave_entities.append(
+                entities_to_add.append(
                     HuaweiSolarSensorEntity(
-                        update_coordinator,
-                        entity_description,
-                        device_infos["connected_energy_storage"],
+                        ucs.energy_storage_update_coordinator, entity_description
                     )
                 )
 
-            if configuration_update_coordinator:
-                slave_entities.append(
+            if ucs.configuration_update_coordinator:
+                entities_to_add.append(
                     HuaweiSolarTOUPricePeriodsSensorEntity(
-                        configuration_update_coordinator,
-                        update_coordinator.bridge,
-                        device_infos["connected_energy_storage"],
+                        ucs.configuration_update_coordinator, ucs.bridge
                     )
                 )
-                slave_entities.append(
+                entities_to_add.append(
                     HuaweiSolarFixedChargingPeriodsSensorEntity(
-                        configuration_update_coordinator,
-                        update_coordinator.bridge,
-                        device_infos["connected_energy_storage"],
+                        ucs.configuration_update_coordinator,
+                        ucs.configuration_update_coordinator.bridge,
                     )
                 )
 
-                if bridge.supports_capacity_control:
-                    slave_entities.append(
+                if ucs.bridge.supports_capacity_control:
+                    entities_to_add.append(
                         HuaweiSolarCapacityControlPeriodsSensorEntity(
-                            configuration_update_coordinator,
-                            update_coordinator.bridge,
-                            device_infos["connected_energy_storage"],
+                            ucs.configuration_update_coordinator,
+                            ucs.configuration_update_coordinator.bridge,
+                            ucs.device_infos["connected_energy_storage"],
                         )
                     )
 
-        entities_to_add.extend(slave_entities)
+        if ucs.optimizer_update_coordinator:
+            optimizer_device_infos = (
+                ucs.optimizer_update_coordinator.optimizer_device_infos
+            )
 
-    optimizer_update_coordinators = hass.data[DOMAIN][entry.entry_id][
-        DATA_OPTIMIZER_UPDATE_COORDINATORS
-    ]  # type: list[HuaweiSolarOptimizerUpdateCoordinator]
-
-    for update_coordinator in optimizer_update_coordinators:
-        optimizer_entities: list[HuaweiSolarOptimizerSensorEntity] = []
-
-        bridge = update_coordinator.bridge
-        optimizer_device_infos = update_coordinator.optimizer_device_infos
-
-        for entity_description in OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS:
-            for optimizer_id, device_info in optimizer_device_infos.items():
-                optimizer_entities.append(
-                    HuaweiSolarOptimizerSensorEntity(
-                        update_coordinator,
-                        entity_description,
-                        optimizer_id,
-                        device_info,
+            for entity_description in OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS:
+                for optimizer_id, device_info in optimizer_device_infos.items():
+                    entities_to_add.append(
+                        HuaweiSolarOptimizerSensorEntity(
+                            ucs.optimizer_update_coordinator,
+                            entity_description,
+                            optimizer_id,
+                            device_info,
+                        )
                     )
-                )
-
-        entities_to_add.extend(optimizer_entities)
 
     async_add_entities(entities_to_add, True)
 
@@ -780,9 +752,10 @@ class HuaweiSolarSensorEntity(CoordinatorEntity, HuaweiSolarEntity, SensorEntity
 
     def __init__(
         self,
-        coordinator: HuaweiSolarUpdateCoordinator,
+        coordinator: HuaweiSolarInverterUpdateCoordinator
+        | HuaweiSolarPowerMeterUpdateCoordinator
+        | HuaweiSolarEnergyStorageUpdateCoordinator,
         description: HuaweiSolarSensorEntityDescription,
-        device_info,
     ) -> None:
         """Batched Huawei Solar Sensor Entity constructor."""
         super().__init__(coordinator)
@@ -790,7 +763,7 @@ class HuaweiSolarSensorEntity(CoordinatorEntity, HuaweiSolarEntity, SensorEntity
         self.coordinator = coordinator
         self.entity_description = description
 
-        self._attr_device_info = device_info
+        self._attr_device_info = coordinator.device_info
         self._attr_unique_id = f"{coordinator.bridge.serial_number}_{description.key}"
 
         self._register_key = self.entity_description.key
@@ -831,7 +804,7 @@ class HuaweiSolarAlarmSensorEntity(HuaweiSolarSensorEntity):
 
     def __init__(
         self,
-        coordinator: HuaweiSolarUpdateCoordinator,
+        coordinator: HuaweiSolarInverterUpdateCoordinator,
         device_info,
     ):
         """Huawei Solar Alarm Sensor Entity constructor."""
@@ -883,7 +856,6 @@ class HuaweiSolarTOUPricePeriodsSensorEntity(
         self,
         coordinator: HuaweiSolarConfigurationUpdateCoordinator,
         bridge: HuaweiSolarBridge,
-        device_info,
     ) -> None:
         """Huawei Solar TOU Sensor Entity constructor."""
         super().__init__(coordinator)
@@ -895,7 +867,7 @@ class HuaweiSolarTOUPricePeriodsSensorEntity(
         )
 
         self._bridge = bridge
-        self._attr_device_info = device_info
+        self._attr_device_info = coordinator.device_infos["connected_energy_storage"]
         self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
 
     def _lg_resu_period_to_text(self, period: LG_RESU_TimeOfUsePeriod):
@@ -953,7 +925,6 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
         self,
         coordinator: HuaweiSolarConfigurationUpdateCoordinator,
         bridge: HuaweiSolarBridge,
-        device_info,
     ) -> None:
         """Huawei Solar Capacity Control Periods Sensor Entity constructor."""
         super().__init__(coordinator)
@@ -965,7 +936,7 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
         )
 
         self._bridge = bridge
-        self._attr_device_info = device_info
+        self._attr_device_info = coordinator.device_infos["connected_energy_storage"]
         self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
 
     def _period_to_text(self, psp: PeakSettingPeriod):
@@ -1011,7 +982,6 @@ class HuaweiSolarFixedChargingPeriodsSensorEntity(
         self,
         coordinator: HuaweiSolarConfigurationUpdateCoordinator,
         bridge: HuaweiSolarBridge,
-        device_info,
     ) -> None:
         """Huawei Solar Capacity Control Periods Sensor Entity constructor."""
         super().__init__(coordinator)
@@ -1023,7 +993,7 @@ class HuaweiSolarFixedChargingPeriodsSensorEntity(
         )
 
         self._bridge = bridge
-        self._attr_device_info = device_info
+        self._attr_device_info = coordinator.device_infos["connected_energy_storage"]
         self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
 
     def _period_to_text(self, cdp: ChargeDischargePeriod):
