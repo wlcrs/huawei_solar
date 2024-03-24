@@ -40,6 +40,15 @@
                 },
                 "title": "Path"
             },
+            "exclusions": {
+                "data": {
+                    "exclude_battery": "Exclude battery",
+                    "exclude_optimizers": "Exclude optmizers",
+                    "exclude_power_meter": "Exclude power meter"
+                },
+                "title": "Excluded devices",
+                "description": "The selected devices will not be added to the configuration"
+            },
             "user": {
                 "data": {
                     "type": "Connection type"

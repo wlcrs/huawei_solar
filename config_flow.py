@@ -12,11 +12,21 @@ from homeassistant.components import usb
 from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT, CONF_TYPE, CONF_USERNAME
 from homeassistant.data_entry_flow import FlowResult
 import homeassistant.helpers.config_validation as cv
-from huawei_solar import ConnectionException, HuaweiSolarBridge, HuaweiSolarException, InvalidCredentials, ReadException
+from huawei_solar import (
+    ConnectionException,
+    HuaweiSolarBridge,
+    HuaweiSolarException,
+    InvalidCredentials,
+    ReadException,
+    register_values as rv,
+)
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
     CONF_SLAVE_IDS,
+    CONF_EXCLUDE_BATTERY,
+    CONF_EXCLUDE_OPTIMIZERS,
+    CONF_EXCLUDE_POWER_METER,
     DEFAULT_PORT,
     DEFAULT_SERIAL_SLAVE_ID,
     DEFAULT_SLAVE_ID,
@@ -45,7 +55,9 @@ STEP_LOGIN_DATA_SCHEMA = vol.Schema(
 CONF_MANUAL_PATH = "Enter Manually"
 
 
-async def validate_serial_setup(data: dict[str, Any]) -> dict[str, Any]:
+async def validate_serial_setup(
+    config_flow: config_entries.ConfigFlow, data: dict[str, Any]
+) -> dict[str, Any]:
     """Validate the serial device that was passed by the user."""
     bridge = None
     try:
@@ -82,6 +94,10 @@ async def validate_serial_setup(data: dict[str, Any]) -> dict[str, Any]:
                 _LOGGER.error("Could not connect to slave %s", slave_id)
                 raise SlaveException(f"Could not connect to slave {slave_id}") from err
 
+        config_flow._has_optimizers = bridge.has_optimizers
+        config_flow._has_power_meter = bridge.power_meter_type is not None
+        config_flow._has_battery = bridge.battery_type != rv.StorageProductModel.NONE
+
         # Return info that you want to store in the config entry.
         return result
 
@@ -91,7 +107,9 @@ async def validate_serial_setup(data: dict[str, Any]) -> dict[str, Any]:
             await bridge.stop()
 
 
-async def validate_network_setup(data: dict[str, Any]) -> dict[str, Any]:
+async def validate_network_setup(
+    config_flow: config_entries.ConfigFlow, data: dict[str, Any]
+) -> dict[str, Any]:
     """Validate the user input allows us to connect.
 
     Data has the keys from STEP_SETUP_NETWORK_DATA_SCHEMA with values provided by the user.
@@ -136,6 +154,10 @@ async def validate_network_setup(data: dict[str, Any]) -> dict[str, Any]:
             except HuaweiSolarException as err:
                 _LOGGER.error("Could not connect to slave %s", slave_id)
                 raise SlaveException(f"Could not connect to slave {slave_id}") from err
+
+        config_flow._has_optimizers = bridge.has_optimizers
+        config_flow._has_power_meter = bridge.power_meter_type is not None
+        config_flow._has_battery = bridge.battery_type != rv.StorageProductModel.NONE
 
         # Return info that you want to store in the config entry.
         return result
@@ -235,7 +257,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors["base"] = "invalid_slave_ids"
             else:
                 try:
-                    info = await validate_serial_setup(user_input)
+                    info = await validate_serial_setup(self, user_input)
 
                 except ConnectionException:
                     errors["base"] = "cannot_connect"
@@ -263,7 +285,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     self.context["title_placeholders"] = {"name": info["model_name"]}
 
                     # We can directly make the new entry
-                    return await self._create_entry()
+                    return await self.async_step_exclusions()
 
         ports = await self.hass.async_add_executor_job(serial.tools.list_ports.comports)
         list_of_ports = {
@@ -335,7 +357,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     self.context["title_placeholders"] = {"name": info["model_name"]}
 
                     # We can directly make the new entry
-                    return await self._create_entry()
+                    return await self.async_step_exclusions()
 
         schema = vol.Schema(
             {
@@ -362,7 +384,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors["base"] = "invalid_slave_ids"
             else:
                 try:
-                    info = await validate_network_setup(user_input)
+                    info = await validate_network_setup(self, user_input)
 
                 except ConnectionException:
                     errors["base"] = "cannot_connect"
@@ -398,7 +420,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         return await self.async_step_network_login()
 
                     # Otherwise, we can directly create the device entry!
-                    return await self._create_entry()
+                    return await self.async_step_exclusions()
 
         return self.async_show_form(
             step_id="setup_network",
@@ -425,7 +447,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     self._username = user_input[CONF_USERNAME]
                     self._password = user_input[CONF_PASSWORD]
 
-                    return await self._create_entry()
+                    return await self.async_step_exclusions()
 
                 errors["base"] = "invalid_auth"
 
@@ -444,6 +466,33 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="network_login", data_schema=STEP_LOGIN_DATA_SCHEMA, errors=errors
         )
 
+    async def async_step_exclusions(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Configuration of device exclusions."""
+
+        if user_input is not None:
+            self._exclude_optimizers = user_input[CONF_EXCLUDE_OPTIMIZERS]
+            self._exclude_power_meter = user_input[CONF_EXCLUDE_POWER_METER]
+            self._exclude_battery = user_input[CONF_EXCLUDE_BATTERY]
+
+            return await self._create_entry()
+
+        schema = {}
+
+        if self._has_power_meter:
+            schema[vol.Required(CONF_EXCLUDE_POWER_METER)] = bool
+
+        if self._has_battery:
+            schema[vol.Required(CONF_EXCLUDE_BATTERY)] = bool
+
+        if self._has_optimizers:
+            schema[vol.Required(CONF_EXCLUDE_OPTIMIZERS)] = bool
+
+        return self.async_show_form(
+            step_id="exclusions", data_schema=vol.Schema(schema)
+        )
+
     async def _create_entry(self):
         """Create the entry."""
         assert self._port is not None
@@ -456,6 +505,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_ENABLE_PARAMETER_CONFIGURATION: self._enable_parameter_configuration,
             CONF_USERNAME: self._username,
             CONF_PASSWORD: self._password,
+            CONF_EXCLUDE_BATTERY: self._exclude_battery,
+            CONF_EXCLUDE_OPTIMIZERS: self._exclude_optimizers,
+            CONF_EXCLUDE_POWER_METER: self._exclude_power_meter,
         }
 
         if self._reauth_entry:

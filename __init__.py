@@ -18,6 +18,9 @@ from huawei_solar import HuaweiSolarBridge, HuaweiSolarException, InvalidCredent
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
+    CONF_EXCLUDE_BATTERY,
+    CONF_EXCLUDE_OPTIMIZERS,
+    CONF_EXCLUDE_POWER_METER,
     CONF_SLAVE_IDS,
     CONFIGURATION_UPDATE_INTERVAL,
     CONFIGURATION_UPDATE_TIMEOUT,
@@ -93,6 +96,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                         raise ConfigEntryAuthFailed() from err
 
         primary_bridge_device_infos = await _compute_device_infos(
+            entry,
             primary_bridge,
             connecting_inverter_device_id=None,
         )
@@ -107,6 +111,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             )
 
             extra_bridge_device_infos = await _compute_device_infos(
+                entry,
                 extra_bridge,
                 connecting_inverter_device_id=(
                     DOMAIN,
@@ -134,7 +139,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     )
                 )
 
-            if bridge.has_optimizers:
+            if not entry.data.get(CONF_EXCLUDE_OPTIMIZERS) and bridge.has_optimizers:
                 optimizers_device_infos = {}
                 try:
                     optimizer_system_infos = (
@@ -223,6 +228,7 @@ class HuaweiInverterBridgeDeviceInfos(TypedDict):
 
 
 async def _compute_device_infos(
+    entry: ConfigEntry,
     bridge: HuaweiSolarBridge,
     connecting_inverter_device_id: tuple[str, str] | None,
 ) -> HuaweiInverterBridgeDeviceInfos:
@@ -239,7 +245,10 @@ async def _compute_device_infos(
     # Add power meter device if a power meter is detected
     power_meter_device_info = None
 
-    if bridge.power_meter_type is not None:
+    if (
+        not entry.data.get(CONF_EXCLUDE_POWER_METER)
+        and bridge.power_meter_type is not None
+    ):
         power_meter_device_info = DeviceInfo(
             identifiers={
                 (DOMAIN, f"{bridge.serial_number}/power_meter"),
@@ -251,7 +260,10 @@ async def _compute_device_infos(
     # Add battery device if a battery is detected
     battery_device_info = None
 
-    if bridge.battery_type != rv.StorageProductModel.NONE:
+    if (
+        not entry.data.get(CONF_EXCLUDE_BATTERY)
+        and bridge.battery_type != rv.StorageProductModel.NONE
+    ):
         battery_device_info = DeviceInfo(
             identifiers={
                 (DOMAIN, f"{bridge.serial_number}/connected_energy_storage"),
