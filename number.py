@@ -1,4 +1,5 @@
 """Number entities for Huawei Solar."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -18,21 +19,14 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
 
-from . import (
-    HuaweiSolarConfigurationUpdateCoordinator,
-    HuaweiSolarEntity,
-    HuaweiSolarUpdateCoordinators,
-)
-from .const import (
-    CONF_ENABLE_PARAMETER_CONFIGURATION,
-    DATA_UPDATE_COORDINATORS,
-    DOMAIN,
-)
+from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinators
+from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
+from .update_coordinator import HuaweiSolarUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
 
-@dataclass
+@dataclass(frozen=True)
 class HuaweiSolarNumberEntityDescription(NumberEntityDescription):
     """Huawei Solar Number Entity Description."""
 
@@ -46,9 +40,25 @@ class HuaweiSolarNumberEntityDescription(NumberEntityDescription):
 
     def __post_init__(self):
         """Defaults the translation_key to the number key."""
-        self.translation_key = (
-            self.translation_key or self.key.replace("#", "_").lower()
+        # We use this special setter to be able to set/update the translation_key
+        # in this frozen dataclass.
+        # cfr. https://docs.python.org/3/library/dataclasses.html#frozen-instances
+        object.__setattr__(
+            self,
+            "translation_key",
+            self.translation_key or self.key.replace("#", "_").lower(),
         )
+
+    @property
+    def context(self):
+        """Context used by DataUpdateCoordinator."""
+
+        registers = [self.key]
+        if self.dynamic_minimum_key:
+            registers.append(self.dynamic_minimum_key)
+        if self.dynamic_maximum_key:
+            registers.append(self.dynamic_maximum_key)
+        return {"register_names": registers}
 
 
 ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
@@ -188,19 +198,28 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
     """Huawei Solar Number Entity."""
 
     entity_description: HuaweiSolarNumberEntityDescription
+    _attr_mode = NumberMode.BOX  # Always allow a precise number
+
+    _static_min_value: float | None = None
+    _static_max_value: float | None = None
+
+    _dynamic_min_value: float | None = None
+    _dynamic_max_value: float | None = None
 
     def __init__(
         self,
-        coordinator: HuaweiSolarConfigurationUpdateCoordinator,
+        coordinator: HuaweiSolarUpdateCoordinator,
         bridge: HuaweiSolarBridge,
         description: HuaweiSolarNumberEntityDescription,
         device_info: DeviceInfo,
+        static_max_value: float | None = None,
+        static_min_value: float | None = None,
     ) -> None:
         """Huawei Solar Number Entity constructor.
 
         Do not use directly. Use `.create` instead!
         """
-        super().__init__(coordinator)
+        super().__init__(coordinator, description.context)
         self.coordinator = coordinator
 
         self.bridge = bridge
@@ -208,15 +227,14 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
 
         self._attr_device_info = device_info
         self._attr_unique_id = f"{bridge.serial_number}_{description.key}"
-        self._attr_mode = NumberMode.BOX  # Always allow a precise number
 
-        self._dynamic_min_value: float | None = None
-        self._dynamic_max_value: float | None = None
+        self._static_max_value = static_max_value
+        self._static_min_value = static_min_value
 
     @classmethod
     async def create(
         cls,
-        coordinator: HuaweiSolarConfigurationUpdateCoordinator,
+        coordinator: HuaweiSolarUpdateCoordinator,
         bridge: HuaweiSolarBridge,
         description: HuaweiSolarNumberEntityDescription,
         device_info: DeviceInfo,
@@ -225,40 +243,57 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
 
         This async constructor fills in the necessary min/max values
         """
-        if description.static_minimum_key:
-            description.native_min_value = (
-                await bridge.client.get(description.static_minimum_key, bridge.slave_id)
-            ).value
 
+        static_max_value = None
         if description.static_maximum_key:
-            description.native_max_value = (
+            static_max_value = (
                 await bridge.client.get(description.static_maximum_key, bridge.slave_id)
             ).value
 
-        return cls(coordinator, bridge, description, device_info)
+        static_min_value = None
+        if description.static_minimum_key:
+            static_min_value = (
+                await bridge.client.get(description.static_minimum_key, bridge.slave_id)
+            ).value
+
+        return cls(
+            coordinator,
+            bridge,
+            description,
+            device_info,
+            static_max_value,
+            static_min_value,
+        )
 
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        self._attr_native_value = self.coordinator.data[
-            self.entity_description.key
-        ].value
+        if (
+            self.coordinator.data
+            and self.entity_description.key in self.coordinator.data
+        ):
+            self._attr_native_value = self.coordinator.data[
+                self.entity_description.key
+            ].value
 
-        if self.entity_description.dynamic_minimum_key:
-            min_register = self.coordinator.data.get(
-                self.entity_description.dynamic_minimum_key
-            )
+            if self.entity_description.dynamic_minimum_key:
+                min_register = self.coordinator.data.get(
+                    self.entity_description.dynamic_minimum_key
+                )
 
-            if min_register:
-                self._dynamic_min_value = min_register.value
+                if min_register:
+                    self._dynamic_min_value = min_register.value
 
-        if self.entity_description.dynamic_maximum_key:
-            max_register = self.coordinator.data.get(
-                self.entity_description.dynamic_maximum_key
-            )
+            if self.entity_description.dynamic_maximum_key:
+                max_register = self.coordinator.data.get(
+                    self.entity_description.dynamic_maximum_key
+                )
 
-            if max_register:
-                self._dynamic_max_value = max_register.value
+                if max_register:
+                    self._dynamic_max_value = max_register.value
+        else:
+            self._attr_available = False
+            self._attr_native_value = None
 
         self.async_write_ha_state()
 
@@ -272,7 +307,9 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
     @property
     def native_max_value(self) -> float:
         """Maximum value, possibly determined dynamically using _dynamic_max_value."""
-        native_max_value = self.entity_description.native_max_value
+        native_max_value = (
+            self._static_max_value or self.entity_description.native_max_value
+        )
 
         if self._dynamic_max_value:
             if native_max_value:
@@ -286,7 +323,9 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
     @property
     def native_min_value(self) -> float:
         """Minimum value, possibly determined dynamically using _dynamic_min_value."""
-        native_min_value = self.entity_description.native_min_value
+        native_min_value = (
+            self._static_min_value or self.entity_description.native_min_value
+        )
 
         if self._dynamic_min_value:
             if native_min_value:

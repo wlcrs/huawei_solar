@@ -1,10 +1,8 @@
 """The Huawei Solar integration."""
+
 from __future__ import annotations
 
-import asyncio
-from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
-from datetime import timedelta
 import logging
 from typing import TypedDict, TypeVar
 
@@ -18,9 +16,7 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
-from homeassistant.helpers.debounce import Debouncer
 from homeassistant.helpers.entity import DeviceInfo, Entity
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from huawei_solar import (
     HuaweiSolarBridge,
     HuaweiSolarException,
@@ -32,18 +28,20 @@ from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
     CONF_SLAVE_IDS,
     CONFIGURATION_UPDATE_INTERVAL,
-    CONFIGURATION_UPDATE_TIMEOUT,
     DATA_BRIDGES_WITH_DEVICEINFOS,
     DATA_UPDATE_COORDINATORS,
     DOMAIN,
     ENERGY_STORAGE_UPDATE_INTERVAL,
     INVERTER_UPDATE_INTERVAL,
     OPTIMIZER_UPDATE_INTERVAL,
-    OPTIMIZER_UPDATE_TIMEOUT,
     POWER_METER_UPDATE_INTERVAL,
-    UPDATE_TIMEOUT,
 )
 from .services import async_cleanup_services, async_setup_services
+from .update_coordinator import (
+    HuaweiSolarOptimizerUpdateCoordinator,
+    HuaweiSolarUpdateCoordinator,
+    create_optimizer_update_coordinator,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -104,7 +102,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     except InvalidCredentials as err:
                         raise ConfigEntryAuthFailed() from err
 
-        primary_bridge_device_infos = await _compute_device_infos(
+        primary_bridge_device_infos = await compute_device_infos(
             primary_bridge,
             connecting_inverter_device_id=None,
         )
@@ -118,7 +116,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 primary_bridge, extra_slave_id
             )
 
-            extra_bridge_device_infos = await _compute_device_infos(
+            extra_bridge_device_infos = await compute_device_infos(
                 extra_bridge,
                 connecting_inverter_device_id=(
                     DOMAIN,
@@ -132,40 +130,44 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         update_coordinators: list[HuaweiSolarUpdateCoordinators] = []
 
         for bridge, device_infos in bridges_with_device_infos:
-            inverter_update_coordinator = await _create_inverter_update_coordinator(
-                hass, bridge, device_infos["inverter"], INVERTER_UPDATE_INTERVAL
+            inverter_update_coordinator = HuaweiSolarUpdateCoordinator(
+                hass,
+                _LOGGER,
+                bridge=bridge,
+                name=f"{bridge.serial_number}_inverter_data_update_coordinator",
+                update_interval=INVERTER_UPDATE_INTERVAL,
             )
 
             power_meter_update_coordinator = None
             if bridge.power_meter_type:
                 assert device_infos["power_meter"]
-                power_meter_update_coordinator = (
-                    await _create_power_meter_update_coordinator(
-                        hass,
-                        bridge,
-                        device_infos["power_meter"],
-                        POWER_METER_UPDATE_INTERVAL,
-                    )
+                power_meter_update_coordinator = HuaweiSolarUpdateCoordinator(
+                    hass,
+                    _LOGGER,
+                    bridge=bridge,
+                    name=f"{bridge.serial_number}_power_meter_data_update_coordinator",
+                    update_interval=POWER_METER_UPDATE_INTERVAL,
                 )
 
             energy_storage_update_coordinator = None
             if bridge.battery_type != rv.StorageProductModel.NONE:
                 assert device_infos["connected_energy_storage"]
-                energy_storage_update_coordinator = (
-                    await _create_energy_storage_update_coordinator(
-                        hass,
-                        bridge,
-                        device_infos["connected_energy_storage"],
-                        ENERGY_STORAGE_UPDATE_INTERVAL,
-                    )
+                energy_storage_update_coordinator = HuaweiSolarUpdateCoordinator(
+                    hass,
+                    _LOGGER,
+                    bridge=bridge,
+                    name=f"{bridge.serial_number}_battery_data_update_coordinator",
+                    update_interval=ENERGY_STORAGE_UPDATE_INTERVAL,
                 )
 
             configuration_update_coordinator = None
             if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
-                configuration_update_coordinator = (
-                    await _create_configuration_update_coordinator(
-                        hass, bridge, device_infos, CONFIGURATION_UPDATE_INTERVAL
-                    )
+                configuration_update_coordinator = HuaweiSolarUpdateCoordinator(
+                    hass,
+                    _LOGGER,
+                    bridge=bridge,
+                    name=f"{bridge.serial_number}_config_data_update_coordinator",
+                    update_interval=CONFIGURATION_UPDATE_INTERVAL,
                 )
 
             optimizer_update_coordinator = None
@@ -186,7 +188,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                         )
 
                     optimizer_update_coordinator = (
-                        await _create_optimizer_update_coordinator(
+                        await create_optimizer_update_coordinator(
                             hass,
                             bridge,
                             optimizers_device_infos,
@@ -223,7 +225,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             DATA_BRIDGES_WITH_DEVICEINFOS: bridges_with_device_infos,
             DATA_UPDATE_COORDINATORS: update_coordinators,
         }
-    except (HuaweiSolarException, TimeoutError, asyncio.TimeoutError) as err:
+    except (HuaweiSolarException, TimeoutError) as err:
         if primary_bridge is not None:
             await primary_bridge.stop()
 
@@ -267,7 +269,7 @@ class HuaweiInverterBridgeDeviceInfos(TypedDict):
     connected_energy_storage: DeviceInfo | None
 
 
-async def _compute_device_infos(
+async def compute_device_infos(
     bridge: HuaweiSolarBridge,
     connecting_inverter_device_id: tuple[str, str] | None,
 ) -> HuaweiInverterBridgeDeviceInfos:
@@ -278,6 +280,7 @@ async def _compute_device_infos(
         manufacturer="Huawei",
         model=bridge.model_name,
         serial_number=bridge.serial_number,
+        sw_version=bridge.software_version,
         via_device=connecting_inverter_device_id,  # type: ignore[typeddict-item]
     )
 
@@ -314,290 +317,6 @@ async def _compute_device_infos(
     )
 
 
-class HuaweiSolarInverterUpdateCoordinator(DataUpdateCoordinator):
-    """A specialised DataUpdateCoordinator for Huawei Solar inverter entities."""
-
-    bridge: HuaweiSolarBridge
-    device_info: DeviceInfo
-
-    def __init__(
-        self,
-        hass: HomeAssistant,
-        logger: logging.Logger,
-        bridge: HuaweiSolarBridge,
-        device_info: DeviceInfo,
-        name: str,
-        update_interval: timedelta | None = None,
-        update_method: Callable[[], Awaitable[T]] | None = None,
-        request_refresh_debouncer: Debouncer | None = None,
-    ) -> None:
-        """Create a HuaweiSolarInverterUpdateCoordinator."""
-        super().__init__(
-            hass,
-            logger,
-            name=name,
-            update_interval=update_interval,
-            update_method=update_method,
-            request_refresh_debouncer=request_refresh_debouncer,
-        )
-        self.bridge = bridge
-        self.device_info = device_info
-
-    async def _async_update_data(self):
-        try:
-            async with asyncio.timeout(UPDATE_TIMEOUT.total_seconds()):
-                return await self.bridge.update_inverter()
-        except HuaweiSolarException as err:
-            raise UpdateFailed(
-                f"Could not update {self.bridge.serial_number} inverter values: {err}"
-            ) from err
-
-
-async def _create_inverter_update_coordinator(
-    hass,
-    bridge: HuaweiSolarBridge,
-    device_info: DeviceInfo,
-    update_interval,
-):
-    coordinator = HuaweiSolarInverterUpdateCoordinator(
-        hass,
-        _LOGGER,
-        bridge=bridge,
-        device_info=device_info,
-        name=f"{bridge.serial_number}_data_inverter_update_coordinator",
-        update_interval=update_interval,
-    )
-
-    await coordinator.async_config_entry_first_refresh()
-
-    return coordinator
-
-
-class HuaweiSolarPowerMeterUpdateCoordinator(DataUpdateCoordinator):
-    """A specialised DataUpdateCoordinator for Huawei Solar Power meter entities."""
-
-    def __init__(
-        self,
-        hass: HomeAssistant,
-        logger: logging.Logger,
-        bridge: HuaweiSolarBridge,
-        device_info: DeviceInfo,
-        name: str,
-        update_interval: timedelta | None = None,
-        update_method: Callable[[], Awaitable[T]] | None = None,
-        request_refresh_debouncer: Debouncer | None = None,
-    ) -> None:
-        """Create a HuaweiSolarPowerMeterUpdateCoordinator."""
-        super().__init__(
-            hass,
-            logger,
-            name=name,
-            update_interval=update_interval,
-            update_method=update_method,
-            request_refresh_debouncer=request_refresh_debouncer,
-        )
-        self.bridge = bridge
-        self.device_info = device_info
-
-    async def _async_update_data(self):
-        try:
-            async with asyncio.timeout(UPDATE_TIMEOUT.total_seconds()):
-                return await self.bridge.update_power_meter()
-        except HuaweiSolarException as err:
-            raise UpdateFailed(
-                f"Could not update {self.bridge.serial_number} values: {err}"
-            ) from err
-
-
-async def _create_power_meter_update_coordinator(
-    hass,
-    bridge: HuaweiSolarBridge,
-    device_info: DeviceInfo,
-    update_interval,
-):
-    coordinator = HuaweiSolarPowerMeterUpdateCoordinator(
-        hass,
-        _LOGGER,
-        bridge=bridge,
-        device_info=device_info,
-        name=f"{bridge.serial_number}_data_power_meter_update_coordinator",
-        update_interval=update_interval,
-    )
-
-    await coordinator.async_config_entry_first_refresh()
-
-    return coordinator
-
-
-class HuaweiSolarEnergyStorageUpdateCoordinator(DataUpdateCoordinator):
-    """A specialised DataUpdateCoordinator for Huawei Solar Energy Storage entities."""
-
-    def __init__(
-        self,
-        hass: HomeAssistant,
-        logger: logging.Logger,
-        bridge: HuaweiSolarBridge,
-        device_info: DeviceInfo,
-        name: str,
-        update_interval: timedelta | None = None,
-        update_method: Callable[[], Awaitable[T]] | None = None,
-        request_refresh_debouncer: Debouncer | None = None,
-    ) -> None:
-        """Create a HuaweiSolarEnergyStorageUpdateCoordinator."""
-        super().__init__(
-            hass,
-            logger,
-            name=name,
-            update_interval=update_interval,
-            update_method=update_method,
-            request_refresh_debouncer=request_refresh_debouncer,
-        )
-        self.bridge = bridge
-        self.device_info = device_info
-
-    async def _async_update_data(self):
-        try:
-            async with asyncio.timeout(UPDATE_TIMEOUT.total_seconds()):
-                return await self.bridge.update_energy_storage()
-        except HuaweiSolarException as err:
-            raise UpdateFailed(
-                f"Could not update {self.bridge.serial_number} values: {err}"
-            ) from err
-
-
-async def _create_energy_storage_update_coordinator(
-    hass,
-    bridge: HuaweiSolarBridge,
-    device_info: DeviceInfo,
-    update_interval,
-):
-    coordinator = HuaweiSolarEnergyStorageUpdateCoordinator(
-        hass,
-        _LOGGER,
-        bridge=bridge,
-        device_info=device_info,
-        name=f"{bridge.serial_number}_data_energy_storage_update_coordinator",
-        update_interval=update_interval,
-    )
-
-    await coordinator.async_config_entry_first_refresh()
-
-    return coordinator
-
-
-class HuaweiSolarOptimizerUpdateCoordinator(DataUpdateCoordinator):
-    """A specialised DataUpdateCoordinator for Huawei Solar optimizers."""
-
-    def __init__(
-        self,
-        hass: HomeAssistant,
-        logger: logging.Logger,
-        bridge: HuaweiSolarBridge,
-        optimizer_device_infos: dict[int, DeviceInfo],
-        name: str,
-        update_interval: timedelta | None = None,
-        update_method: Callable[[], Awaitable[T]] | None = None,
-        request_refresh_debouncer: Debouncer | None = None,
-    ) -> None:
-        """Create a HuaweiSolarRegisterUpdateCoordinator."""
-        super().__init__(
-            hass,
-            logger,
-            name=name,
-            update_interval=update_interval,
-            update_method=update_method,
-            request_refresh_debouncer=request_refresh_debouncer,
-        )
-        self.bridge = bridge
-        self.optimizer_device_infos = optimizer_device_infos
-
-    async def _async_update_data(self):
-        """Retrieve the latest values from the optimizers."""
-        try:
-            async with asyncio.timeout(OPTIMIZER_UPDATE_TIMEOUT.total_seconds()):
-                return await self.bridge.get_latest_optimizer_history_data()
-        except HuaweiSolarException as err:
-            raise UpdateFailed(
-                f"Could not update {self.bridge.serial_number} optimizer values: {err}"
-            ) from err
-
-
-async def _create_optimizer_update_coordinator(
-    hass,
-    bridge: HuaweiSolarBridge,
-    optimizer_device_infos: dict[int, DeviceInfo],
-    update_interval,
-):
-    coordinator = HuaweiSolarOptimizerUpdateCoordinator(
-        hass,
-        _LOGGER,
-        bridge=bridge,
-        optimizer_device_infos=optimizer_device_infos,
-        name=f"{bridge.serial_number}_optimizer_data_update_coordinator",
-        update_interval=update_interval,
-    )
-
-    await coordinator.async_config_entry_first_refresh()
-
-    return coordinator
-
-
-class HuaweiSolarConfigurationUpdateCoordinator(DataUpdateCoordinator):
-    """A specialised DataUpdateCoordinator for Huawei Solar."""
-
-    def __init__(
-        self,
-        hass: HomeAssistant,
-        logger: logging.Logger,
-        bridge: HuaweiSolarBridge,
-        device_infos: HuaweiInverterBridgeDeviceInfos,
-        name: str,
-        update_interval: timedelta | None = None,
-        update_method: Callable[[], Awaitable[T]] | None = None,
-        request_refresh_debouncer: Debouncer | None = None,
-    ) -> None:
-        """Create a HuaweiSolarConfigurationUpdateCoordinator."""
-        super().__init__(
-            hass,
-            logger,
-            name=name,
-            update_interval=update_interval,
-            update_method=update_method,
-            request_refresh_debouncer=request_refresh_debouncer,
-        )
-        self.bridge = bridge
-        self.device_infos = device_infos
-
-    async def _async_update_data(self):
-        try:
-            async with asyncio.timeout(CONFIGURATION_UPDATE_TIMEOUT.total_seconds()):
-                return await self.bridge.update_configuration_registers()
-        except HuaweiSolarException as err:
-            raise UpdateFailed(
-                f"Could not update {self.bridge.serial_number} values: {err}"
-            ) from err
-
-
-async def _create_configuration_update_coordinator(
-    hass,
-    bridge: HuaweiSolarBridge,
-    device_infos: HuaweiInverterBridgeDeviceInfos,
-    update_interval,
-):
-    coordinator = HuaweiSolarConfigurationUpdateCoordinator(
-        hass,
-        _LOGGER,
-        bridge=bridge,
-        device_infos=device_infos,
-        name=f"{bridge.serial_number}_configuration_update_coordinator",
-        update_interval=update_interval,
-    )
-
-    await coordinator.async_config_entry_first_refresh()
-
-    return coordinator
-
-
 @dataclass
 class HuaweiSolarUpdateCoordinators:
     """Device Infos for a specific inverter."""
@@ -605,11 +324,11 @@ class HuaweiSolarUpdateCoordinators:
     bridge: HuaweiSolarBridge
     device_infos: HuaweiInverterBridgeDeviceInfos
 
-    inverter_update_coordinator: HuaweiSolarInverterUpdateCoordinator
-    power_meter_update_coordinator: HuaweiSolarPowerMeterUpdateCoordinator | None
-    energy_storage_update_coordinator: HuaweiSolarEnergyStorageUpdateCoordinator | None
+    inverter_update_coordinator: HuaweiSolarUpdateCoordinator
+    power_meter_update_coordinator: HuaweiSolarUpdateCoordinator | None
+    energy_storage_update_coordinator: HuaweiSolarUpdateCoordinator | None
     optimizer_update_coordinator: HuaweiSolarOptimizerUpdateCoordinator | None
-    configuration_update_coordinator: HuaweiSolarConfigurationUpdateCoordinator | None
+    configuration_update_coordinator: HuaweiSolarUpdateCoordinator | None
 
 
 class HuaweiSolarEntity(Entity):

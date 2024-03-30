@@ -1,4 +1,5 @@
 """Switch entities for Huawei Solar."""
+
 from __future__ import annotations
 
 import asyncio
@@ -15,12 +16,9 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
 
-from . import (
-    HuaweiSolarConfigurationUpdateCoordinator,
-    HuaweiSolarEntity,
-    HuaweiSolarInverterUpdateCoordinator,
-)
+from . import HuaweiSolarEntity
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
+from .update_coordinator import HuaweiSolarUpdateCoordinator
 
 if TYPE_CHECKING:
     from . import HuaweiSolarUpdateCoordinators
@@ -31,7 +29,7 @@ _LOGGER = logging.getLogger(__name__)
 T = TypeVar("T")
 
 
-@dataclass
+@dataclass(frozen=True)
 class HuaweiSolarSwitchEntityDescription(Generic[T], SwitchEntityDescription):
     """Huawei Solar Switch Entity Description."""
 
@@ -40,9 +38,24 @@ class HuaweiSolarSwitchEntityDescription(Generic[T], SwitchEntityDescription):
 
     def __post_init__(self):
         """Defaults the translation_key to the switch key."""
-        self.translation_key = (
-            self.translation_key or self.key.replace("#", "_").lower()
+
+        # We use this special setter to be able to set/update the translation_key
+        # in this frozen dataclass.
+        # cfr. https://docs.python.org/3/library/dataclasses.html#frozen-instances
+        object.__setattr__(
+            self,
+            "translation_key",
+            self.translation_key or self.key.replace("#", "_").lower(),
         )
+
+    @property
+    def context(self):
+        """Context used by DataUpdateCoordinator."""
+        registers = [self.key]
+        if self.is_available_key:
+            registers.append(self.is_available_key)
+
+        return {"register_names": registers}
 
 
 ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
@@ -83,6 +96,7 @@ async def async_setup_entry(
 
         slave_entities.append(
             HuaweiSolarOnOffSwitchEntity(
+                # This entity dependens on DEVICE_STATUS which is already read by the inverter_update_coordinator
                 ucs.inverter_update_coordinator,
                 ucs.bridge,
                 ucs.device_infos["inverter"],
@@ -123,7 +137,7 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
 
     def __init__(
         self,
-        coordinator: HuaweiSolarConfigurationUpdateCoordinator,
+        coordinator: HuaweiSolarUpdateCoordinator,
         bridge: HuaweiSolarBridge,
         description: HuaweiSolarSwitchEntityDescription,
         device_info: DeviceInfo,
@@ -132,7 +146,7 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
 
         Do not use directly. Use `.create` instead!
         """
-        super().__init__(coordinator)
+        super().__init__(coordinator, description.context)
         self.coordinator = coordinator
 
         self.bridge = bridge
@@ -144,15 +158,25 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        self._attr_is_on = self.coordinator.data[self.entity_description.key].value
+        if (
+            self.coordinator.data
+            and self.entity_description.key in self.coordinator.data
+        ):
+            self._attr_is_on = self.coordinator.data[self.entity_description.key].value
 
-        if self.entity_description.check_is_available_func:
-            is_available_register = self.coordinator.data.get(
-                self.entity_description.is_available_key
-            )
-            self._attr_available = self.entity_description.check_is_available_func(
-                is_available_register.value if is_available_register else None
-            )
+            if self.entity_description.check_is_available_func:
+                assert self.entity_description.is_available_key
+                is_available_register = self.coordinator.data.get(
+                    self.entity_description.is_available_key
+                )
+                self._attr_available = self.entity_description.check_is_available_func(
+                    is_available_register.value if is_available_register else None
+                )
+            else:
+                self._attr_available = True
+        else:
+            self._attr_is_on = None
+            self._attr_available = False
 
         self.async_write_ha_state()
 
@@ -195,7 +219,7 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
         self,
         # not the HuaweiSolarConfigurationUpdateCoordinator as
         # this entity depends on the 'Device Status' register
-        coordinator: HuaweiSolarInverterUpdateCoordinator,
+        coordinator: HuaweiSolarUpdateCoordinator,
         bridge: HuaweiSolarBridge,
         device_info: DeviceInfo,
     ) -> None:
@@ -203,7 +227,7 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
 
         Do not use directly. Use `.create` instead!
         """
-        super().__init__(coordinator)
+        super().__init__(coordinator, {"register_names": [rn.DEVICE_STATUS]})
         self.coordinator = coordinator
 
         self.bridge = bridge
@@ -228,9 +252,14 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
         if self._change_lock.locked():
             return  # Don't do status updates if async_turn_on or async_turn_off is running
 
-        device_status = self.coordinator.data[rn.DEVICE_STATUS].value
+        if self.coordinator.data and rn.DEVICE_STATUS in self.coordinator.data:
+            device_status = self.coordinator.data[rn.DEVICE_STATUS].value
 
-        self._attr_is_on = not self._is_off(device_status)
+            self._attr_is_on = not self._is_off(device_status)
+            self._attr_available = True
+        else:
+            self._attr_available = False
+
         self.async_write_ha_state()
 
     async def async_turn_on(self, **kwargs) -> None:
