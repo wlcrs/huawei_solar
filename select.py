@@ -166,7 +166,7 @@ class HuaweiSolarSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity
         device_info: DeviceInfo,
     ) -> None:
         """Huawei Solar Select Entity constructor."""
-        super().__init__(coordinator)
+        super().__init__(coordinator, description.context)
         self.coordinator = coordinator
 
         self.bridge = bridge
@@ -179,6 +179,7 @@ class HuaweiSolarSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity
             r.NumberRegister, REGISTERS[description.key]
         ).unit
 
+        self._attr_current_option = None
         self._attr_options = [
             self._friendly_format(value) for value in self._register_unit
         ]
@@ -251,7 +252,9 @@ class StorageModeSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity
 
         Do not use directly. Use `.create` instead!
         """
-        super().__init__(coordinator)
+        super().__init__(
+            coordinator, {"register_names": [rn.STORAGE_WORKING_MODE_SETTINGS]}
+        )
         self.coordinator = coordinator
 
         self.bridge = bridge
@@ -262,13 +265,13 @@ class StorageModeSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity
         self._attr_device_info = device_info
         self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
 
+        self._attr_current_option = None
         # The options depend on the type of battery
         available_options = [swm.name for swm in rv.StorageWorkingModesC]
         if bridge.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000:
             available_options.remove(rv.StorageWorkingModesC.TIME_OF_USE_LG.name)
         elif bridge.battery_type == rv.StorageProductModel.LG_RESU:
             available_options.remove(rv.StorageWorkingModesC.TIME_OF_USE_LUNA2000.name)
-
         self._attr_options = [option.lower() for option in available_options]
 
     @callback
