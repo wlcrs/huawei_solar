@@ -200,6 +200,9 @@
             "internal_temperature": {
                 "name": "Internal temperature"
             },
+            "insulation_resistance": {
+                "name": "Insulation resistance"
+            },
             "line_voltage_a_b": {
                 "name": "A-B line voltage"
             },

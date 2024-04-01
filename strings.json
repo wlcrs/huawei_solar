@@ -50,10 +50,10 @@
     },
     "entity": {
         "number": {
-            "storage_maximum_charge_power": {
+            "storage_maximum_charging_power": {
                 "name": "Maximum charging power"
             },
-            "storage_maximum_discharge_power": {
+            "storage_maximum_discharging_power": {
                 "name": "Maximum discharging power"
             },
             "storage_charging_cutoff_capacity": {
@@ -124,6 +124,9 @@
             "internal_temperature": {
                 "name": "Internal temperature"
             },
+            "insulation_resistance": {
+                "name": "Insulation resistance"
+            },
             "device_status": {
                 "name": "Device status"
             },
@@ -138,6 +141,9 @@
             },
             "daily_yield_energy": {
                 "name": "Daily yield"
+            },
+            "hourly_yield_energy": {
+                "name": "Hourly yield"
             },
             "state_1": {
                 "name": "Inverter state"
@@ -181,11 +187,11 @@
             "temperature": {
                 "name": "[%key:component::sensor::entity_component::temperature::name%]"
             },
+            "total_dc_input_power": {
+                "name": "Total DC input energy"
+            },
             "running_status": {
                 "name": "Running status"
-            },
-            "accumulated_energy_yield": {
-                "name": "Accumulated energy yield"
             },
             "alarm": {
                 "name": "Alarm"
@@ -286,6 +292,9 @@
             "alarms": {
                 "name": "Alarms"
             },
+            "current_electricity_generation_statistics_time": {
+                "name": "Current electricity generation statistics time"
+            },
             "storage_time_of_use_charging_and_discharging_periods": {
                 "name": "Time Of use periods"
             },
@@ -355,6 +364,9 @@
             "pv_10_current": {
                 "name": "PV 10 current"
             },
+            "pv_11_voltage": {
+                "name": "PV 11 voltage"
+            },
             "pv_11_current": {
                 "name": "PV 11 current"
             },
@@ -411,6 +423,9 @@
             },
             "pv_20_current": {
                 "name": "PV 20 current"
+            },
+            "pv_21_voltage": {
+                "name": "PV 21 voltage"
             },
             "pv_21_current": {
                 "name": "PV 21 current"
