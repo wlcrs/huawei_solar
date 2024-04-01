@@ -266,7 +266,10 @@ class HuaweiInverterBridgeDeviceInfos(TypedDict):
 
     inverter: DeviceInfo
     power_meter: DeviceInfo | None
+
     connected_energy_storage: DeviceInfo | None
+    battery_1: DeviceInfo | None
+    battery_2: DeviceInfo | None
 
 
 async def compute_device_infos(
@@ -276,7 +279,7 @@ async def compute_device_infos(
     """Create the correct DeviceInfo-objects, which can be used to correctly assign to entities in this integration."""
     inverter_device_info = DeviceInfo(
         identifiers={(DOMAIN, bridge.serial_number)},
-        name="Inverter",
+        translation_key="inverter",
         manufacturer="Huawei",
         model=bridge.model_name,
         serial_number=bridge.serial_number,
@@ -292,7 +295,7 @@ async def compute_device_infos(
             identifiers={
                 (DOMAIN, f"{bridge.serial_number}/power_meter"),
             },
-            name="Power meter",
+            translation_key="power_meter",
             via_device=(DOMAIN, bridge.serial_number),
         )
 
@@ -304,9 +307,48 @@ async def compute_device_infos(
             identifiers={
                 (DOMAIN, f"{bridge.serial_number}/connected_energy_storage"),
             },
-            name="Battery",
+            translation_key="connected_energy_storage",
             manufacturer=inverter_device_info.get("manufacturer"),
-            model=f"{inverter_device_info.get('model')} Connected energy storage",
+            via_device=(DOMAIN, bridge.serial_number),
+        )
+
+    def _battery_product_model_to_manufacturer(spm: rv.StorageProductModel):
+        if spm == rv.StorageProductModel.HUAWEI_LUNA2000:
+            return "Huawei"
+        if spm == rv.StorageProductModel.LG_RESU:
+            return "LG Chem"
+        else:
+            return None
+
+    def _battery_product_model_to_model(spm: rv.StorageProductModel):
+        if spm == rv.StorageProductModel.HUAWEI_LUNA2000:
+            return "LUNA 2000"
+        if spm == rv.StorageProductModel.LG_RESU:
+            return "RESU"
+        else:
+            return None
+
+    battery_1_device_info = None
+    if bridge.battery_1_type != rv.StorageProductModel.NONE:
+        battery_1_device_info = DeviceInfo(
+            identifiers={
+                (DOMAIN, f"{bridge.serial_number}/battery_1"),
+            },
+            translation_key="battery_1",
+            manufacturer=_battery_product_model_to_manufacturer(bridge.battery_1_type),
+            model=_battery_product_model_to_model(bridge.battery_1_type),
+            via_device=(DOMAIN, bridge.serial_number),
+        )
+
+    battery_2_device_info = None
+    if bridge.battery_2_type != rv.StorageProductModel.NONE:
+        battery_2_device_info = DeviceInfo(
+            identifiers={
+                (DOMAIN, f"{bridge.serial_number}/battery_2"),
+            },
+            translation_key="battery_2",
+            manufacturer=_battery_product_model_to_manufacturer(bridge.battery_2_type),
+            model=_battery_product_model_to_model(bridge.battery_2_type),
             via_device=(DOMAIN, bridge.serial_number),
         )
 
@@ -314,6 +356,8 @@ async def compute_device_infos(
         inverter=inverter_device_info,
         power_meter=power_meter_device_info,
         connected_energy_storage=battery_device_info,
+        battery_1=battery_1_device_info,
+        battery_2=battery_2_device_info,
     )
 
 

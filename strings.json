@@ -447,6 +447,18 @@
             },
             "pv_24_current": {
                 "name": "PV 24 current"
+            },
+            "battery_working_mode": {
+                "name": "Working mode"
+            },
+            "battery_rated_charge_power": {
+                "name": "Rated charge power"
+            },
+            "battery_rated_discharge_power": {
+                "name": "Rated discharge power"
+            },
+            "battery_remaining_charge_discharge_time": {
+                "name": "Remaining charge/discharge time"
             }
         },
         "select": {
@@ -668,6 +680,23 @@
                     "description": "One period per line. Format: '[start time]-[end time]/[power]W'. Example: '12:00-15:59/-1000W'."
                 }
             }
+        }
+    },
+    "device": {
+        "inverter": {
+            "name": "Inverter"
+        },
+        "connected_energy_storage": {
+            "name": "Batteries"
+        },
+        "power_meter": {
+            "name": "Power meter"
+        },
+        "battery_1": {
+            "name": "Battery 1"
+        },
+        "battery_2": {
+            "name": "Battery 2"
         }
     }
 }

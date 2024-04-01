@@ -475,6 +475,18 @@
             },
             "voltage_to_ground": {
                 "name": "Spanning naar aarde"
+            },
+            "battery_working_mode": {
+                "name": "Werkmodus"
+            },
+            "battery_rated_charge_power": {
+                "name": "Nominaal oplaadvermogen"
+            },
+            "battery_rated_discharge_power": {
+                "name": "Nominaal ontlaadvermogen"
+            },
+            "battery_remaining_charge_discharge_time": {
+                "name": "Resterende (ont)laadtijd"
             }
         },
         "switch": {
@@ -668,6 +680,23 @@
                 }
             },
             "name": "Stop geforceerd laden"
+        }
+    },
+    "device": {
+        "inverter": {
+            "name": "Omvormer"
+        },
+        "connected_energy_storage": {
+            "name": "Batterijen"
+        },
+        "power_meter": {
+            "name": "Elektriciteitsmeter"
+        },
+        "battery_1": {
+            "name": "Batterij 1"
+        },
+        "battery_2": {
+            "name": "Batterij 2"
         }
     }
 }
