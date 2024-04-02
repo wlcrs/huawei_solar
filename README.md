@@ -7,6 +7,16 @@
 
 This integration exposes the information and functions made available by Huawei Solar inverters directly via one of its Modbus interfaces in Home Assistant.
 
+## Table of Contents
+
+- [Screenshots](#screenshots)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Inverter polling frequency](#inverter-polling-frequency)
+- [FAQ - Troubleshooting](#faq---troubleshooting)
+
+Looking for more information? The [Wiki](https://github.com/wlcrs/huawei_solar/wiki) contains in-depth documentation and support materials.
+ 
 ## Screenshots
 
 | **Inverter**                                                           | **Battery**                                                  |
