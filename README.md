@@ -91,7 +91,7 @@ the FusionSolar App. The default password is either `00000a` or `0000000a`. If n
 
 ## Inverter polling frequency
 
-The integration will poll the inverter for new values every 30 seconds. If you wish to receive fresh inverter data less (or more) frequently, you can disable the automatic refresh in the integration's system options (Enable polling for updates) and create your own automation with your desired polling frequency.
+The integration will poll the inverter for new values every 30 seconds. If you wish to receive fresh inverter data less (or more) frequently, you can disable the automatic refresh in the integration's system options (Enable polling for updates) and create your own automations with your desired polling frequency. If your installation contains a power meter and/or battery, then you need to create a separate data polling automation for these devices. This allows for fine grained control of which entities must be updated more quickly.
 
 ```yaml
 - alias: "Huawei Solar inverter data polling"
@@ -99,14 +99,34 @@ The integration will poll the inverter for new values every 30 seconds. If you w
     - platform: time_pattern
       hours: "*"
       minutes: "*"
-      seconds: "/10"
+      seconds: "/20"
   action:
     - service: homeassistant.update_entity
       target:
         entity_id: sensor.inverter_daily_yield
+- alias: "Huawei Solar power meter data polling"
+  trigger:
+    - platform: time_pattern
+      hours: "*"
+      minutes: "*"
+      seconds: "/5"
+  action:
+    - service: homeassistant.update_entity
+      target:
+        entity_id: sensor.power_meter_active_power
+- alias: "Huawei Solar battery data polling"
+  trigger:
+    - platform: time_pattern
+      hours: "*"
+      minutes: "*"
+      seconds: "/20"
+  action:
+    - service: homeassistant.update_entity
+      target:
+        entity_id: sensor.battery_state_of_capacity
 ```
 
-Note that optimizer data is refreshed only every 5 minutes, which matches how frequently the inverter refreshes this data.
+**Note:** optimizer data is refreshed only every 5 minutes, which matches how frequently the inverter refreshes this data. Increasing the update frequency of those entities will thus not result in a higher resolution.
 
 ## FAQ - Troubleshooting
 
@@ -122,6 +142,17 @@ Note that optimizer data is refreshed only every 5 minutes, which matches how fr
 
 ---
 
+**Q**: I want to connect multiple systems simultaniously to the Huawei Solar inverter. For example: 2 HA installations, EVCC, ...  Is this possible?
+
+**A**: This integration connects to the inverter over Modbus. This protocol only supports one "server" (confusingly named, but this is the party sending queries to the inverter). It is therefore not possible to connect multiple systems directly to the inverter. However, you can use a [Modbus Proxy](https://github.com/Akulatraxas/ha-modbusproxy) to multiplex the connection to the inverter.
+
+---
+
+**Q**: How do I change the connection parameters (IP, port, USB device, installer password) of this integration?
+
+**A**: Changing connection parameters is not supported. You need to delete the integration and install it again. You typically do not lose any history attached to your entities in Home Assistant.
+
+---
 <a name="daily-yield"></a>
 
 **Q**: The "Daily Yield" value reported does not match with the value from FusionSolar?
