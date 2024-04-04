@@ -139,7 +139,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             )
 
             power_meter_update_coordinator = None
-            if bridge.power_meter_type:
+            if bridge.power_meter_type is not None:
                 assert device_infos["power_meter"]
                 power_meter_update_coordinator = HuaweiSolarUpdateCoordinator(
                     hass,
