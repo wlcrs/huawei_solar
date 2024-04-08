@@ -1,452 +1,452 @@
 {
     "config": {
         "abort": {
-            "already_configured": "Device is already configured"
+            "already_configured": "Dispositivo ya configurado"
         },
         "error": {
-            "cannot_connect": "Failed to connect",
-            "invalid_auth": "Invalid authentication",
-            "invalid_slave_ids": "Slave IDs must be comma-separated list of ints",
-            "read_error": "Reading from the inverter failed.",
-            "slave_cannot_connect": "Failed to connect to additional slave",
-            "unknown": "Unexpected error"
+            "cannot_connect": "Error de conexión",
+            "invalid_auth": "Credenciales inválidas",
+            "invalid_slave_ids": "Los IDs esclavos deben estar separados por comas",
+            "read_error": "Lectura inválida",
+            "slave_cannot_connect": "Error de conexión al esclavo",
+            "unknown": "Error inesperado"
         },
         "step": {
             "network_login": {
                 "data": {
-                    "password": "Password",
-                    "username": "Username"
+                    "password": "Contraseña",
+                    "username": "Nombre de usuario"
                 },
-                "description": "Please enter the Installer credentials"
+                "description": "Introduce las credenciales de Instalador"
             },
             "setup_network": {
                 "data": {
-                    "enable_parameter_configuration": "Advanced: elevate permissions",
+                    "enable_parameter_configuration": "Avanzado: elevar permisos",
                     "host": "Host",
-                    "port": "Port",
-                    "slave_ids": "Slave IDs (Comma separated)"
+                    "port": "Puerto",
+                    "slave_ids": "IDs esclavos (separados por comas)"
                 }
             },
             "setup_serial": {
                 "data": {
-                    "port": "Select device",
-                    "slave_ids": "Slave IDs (Comma separated)"
+                    "port": "Selecciona un dispositivo",
+                    "slave_ids": "IDs esclavos (separados por comas)"
                 },
-                "title": "Device"
+                "title": "Dispositivo"
             },
             "setup_serial_manual_path": {
                 "data": {
-                    "port": "USB Device Path"
+                    "port": "Ruta al dispositivo USB"
                 },
-                "title": "Path"
+                "title": "Ruta"
             },
             "user": {
                 "data": {
-                    "type": "Connection type"
+                    "type": "Tipo de conexión"
                 },
-                "title": "Select connection type"
+                "title": "Selecciona el tipo de conexión"
             }
         }
     },
     "entity": {
         "number": {
             "storage_maximum_charging_power": {
-                "name": "Maximum charging power"
+                "name": "Potencia máxima de carga"
             },
             "storage_maximum_discharging_power": {
-                "name": "Maximum discharging power"
+                "name": "Potencia máxima de descarga"
             },
             "storage_charging_cutoff_capacity": {
-                "name": "End-of-charge SOC"
+                "name": "Fin de carga SoC"
             },
             "storage_discharging_cutoff_capacity": {
-                "name": "End-of-discharge SOC"
+                "name": "Fin de descarga SoC"
             },
             "storage_backup_power_state_of_charge": {
-                "name": "Backup power SOC"
+                "name": "Carga de reserva SoC"
             },
             "storage_grid_charge_cutoff_state_of_charge": {
-                "name": "Grid charge cutoff SOC"
+                "name": "Corte de carga de red SoC"
             },
             "storage_power_of_charge_from_grid": {
-                "name": "Grid charge maximum power"
+                "name": "Potencia máxima de carga desde la red"
             },
             "storage_capacity_control_soc_peak_shaving": {
-                "name": "Peak Shaving SOC"
+                "name": "Afeitado de pico SoC"
             }
         },
         "sensor": {
             "input_power": {
-                "name": "Input power"
+                "name": "Potencia de entrada"
             },
             "line_voltage_a_b": {
-                "name": "A-B line voltage"
+                "name": "Tensión de línea A-B"
             },
             "line_voltage_b_c": {
-                "name": "B-C line voltage"
+                "name": "Tensión de línea B-C"
             },
             "line_voltage_c_a": {
-                "name": "C-A line voltage"
+                "name": "Tensión de línea C-A"
             },
             "phase_a_voltage": {
-                "name": "Phase A voltage"
+                "name": "Tensión de fase A"
             },
             "phase_b_voltage": {
-                "name": "Phase B voltage"
+                "name": "Tensión de fase B"
             },
             "phase_c_voltage": {
-                "name": "Phase C voltage"
+                "name": "Tensión de fase C"
             },
             "phase_a_current": {
-                "name": "Phase A current"
+                "name": "Corriente de fase A"
             },
             "phase_b_current": {
-                "name": "Phase B current"
+                "name": "Corriente de fase B"
             },
             "phase_c_current": {
-                "name": "Phase C current"
+                "name": "Corriente de fase C"
             },
             "day_active_power_peak": {
-                "name": "Day active power peak"
+                "name": "Pico de potencia diurna"
             },
             "active_power": {
-                "name": "Active power"
+                "name": "Potencia activa"
             },
             "reactive_power": {
-                "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
+                "name": "Potencia reactiva"
             },
             "power_factor": {
-                "name": "[%key:component::sensor::entity_component::power_factor::name%]"
+                "name": "Factor de potencia"
             },
             "efficiency": {
-                "name": "Efficiency"
+                "name": "Eficiencia"
             },
             "internal_temperature": {
-                "name": "Internal temperature"
+                "name": "Temperatura interna"
             },
             "insulation_resistance": {
                 "name": "Insulation resistance"
             },
             "device_status": {
-                "name": "Device status"
+                "name": "Estado del dispositivo"
             },
             "startup_time": {
-                "name": "Startup time"
+                "name": "Hora de arranque"
             },
             "shutdown_time": {
-                "name": "Shutdown time"
+                "name": "Hora de apagado"
             },
             "accumulated_yield_energy": {
-                "name": "Total yield"
+                "name": "Rendimiento total"
             },
             "daily_yield_energy": {
-                "name": "Daily yield"
+                "name": "Rendimiento diario"
             },
             "hourly_yield_energy": {
                 "name": "Hourly yield"
             },
             "state_1": {
-                "name": "Inverter state"
+                "name": "Estado del inversor"
             },
             "state_2_0": {
-                "name": "Locking status"
+                "name": "Estado de bloqueo"
             },
             "state_2_1": {
-                "name": "PV connection status"
+                "name": "Estado de conexión FV"
             },
             "state_2_2": {
-                "name": "DSP data collection"
+                "name": "Recopilación de datos DSP"
             },
             "state_3_0": {
-                "name": "Off-grid status"
+                "name": "Estado off-grid"
             },
             "state_3_1": {
-                "name": "Off-grid switch"
+                "name": "Interruptor off-grid"
             },
             "nb_online_optimizers": {
-                "name": "Optimizers online"
+                "name": "Optimizadores en línea"
             },
             "output_power": {
-                "name": "Output power"
+                "name": "Potencia de salida"
             },
             "voltage_to_ground": {
-                "name": "Voltage to ground"
+                "name": "Tensión a tierra"
             },
             "output_voltage": {
-                "name": "Output voltage"
+                "name": "Tensión de salida"
             },
             "output_current": {
-                "name": "Output current"
+                "name": "Corriente de salida"
             },
             "input_voltage": {
-                "name": "Input voltage"
+                "name": "Tensión de entrada"
             },
             "input_current": {
-                "name": "Input current"
+                "name": "Corriente de entrada"
             },
             "temperature": {
-                "name": "[%key:component::sensor::entity_component::temperature::name%]"
+                "name": "Temperatura"
             },
             "total_dc_input_power": {
                 "name": "Total DC input energy"
             },
             "running_status": {
-                "name": "Running status"
+                "name": "Estado de funcionamiento"
             },
             "alarm": {
-                "name": "Alarm"
+                "name": "Alarma"
             },
             "meter_status": {
-                "name": "Meter status"
+                "name": "Estado del medidor"
             },
             "single_phase_meter_voltage": {
-                "name": "[%key:component::sensor::entity_component::voltage::name%]"
+                "name": "Tensión"
             },
             "single_phase_meter_current": {
-                "name": "[%key:component::sensor::entity_component::current::name%]"
+                "name": "Corriente"
             },
             "power_meter_active_power": {
-                "name": "Active power"
+                "name": "Potencia activa"
             },
             "power_meter_reactive_power": {
-                "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
+                "name": "Potencia reactiva"
             },
             "active_grid_power_factor": {
-                "name": "Power factor"
+                "name": "Factor de potencia"
             },
             "active_grid_frequency": {
-                "name": "[%key:component::sensor::entity_component::frequency::name%]"
+                "name": "Frecuencia"
             },
             "grid_exported_energy": {
-                "name": "Exported"
+                "name": "Energía exportada"
             },
             "grid_accumulated_energy": {
-                "name": "Consumption"
+                "name": "Consumo"
             },
             "grid_accumulated_reactive_power": {
-                "name": "Reactive energy"
+                "name": "Energía reactiva acumulada"
             },
             "grid_a_voltage": {
-                "name": "Phase A voltage"
+                "name": "Tensión de fase A"
             },
             "grid_b_voltage": {
-                "name": "Phase B voltage"
+                "name": "Tensión de fase B"
             },
             "grid_c_voltage": {
-                "name": "Phase C voltage"
+                "name": "Tensión de fase C"
             },
             "grid_a_current": {
-                "name": "Phase A current"
+                "name": "Corriente de fase A"
             },
             "grid_b_current": {
-                "name": "Phase B current"
+                "name": "Corriente de fase B"
             },
             "grid_c_current": {
-                "name": "Phase C current"
+                "name": "Corriente de fase C"
             },
             "active_grid_a_b_voltage": {
-                "name": "A-B line voltage"
+                "name": "Tensión de línea A-B"
             },
             "active_grid_b_c_voltage": {
-                "name": "B-C line voltage"
+                "name": "Tensión de línea B-C"
             },
             "active_grid_c_a_voltage": {
-                "name": "C-A line voltage"
+                "name": "Tensión de línea C-A"
             },
             "active_grid_a_power": {
-                "name": "Phase A active power"
+                "name": "Potencia activa de fase A"
             },
             "active_grid_b_power": {
-                "name": "Phase B active power"
+                "name": "Potencia activa de fase B"
             },
             "active_grid_c_power": {
-                "name": "Phase C active power"
+                "name": "Potencia activa de fase C"
             },
             "storage_state_of_capacity": {
-                "name": "State of capacity"
+                "name": "Estado de la capacidad"
             },
             "storage_running_status": {
-                "name": "Status"
+                "name": "Estado"
             },
             "storage_bus_voltage": {
-                "name": "Bus voltage"
+                "name": "Tensión del bus"
             },
             "storage_bus_current": {
-                "name": "Bus current"
+                "name": "Corriente del bus"
             },
             "storage_charge_discharge_power": {
-                "name": "Charge/Discharge power"
+                "name": "Potencia de carga/descarga"
             },
             "storage_total_charge": {
-                "name": "Total charge"
+                "name": "Carga total"
             },
             "storage_total_discharge": {
-                "name": "Total discharge"
+                "name": "Descarga total"
             },
             "storage_current_day_charge_capacity": {
-                "name": "Day charge"
+                "name": "Carga diaria"
             },
             "storage_current_day_discharge_capacity": {
-                "name": "Day discharge"
+                "name": "Descarga diaria"
             },
             "alarms": {
-                "name": "Alarms"
+                "name": "Alarmas"
             },
             "current_electricity_generation_statistics_time": {
                 "name": "Current electricity generation statistics time"
             },
             "storage_time_of_use_charging_and_discharging_periods": {
-                "name": "Time Of use periods"
+                "name": "Períodos de horario de uso"
             },
             "storage_capacity_control_periods": {
-                "name": "Capacity control periods"
+                "name": "Períodos de control de capacidad"
             },
             "storage_fixed_charging_and_discharging_periods": {
-                "name": "Fixed charging periods"
+                "name": "Períodos de carga y descarga fija"
             },
             "pv_01_voltage": {
-                "name": "PV 1 voltage"
+                "name": "Tensión FV 1"
             },
             "pv_01_current": {
-                "name": "PV 1 current"
+                "name": "Corriente FV 1"
             },
             "pv_02_voltage": {
-                "name": "PV 2 voltage"
+                "name": "Tensión FV 2"
             },
             "pv_02_current": {
-                "name": "PV 2 current"
+                "name": "Corriente FV 2"
             },
             "pv_03_voltage": {
-                "name": "PV 3 voltage"
+                "name": "Tensión FV 3"
             },
             "pv_03_current": {
-                "name": "PV 3 current"
+                "name": "Corriente FV 3"
             },
             "pv_04_voltage": {
-                "name": "PV 4 voltage"
+                "name": "Tensión FV 4"
             },
             "pv_04_current": {
-                "name": "PV 4 current"
+                "name": "Corriente FV 4"
             },
             "pv_05_voltage": {
-                "name": "PV 5 voltage"
+                "name": "Tensión FV 5"
             },
             "pv_05_current": {
-                "name": "PV 5 current"
+                "name": "Corriente FV 5"
             },
             "pv_06_voltage": {
-                "name": "PV 6 voltage"
+                "name": "Tensión FV 6"
             },
             "pv_06_current": {
-                "name": "PV 6 current"
+                "name": "Corriente FV 6"
             },
             "pv_07_voltage": {
-                "name": "PV 7 voltage"
+                "name": "Tensión FV 7"
             },
             "pv_07_current": {
-                "name": "PV 7 current"
+                "name": "Corriente FV 7"
             },
             "pv_08_voltage": {
-                "name": "PV 8 voltage"
+                "name": "Tensión FV 8"
             },
             "pv_08_current": {
-                "name": "PV 8 current"
+                "name": "Corriente FV 8"
             },
             "pv_09_voltage": {
-                "name": "PV 9 voltage"
+                "name": "Tensión FV 9"
             },
             "pv_09_current": {
-                "name": "PV 9 current"
+                "name": "Corriente FV 9"
             },
             "pv_10_voltage": {
-                "name": "PV 10 voltage"
+                "name": "Tensión FV 10"
             },
             "pv_10_current": {
-                "name": "PV 10 current"
+                "name": "Corriente FV 10"
             },
             "pv_11_voltage": {
-                "name": "PV 11 voltage"
+                "name": "Tensión FV 11"
             },
             "pv_11_current": {
-                "name": "PV 11 current"
+                "name": "Corriente FV 11"
             },
             "pv_12_voltage": {
-                "name": "PV 12 voltage"
+                "name": "Tensión FV 12"
             },
             "pv_12_current": {
-                "name": "PV 12 current"
+                "name": "Corriente FV 12"
             },
             "pv_13_voltage": {
-                "name": "PV 13 voltage"
+                "name": "Tensión FV 13"
             },
             "pv_13_current": {
-                "name": "PV 13 current"
+                "name": "Corriente FV 13"
             },
             "pv_14_voltage": {
-                "name": "PV 14 voltage"
+                "name": "Tensión FV 14"
             },
             "pv_14_current": {
-                "name": "PV 14 current"
+                "name": "Corriente FV 14"
             },
             "pv_15_voltage": {
-                "name": "PV 15 voltage"
+                "name": "Tensión FV 15"
             },
             "pv_15_current": {
-                "name": "PV 15 current"
+                "name": "Corriente FV 15"
             },
             "pv_16_voltage": {
-                "name": "PV 16 voltage"
+                "name": "Tensión FV 16"
             },
             "pv_16_current": {
-                "name": "PV 16 current"
+                "name": "Corriente FV 16"
             },
             "pv_17_voltage": {
-                "name": "PV 17 voltage"
+                "name": "Tensión FV 17"
             },
             "pv_17_current": {
-                "name": "PV 17 current"
+                "name": "Corriente FV 17"
             },
             "pv_18_voltage": {
-                "name": "PV 18 voltage"
+                "name": "Tensión FV 18"
             },
             "pv_18_current": {
-                "name": "PV 18 current"
+                "name": "Corriente FV 18"
             },
             "pv_19_voltage": {
-                "name": "PV 19 voltage"
+                "name": "Tensión FV 19"
             },
             "pv_19_current": {
-                "name": "PV 19 current"
+                "name": "Corriente FV 19"
             },
             "pv_20_voltage": {
-                "name": "PV 20 voltage"
+                "name": "Tensión FV 20"
             },
             "pv_20_current": {
-                "name": "PV 20 current"
+                "name": "Corriente FV 20"
             },
             "pv_21_voltage": {
-                "name": "PV 21 voltage"
+                "name": "Tensión FV 21"
             },
             "pv_21_current": {
-                "name": "PV 21 current"
+                "name": "Corriente FV 21"
             },
             "pv_22_voltage": {
-                "name": "PV 22 voltage"
+                "name": "Tensión FV 22"
             },
             "pv_22_current": {
-                "name": "PV 22 current"
+                "name": "Corriente FV 22"
             },
             "pv_23_voltage": {
-                "name": "PV 23 voltage"
+                "name": "Tensión FV 23"
             },
             "pv_23_current": {
-                "name": "PV 23 current"
+                "name": "Corriente FV 23"
             },
             "pv_24_voltage": {
-                "name": "PV 24 voltage"
+                "name": "Tensión FV 24"
             },
             "pv_24_current": {
-                "name": "PV 24 current"
+                "name": "Corriente FV 24"
             },
             "battery_working_mode": {
                 "name": "Working mode"
@@ -463,221 +463,221 @@
         },
         "select": {
             "storage_excess_pv_energy_use_in_tou": {
-                "name": "Excess PV energy use in TOU",
+                "name": "Uso de energía FV excedente en TOU",
                 "state": {
-                    "fed_to_grid": "Fed to grid",
-                    "charge": "Charge"
+                    "fed_to_grid": "Vertir a la red",
+                    "charge": "Carga"
                 }
             },
             "storage_capacity_control_mode": {
-                "name": "Capacity Control Mode",
+                "name": "Modo de control de capacidad",
                 "state": {
-                    "disable": "Disable",
-                    "active_capacity_control": "Active capacity control",
-                    "apparent_power_limit": "Apparent power limit"
+                    "disable": "Desactivar",
+                    "active_capacity_control": "Control de capacidad activo",
+                    "apparent_power_limit": "Límite de potencia aparente"
                 }
             },
             "storage_working_mode_settings": {
-                "name": "Working Mode",
+                "name": "Modo de funcionamiento",
                 "state": {
-                    "adaptive": "Adaptive",
-                    "fixed_charge_discharge": "Fixed charge discharge",
-                    "maximise_self_consumption": "Maximise self consumption",
-                    "time_of_use_lg": "Time of use",
-                    "fully_fed_to_grid": "Fully fed to grid",
-                    "time_of_use_luna2000": "Time of use"
+                    "adaptive": "Adaptativo",
+                    "fixed_charge_discharge": "Carga y descarga fija",
+                    "maximise_self_consumption": "Maximizar el autoconsumo",
+                    "time_of_use_lg": "Horario de uso",
+                    "fully_fed_to_grid": "Vertido completo a la red",
+                    "time_of_use_luna2000": "Horario de uso"
                 }
             }
         },
         "switch": {
             "storage_charge_from_grid_function": {
-                "name": "Charge from grid"
+                "name": "Carga desde la red"
             },
             "startup": {
-                "name": "Inverter ON/OFF"
+                "name": "Encendido/Apagado del inversor"
             }
         }
     },
     "services": {
         "forcible_charge": {
-            "name": "Forcible Charge",
-            "description": "Forcible Charge of the battery for a certain time",
+            "name": "Carga Forzada",
+            "description": "Carga forzada de la batería durante un cierto tiempo",
             "fields": {
                 "device_id": {
-                    "name": "Battery",
-                    "description": "Must be a 'Battery' device"
+                    "name": "Batería",
+                    "description": "Debe ser un dispositivo 'Batería'"
                 },
                 "duration": {
-                    "name": "Duration",
-                    "description": "Duration of the charge"
+                    "name": "Duración",
+                    "description": "Duración de la carga"
                 },
                 "power": {
-                    "name": "Power",
-                    "description": "Wattage used for the charge"
+                    "name": "Potencia",
+                    "description": "Potencia utilizada para la carga"
                 }
             }
         },
         "forcible_discharge": {
-            "name": "Forcible Discharge",
-            "description": "Forcible Discharge of the battery for a certain time",
+            "name": "Descarga Forzada",
+            "description": "Descarga forzada de la batería durante un cierto tiempo",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
-                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
+                    "name": "Batería",
+                    "description": "Debe ser un dispositivo 'Batería'"
                 },
                 "duration": {
-                    "name": "Duration",
-                    "description": "Duration of the discharge"
+                    "name": "Duración",
+                    "description": "Duración de la descarga"
                 },
                 "power": {
-                    "name": "Power",
-                    "description": "Wattage used for the discharge"
+                    "name": "Potencia",
+                    "description": "Potencia utilizada para la descarga"
                 }
             }
         },
         "forcible_charge_soc": {
-            "name": "Forcible Charge to a SoC level",
-            "description": "Forcible Charge of the battery to a certain State of Charge level",
+            "name": "Carga Forzada a un Nivel de SoC",
+            "description": "Carga forzada de la batería hasta cierto nivel de SoC",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
-                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
+                    "name": "Batería",
+                    "description": "Debe ser un dispositivo 'Batería'"
                 },
                 "target_soc": {
-                    "name": "Target SoC",
-                    "description": "State of Charge that must be reached"
+                    "name": "SoC Objetivo",
+                    "description": "SoC que debe alcanzarse"
                 },
                 "power": {
-                    "name": "Power",
-                    "description": "Wattage used for the charge"
+                    "name": "Potencia",
+                    "description": "Potencia utilizada para la carga"
                 }
             }
         },
         "forcible_discharge_soc": {
-            "name": "Forcible Discharge to a SoC level",
-            "description": "Forcible Discharge of the battery to a certain State of Charge level",
+            "name": "Descarga forzada a un nivel de SoC",
+            "description": "Descarga forzada de la batería hasta cierto nivel de SoC",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
-                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
+                    "name": "Batería",
+                    "description": "Debe ser un dispositivo 'Batería'"
                 },
                 "target_soc": {
-                    "name": "[%key:component::huawei_solar::services::forcible_charge_soc::fields::target_soc::name%]",
-                    "description": "[%key:component::huawei_solar::services::forcible_charge_soc::fields::target_soc::description%]"
+                    "name": "SoC objetivo",
+                    "description": "SoC que debe alcanzarse"
                 },
                 "power": {
-                    "name": "Power",
-                    "description": "Wattage used for the discharge"
+                    "name": "Potencia",
+                    "description": "Potencia utilizada para la descarga"
                 }
             }
         },
         "stop_forcible_charge": {
-            "name": "Stop the forcible charge or discharge",
-            "description": "Cancel the running forcible charge command",
+            "name": "Detener la carga o descarga forzada",
+            "description": "Cancelar el comando de carga forzada en ejecución",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
-                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
+                    "name": "Batería",
+                    "description": "Debe ser un dispositivo 'Batería'"
                 }
             }
         },
         "reset_maximum_feed_grid_power": {
-            "name": "Set Active Power Control to Maximum Feed Grid Power",
-            "description": "Set Active Power Control to the default Unlimited mode",
+            "name": "Restablecer control de potencia activa a máxima alimentación a la red",
+            "description": "Restablece el control de potencia activa al modo ilimitado por defecto",
             "fields": {
                 "device_id": {
-                    "name": "Inverter",
-                    "description": "Must be a 'Inverter' device"
+                    "name": "Inversor",
+                    "description": "Debe ser un dispositivo 'Inversor'"
                 }
             }
         },
         "set_di_active_power_scheduling": {
-            "name": "Set Active Power Control to 'DI active scheduling'",
-            "description": "Set Active Power Control to 'DI active scheduling'",
+            "name": "Establecer control de potencia activa a 'Programación Activa DI'",
+            "description": "Establece el control de potencia activa a 'Programación Activa DI'",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
-                    "description": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::description%]"
+                    "name": "Inversor",
+                    "description": "Debe ser un dispositivo 'Inversor'"
                 }
             }
         },
         "set_zero_power_grid_connection": {
-            "name": "Set Active Power Control to 'Zero power grid connection'",
-            "description": "Set Active Power Control to 'Zero power grid connection'",
+            "name": "Establecer Control de Potencia Activa a 'Conexión a la red con inyección cero'",
+            "description": "Establece el Control de Potencia Activa a 'Conexión a la red con inyección cero'",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
-                    "description": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::description%]"
+                    "name": "Inversor",
+                    "description": "Debe ser un dispositivo 'Inversor'"
                 }
             }
         },
         "set_maximum_feed_grid_power": {
-            "name": "Limit the power fed to the grid",
-            "description": "Sets Active Power Control to 'Power-limited grid connection' with the given wattage",
+            "name": "Limitar la potencia alimentada a la red",
+            "description": "Establece el Control de Potencia Activa a 'Conexión a la red Limitada por Potencia' a la potencia en vatios especificada",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
-                    "description": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::description%]"
+                    "name": "Inversor",
+                    "description": "Debe ser un dispositivo 'Inversor'"
                 },
                 "power": {
-                    "name": "Power",
-                    "description": "Maximum Wattage"
+                    "name": "Potencia",
+                    "description": "Potencia máxima en Vatios"
                 }
             }
         },
         "set_maximum_feed_grid_power_percent": {
-            "name": "Limit the power fed to the grid to percentage",
-            "description": "Sets Active Power Control to 'Power-limited grid connection (%)' with the given percentage",
+            "name": "Limitar la potencia alimentada a la red a un porcentaje",
+            "description": "Establece el Control de Potencia Activa a 'Conexión a la red limitada por Potencia (%)' al porcentaje especificado",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
-                    "description": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::description%]"
+                    "name": "Inversor",
+                    "description": "Debe ser un dispositivo 'Inversor'"
                 },
                 "power_percentage": {
-                    "name": "Power Percentage",
-                    "description": "Maximum Percentage"
+                    "name": "Porcentaje de Potencia",
+                    "description": "Porcentaje máximo"
                 }
             }
         },
         "set_tou_periods": {
-            "name": "Set TOU Periods",
-            "description": "Sets Time Of Use Periods",
+            "name": "Establecer los períodos de uso",
+            "description": "Establece los períodos de uso",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
-                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
+                    "name": "Batería",
+                    "description": "Debe ser un dispositivo 'Batería'"
                 },
                 "periods": {
-                    "name": "Periods",
-                    "description": "One period per line. For Huawei LUNA2000 batteries: '[start time]-[end time]/[days effective]/[charge]', with 1=Monday, 7=Sunday (example: '12:00-14:00/1234567/-'). For LG RESU batteries: '[start time]-[end time]/[electricity price]' (example: 13:00-14:00/0.50)"
+                    "name": "Períodos",
+                    "description": "Un período por línea. Para baterías Huawei LUNA2000: '[hora inicio]-[hora fin]/[días efectivos]/[carga]', con 1=lunes, 7=domingo (ejemplo: '12:00-14:00/1234567/-'). Para baterías LG RESU: '[hora inicio]-[hora fin]/[precio de la electricidad]' (ejemplo: 13:00-14:00/0.50)"
                 }
             }
         },
         "set_capacity_control_periods": {
-            "name": "Set Capacity Control Periods",
-            "description": "Set Capacity Control Periods",
+            "name": "Establecer períodos de control de capacidad",
+            "description": "Establece los períodos de control de capacidad",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
-                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
+                    "name": "Batería",
+                    "description": "Debe ser un dispositivo 'Batería'"
                 },
                 "periods": {
-                    "name": "Periods",
-                    "description": "One period per line. Format: '[start time]-[end time]/[days effective]/[power]W', with 1=Monday, 7=Sunday. Example: '00:00-23:59/1234567/2500W'."
+                    "name": "Períodos",
+                    "description": "Un período por línea. Formato: '[hora inicio]-[hora fin]/[días efectivos]/[potencia]W', con 1=lunes, 7=domingo. Ejemplo: '00:00-23:59/1234567/2500W'."
                 }
             }
         },
         "set_fixed_charge_periods": {
-            "name": "Set Fixed Charge Periods",
-            "description": "Sets Fixed Charge and Discharge Periods",
+            "name": "Establecer períodos de carga y descarga fija",
+            "description": "Establece los períodos de carga y descarga fija",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
-                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
+                    "name": "Batería",
+                    "description": "Debe ser un dispositivo 'Batería'"
                 },
                 "periods": {
-                    "name": "Periods",
-                    "description": "One period per line. Format: '[start time]-[end time]/[power]W'. Example: '12:00-15:59/-1000W'."
+                    "name": "Períodos",
+                    "description": "Un período por línea. Formato: '[hora inicio]-[hora fin]/[potencia]W'. Ejemplo: '12:00-15:59/-1000W'."
                 }
             }
         }
