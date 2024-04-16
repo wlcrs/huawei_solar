@@ -61,6 +61,28 @@ class HuaweiSolarNumberEntityDescription(NumberEntityDescription):
         return {"register_names": registers}
 
 
+INVERTER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
+    HuaweiSolarNumberEntityDescription(
+        key=rn.ACTIVE_POWER_PERCENTAGE_DERATING,
+        native_max_value=100,
+        native_step=0.1,
+        native_min_value=0,
+        icon="mdi:transmission-tower-off",
+        native_unit_of_measurement=PERCENTAGE,
+        entity_category=EntityCategory.CONFIG,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.ACTIVE_POWER_FIXED_VALUE_DERATING,
+        static_maximum_key=rn.P_MAX,
+        native_step=1,
+        native_min_value=0,
+        icon="mdi:transmission-tower-off",
+        native_unit_of_measurement=UnitOfPower.WATT,
+        entity_category=EntityCategory.CONFIG,
+    ),
+)
+
 ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_MAXIMUM_CHARGING_POWER,
@@ -157,7 +179,15 @@ async def async_setup_entry(
         if not ucs.configuration_update_coordinator:
             continue
 
-        slave_entities: list[HuaweiSolarNumberEntity] = []
+        slave_entities: list[HuaweiSolarNumberEntity] = [
+            await HuaweiSolarNumberEntity.create(
+                ucs.configuration_update_coordinator,
+                ucs.bridge,
+                entity_description,
+                ucs.device_infos["inverter"],
+            )
+            for entity_description in INVERTER_NUMBER_DESCRIPTIONS
+        ]
 
         if ucs.bridge.battery_type != rv.StorageProductModel.NONE:
             assert ucs.device_infos["connected_energy_storage"]

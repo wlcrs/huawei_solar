@@ -50,6 +50,12 @@
     },
     "entity": {
         "number": {
+            "active_power_percentage_derating": {
+                "name": "Vermogensbeperking (percentage)"
+            },
+            "active_power_fixed_value_derating": {
+                "name": "Vermogensbeperking"
+            },
             "storage_backup_power_state_of_charge": {
                 "name": "Noodvermogen batterijpercentage"
             },
