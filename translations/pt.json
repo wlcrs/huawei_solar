@@ -50,6 +50,12 @@
     },
     "entity": {
         "number": {
+            "active_power_percentage_derating": {
+                "name": "Power derating (by percentage)"
+            },
+            "active_power_fixed_value_derating": {
+                "name": "Power derating"
+            },
             "storage_maximum_charging_power": {
                 "name": "Maximum charging power"
             },
