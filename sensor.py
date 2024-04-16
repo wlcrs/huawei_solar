@@ -598,14 +598,14 @@ BATTERIES_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = 
         icon="mdi:battery-plus-variant",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         state_class=SensorStateClass.TOTAL,
-        device_class=SensorDeviceClass.ENERGY,
+        device_class=SensorDeviceClass.ENERGY_STORAGE,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_TOTAL_DISCHARGE,
         icon="mdi:battery-minus-variant",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         state_class=SensorStateClass.TOTAL,
-        device_class=SensorDeviceClass.ENERGY,
+        device_class=SensorDeviceClass.ENERGY_STORAGE,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_CURRENT_DAY_CHARGE_CAPACITY,
@@ -719,7 +719,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         translation_key="storage_total_charge",
         icon="mdi:battery-plus-variant",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
-        state_class=SensorStateClass.MEASUREMENT,
+        state_class=SensorStateClass.TOTAL,
         device_class=SensorDeviceClass.ENERGY_STORAGE,
     ),
     BatteryTemplateEntityDescription(
@@ -728,7 +728,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         translation_key="storage_total_discharge",
         icon="mdi:battery-minus-variant",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
-        state_class=SensorStateClass.MEASUREMENT,
+        state_class=SensorStateClass.TOTAL,
         device_class=SensorDeviceClass.ENERGY_STORAGE,
     ),
     BatteryTemplateEntityDescription(
