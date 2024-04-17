@@ -23,7 +23,7 @@ body:
       Power meter present: three phase / single phase / no
       Battery: LG RESU xxkWh / LUNA2000 xxkWh / None
       Battery Firmware version:
-      Version of Huawei Solar Installed:
+      Huawei Solar integration version:
   validations:
     required: true
 
