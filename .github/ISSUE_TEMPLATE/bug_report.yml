@@ -14,7 +14,7 @@ body:
 
 - type: textarea
   attributes:
-    label: "Bescribe your Huawei Solar Setup"
+    label: "Describe your Huawei Solar Setup"
     description: "Please be thorough when describing your setup"
     value: |
       Inverter Type:
@@ -23,6 +23,7 @@ body:
       Power meter present: three phase / single phase / no
       Battery: LG RESU xxkWh / LUNA2000 xxkWh / None
       Battery Firmware version:
+      Version of Huawei Solar Installed:
   validations:
     required: true
 
