@@ -1,7 +1,7 @@
 {
     "config": {
         "abort": {
-            "already_configured": "Apparaat is reeds geconfigureerd"
+            "already_configured": "Apparaat is al geconfigureerd"
         },
         "error": {
             "cannot_connect": "Verbinden mislukt",
@@ -51,10 +51,10 @@
     "entity": {
         "number": {
             "active_power_percentage_derating": {
-                "name": "Power derating (by percentage)"
+                "name": "Vermogensbeperking (percentage)"
             },
             "active_power_fixed_value_derating": {
-                "name": "Power derating"
+                "name": "Vermogensbeperking"
             },
             "storage_maximum_charging_power": {
                 "name": "Maximum laadvermogen"
@@ -554,14 +554,14 @@
                     "description": "Laadniveau dat moet worden bereikt"
                 },
                 "power": {
-                    "name": "Vermogen",
+                    "name": "Power",
                     "description": "Gebruikt vermogen voor het laden"
                 }
             }
         },
         "forcible_discharge_soc": {
             "name": "Geforceerd ontladen tot een ladingsniveau",
-            "description": "Batterij geforceerd laden tot een bepaald ladingsniveau",
+            "description": "Forcible Discharge of the battery to a certain State of Charge level",
             "fields": {
                 "device_id": {
                     "name": "Batterij",
@@ -592,7 +592,7 @@
             "description": "De regeling 'werkelijk vermogen' instellen op standaardmodus 'Onbeperkt'",
             "fields": {
                 "device_id": {
-                    "name": "Omvormer",
+                    "name": "Inverter",
                     "description": "Toestel type moet 'Omvormer' zijn"
                 }
             }
@@ -641,7 +641,7 @@
                 },
                 "power_percentage": {
                     "name": "Vermogen Percentage",
-                    "description": "Maximaal percentage"
+                    "description": "Maximum Percentage"
                 }
             }
         },
