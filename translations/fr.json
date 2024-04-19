@@ -1,0 +1,665 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Le périphérique est déjà configuré"
+        },
+        "error": {
+            "cannot_connect": "Échec de la connexion",
+            "invalid_auth": "Authentification invalide",
+            "invalid_slave_ids": "Les ID d'esclaves doivent être une liste de nombres entiers séparés par des virgules",
+            "read_error": "Échec de la lecture de l'onduleur.",
+            "slave_cannot_connect": "Échec de la connexion à un esclave supplémentaire",
+            "unknown": "Erreur inattendue"
+        },
+        "step": {
+            "network_login": {
+                "data": {
+                    "password": "Mot de passe",
+                    "username": "Nom d'utilisateur"
+                },
+                "description": "Veuillez saisir les identifiants de l'installateur"
+            },
+            "setup_network": {
+                "data": {
+                    "enable_parameter_configuration": "Avancé : élever les permissions",
+                    "host": "Hôte",
+                    "port": "Port",
+                    "slave_ids": "ID d'esclaves (séparés par des virgules)"
+                }
+            },
+            "setup_serial": {
+                "data": {
+                    "port": "Sélectionner le périphérique",
+                    "slave_ids": "ID d'esclaves (séparés par des virgules)"
+                },
+                "title": "Périphérique"
+            },
+            "setup_serial_manual_path": {
+                "data": {
+                    "port": "Chemin du périphérique USB"
+                },
+                "title": "Chemin"
+            },
+            "user": {
+                "data": {
+                    "type": "Type de connexion"
+                },
+                "title": "Sélectionner le type de connexion"
+            }
+        }
+    },
+    "entity": {
+        "number": {
+            "storage_backup_power_state_of_charge": {
+                "name": "SOC de la batterie de secours"
+            },
+            "storage_capacity_control_soc_peak_shaving": {
+                "name": "SOC de l'écrêtage de puissance de la batterie"
+            },
+            "storage_charging_cutoff_capacity": {
+                "name": "SOC de fin de charge"
+            },
+            "storage_discharging_cutoff_capacity": {
+                "name": "SOC de fin de décharge"
+            },
+            "storage_grid_charge_cutoff_state_of_charge": {
+                "name": "SOC de coupure de charge réseau"
+            },
+            "storage_maximum_charging_power": {
+                "name": "Puissance de charge maximale"
+            },
+            "storage_maximum_discharging_power": {
+                "name": "Puissance de décharge maximale"
+            },
+            "storage_power_of_charge_from_grid": {
+                "name": "Puissance de charge maximale depuis le réseau"
+            }
+        },
+        "select": {
+            "storage_capacity_control_mode": {
+                "name": "Mode de contrôle de capacité",
+                "state": {
+                    "active_capacity_control": "Contrôle de capacité actif",
+                    "apparent_power_limit": "Limite de puissance apparente",
+                    "disable": "Désactiver"
+                }
+            },
+            "storage_excess_pv_energy_use_in_tou": {
+                "name": "Utilisation de l'énergie PV excédentaire en TOU",
+                "state": {
+                    "charge": "Charge",
+                    "fed_to_grid": "Alimenté au réseau"
+                }
+            },
+            "storage_working_mode_settings": {
+                "name": "Mode de fonctionnement",
+                "state": {
+                    "adaptive": "Adaptatif",
+                    "fixed_charge_discharge": "Charge/décharge fixe",
+                    "fully_fed_to_grid": "Entièrement alimenté au réseau",
+                    "maximise_self_consumption": "Maximiser l'autoconsommation",
+                    "time_of_use_lg": "Heure creuse",
+                    "time_of_use_luna2000": "Heure creuse"
+                }
+            }
+        },
+        "sensor": {
+			"accumulated_energy_yield": {
+				"name": "Production d'énergie accumulée"
+			},
+			"accumulated_yield_energy": {
+				"name": "Production totale"
+			},
+			"active_grid_a_b_voltage": {
+				"name": "Tension ligne A-B"
+			},
+			"active_grid_a_power": {
+				"name": "Puissance active de la phase A"
+			},
+			"active_grid_b_c_voltage": {
+				"name": "Tension ligne B-C"
+			},
+			"active_grid_b_power": {
+				"name": "Puissance active de la phase B"
+			},
+			"active_grid_c_a_voltage": {
+				"name": "Tension ligne C-A"
+			},
+			"active_grid_c_power": {
+				"name": "Puissance active de la phase C"
+			},
+			"active_grid_frequency": {
+				"name": "Fréquence"
+			},
+			"active_grid_power_factor": {
+				"name": "Facteur de puissance"
+			},
+			"active_power": {
+				"name": "Puissance active"
+			},
+			"alarm": {
+				"name": "Alarme"
+			},
+			"alarms": {
+				"name": "Alarmes"
+			},
+			"daily_yield_energy": {
+				"name": "Production quotidienne"
+			},
+			"day_active_power_peak": {
+				"name": "Pic de puissance active journalière"
+			},
+			"device_status": {
+				"name": "État du périphérique"
+			},
+			"efficiency": {
+				"name": "Efficacité"
+			},
+			"grid_a_current": {
+				"name": "Courant de la phase A"
+			},
+			"grid_a_voltage": {
+				"name": "Tension de la phase A"
+			},
+			"grid_accumulated_energy": {
+				"name": "Consommation"
+			},
+			"grid_accumulated_reactive_power": {
+				"name": "Énergie réactive"
+			},
+			"grid_b_current": {
+				"name": "Courant de la phase B"
+			},
+			"grid_b_voltage": {
+				"name": "Tension de la phase B"
+			},
+			"grid_c_current": {
+				"name": "Courant de la phase C"
+			},
+			"grid_c_voltage": {
+				"name": "Tension de la phase C"
+			},
+			"grid_exported_energy": {
+				"name": "Exporté"
+			},
+			"input_current": {
+				"name": "Courant d'entrée"
+			},
+			"input_power": {
+				"name": "Puissance d'entrée"
+			},
+			"input_voltage": {
+				"name": "Tension d'entrée"
+			},
+			"internal_temperature": {
+				"name": "Température interne"
+			},
+			"line_voltage_a_b": {
+				"name": "Tension ligne A-B"
+			},
+			"line_voltage_b_c": {
+				"name": "Tension ligne B-C"
+			},
+			"line_voltage_c_a": {
+				"name": "Tension ligne C-A"
+			},
+			"meter_status": {
+				"name": "État du compteur"
+			},
+			"nb_online_optimizers": {
+				"name": "Optimiseurs en ligne"
+			},
+			"output_current": {
+				"name": "Courant de sortie"
+			},
+			"output_power": {
+				"name": "Puissance de sortie"
+			},
+			"output_voltage": {
+				"name": "Tension de sortie"
+			},
+			"phase_a_current": {
+				"name": "Courant de la phase A"
+			},
+			"phase_a_voltage": {
+				"name": "Tension de la phase A"
+			},
+			"phase_b_current": {
+				"name": "Courant de la phase B"
+			},
+			"phase_b_voltage": {
+				"name": "Tension de la phase B"
+			},
+			"phase_c_current": {
+				"name": "Courant de la phase C"
+			},
+			"phase_c_voltage": {
+				"name": "Tension de la phase C"
+			},
+			"power_factor": {
+				"name": "Facteur de puissance"
+			},
+			"power_meter_active_power": {
+				"name": "Puissance active"
+			},
+			"power_meter_reactive_power": {
+				"name": "Puissance réactive"
+			},
+			"pv_01_current": {
+				"name": "Courant PV 1"
+			},
+			"pv_01_voltage": {
+				"name": "Tension PV 1"
+			},
+			"pv_02_current": {
+				"name": "Courant PV 2"
+			},
+			"pv_02_voltage": {
+				"name": "Tension PV 2"
+			},
+			"pv_03_current": {
+				"name": "Courant PV 3"
+			},
+			"pv_03_voltage": {
+				"name": "Tension PV 3"
+			},
+			"pv_04_current": {
+				"name": "Courant PV 4"
+			},
+			"pv_04_voltage": {
+				"name": "Tension PV 4"
+			},
+			"pv_05_current": {
+				"name": "Courant PV 5"
+			},
+			"pv_05_voltage": {
+				"name": "Tension PV 5"
+			},
+			"pv_06_current": {
+				"name": "Courant PV 6"
+			},
+			"pv_06_voltage": {
+				"name": "Tension PV 6"
+			},
+			"pv_07_current": {
+				"name": "Courant PV 7"
+			},
+			"pv_07_voltage": {
+				"name": "Tension PV 7"
+			},
+			"pv_08_current": {
+				"name": "Courant PV 8"
+			},
+			"pv_08_voltage": {
+				"name": "Tension PV 8"
+			},
+			"pv_09_current": {
+				"name": "Courant PV 9"
+			},
+			"pv_09_voltage": {
+				"name": "Tension PV 9"
+			},
+			"pv_10_current": {
+				"name": "Courant PV 10"
+			},
+			"pv_10_voltage": {
+				"name": "Tension PV 10"
+			},
+			"pv_11_current": {
+				"name": "Courant PV 11"
+			},
+			"pv_11_voltage": {
+				"name": "Tension PV 11"
+			},
+			"pv_12_current": {
+				"name": "Courant PV 12"
+			},
+			"pv_12_voltage": {
+				"name": "Tension PV 12"
+			},
+			"pv_13_current": {
+				"name": "Courant PV 13"
+			},
+			"pv_13_voltage": {
+				"name": "Tension PV 13"
+			},
+			"pv_14_current": {
+				"name": "Courant PV 14"
+			},
+			"pv_14_voltage": {
+				"name": "Tension PV 14"
+			},
+			"pv_15_current": {
+				"name": "Courant PV 15"
+			},
+			"pv_15_voltage": {
+				"name": "Tension PV 15"
+			},
+			"pv_16_current": {
+				"name": "Courant PV 16"
+			},
+			"pv_16_voltage": {
+				"name": "Tension PV 16"
+			},
+			"pv_17_current": {
+				"name": "Courant PV 17"
+			},
+			"pv_17_voltage": {
+				"name": "Tension PV 17"
+			},
+			"pv_18_current": {
+				"name": "Courant PV 18"
+			},
+			"pv_18_voltage": {
+				"name": "Tension PV 18"
+			},
+			"pv_19_current": {
+				"name": "Courant PV 19"
+			},
+			"pv_19_voltage": {
+				"name": "Tension PV 19"
+			},
+			"pv_20_current": {
+				"name": "Courant PV 20"
+			},
+			"pv_20_voltage": {
+				"name": "Tension PV 20"
+			},
+			"pv_21_current": {
+				"name": "Courant PV 21"
+			},
+			"pv_21_voltage": {
+				"name": "Tension PV 21"
+			},
+			"pv_22_current": {
+				"name": "Courant PV 22"
+			},
+			"pv_22_voltage": {
+				"name": "Tension PV 22"
+			},
+			"pv_23_current": {
+				"name": "Courant PV 23"
+			},
+			"pv_23_voltage": {
+				"name": "Tension PV 23"
+			},
+			"pv_24_current": {
+				"name": "Courant PV 24"
+			},
+			"pv_24_voltage": {
+				"name": "Tension PV 24"
+			},
+			"reactive_power": {
+				"name": "Puissance réactive"
+			},
+			"running_status": {
+				"name": "État de fonctionnement"
+			},
+			"shutdown_time": {
+				"name": "Heure d'arrêt"
+			},
+			"single_phase_meter_current": {
+				"name": "Courant"
+			},
+			"single_phase_meter_voltage": {
+				"name": "Tension"
+			},
+			"startup_time": {
+				"name": "Heure de démarrage"
+			},
+			"state_1": {
+				"name": "État de l'onduleur"
+			},
+			"state_2_0": {
+				"name": "Statut de verrouillage"
+			},
+			"state_2_1": {
+				"name": "Statut de connexion PV"
+			},
+			"state_2_2": {
+				"name": "Collecte de données DSP"
+			},
+			"state_3_0": {
+				"name": "Statut hors réseau"
+			},
+			"state_3_1": {
+				"name": "Interrupteur hors réseau"
+			},
+			"storage_bus_current": {
+				"name": "Courant du bus"
+			},
+			"storage_bus_voltage": {
+				"name": "Tension du bus"
+			},
+			"storage_capacity_control_periods": {
+				"name": "Périodes de contrôle de la capacité"
+			},
+			"storage_charge_discharge_power": {
+				"name": "Puissance de charge/décharge"
+			},
+			"storage_current_day_charge_capacity": {
+				"name": "Charge journalière"
+			},
+			"storage_current_day_discharge_capacity": {
+				"name": "Décharge journalière"
+			},
+			"storage_fixed_charging_and_discharging_periods": {
+				"name": "Périodes de charge et de décharge fixes"
+			},
+			"storage_running_status": {
+				"name": "État de fonctionnement"
+			},
+			"storage_state_of_capacity": {
+				"name": "État de la capacité"
+			},
+			"storage_time_of_use_charging_and_discharging_periods": {
+				"name": "Périodes de charge et de décharge en fonction de l'utilisation"
+			},
+			"storage_total_charge": {
+				"name": "Charge totale"
+			},
+			"storage_total_discharge": {
+				"name": "Décharge totale"
+			},
+			"temperature": {
+				"name": "Température"
+			},
+			"voltage_to_ground": {
+				"name": "Tension à la terre"
+			}
+		},
+		"switch": {
+			"startup": {
+				"name": "Marche/Arrêt de l'onduleur"
+			},
+			"storage_charge_from_grid_function": {
+				"name": "Charge depuis le réseau"
+			}
+		}
+	},
+	"services": {
+		"forcible_charge": {
+			"description": "Charge forcée de la batterie pendant un certain temps",
+			"fields": {
+				"device_id": {
+					"description": "Doit être un périphérique 'Batterie'",
+					"name": "Batterie"
+				},
+				"duration": {
+					"description": "Durée de la charge",
+					"name": "Durée"
+				},
+				"power": {
+					"description": "Puissance utilisée pour la charge",
+					"name": "Puissance"
+				}
+			},
+			"name": "Charge forcée"
+		},
+		"forcible_charge_soc": {
+			"description": "Charge forcée de la batterie jusqu'à un certain niveau de charge",
+			"fields": {
+				"device_id": {
+					"description": "Doit être un périphérique 'Batterie'",
+					"name": "Batterie"
+				},
+				"power": {
+					"description": "Puissance utilisée pour la charge",
+					"name": "Puissance"
+				},
+				"target_soc": {
+					"description": "Niveau de charge à atteindre",
+					"name": "Niveau cible de SoC"
+				}
+			},
+			"name": "Charge forcée jusqu'à un niveau de SoC"
+		},
+		"forcible_discharge": {
+			"description": "Décharge forcée de la batterie pendant un certain temps",
+			"fields": {
+				"device_id": {
+					"description": "Doit être un périphérique 'Batterie'",
+					"name": "Batterie"
+				},
+				"duration": {
+					"description": "Durée de la décharge",
+					"name": "Durée"
+				},
+				"power": {
+					"description": "Puissance utilisée pour la décharge",
+					"name": "Puissance"
+				}
+			},
+			"name": "Décharge forcée"
+		},
+		"forcible_discharge_soc": {
+			"description": "Décharge forcée de la batterie jusqu'à un certain niveau de charge",
+			"fields": {
+				"device_id": {
+					"description": "Doit être un périphérique 'Batterie'",
+					"name": "Batterie"
+				},
+				"power": {
+					"description": "Puissance utilisée pour la décharge",
+					"name": "Puissance"
+				},
+				"target_soc": {
+					"description": "Niveau de charge à atteindre",
+					"name": "Niveau cible de SoC"
+				}
+			},
+			"name": "Décharge forcée jusqu'à un niveau de SoC"
+		},
+		"reset_maximum_feed_grid_power": {
+			"description": "Réinitialise le contrôle de la puissance active au mode Illimité par défaut",
+			"fields": {
+				"device_id": {
+					"description": "Doit être un périphérique 'Onduleur'",
+					"name": "Onduleur"
+				}
+			},
+			"name": "Définir le contrôle de puissance active sur la puissance maximale envoyée au réseau"
+		},
+		"set_capacity_control_periods": {
+			"description": "Définir les périodes de contrôle de capacité",
+			"fields": {
+				"device_id": {
+					"description": "Doit être un périphérique 'Batterie'",
+					"name": "Batterie"
+				},
+				"periods": {
+					"description": "Une période par ligne. Format : '[heure de début]-[heure de fin]/[jours d'efficacité]/[puissance]W', avec 1=lundi, 7=dimanche. Exemple : '00:00-23:59/1234567/2500W'.",
+					"name": "Périodes"
+				}
+			},
+			"name": "Définir les périodes de contrôle de capacité"
+		},
+		"set_di_active_power_scheduling": {
+			"description": "Définir le contrôle de puissance active sur 'Planification active DI'",
+			"fields": {
+				"device_id": {
+					"description": "Doit être un périphérique 'Onduleur'",
+					"name": "Onduleur"
+				}
+			},
+			"name": "Définir le contrôle de puissance active sur 'Planification active DI'"
+		},
+		"set_fixed_charge_periods": {
+			"description": "Définir les périodes de charge et de décharge fixes",
+			"fields": {
+				"device_id": {
+					"description": "Doit être un périphérique 'Batterie'",
+					"name": "Batterie"
+				},
+				"periods": {
+					"description": "Une période par ligne. Format : '[heure de début]-[heure de fin]/[puissance]W'. Exemple : '12:00-15:59/-1000W'.",
+					"name": "Périodes"
+				}
+			},
+			"name": "Définir les périodes de charge fixes"
+		},
+		"set_maximum_feed_grid_power": {
+			"description": "Définit le contrôle de puissance active sur 'Connexion au réseau limitée en puissance' avec la puissance donnée",
+			"fields": {
+				"device_id": {
+					"description": "Doit être un périphérique 'Onduleur'",
+					"name": "Onduleur"
+				},
+				"power": {
+					"description": "Puissance maximale",
+					"name": "Puissance"
+				}
+			},
+			"name": "Limite de la puissance envoyée au réseau"
+		},
+		"set_maximum_feed_grid_power_percent": {
+			"description": "Définit le contrôle de puissance active sur 'Connexion au réseau limitée en puissance (%)' avec le pourcentage donné",
+			"fields": {
+				"device_id": {
+					"description": "Doit être un périphérique 'Onduleur'",
+					"name": "Onduleur"
+				},
+				"power_percentage": {
+					"description": "Pourcentage maximal",
+					"name": "Pourcentage de puissance"
+				}
+			},
+			"name": "Limite de la puissance envoyée au réseau en pourcentage"
+		},
+		"set_tou_periods": {
+			"description": "Définir les périodes de tarification en fonction de l'utilisation",
+			"fields": {
+				"device_id": {
+					"description": "Doit être un périphérique 'Batterie'",
+					"name": "Batterie"
+				},
+				"periods": {
+					"description": "Une période par ligne. Pour les batteries Huawei LUNA2000 : '[heure de début]-[heure de fin]/[jours d'efficacité]/[charge]', avec 1=lundi, 7=dimanche (exemple : '12:00-14:00/1234567/-'). Pour les batteries LG RESU : '[heure de début]-[heure de fin]/[prix de l'électricité]' (exemple : 13:00-14:00/0.50).",
+					"name": "Périodes"
+				}
+			},
+			"name": "Définir les périodes de tarification en fonction de l'utilisation"
+		},
+		"set_zero_power_grid_connection": {
+			"description": "Définir le contrôle de puissance active sur 'Connexion au réseau à zéro puissance'",
+			"fields": {
+				"device_id": {
+					"description": "Doit être un périphérique 'Onduleur'",
+					"name": "Onduleur"
+				}
+			},
+			"name": "Définir le contrôle de puissance active sur 'Connexion au réseau à zéro puissance'"
+		},
+		"stop_forcible_charge": {
+			"description": "Annuler la commande de charge forcée en cours",
+			"fields": {
+				"device_id": {
+					"description": "Doit être un périphérique 'Batterie'",
+					"name": "Batterie"
+				}
+			},
+			"name": "Arrêter la charge ou la décharge forcée"
+		}
+	}
+}
+
