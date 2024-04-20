@@ -50,6 +50,12 @@
     },
     "entity": {
         "number": {
+            "active_power_percentage_derating": {
+                "name": "Riduzione della Potenza (in percentuale)"
+            },
+            "active_power_fixed_value_derating": {
+                "name": "Riduzione della Potenza"
+            },
             "storage_backup_power_state_of_charge": {
                 "name": "Alimentazione backup SOC batteria"
             },
@@ -388,6 +394,18 @@
             },
             "pv_24_voltage": {
                 "name": "Tensione FV 24"
+            },
+            "battery_working_mode": {
+                "name": "Modo di funzionamento"
+            },
+            "battery_rated_charge_power": {
+                "name": "Potenza di carica nominale"
+            },
+            "battery_rated_discharge_power": {
+                "name": "Potenza di scarica nominale"
+            },
+            "battery_remaining_charge_discharge_time": {
+                "name": "Tempo di carica/scarica rimasto"
             },
             "reactive_power": {
                 "name": "Potenza reattiva"
