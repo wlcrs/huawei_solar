@@ -51,10 +51,10 @@
     "entity": {
         "number": {
             "active_power_percentage_derating": {
-                "name": "Power derating (by percentage)"
+                "name": "Riduzione della Potenza (in percentuale)"
             },
             "active_power_fixed_value_derating": {
-                "name": "Power derating"
+                "name": "Riduzione della Potenza"
             },
             "storage_maximum_charging_power": {
                 "name": "Potenza massima di carica batteria"
@@ -455,16 +455,16 @@
                 "name": "Corrente FV 24"
             },
             "battery_working_mode": {
-                "name": "Working mode"
+                "name": "Modo di funzionamento"
             },
             "battery_rated_charge_power": {
-                "name": "Rated charge power"
+                "name": "Potenza di carica nominale"
             },
             "battery_rated_discharge_power": {
-                "name": "Rated discharge power"
+                "name": "Potenza di scarica nominale"
             },
             "battery_remaining_charge_discharge_time": {
-                "name": "Remaining charge/discharge time"
+                "name": "Tempo di carica/scarica rimasto"
             }
         },
         "select": {
