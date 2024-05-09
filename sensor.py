@@ -413,7 +413,7 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
         # Was SensorDeviceClass.REACTIVE_POWER, which only supports 'var' unit of measurement.
         # We need a SensorDeviceClass.REACTIVE_ENERGY
         device_class=None,
-        state_class=SensorStateClass.TOTAL_INCREASING,
+        state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
     ),
 )
