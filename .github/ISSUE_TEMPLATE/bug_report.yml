@@ -17,13 +17,17 @@ body:
     label: "Describe your Huawei Solar Setup"
     description: "Please be thorough when describing your setup"
     value: |
-      Inverter Type:
-      Inverter Firmware version:
-      SDongle present: yes / no
+      Inverter Type: 
+      Inverter Firmware version: 
+      sDongle present: Yes / No
+      sDongle Type: sDongleA-05 (WiFi / Ethernet) / SDongleA-03 (4G)
+      sDongle Connectivitiy: WiFi / Ethernet / 4G
+      sDongle Firmware: 
       Power meter present: three phase / single phase / no
-      Battery: LG RESU xxkWh / LUNA2000 xxkWh / None
-      Battery Firmware version:
-      Huawei Solar integration version:
+      Optimizers Present: Yes / No
+      Battery: LUNA2000-SO xxkWh / LUNA2000-S1 xxkWh (Released 2024) / LG RESU xxkWh / None
+      Battery Firmware version: 
+      Huawei Solar integration version: 
   validations:
     required: true
 
