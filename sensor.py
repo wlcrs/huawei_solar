@@ -1308,36 +1308,33 @@ class HuaweiSolarForcibleChargeEntity(
             ].value
 
             if mode == rv.StorageForcibleChargeDischarge.STOP:
-                value = "stopped"
+                value = "Stopped"
+            elif mode == rv.StorageForcibleChargeDischarge.CHARGE:
+                if setting == rv.StorageForcibleChargeDischargeTargetMode.SOC:
+                    value = f"Charging at {charge_power}W until {target_soc}%"
+                else:
+                    value = f"Charging at {charge_power}W for {duration} minutes"
             else:
-                value = (
-                    f"{'charging' if mode == rv.StorageForcibleChargeDischarge.CHARGE else 'discharging'}_"
-                    f"{'soc' if setting == rv.StorageForcibleChargeDischargeTargetMode.SOC else 'time'}"
-                )
+                assert mode == rv.StorageForcibleChargeDischarge.DISCHARGE
+                if setting == rv.StorageForcibleChargeDischargeTargetMode.SOC:
+                    value = f"Discharging at {discharge_power}W until {target_soc}%"
+                else:
+                    value = f"Discharging at {discharge_power}W for {duration} minutes"
 
             self._attr_available = True
+            self._attr_native_value = value
             self._attr_extra_state_attributes = {
                 "mode": str(mode),
-                "setting": "SoC"
-                if setting == rv.StorageForcibleChargeDischargeTargetMode.SOC
-                else "Time",
+                "setting": str(setting),
                 "charge_power": charge_power,
                 "discharge_power": discharge_power,
                 "target_soc": target_soc,
                 "duration": duration,
             }
-            self._attr_translation_placeholders = {
-                "charge_power": charge_power,
-                "discharge_power": discharge_power,
-                "target_soc": target_soc,
-                "duration": duration,
-            }
-            self._attr_native_value = value
         else:
             self._attr_available = False
             self._attr_native_value = None
             self._attr_extra_state_attributes.clear()
-            self._attr_translation_placeholders.clear()
         self.async_write_ha_state()
 
 

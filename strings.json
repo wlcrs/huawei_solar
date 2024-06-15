@@ -467,14 +467,7 @@
                 "name": "Remaining charge/discharge time"
             },
             "forcible_charge_summary": {
-                "name": "Forcible Charge",
-                "state": {
-                    "stopped": "Stopped",
-                    "charging_soc": "Charging at {charge_power}W until {target_soc}%",
-                    "discharging_soc": "Discharging at {discharge_power}W until {target_soc}%",
-                    "charging_time": "Charging at {charge_power}W for {duration} minutes",
-                    "discharging_time": "Discharging at {discharge_power}W for {duration} minutes"
-                }
+                "name": "Forcible Charge"
             }
         },
         "select": {
