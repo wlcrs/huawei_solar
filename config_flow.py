@@ -206,18 +206,25 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     # Only used in reconfigure flows:
     _reconfigure_entry: config_entries.ConfigEntry | None = None
 
+    # Only used for async_step_network_login
+    _inverter_info: dict[str, Any] | None = None
+
     VERSION = 1
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Step when user initializes a integration."""
-        return self.async_step_setup_connection_type()
+        return await self.async_step_setup_connection_type()
 
     def _update_config_data_from_entry_data(self, entry_data: dict[str, Any]):
         self._host = entry_data.get(CONF_HOST)
         self._port = entry_data.get(CONF_PORT)
-        self._slave_ids = entry_data.get(CONF_SLAVE_IDS)
+
+        slave_ids = entry_data.get(CONF_SLAVE_IDS)
+        if not isinstance(slave_ids, list):
+            slave_ids = [slave_ids]
+        self._slave_ids = ",".join(map(str, slave_ids))
 
         self._username = entry_data.get(CONF_USERNAME)
         self._password = entry_data.get(CONF_PASSWORD)
@@ -232,8 +239,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self.context["entry_id"]
         )
         self._update_config_data_from_entry_data(self._reconfigure_entry.data)
-
-        return self.async_step_setup_connection_type()
+        await self.hass.config_entries.async_unload(self.context["entry_id"])
+        return await self.async_step_setup_connection_type()
 
     async def async_step_reauth(
         self, config: dict[str, Any] | None = None
@@ -330,7 +337,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required(CONF_PORT, default=self._port): vol.In(list_of_ports),
                 vol.Required(
                     CONF_SLAVE_IDS,
-                    default=",".join(self._slave_ids)
+                    default=",".join(map(str, self._slave_ids))
                     if self._slave_ids
                     else str(DEFAULT_SERIAL_SLAVE_ID),
                 ): str,
@@ -374,7 +381,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required(CONF_PORT, default=self._port): str,
                 vol.Required(
                     CONF_SLAVE_IDS,
-                    default=",".join(self._slave_ids)
+                    default=",".join(map(str, self._slave_ids))
                     if self._slave_ids
                     else str(DEFAULT_SERIAL_SLAVE_ID),
                 ): str,
@@ -404,6 +411,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         host=self._host,
                         port=self._port,
                         slave_ids=self._slave_ids,
+                        elevated_permissions=self._elevated_permissions,
                     )
 
                 except ConnectionException:
@@ -429,6 +437,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         self.context["title_placeholders"] = {
                             "name": info["model_name"]
                         }
+                        self._inverter_info = info
                         return await self.async_step_network_login()
 
                     # In case of a reconfigure, the user can have unchecked the elevated permissions checkbox
@@ -436,7 +445,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     self._password = None
 
                     # Otherwise, we can directly create the device entry!
-                    return await self._create_or_update_entry()
+                    return await self._create_or_update_entry(info)
 
         return self.async_show_form(
             step_id="setup_network",
@@ -448,7 +457,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     ): cv.port,
                     vol.Required(
                         CONF_SLAVE_IDS,
-                        default=",".join(self._slave_ids)
+                        default=",".join(map(str, self._slave_ids))
                         if self._slave_ids
                         else str(DEFAULT_SLAVE_ID),
                     ): str,
@@ -468,6 +477,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         assert self._host is not None
         assert self._port is not None
         assert self._slave_ids is not None
+        assert self._inverter_info is not None
 
         errors = {}
 
@@ -484,7 +494,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     password=self._password,
                 )
                 if login_success:
-                    return await self._create_or_update_entry()
+                    return await self._create_or_update_entry(self._inverter_info)
 
                 errors["base"] = "invalid_auth"
             except ConnectionException:
@@ -515,10 +525,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def _create_or_update_entry(self, inverter_info):
+    async def _create_or_update_entry(self, inverter_info: dict[str, Any] | None):
         """Create the entry, or update the existing one if present."""
 
-        self.context["title_placeholders"] = {"name": inverter_info["model_name"]}
         data = {
             CONF_HOST: self._host,
             CONF_PORT: self._port,
@@ -533,6 +542,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             await self.hass.config_entries.async_reload(self._reauth_entry.entry_id)
             return self.async_abort(reason="reauth_successful")
 
+        assert inverter_info
+        self.context["title_placeholders"] = {"name": inverter_info["model_name"]}
         if self._reconfigure_entry:
             self.hass.config_entries.async_update_entry(
                 self._reconfigure_entry, data=data
@@ -545,9 +556,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         await self.async_set_unique_id(inverter_info["serial_number"])
         self._abort_if_unique_id_configured(updates=data)
 
-        return self.async_create_entry(
-            title=self._inverter_info["model_name"], data=data
-        )
+        return self.async_create_entry(title=inverter_info["model_name"], data=data)
 
 
 class SlaveIdsParseException(Exception):
