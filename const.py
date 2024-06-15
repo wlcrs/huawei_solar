@@ -1,4 +1,5 @@
 """Constants for the Huawei Solar integration."""
+
 from datetime import timedelta
 
 DOMAIN = "huawei_solar"

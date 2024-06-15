@@ -39,32 +39,16 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-STEP_SETUP_NETWORK_DATA_SCHEMA = vol.Schema(
-    {
-        vol.Required(CONF_HOST): str,
-        vol.Required(CONF_PORT, default=DEFAULT_PORT): cv.port,
-        vol.Required(CONF_SLAVE_IDS, default=str(DEFAULT_SLAVE_ID)): str,
-        vol.Required(CONF_ENABLE_PARAMETER_CONFIGURATION, default=False): bool,
-    }
-)
-
-STEP_LOGIN_DATA_SCHEMA = vol.Schema(
-    {
-        vol.Required(CONF_USERNAME, default=DEFAULT_USERNAME): str,
-        vol.Required(CONF_PASSWORD): str,
-    }
-)
-
 CONF_MANUAL_PATH = "Enter Manually"
 
 
-async def validate_serial_setup(data: dict[str, Any]) -> dict[str, Any]:
+async def validate_serial_setup(port: str, slave_ids: list[int]) -> dict[str, Any]:
     """Validate the serial device that was passed by the user."""
     bridge = None
     try:
         bridge = await HuaweiSolarBridge.create_rtu(
-            port=data[CONF_PORT],
-            slave_id=data[CONF_SLAVE_IDS][0],
+            port=port,
+            slave_id=slave_ids[0],
         )
 
         _LOGGER.info(
@@ -79,7 +63,7 @@ async def validate_serial_setup(data: dict[str, Any]) -> dict[str, Any]:
         }
 
         # Also validate the other slave-ids
-        for slave_id in data[CONF_SLAVE_IDS][1:]:
+        for slave_id in slave_ids[1:]:
             try:
                 slave_bridge = await HuaweiSolarBridge.create_extra_slave(
                     bridge, slave_id
@@ -104,7 +88,13 @@ async def validate_serial_setup(data: dict[str, Any]) -> dict[str, Any]:
             await bridge.stop()
 
 
-async def validate_network_setup(data: dict[str, Any]) -> dict[str, Any]:
+async def validate_network_setup(
+    *,
+    host: str,
+    port: int,
+    slave_ids: list[int],
+    elevated_permissions: bool,
+) -> dict[str, Any]:
     """Validate the user input allows us to connect.
 
     Data has the keys from STEP_SETUP_NETWORK_DATA_SCHEMA with values provided by the user.
@@ -112,9 +102,9 @@ async def validate_network_setup(data: dict[str, Any]) -> dict[str, Any]:
     bridge = None
     try:
         bridge = await HuaweiSolarBridge.create(
-            host=data[CONF_HOST],
-            port=data[CONF_PORT],
-            slave_id=data[CONF_SLAVE_IDS][0],
+            host=host,
+            port=port,
+            slave_id=slave_ids[0],
         )
 
         _LOGGER.info(
@@ -127,14 +117,14 @@ async def validate_network_setup(data: dict[str, Any]) -> dict[str, Any]:
             "model_name": bridge.model_name,
             "serial_number": bridge.serial_number,
         }
-        if data[CONF_ENABLE_PARAMETER_CONFIGURATION]:
+        if elevated_permissions:
             # Check if we have write access. If this is not the case, we will
             # need to login (and request the username/password from the user to be
             # able to do this).
             result["has_write_permission"] = await bridge.has_write_permission()
 
         # Also validate the other slave-ids
-        for slave_id in data[CONF_SLAVE_IDS][1:]:
+        for slave_id in slave_ids[1:]:
             try:
                 slave_bridge = await HuaweiSolarBridge.create_extra_slave(
                     bridge, slave_id
@@ -160,7 +150,12 @@ async def validate_network_setup(data: dict[str, Any]) -> dict[str, Any]:
 
 
 async def validate_network_setup_login(
-    host: str, port: int, slave_id: int, login_data: dict[str, Any]
+    *,
+    host: str,
+    port: int,
+    slave_id: int,
+    username: str,
+    password: str,
 ) -> bool:
     """Verify the installer username/password and test if it can perform a write-operation."""
     bridge = None
@@ -172,7 +167,7 @@ async def validate_network_setup_login(
             slave_id=slave_id,
         )
 
-        await bridge.login(login_data[CONF_USERNAME], login_data[CONF_PASSWORD])
+        await bridge.login(username, password)
 
         # verify that we have write-permission now
 
@@ -185,30 +180,76 @@ async def validate_network_setup_login(
             await bridge.stop()
 
 
+def parse_slave_ids(slave_ids: str):
+    """Parse slave ids string into list of ints."""
+    try:
+        return list(map(int, slave_ids.split(",")))
+    except ValueError as err:
+        raise SlaveIdsParseException from err
+
+
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Huawei Solar."""
 
+    # Values entered by user in config flow
+    _host: str | None = None
+    _port: int | str | None = None
+    _slave_ids: list[int] | None = None
+
+    _username: str | None = None
+    _password: str | None = None
+
+    _elevated_permissions = False
+
+    # Only used in reauth flows:
+    _reauth_entry: config_entries.ConfigEntry | None = None
+    # Only used in reconfigure flows:
+    _reconfigure_entry: config_entries.ConfigEntry | None = None
+
     VERSION = 1
-
-    def __init__(self) -> None:
-        """Initialize flow."""
-        self._host: str | None = None
-        self._port: int | None = None
-        self._slave_ids: list[int] | None = None
-        self._enable_parameter_configuration = False
-
-        self._inverter_info: dict | None = None
-
-        self._username: str | None = None
-        self._password: str | None = None
-
-        # Only used in reauth flows:
-        self._reauth_entry: config_entries.ConfigEntry | None = None
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Step when user initializes a integration."""
+        return self.async_step_setup_connection_type()
+
+    def _update_config_data_from_entry_data(self, entry_data: dict[str, Any]):
+        self._host = entry_data.get(CONF_HOST)
+        self._port = entry_data.get(CONF_PORT)
+        self._slave_ids = entry_data.get(CONF_SLAVE_IDS)
+
+        self._username = entry_data.get(CONF_USERNAME)
+        self._password = entry_data.get(CONF_PASSWORD)
+
+        self._elevated_permissions = entry_data.get(
+            CONF_ENABLE_PARAMETER_CONFIGURATION, False
+        )
+
+    async def async_step_reconfigure(self, user_input: dict[str, Any] | None = None):
+        """Step when user reconfigures the integration."""
+        self._reconfigure_entry = self.hass.config_entries.async_get_entry(
+            self.context["entry_id"]
+        )
+        self._update_config_data_from_entry_data(self._reconfigure_entry.data)
+
+        return self.async_step_setup_connection_type()
+
+    async def async_step_reauth(
+        self, config: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Perform reauth upon an login error."""
+        assert config is not None
+        self._reauth_entry = self.hass.config_entries.async_get_entry(
+            self.context["entry_id"]
+        )
+        self._update_config_data_from_entry_data(config)
+        return await self.async_step_network_login()
+
+    async def async_step_setup_connection_type(
+        self, user_input: dict[str, Any] | None = None
+    ):
+        """Step to let the user choose the connection type."""
         if user_input is not None:
             user_selection = user_input[CONF_TYPE]
             if user_selection == "Serial":
@@ -218,37 +259,42 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         list_of_types = ["Serial", "Network"]
 
-        schema = vol.Schema({vol.Required(CONF_TYPE): vol.In(list_of_types)})
-        return self.async_show_form(step_id="user", data_schema=schema)
+        # In case of a reconfigure flow, we already know the current choice.
+        current_conn_type = None
+        if self._host:
+            current_conn_type = "Network"
+        elif self._port:
+            current_conn_type = "Serial"
+        schema = vol.Schema(
+            {vol.Required(CONF_TYPE, default=current_conn_type): vol.In(list_of_types)}
+        )
+        return self.async_show_form(step_id="setup_connection_type", data_schema=schema)
 
     async def async_step_setup_serial(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Handle connection parameters when using ModbusRTU."""
-        # Parameter configuration is always possible over serial connection
-        self._enable_parameter_configuration = True
+        # You always have elevated permissions when connecting over serial
+        self._elevated_permissions = True
 
         errors = {}
 
         if user_input is not None:
-            user_selection = user_input[CONF_PORT]
-            if user_selection == CONF_MANUAL_PATH:
-                self._slave_ids = user_input[CONF_SLAVE_IDS]
-                return await self.async_step_setup_serial_manual_path()
-
-            user_input[CONF_PORT] = await self.hass.async_add_executor_job(
-                usb.get_serial_by_id, user_input[CONF_PORT]
-            )
-
+            self._host = None
             try:
-                user_input[CONF_SLAVE_IDS] = list(
-                    map(int, user_input[CONF_SLAVE_IDS].split(","))
-                )
-            except ValueError:
+                self._slave_ids = parse_slave_ids(user_input[CONF_SLAVE_IDS])
+            except SlaveIdsParseException:
                 errors["base"] = "invalid_slave_ids"
             else:
+                if user_input[CONF_PORT] == CONF_MANUAL_PATH:
+                    return await self.async_step_setup_serial_manual_path()
+
+                self._port = await self.hass.async_add_executor_job(
+                    usb.get_serial_by_id, user_input[CONF_PORT]
+                )
+
                 try:
-                    info = await validate_serial_setup(user_input)
+                    info = await validate_serial_setup(self._port, self._slave_ids)
 
                 except ConnectionException:
                     errors["base"] = "cannot_connect"
@@ -256,27 +302,13 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     errors["base"] = "slave_cannot_connect"
                 except ReadException:
                     errors["base"] = "read_error"
-                except Exception as exception:  # pylint: disable=broad-except
-                    _LOGGER.exception(exception)
+                except Exception:  # pylint: disable=broad-except
+                    _LOGGER.exception(
+                        "Unexpected exception while connecting over serial"
+                    )
                     errors["base"] = "unknown"
                 else:
-                    await self.async_set_unique_id(info["serial_number"])
-                    self._abort_if_unique_id_configured(
-                        updates={
-                            CONF_HOST: None,
-                            CONF_PORT: user_input[CONF_PORT],
-                            CONF_SLAVE_IDS: user_input[CONF_SLAVE_IDS],
-                        }
-                    )
-
-                    self._port = user_input[CONF_PORT]
-                    self._slave_ids = user_input[CONF_SLAVE_IDS]
-
-                    self._inverter_info = info
-                    self.context["title_placeholders"] = {"name": info["model_name"]}
-
-                    # We can directly make the new entry
-                    return await self._create_entry()
+                    return await self._create_or_update_entry(info)
 
         ports = await self.hass.async_add_executor_job(serial.tools.list_ports.comports)
         list_of_ports = {
@@ -295,8 +327,13 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         schema = vol.Schema(
             {
-                vol.Required(CONF_PORT): vol.In(list_of_ports),
-                vol.Required(CONF_SLAVE_IDS, default=str(DEFAULT_SERIAL_SLAVE_ID)): str,
+                vol.Required(CONF_PORT, default=self._port): vol.In(list_of_ports),
+                vol.Required(
+                    CONF_SLAVE_IDS,
+                    default=",".join(self._slave_ids)
+                    if self._slave_ids
+                    else str(DEFAULT_SERIAL_SLAVE_ID),
+                ): str,
             }
         )
         return self.async_show_form(
@@ -312,48 +349,35 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
 
         if user_input is not None:
+            self._host = None
+            self._port = user_input[CONF_PORT]
+
             try:
-                user_input[CONF_SLAVE_IDS] = list(
-                    map(int, user_input[CONF_SLAVE_IDS].split(","))
-                )
-            except ValueError:
+                self._slave_ids = list(map(int, user_input[CONF_SLAVE_IDS].split(",")))
+                info = await validate_serial_setup(self._port, self._slave_ids)
+            except SlaveIdsParseException:
                 errors["base"] = "invalid_slave_ids"
+            except ConnectionException:
+                errors["base"] = "cannot_connect"
+            except SlaveException:
+                errors["base"] = "slave_cannot_connect"
+            except ReadException:
+                errors["base"] = "read_error"
+            except Exception:  # pylint: disable=broad-except
+                _LOGGER.exception("Unexpected exception while connecting over serial")
+                errors["base"] = "unknown"
             else:
-                try:
-                    info = await validate_serial_setup(user_input)
-
-                except ConnectionException:
-                    errors["base"] = "cannot_connect"
-                except SlaveException:
-                    errors["base"] = "slave_cannot_connect"
-                except ReadException:
-                    errors["base"] = "read_error"
-                except Exception as exception:  # pylint: disable=broad-except
-                    _LOGGER.exception(exception)
-                    errors["base"] = "unknown"
-                else:
-                    await self.async_set_unique_id(info["serial_number"])
-                    self._abort_if_unique_id_configured(
-                        updates={
-                            CONF_HOST: None,
-                            CONF_PORT: user_input[CONF_PORT],
-                            CONF_SLAVE_IDS: user_input[CONF_SLAVE_IDS],
-                        }
-                    )
-
-                    self._port = user_input[CONF_PORT]
-                    self._slave_ids = user_input[CONF_SLAVE_IDS]
-
-                    self._inverter_info = info
-                    self.context["title_placeholders"] = {"name": info["model_name"]}
-
-                    # We can directly make the new entry
-                    return await self._create_entry()
+                return await self._create_or_update_entry(info)
 
         schema = vol.Schema(
             {
-                vol.Required(CONF_PORT): str,
-                vol.Required(CONF_SLAVE_IDS, default=self._slave_ids): str,
+                vol.Required(CONF_PORT, default=self._port): str,
+                vol.Required(
+                    CONF_SLAVE_IDS,
+                    default=",".join(self._slave_ids)
+                    if self._slave_ids
+                    else str(DEFAULT_SERIAL_SLAVE_ID),
+                ): str,
             }
         )
         return self.async_show_form(
@@ -367,55 +391,73 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
 
         if user_input is not None:
+            self._host = user_input[CONF_HOST]
+            self._port = user_input[CONF_PORT]
+            self._elevated_permissions = user_input[CONF_ENABLE_PARAMETER_CONFIGURATION]
             try:
-                user_input[CONF_SLAVE_IDS] = list(
-                    map(int, user_input[CONF_SLAVE_IDS].split(","))
-                )
+                self._slave_ids = list(map(int, user_input[CONF_SLAVE_IDS].split(",")))
             except ValueError:
                 errors["base"] = "invalid_slave_ids"
             else:
                 try:
-                    info = await validate_network_setup(user_input)
+                    info = await validate_network_setup(
+                        host=self._host,
+                        port=self._port,
+                        slave_ids=self._slave_ids,
+                    )
 
                 except ConnectionException:
                     errors["base"] = "cannot_connect"
                 except SlaveException:
                     errors["base"] = "slave_cannot_connect"
-                except ReadException as exception:
-                    _LOGGER.exception(exception)
+                except ReadException:
+                    _LOGGER.exception("Read exception while connecting via ModbusTCP")
                     errors["base"] = "read_error"
-                except Exception as exception:  # pylint: disable=broad-except
-                    _LOGGER.exception(exception)
+                except Exception:  # pylint: disable=broad-except
+                    _LOGGER.exception(
+                        "Unexpected exception while connecting via ModbusTCP"
+                    )
                     errors["base"] = "unknown"
                 else:
-                    await self.async_set_unique_id(info["serial_number"])
-                    self._abort_if_unique_id_configured()
-
-                    self._host = user_input[CONF_HOST]
-                    self._port = user_input[CONF_PORT]
-                    self._slave_ids = user_input[CONF_SLAVE_IDS]
-                    self._enable_parameter_configuration = user_input[
-                        CONF_ENABLE_PARAMETER_CONFIGURATION
-                    ]
-
-                    self._inverter_info = info
-                    self.context["title_placeholders"] = {"name": info["model_name"]}
-
                     # Check if we need to ask for the login details
                     if (
-                        self._enable_parameter_configuration
+                        self._elevated_permissions
                         # This can also be None, in which case login is not supported.
                         and info["has_write_permission"] is not None
                         and info["has_write_permission"] is False
                     ):
+                        self.context["title_placeholders"] = {
+                            "name": info["model_name"]
+                        }
                         return await self.async_step_network_login()
 
+                    # In case of a reconfigure, the user can have unchecked the elevated permissions checkbox
+                    self._username = None
+                    self._password = None
+
                     # Otherwise, we can directly create the device entry!
-                    return await self._create_entry()
+                    return await self._create_or_update_entry()
 
         return self.async_show_form(
             step_id="setup_network",
-            data_schema=STEP_SETUP_NETWORK_DATA_SCHEMA,
+            data_schema=vol.Schema(
+                {
+                    vol.Required(CONF_HOST, default=self._host): str,
+                    vol.Required(
+                        CONF_PORT, default=self._port or DEFAULT_PORT
+                    ): cv.port,
+                    vol.Required(
+                        CONF_SLAVE_IDS,
+                        default=",".join(self._slave_ids)
+                        if self._slave_ids
+                        else str(DEFAULT_SLAVE_ID),
+                    ): str,
+                    vol.Required(
+                        CONF_ENABLE_PARAMETER_CONFIGURATION,
+                        default=self._elevated_permissions,
+                    ): bool,
+                }
+            ),
             errors=errors,
         )
 
@@ -430,43 +472,58 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
 
         if user_input is not None:
+            self._username = user_input[CONF_USERNAME]
+            self._password = user_input[CONF_PASSWORD]
+
             try:
                 login_success = await validate_network_setup_login(
-                    self._host, self._port, self._slave_ids[0], user_input
+                    host=self._host,
+                    port=self._port,
+                    slave_id=self._slave_ids[0],
+                    username=self._username,
+                    password=self._password,
                 )
                 if login_success:
-                    self._username = user_input[CONF_USERNAME]
-                    self._password = user_input[CONF_PASSWORD]
-
-                    return await self._create_entry()
+                    return await self._create_or_update_entry()
 
                 errors["base"] = "invalid_auth"
-
             except ConnectionException:
                 errors["base"] = "cannot_connect"
             except SlaveException:
                 errors["base"] = "slave_cannot_connect"
-            except ReadException as exception:
-                _LOGGER.exception(exception)
+            except ReadException:
+                _LOGGER.exception(
+                    "Could not read from ModbusTCP while validating login parameter"
+                )
                 errors["base"] = "read_error"
-            except Exception as exception:  # pylint: disable=broad-except
-                _LOGGER.exception(exception)
+            except Exception:  # pylint: disable=broad-except
+                _LOGGER.exception(
+                    "Unexpected exception while validating login parameters via ModbusTCP"
+                )
                 errors["base"] = "unknown"
 
         return self.async_show_form(
-            step_id="network_login", data_schema=STEP_LOGIN_DATA_SCHEMA, errors=errors
+            step_id="network_login",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_USERNAME, default=self._username or DEFAULT_USERNAME
+                    ): str,
+                    vol.Required(CONF_PASSWORD, default=self._password): str,
+                }
+            ),
+            errors=errors,
         )
 
-    async def _create_entry(self):
-        """Create the entry."""
-        assert self._port is not None
-        assert self._slave_ids is not None
+    async def _create_or_update_entry(self, inverter_info):
+        """Create the entry, or update the existing one if present."""
 
+        self.context["title_placeholders"] = {"name": inverter_info["model_name"]}
         data = {
             CONF_HOST: self._host,
             CONF_PORT: self._port,
             CONF_SLAVE_IDS: self._slave_ids,
-            CONF_ENABLE_PARAMETER_CONFIGURATION: self._enable_parameter_configuration,
+            CONF_ENABLE_PARAMETER_CONFIGURATION: self._elevated_permissions,
             CONF_USERNAME: self._username,
             CONF_PASSWORD: self._password,
         }
@@ -476,27 +533,25 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             await self.hass.config_entries.async_reload(self._reauth_entry.entry_id)
             return self.async_abort(reason="reauth_successful")
 
+        if self._reconfigure_entry:
+            self.hass.config_entries.async_update_entry(
+                self._reconfigure_entry, data=data
+            )
+            await self.hass.config_entries.async_reload(
+                self._reconfigure_entry.entry_id
+            )
+            return self.async_abort(reason="reconfigure_successful")
+
+        await self.async_set_unique_id(inverter_info["serial_number"])
+        self._abort_if_unique_id_configured(updates=data)
+
         return self.async_create_entry(
             title=self._inverter_info["model_name"], data=data
         )
 
-    async def async_step_reauth(
-        self, config: dict[str, Any] | None = None
-    ) -> FlowResult:
-        """Perform reauth upon an login error."""
-        assert config is not None
 
-        self._host = config.get(CONF_HOST)
-        self._port = config.get(CONF_PORT)
-        self._slave_ids = config.get(CONF_SLAVE_IDS)
-        self._enable_parameter_configuration = config.get(
-            CONF_ENABLE_PARAMETER_CONFIGURATION, False
-        )
-
-        self._reauth_entry = self.hass.config_entries.async_get_entry(
-            self.context["entry_id"]
-        )
-        return await self.async_step_network_login()
+class SlaveIdsParseException(Exception):
+    """Error while parsing the slave id's."""
 
 
 class SlaveException(Exception):

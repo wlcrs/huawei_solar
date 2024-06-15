@@ -1,10 +1,11 @@
 """The Huawei Solar services."""
+
 from __future__ import annotations
 
 from functools import partial
 import logging
 import re
-from typing import TYPE_CHECKING, Any
+from typing import Any, TYPE_CHECKING
 
 import voluptuous as vol
 
@@ -24,6 +25,7 @@ from huawei_solar.registers import (
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
     DATA_BRIDGES_WITH_DEVICEINFOS,
+    DATA_UPDATE_COORDINATORS,
     DOMAIN,
     SERVICE_FORCIBLE_CHARGE,
     SERVICE_FORCIBLE_CHARGE_SOC,
@@ -39,10 +41,10 @@ from .const import (
     SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
     SERVICE_STOP_FORCIBLE_CHARGE,
 )
+from .update_coordinator import HuaweiSolarUpdateCoordinator
 
 if TYPE_CHECKING:
-    pass
-
+    from . import HuaweiSolarUpdateCoordinators
 
 ALL_SERVICES = [
     SERVICE_FORCIBLE_CHARGE,
@@ -67,23 +69,27 @@ DATA_DURATION = "duration"
 DATA_TARGET_SOC = "target_soc"
 DATA_PERIODS = "periods"
 
+
 def validate_battery_device_id(device_id: str) -> str:
     """Validate whether the device_id refers to a 'Connected Energy Storage' device."""
     hass = async_get_hass()
     try:
         _get_battery_bridge(hass, device_id)
-        return device_id
     except HuaweiSolarServiceException as err:
         raise vol.Invalid(str(err)) from err
+    else:
+        return device_id
+
 
 def validate_inverter_device_id(device_id: str) -> str:
     """Validate whether the device_id refers to an 'Inverter' device."""
     hass = async_get_hass()
     try:
         _get_inverter_bridge(hass, device_id)
-        return device_id
     except HuaweiSolarServiceException as err:
         raise vol.Invalid(str(err)) from err
+    else:
+        return device_id
 
 
 INVERTER_DEVICE_SCHEMA = vol.Schema(
@@ -189,7 +195,9 @@ def _parse_time(value: str):
 
 
 @callback
-def _get_battery_bridge(hass: HomeAssistant, device_id: str):
+def _get_battery_bridge(
+    hass: HomeAssistant, device_id: str
+) -> tuple[HuaweiSolarBridge, HuaweiSolarUpdateCoordinator]:
     dev_reg = dr.async_get(hass)
     device_entry = dev_reg.async_get(device_id)
 
@@ -197,17 +205,19 @@ def _get_battery_bridge(hass: HomeAssistant, device_id: str):
         raise HuaweiSolarServiceException("No such device found")
 
     for entry_data in hass.data[DOMAIN].values():
-        bridges_with_device_infos = entry_data[DATA_BRIDGES_WITH_DEVICEINFOS]
-        for bridge, device_infos in bridges_with_device_infos:
-            if device_infos["connected_energy_storage"] is None:
+        hsucs: list[HuaweiSolarUpdateCoordinators] = entry_data[
+            DATA_UPDATE_COORDINATORS
+        ]
+        for uc in hsucs:
+            if uc.device_infos["connected_energy_storage"] is None:
                 continue
 
-            for ces_identifier in device_infos["connected_energy_storage"][
+            for ces_identifier in uc.device_infos["connected_energy_storage"][
                 "identifiers"
             ]:
                 for device_identifier in device_entry.identifiers:
                     if ces_identifier == device_identifier:
-                        return bridge
+                        return uc.bridge, uc.configuration_update_coordinator
     _LOGGER.error("The provided device is not a Connected Energy Storage")
     raise HuaweiSolarServiceException("Not a valid 'Connected Energy Storage' device")
 
@@ -215,7 +225,7 @@ def _get_battery_bridge(hass: HomeAssistant, device_id: str):
 @callback
 def get_battery_bridge(
     hass: HomeAssistant, service_call: ServiceCall
-) -> HuaweiSolarBridge:
+) -> tuple[HuaweiSolarBridge, HuaweiSolarUpdateCoordinator]:
     """Return the HuaweiSolarBridge associated with the battery device_id in the service call."""
     device_id = service_call.data[DATA_DEVICE_ID]
     return _get_battery_bridge(hass, device_id)
@@ -263,7 +273,7 @@ async def _validate_power_value(power: Any, bridge: HuaweiSolarBridge, max_value
 
 async def forcible_charge(hass: HomeAssistant, service_call: ServiceCall) -> None:
     """Start a forcible charge on the battery."""
-    bridge = get_battery_bridge(hass, service_call)
+    bridge, uc = get_battery_bridge(hass, service_call)
     power = await _validate_power_value(
         service_call.data[DATA_POWER], bridge, rn.STORAGE_MAXIMUM_CHARGE_POWER
     )
@@ -277,16 +287,21 @@ async def forcible_charge(hass: HomeAssistant, service_call: ServiceCall) -> Non
         rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD,
         duration,
     )
-    await bridge.set(rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE, 0)
+    await bridge.set(
+        rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,
+        rv.StorageForcibleChargeDischargeTargetMode.TIME,
+    )
     await bridge.set(
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
         rv.StorageForcibleChargeDischarge.CHARGE,
     )
 
+    await uc.async_refresh()
+
 
 async def forcible_discharge(hass: HomeAssistant, service_call: ServiceCall) -> None:
     """Start a forcible charge on the battery."""
-    bridge = get_battery_bridge(hass, service_call)
+    bridge, uc = get_battery_bridge(hass, service_call)
     power = await _validate_power_value(
         service_call.data[DATA_POWER], bridge, rn.STORAGE_MAXIMUM_DISCHARGE_POWER
     )
@@ -300,16 +315,20 @@ async def forcible_discharge(hass: HomeAssistant, service_call: ServiceCall) -> 
         rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD,
         duration,
     )
-    await bridge.set(rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE, 0)
+    await bridge.set(
+        rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,
+        rv.StorageForcibleChargeDischargeTargetMode.TIME,
+    )
     await bridge.set(
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
         rv.StorageForcibleChargeDischarge.DISCHARGE,
     )
+    await uc.async_refresh()
 
 
 async def forcible_charge_soc(hass: HomeAssistant, service_call: ServiceCall) -> None:
     """Start a forcible charge on the battery until the target SOC is hit."""
-    bridge = get_battery_bridge(hass, service_call)
+    bridge, uc = get_battery_bridge(hass, service_call)
     target_soc = service_call.data[DATA_TARGET_SOC]
     power = await _validate_power_value(
         service_call.data[DATA_POWER], bridge, rn.STORAGE_MAXIMUM_CHARGE_POWER
@@ -317,18 +336,23 @@ async def forcible_charge_soc(hass: HomeAssistant, service_call: ServiceCall) ->
 
     await bridge.set(rn.STORAGE_FORCIBLE_CHARGE_POWER, power)
     await bridge.set(rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SOC, target_soc)
-    await bridge.set(rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE, 1)
+    await bridge.set(
+        rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,
+        rv.StorageForcibleChargeDischargeTargetMode.SOC,
+    )
     await bridge.set(
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
         rv.StorageForcibleChargeDischarge.CHARGE,
     )
+
+    await uc.async_refresh()
 
 
 async def forcible_discharge_soc(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> None:
     """Start a forcible discharge on the battery until the target SOC is hit."""
-    bridge = get_battery_bridge(hass, service_call)
+    bridge, uc = get_battery_bridge(hass, service_call)
     target_soc = service_call.data[DATA_TARGET_SOC]
     power = await _validate_power_value(
         service_call.data[DATA_POWER], bridge, rn.STORAGE_MAXIMUM_DISCHARGE_POWER
@@ -336,16 +360,20 @@ async def forcible_discharge_soc(
 
     await bridge.set(rn.STORAGE_FORCIBLE_DISCHARGE_POWER, power)
     await bridge.set(rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SOC, target_soc)
-    await bridge.set(rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE, 1)
+    await bridge.set(
+        rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,
+        rv.StorageForcibleChargeDischargeTargetMode.SOC,
+    )
     await bridge.set(
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
         rv.StorageForcibleChargeDischarge.DISCHARGE,
     )
+    await uc.async_refresh()
 
 
 async def stop_forcible_charge(hass: HomeAssistant, service_call: ServiceCall) -> None:
     """Stop a forcible charge or discharge."""
-    bridge = get_battery_bridge(hass, service_call)
+    bridge, uc = get_battery_bridge(hass, service_call)
     await bridge.set(
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
         rv.StorageForcibleChargeDischarge.STOP,
@@ -355,14 +383,19 @@ async def stop_forcible_charge(hass: HomeAssistant, service_call: ServiceCall) -
         rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD,
         0,
     )
-    await bridge.set(rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE, 0)
+    await bridge.set(
+        rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,
+        rv.StorageForcibleChargeDischargeTargetMode.TIME,
+    )
+
+    await uc.async_refresh()
 
 
 async def reset_maximum_feed_grid_power(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> None:
     """Set Active Power Control to 'Unlimited'."""
-    bridge = get_inverter_bridge(hass, service_call)
+    bridge, uc = get_inverter_bridge(hass, service_call)
     await bridge.set(
         rn.ACTIVE_POWER_CONTROL_MODE,
         rv.ActivePowerControlMode.UNLIMITED,
@@ -373,12 +406,14 @@ async def reset_maximum_feed_grid_power(
         0,
     )
 
+    await uc.async_refresh()
+
 
 async def set_di_active_power_scheduling(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> None:
     """Set Active Power Control to 'DI active scheduling'."""
-    bridge = get_inverter_bridge(hass, service_call)
+    bridge, uc = get_inverter_bridge(hass, service_call)
     await bridge.set(
         rn.ACTIVE_POWER_CONTROL_MODE,
         rv.ActivePowerControlMode.DI_ACTIVE_SCHEDULING,
@@ -389,12 +424,14 @@ async def set_di_active_power_scheduling(
         0,
     )
 
+    await uc.async_refresh()
+
 
 async def set_zero_power_grid_connection(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> None:
     """Set Active Power Control to 'Zero-Power Grid Connection'."""
-    bridge = get_inverter_bridge(hass, service_call)
+    bridge, uc = get_inverter_bridge(hass, service_call)
     await bridge.set(
         rn.ACTIVE_POWER_CONTROL_MODE,
         rv.ActivePowerControlMode.ZERO_POWER_GRID_CONNECTION,
@@ -405,12 +442,14 @@ async def set_zero_power_grid_connection(
         0,
     )
 
+    await uc.async_refresh()
+
 
 async def set_maximum_feed_grid_power(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> None:
     """Set Active Power Control to 'Power-limited grid connection' with the given wattage."""
-    bridge = get_inverter_bridge(hass, service_call)
+    bridge, uc = get_inverter_bridge(hass, service_call)
     power = await _validate_power_value(service_call.data[DATA_POWER], bridge, rn.P_MAX)
 
     await bridge.set(rn.MAXIMUM_FEED_GRID_POWER_WATT, power)
@@ -419,12 +458,14 @@ async def set_maximum_feed_grid_power(
         rv.ActivePowerControlMode.POWER_LIMITED_GRID_CONNECTION_WATT,
     )
 
+    await uc.async_refresh()
+
 
 async def set_maximum_feed_grid_power_percentage(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> None:
     """Set Active Power Control to 'Power-limited grid connection' with the given percentage."""
-    bridge = get_inverter_bridge(hass, service_call)
+    bridge, uc = get_inverter_bridge(hass, service_call)
     power_percentage = service_call.data[DATA_POWER_PERCENTAGE]
 
     await bridge.set(rn.MAXIMUM_FEED_GRID_POWER_PERCENT, power_percentage)
@@ -432,6 +473,8 @@ async def set_maximum_feed_grid_power_percentage(
         rn.ACTIVE_POWER_CONTROL_MODE,
         rv.ActivePowerControlMode.POWER_LIMITED_GRID_CONNECTION_PERCENT,
     )
+
+    await uc.async_refresh()
 
 
 async def set_tou_periods(hass: HomeAssistant, service_call: ServiceCall) -> None:
@@ -474,7 +517,7 @@ async def set_tou_periods(hass: HomeAssistant, service_call: ServiceCall) -> Non
 
         return result
 
-    bridge = get_battery_bridge(hass, service_call)
+    bridge, uc = get_battery_bridge(hass, service_call)
 
     if bridge.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000:
         if not re.fullmatch(
@@ -492,6 +535,8 @@ async def set_tou_periods(hass: HomeAssistant, service_call: ServiceCall) -> Non
             rn.STORAGE_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS,
             _parse_lg_resu_periods(service_call.data[DATA_PERIODS]),
         )
+
+    await uc.async_refresh()
 
 
 async def set_capacity_control_periods(
@@ -548,7 +593,7 @@ async def set_fixed_charge_periods(
             )
         return result
 
-    bridge = get_battery_bridge(hass, service_call)
+    bridge, uc = get_battery_bridge(hass, service_call)
 
     if not re.fullmatch(FIXED_CHARGE_PERIODS_PATTERN, service_call.data[DATA_PERIODS]):
         raise ValueError("Invalid periods")
@@ -558,6 +603,8 @@ async def set_fixed_charge_periods(
         _parse_periods(service_call.data[DATA_PERIODS]),
     )
 
+    await uc.async_refresh()
+
 
 async def async_setup_services(  # noqa: C901
     hass: HomeAssistant,
@@ -566,7 +613,6 @@ async def async_setup_services(  # noqa: C901
     """Huawei Solar Services Setup."""
     if not entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
         return
-
 
     hass.services.async_register(
         DOMAIN,
@@ -603,7 +649,9 @@ async def async_setup_services(  # noqa: C901
         schema=MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA,
     )
 
-    bridges_with_device_infos = hass.data[DOMAIN][entry.entry_id][DATA_BRIDGES_WITH_DEVICEINFOS]
+    bridges_with_device_infos = hass.data[DOMAIN][entry.entry_id][
+        DATA_BRIDGES_WITH_DEVICEINFOS
+    ]
 
     if any(
         bridge.battery_type != rv.StorageProductModel.NONE
@@ -664,7 +712,8 @@ async def async_setup_services(  # noqa: C901
                 schema=CAPACITY_CONTROL_PERIODS_SCHEMA,
             )
 
-async def async_cleanup_services( hass: HomeAssistant):
+
+async def async_cleanup_services(hass: HomeAssistant):
     """Cleanup all Huawei Solar service (if all config entries unloaded)."""
     if len(hass.data[DOMAIN]) == 1:
         for service in ALL_SERVICES:

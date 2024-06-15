@@ -769,90 +769,97 @@ async def async_setup_entry(
 
     entities_to_add: list[SensorEntity] = []
     for ucs in update_coordinators:
-        for entity_description in INVERTER_SENSOR_DESCRIPTIONS:
-            entities_to_add.append(
-                HuaweiSolarSensorEntity(
-                    ucs.inverter_update_coordinator,
-                    entity_description,
-                    ucs.device_infos["inverter"],
-                )
+        entities_to_add.extend(
+            HuaweiSolarSensorEntity(
+                ucs.inverter_update_coordinator,
+                entity_description,
+                ucs.device_infos["inverter"],
             )
+            for entity_description in INVERTER_SENSOR_DESCRIPTIONS
+        )
         entities_to_add.append(
             HuaweiSolarAlarmSensorEntity(
                 ucs.inverter_update_coordinator, ucs.device_infos["inverter"]
             )
         )
 
-        for entity_description in get_pv_entity_descriptions(
-            ucs.bridge.pv_string_count
-        ):
-            entities_to_add.append(
+        entities_to_add.extend(
+            HuaweiSolarSensorEntity(
+                ucs.inverter_update_coordinator,
+                entity_description,
+                ucs.device_infos["inverter"],
+            )
+            for entity_description in get_pv_entity_descriptions(
+                ucs.bridge.pv_string_count
+            )
+        )
+
+        if ucs.bridge.has_optimizers:
+            entities_to_add.extend(
                 HuaweiSolarSensorEntity(
                     ucs.inverter_update_coordinator,
                     entity_description,
                     ucs.device_infos["inverter"],
                 )
+                for entity_description in OPTIMIZER_SENSOR_DESCRIPTIONS
             )
-
-        if ucs.bridge.has_optimizers:
-            for entity_description in OPTIMIZER_SENSOR_DESCRIPTIONS:
-                entities_to_add.append(
-                    HuaweiSolarSensorEntity(
-                        ucs.inverter_update_coordinator,
-                        entity_description,
-                        ucs.device_infos["inverter"],
-                    )
-                )
 
         if ucs.bridge.power_meter_type == rv.MeterType.SINGLE_PHASE:
             assert ucs.power_meter_update_coordinator
             assert ucs.device_infos["power_meter"]
-            for entity_description in SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS:
-                entities_to_add.append(
-                    HuaweiSolarSensorEntity(
-                        ucs.power_meter_update_coordinator,
-                        entity_description,
-                        ucs.device_infos["power_meter"],
-                    )
+            entities_to_add.extend(
+                HuaweiSolarSensorEntity(
+                    ucs.power_meter_update_coordinator,
+                    entity_description,
+                    ucs.device_infos["power_meter"],
                 )
+                for entity_description in SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS
+            )
+
         elif ucs.bridge.power_meter_type == rv.MeterType.THREE_PHASE:
             assert ucs.power_meter_update_coordinator
             assert ucs.device_infos["power_meter"]
-            for entity_description in THREE_PHASE_METER_ENTITY_DESCRIPTIONS:
-                entities_to_add.append(
-                    HuaweiSolarSensorEntity(
-                        ucs.power_meter_update_coordinator,
-                        entity_description,
-                        ucs.device_infos["power_meter"],
-                    )
+            entities_to_add.extend(
+                HuaweiSolarSensorEntity(
+                    ucs.power_meter_update_coordinator,
+                    entity_description,
+                    ucs.device_infos["power_meter"],
                 )
+                for entity_description in THREE_PHASE_METER_ENTITY_DESCRIPTIONS
+            )
 
         if ucs.bridge.battery_type != rv.StorageProductModel.NONE:
             assert ucs.energy_storage_update_coordinator
             assert ucs.device_infos["connected_energy_storage"]
-            for entity_description in BATTERIES_SENSOR_DESCRIPTIONS:
-                entities_to_add.append(
-                    HuaweiSolarSensorEntity(
-                        ucs.energy_storage_update_coordinator,
-                        entity_description,
-                        ucs.device_infos["connected_energy_storage"],
-                    )
+
+            entities_to_add.extend(
+                HuaweiSolarSensorEntity(
+                    ucs.energy_storage_update_coordinator,
+                    entity_description,
+                    ucs.device_infos["connected_energy_storage"],
                 )
+                for entity_description in BATTERIES_SENSOR_DESCRIPTIONS
+            )
 
             if ucs.configuration_update_coordinator:
-                entities_to_add.append(
-                    HuaweiSolarTOUPricePeriodsSensorEntity(
-                        ucs.configuration_update_coordinator,
-                        ucs.bridge,
-                        ucs.device_infos["connected_energy_storage"],
-                    )
-                )
-                entities_to_add.append(
-                    HuaweiSolarFixedChargingPeriodsSensorEntity(
-                        ucs.configuration_update_coordinator,
-                        ucs.configuration_update_coordinator.bridge,
-                        ucs.device_infos["connected_energy_storage"],
-                    )
+                entities_to_add.extend(
+                    [
+                        HuaweiSolarTOUPricePeriodsSensorEntity(
+                            ucs.configuration_update_coordinator,
+                            ucs.bridge,
+                            ucs.device_infos["connected_energy_storage"],
+                        ),
+                        HuaweiSolarFixedChargingPeriodsSensorEntity(
+                            ucs.configuration_update_coordinator,
+                            ucs.configuration_update_coordinator.bridge,
+                            ucs.device_infos["connected_energy_storage"],
+                        ),
+                        HuaweiSolarForcibleChargeEntity(
+                            ucs.configuration_update_coordinator,
+                            ucs.configuration_update_coordinator.bridge,
+                            ucs.device_infos["connected_energy_storage"],
+                        ),
+                    ]
                 )
 
                 if ucs.bridge.supports_capacity_control:
@@ -865,59 +872,59 @@ async def async_setup_entry(
                     )
 
             if ucs.device_infos["battery_1"]:
-                for entity_description_template in BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS:
-                    if entity_description_template.battery_1_key:
-                        entities_to_add.append(
-                            HuaweiSolarSensorEntity(
-                                ucs.energy_storage_update_coordinator,
-                                HuaweiSolarSensorEntityDescription(
-                                    key=entity_description_template.battery_1_key,
-                                    translation_key=entity_description_template.translation_key,
-                                    device_class=entity_description_template.device_class,
-                                    state_class=entity_description_template.state_class,
-                                    native_unit_of_measurement=entity_description_template.native_unit_of_measurement,
-                                    icon=entity_description_template.icon,
-                                    entity_category=entity_description_template.entity_category,
-                                    entity_registry_enabled_default=False,
-                                ),
-                                ucs.device_infos["battery_1"],
-                            )
-                        )
+                entities_to_add.extend(
+                    HuaweiSolarSensorEntity(
+                        ucs.energy_storage_update_coordinator,
+                        HuaweiSolarSensorEntityDescription(
+                            key=entity_description_template.battery_1_key,
+                            translation_key=entity_description_template.translation_key,
+                            device_class=entity_description_template.device_class,
+                            state_class=entity_description_template.state_class,
+                            native_unit_of_measurement=entity_description_template.native_unit_of_measurement,
+                            icon=entity_description_template.icon,
+                            entity_category=entity_description_template.entity_category,
+                            entity_registry_enabled_default=False,
+                        ),
+                        ucs.device_infos["battery_1"],
+                    )
+                    for entity_description_template in BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS
+                    if entity_description_template.battery_1_key
+                )
 
             if ucs.device_infos["battery_2"]:
-                for entity_description_template in BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS:
-                    if entity_description_template.battery_2_key:
-                        entities_to_add.append(
-                            HuaweiSolarSensorEntity(
-                                ucs.energy_storage_update_coordinator,
-                                HuaweiSolarSensorEntityDescription(
-                                    key=entity_description_template.battery_2_key,
-                                    translation_key=entity_description_template.translation_key,
-                                    device_class=entity_description_template.device_class,
-                                    state_class=entity_description_template.state_class,
-                                    native_unit_of_measurement=entity_description_template.native_unit_of_measurement,
-                                    icon=entity_description_template.icon,
-                                    entity_category=entity_description_template.entity_category,
-                                    entity_registry_enabled_default=False,
-                                ),
-                                ucs.device_infos["battery_2"],
-                            )
-                        )
+                entities_to_add.extend(
+                    HuaweiSolarSensorEntity(
+                        ucs.energy_storage_update_coordinator,
+                        HuaweiSolarSensorEntityDescription(
+                            key=entity_description_template.battery_2_key,
+                            translation_key=entity_description_template.translation_key,
+                            device_class=entity_description_template.device_class,
+                            state_class=entity_description_template.state_class,
+                            native_unit_of_measurement=entity_description_template.native_unit_of_measurement,
+                            icon=entity_description_template.icon,
+                            entity_category=entity_description_template.entity_category,
+                            entity_registry_enabled_default=False,
+                        ),
+                        ucs.device_infos["battery_2"],
+                    )
+                    for entity_description_template in BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS
+                    if entity_description_template.battery_2_key
+                )
         if ucs.optimizer_update_coordinator:
             optimizer_device_infos = (
                 ucs.optimizer_update_coordinator.optimizer_device_infos
             )
 
-            for entity_description in OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS:
-                for optimizer_id, device_info in optimizer_device_infos.items():
-                    entities_to_add.append(
-                        HuaweiSolarOptimizerSensorEntity(
-                            ucs.optimizer_update_coordinator,
-                            entity_description,
-                            optimizer_id,
-                            device_info,
-                        )
-                    )
+            entities_to_add.extend(
+                HuaweiSolarOptimizerSensorEntity(
+                    ucs.optimizer_update_coordinator,
+                    entity_description,
+                    optimizer_id,
+                    device_info,
+                )
+                for optimizer_id, device_info in optimizer_device_infos.items()
+                for entity_description in OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS
+            )
 
     async_add_entities(entities_to_add, True)
 
@@ -1019,7 +1026,7 @@ class HuaweiSolarAlarmSensorEntity(HuaweiSolarSensorEntity):
 
 def _days_effective_to_str(days: tuple[bool, bool, bool, bool, bool, bool, bool]):
     value = ""
-    for i in range(0, 7):  # Sunday is on index 0, but we want to name it day 7
+    for i in range(7):  # Sunday is on index 0, but we want to name it day 7
         if days[(i + 1) % 7]:
             value += f"{i+1}"
 
@@ -1236,6 +1243,101 @@ class HuaweiSolarFixedChargingPeriodsSensorEntity(
             self._attr_available = False
             self._attr_native_value = None
             self._attr_extra_state_attributes.clear()
+        self.async_write_ha_state()
+
+
+class HuaweiSolarForcibleChargeEntity(
+    CoordinatorEntity, HuaweiSolarEntity, SensorEntity
+):
+    """Huawei Solar Sensor for the current forcible charge status."""
+
+    REGISTER_NAMES = [
+        rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,  # is SoC or time the target?
+        rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,  # stop/charging/discharging
+        rn.STORAGE_FORCIBLE_CHARGE_POWER,
+        rn.STORAGE_FORCIBLE_DISCHARGE_POWER,
+        rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD,
+        rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SOC,
+    ]
+
+    def __init__(
+        self,
+        coordinator: HuaweiSolarUpdateCoordinator,
+        bridge: HuaweiSolarBridge,
+        device_info: DeviceInfo,
+    ) -> None:
+        """Create HuaweiSolarForcibleChargeEntity."""
+        super().__init__(
+            coordinator,
+            {"register_names": self.REGISTER_NAMES},
+        )
+        self.coordinator = coordinator
+
+        self.entity_description = HuaweiSolarSensorEntityDescription(
+            key=rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
+            icon="mdi:battery-charging-medium",
+            translation_key="forcible_charge_summary",
+        )
+
+        self._bridge = bridge
+        self._attr_device_info = device_info
+        self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        if (
+            self.coordinator.data
+            and set(self.REGISTER_NAMES) <= self.coordinator.data.keys()
+        ):
+            mode = self.coordinator.data[
+                rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE
+            ].value
+            setting = self.coordinator.data[
+                rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE
+            ].value
+            charge_power = self.coordinator.data[rn.STORAGE_FORCIBLE_CHARGE_POWER].value
+            discharge_power = self.coordinator.data[
+                rn.STORAGE_FORCIBLE_DISCHARGE_POWER
+            ].value
+            target_soc = self.coordinator.data[
+                rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SOC
+            ].value
+            duration = self.coordinator.data[
+                rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD
+            ].value
+
+            if mode == rv.StorageForcibleChargeDischarge.STOP:
+                value = "stopped"
+            else:
+                value = (
+                    f"{'charging' if mode == rv.StorageForcibleChargeDischarge.CHARGE else 'discharging'}_"
+                    f"{'soc' if setting == rv.StorageForcibleChargeDischargeTargetMode.SOC else 'time'}"
+                )
+
+            self._attr_available = True
+            self._attr_extra_state_attributes = {
+                "mode": str(mode),
+                "setting": "SoC"
+                if setting == rv.StorageForcibleChargeDischargeTargetMode.SOC
+                else "Time",
+                "charge_power": charge_power,
+                "discharge_power": discharge_power,
+                "target_soc": target_soc,
+                "duration": duration,
+            }
+            self._attr_translation_placeholders = {
+                "charge_power": charge_power,
+                "discharge_power": discharge_power,
+                "target_soc": target_soc,
+                "duration": duration,
+            }
+            self._attr_native_value = value
+        else:
+            self._attr_available = False
+            self._attr_native_value = None
+            self._attr_extra_state_attributes.clear()
+            self._attr_translation_placeholders.clear()
         self.async_write_ha_state()
 
 
