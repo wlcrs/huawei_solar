@@ -469,7 +469,10 @@
                 "name": "Remaining charge/discharge time"
             },
             "forcible_charge_summary": {
-                "name": "Forcible Charge"
+                "name": "Forcible charge"
+            },
+            "active_power_control": {
+                "name": "Active power control"
             }
         },
         "select": {

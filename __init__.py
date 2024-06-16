@@ -28,7 +28,6 @@ from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
     CONF_SLAVE_IDS,
     CONFIGURATION_UPDATE_INTERVAL,
-    DATA_BRIDGES_WITH_DEVICEINFOS,
     DATA_UPDATE_COORDINATORS,
     DOMAIN,
     ENERGY_STORAGE_UPDATE_INTERVAL,
@@ -48,10 +47,10 @@ _LOGGER = logging.getLogger(__name__)
 T = TypeVar("T")
 
 PLATFORMS: list[Platform] = [
-    Platform.SENSOR,
     Platform.NUMBER,
-    Platform.SWITCH,
     Platform.SELECT,
+    Platform.SENSOR,
+    Platform.SWITCH,
 ]
 
 
@@ -222,7 +221,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             )
 
         hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {
-            DATA_BRIDGES_WITH_DEVICEINFOS: bridges_with_device_infos,
             DATA_UPDATE_COORDINATORS: update_coordinators,
         }
     except (HuaweiSolarException, TimeoutError) as err:
@@ -317,16 +315,14 @@ async def compute_device_infos(
             return "Huawei"
         if spm == rv.StorageProductModel.LG_RESU:
             return "LG Chem"
-        else:
-            return None
+        return None
 
     def _battery_product_model_to_model(spm: rv.StorageProductModel):
         if spm == rv.StorageProductModel.HUAWEI_LUNA2000:
             return "LUNA 2000"
         if spm == rv.StorageProductModel.LG_RESU:
             return "RESU"
-        else:
-            return None
+        return None
 
     battery_1_device_info = None
     if bridge.battery_1_type != rv.StorageProductModel.NONE:

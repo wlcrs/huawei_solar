@@ -145,6 +145,9 @@
             "active_power": {
                 "name": "Active power"
             },
+            "active_power_control": {
+                "name": "Active power control"
+            },
             "alarm": {
                 "name": "Alarm"
             },

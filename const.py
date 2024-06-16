@@ -12,8 +12,6 @@ DEFAULT_PASSWORD = "00000a"
 CONF_SLAVE_IDS = "slave_ids"
 CONF_ENABLE_PARAMETER_CONFIGURATION = "enable_parameter_configuration"
 
-
-DATA_BRIDGES_WITH_DEVICEINFOS = "bridges"
 DATA_UPDATE_COORDINATORS = "update_coordinators"
 
 INVERTER_UPDATE_INTERVAL = timedelta(seconds=30)

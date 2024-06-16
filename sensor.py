@@ -340,6 +340,7 @@ OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, 
         value_conversion_function=lambda alarms: ", ".join(alarms)
         if len(alarms)
         else "None",
+        icon="mdi:alarm-light",
     ),
 )
 
@@ -826,6 +827,15 @@ async def async_setup_entry(
                     ucs.device_infos["power_meter"],
                 )
                 for entity_description in THREE_PHASE_METER_ENTITY_DESCRIPTIONS
+            )
+
+        if ucs.bridge.has_write_permission and ucs.configuration_update_coordinator:
+            entities_to_add.append(
+                HuaweiSolarActivePowerControlModeEntity(
+                    ucs.configuration_update_coordinator,
+                    ucs.bridge,
+                    ucs.device_infos["inverter"],
+                )
             )
 
         if ucs.bridge.battery_type != rv.StorageProductModel.NONE:
@@ -1330,6 +1340,86 @@ class HuaweiSolarForcibleChargeEntity(
                 "discharge_power": discharge_power,
                 "target_soc": target_soc,
                 "duration": duration,
+            }
+        else:
+            self._attr_available = False
+            self._attr_native_value = None
+            self._attr_extra_state_attributes.clear()
+        self.async_write_ha_state()
+
+
+class HuaweiSolarActivePowerControlModeEntity(
+    CoordinatorEntity, HuaweiSolarEntity, SensorEntity
+):
+    """Huawei Solar Sensor for the current forcible charge status."""
+
+    REGISTER_NAMES = [
+        rn.ACTIVE_POWER_CONTROL_MODE,
+        rn.MAXIMUM_FEED_GRID_POWER_WATT,
+        rn.MAXIMUM_FEED_GRID_POWER_PERCENT,
+    ]
+
+    def __init__(
+        self,
+        coordinator: HuaweiSolarUpdateCoordinator,
+        bridge: HuaweiSolarBridge,
+        device_info: DeviceInfo,
+    ) -> None:
+        """Create HuaweiSolarForcibleChargeEntity."""
+        super().__init__(
+            coordinator,
+            {"register_names": self.REGISTER_NAMES},
+        )
+        self.coordinator = coordinator
+
+        self.entity_description = HuaweiSolarSensorEntityDescription(
+            key=rn.ACTIVE_POWER_CONTROL_MODE,
+            translation_key="active_power_control",
+            icon="mdi:transmission-tower",
+            entity_category=EntityCategory.DIAGNOSTIC,
+            entity_registry_enabled_default=False,
+        )
+
+        self._bridge = bridge
+        self._attr_device_info = device_info
+        self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        if (
+            self.coordinator.data
+            and set(self.REGISTER_NAMES) <= self.coordinator.data.keys()
+        ):
+            mode = self.coordinator.data[rn.ACTIVE_POWER_CONTROL_MODE].value
+            maximum_power_watt = self.coordinator.data[
+                rn.MAXIMUM_FEED_GRID_POWER_WATT
+            ].value
+            maximum_power_percent = self.coordinator.data[
+                rn.MAXIMUM_FEED_GRID_POWER_PERCENT
+            ].value
+
+            if mode == rv.ActivePowerControlMode.UNLIMITED:
+                value = "Unlimited"
+            elif (
+                mode == rv.ActivePowerControlMode.POWER_LIMITED_GRID_CONNECTION_PERCENT
+            ):
+                value = f"Limited to {maximum_power_percent}%"
+            elif mode == rv.ActivePowerControlMode.POWER_LIMITED_GRID_CONNECTION_WATT:
+                value = f"Limited to {maximum_power_watt}W"
+            elif mode == rv.ActivePowerControlMode.ZERO_POWER_GRID_CONNECTION:
+                value = "Zero Power"
+            elif mode == rv.ActivePowerControlMode.DI_ACTIVE_SCHEDULING:
+                value = "DI Active Scheduling"
+            else:
+                value = "Unknown"
+
+            self._attr_available = True
+            self._attr_native_value = value
+            self._attr_extra_state_attributes = {
+                "mode": str(mode),
+                "maximum_power_watt": maximum_power_watt,
+                "maximum_power_percent": maximum_power_percent,
             }
         else:
             self._attr_available = False
