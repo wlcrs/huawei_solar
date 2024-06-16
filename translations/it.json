@@ -469,7 +469,10 @@
                 "name": "Tempo di carica/scarica rimasto"
             },
             "forcible_charge_summary": {
-                "name": "Forcible Charge"
+                "name": "Forcible charge"
+            },
+            "active_power_control": {
+                "name": "Active power control"
             }
         },
         "select": {
