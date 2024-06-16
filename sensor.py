@@ -186,7 +186,7 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.INSULATION_RESISTANCE,
         icon="mdi:omega",
-        native_unit_of_measurement="ohm",
+        native_unit_of_measurement="MOhm",
         state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
     ),
