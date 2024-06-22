@@ -565,7 +565,7 @@ async def set_capacity_control_periods(
             )
         return result
 
-    bridge = get_battery_bridge(hass, service_call)
+    bridge, uc = get_battery_bridge(hass, service_call)
 
     if not re.fullmatch(
         CAPACITY_CONTROL_PERIODS_PATTERN, service_call.data[DATA_PERIODS]
@@ -576,6 +576,8 @@ async def set_capacity_control_periods(
         rn.STORAGE_CAPACITY_CONTROL_PERIODS,
         _parse_periods(service_call.data[DATA_PERIODS]),
     )
+
+    await uc.async_refresh()
 
 
 async def set_fixed_charge_periods(
