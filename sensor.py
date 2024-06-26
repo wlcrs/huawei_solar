@@ -80,8 +80,8 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.INPUT_POWER,
         native_unit_of_measurement=UnitOfPower.WATT,
-        device_class=SensorDeviceClass.POWER,
-        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.LINE_VOLTAGE_A_B,
@@ -155,8 +155,8 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_POWER,
         native_unit_of_measurement=UnitOfPower.WATT,
-        device_class=SensorDeviceClass.POWER,
-        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.REACTIVE_POWER,
