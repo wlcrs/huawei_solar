@@ -8,7 +8,7 @@ from enum import IntEnum
 import logging
 from typing import TYPE_CHECKING, Any, Generic, TypeVar, cast
 
-from homeassistant.components.select import SelectEntity, SelectEntityDescription
+from homeassistant.components.select import SelectEntity, SelectEntityDescription, ENTITY_ID_FORMAT
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
@@ -174,6 +174,7 @@ class HuaweiSolarSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity
 
         self._attr_device_info = device_info
         self._attr_unique_id = f"{bridge.serial_number}_{description.key}"
+        self.entity_id = ENTITY_ID_FORMAT.format(f"{DOMAIN.lower()}_{self._attr_unique_id.lower()}")
 
         self._register_unit: IntEnum = cast(
             r.NumberRegister, REGISTERS[description.key]
@@ -264,6 +265,7 @@ class StorageModeSelectEntity(CoordinatorEntity, HuaweiSolarEntity, SelectEntity
         )
         self._attr_device_info = device_info
         self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
+        self.entity_id = ENTITY_ID_FORMAT.format(f"{DOMAIN.lower()}_{self._attr_unique_id.lower()}")
 
         self._attr_current_option = None
         # The options depend on the type of battery
