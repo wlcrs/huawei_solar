@@ -84,6 +84,12 @@
             }
         },
         "sensor": {
+            "rated_power": {
+                "name": "Rated power"
+            },
+            "p_max": {
+                "name": "Max active power"
+            },
             "input_power": {
                 "name": "Input power"
             },
@@ -269,6 +275,15 @@
             },
             "active_grid_c_power": {
                 "name": "Phase C active power"
+            },
+            "storage_maximum_charge_power": {
+                "name": "Maximum charge power"
+            },
+            "storage_maximum_discharge_power": {
+                "name": "Maximum discharge power"
+            },
+            "storage_rated_capacity": {
+                "name": "Rated Capacity"
             },
             "storage_state_of_capacity": {
                 "name": "State of capacity"
