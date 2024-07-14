@@ -110,6 +110,12 @@
             "accumulated_yield_energy": {
                 "name": "کُل پیداوار"
             },
+            "rated_power": {
+                "name": "شرح شدہ طاقت"
+            },
+            "p_max": {
+                "name": "زیادہ سے زیادہ فعال طاقت"
+            },
             "active_grid_a_b_voltage": {
                 "name": "اے بی لائن وولٹیج"
             },
@@ -448,6 +454,15 @@
             },
             "storage_running_status": {
                 "name": "حالت"
+            },
+            "storage_maximum_charge_power": {
+                "name": "زیادہ سے زیادہ چارج پاور"
+            },
+            "storage_maximum_discharge_power": {
+                "name": "زیادہ سے زیادہ خارج ہونے والی طاقت"
+            },
+            "storage_rated_capacity": {
+                "name": "شرح شدہ صلاحیت"
             },
             "storage_state_of_capacity": {
                 "name": "صلاحیت کی حالت"
