@@ -110,6 +110,12 @@
             "accumulated_yield_energy": {
                 "name": "Całkowita produkcja energii"
             },
+            "rated_power": {
+                "name": "Moc znamionowa"
+            },
+            "p_max": {
+                "name": "Maksymalna moc czynna"
+            },
             "active_grid_a_b_voltage": {
                 "name": "Napięcie międzyfazowe A-B"
             },
@@ -448,6 +454,15 @@
             },
             "storage_running_status": {
                 "name": "Status"
+            },
+            "storage_maximum_charge_power": {
+                "name": "Maksymalna moc ładowania"
+            },
+            "storage_maximum_discharge_power": {
+                "name": "Maksymalna moc rozładowania"
+            },
+            "storage_rated_capacity": {
+                "name": "Pojemność znamionowa"
             },
             "storage_state_of_capacity": {
                 "name": "Stan pojemności"
