@@ -110,6 +110,12 @@
             "accumulated_yield_energy": {
                 "name": "Rendiment total"
             },
+            "rated_power": {
+                "name": "Potència nominal"
+            },
+            "p_max": {
+                "name": "Potència activa màxima"
+            },
             "active_grid_a_b_voltage": {
                 "name": "Tensió de línia A-B"
             },
@@ -448,6 +454,15 @@
             },
             "storage_running_status": {
                 "name": "Estat"
+            },
+            "storage_maximum_charge_power": {
+                "name": "Potència de càrrega màxima"
+            },
+            "storage_maximum_discharge_power": {
+                "name": "Potència de descàrrega màxima"
+            },
+            "storage_rated_capacity": {
+                "name": "Capacitat nominal"
             },
             "storage_state_of_capacity": {
                 "name": "Estat de la capacitat"
