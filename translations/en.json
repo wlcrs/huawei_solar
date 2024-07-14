@@ -115,6 +115,12 @@
             "accumulated_yield_energy": {
                 "name": "Total yield"
             },
+            "rated_power": {
+                "name": "Rated power"
+            },
+            "p_max": {
+                "name": "Max active power"
+            },
             "total_dc_input_power": {
                 "name": "Total DC input energy"
             },
@@ -484,8 +490,20 @@
             "storage_running_status": {
                 "name": "Status"
             },
+            "storage_maximum_charge_power": {
+                "name": "Maximum charge power"
+            },
+            "storage_maximum_discharge_power": {
+                "name": "Maximum discharge power"
+            },
+            "storage_rated_capacity": {
+                "name": "Rated Capacity"
+            },
             "storage_state_of_capacity": {
                 "name": "State of capacity"
+            },
+            "storage_rated_capacity": {
+                "name": "Rated Capacity"
             },
             "storage_time_of_use_charging_and_discharging_periods": {
                 "name": "Time Of use periods"
