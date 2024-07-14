@@ -110,6 +110,12 @@
             "accumulated_yield_energy": {
                 "name": "Gesamtenergieertrag"
             },
+            "rated_power": {
+                "name": "Nennleistung"
+            },
+            "p_max": {
+                "name": "Maximale Wirkleistung"
+            },
             "active_grid_a_b_voltage": {
                 "name": "A-B-Netzspannung"
             },
@@ -448,6 +454,15 @@
             },
             "storage_running_status": {
                 "name": "Status"
+            },
+            "storage_maximum_charge_power": {
+                "name": "Maximale Ladeleistung"
+            },
+            "storage_maximum_discharge_power": {
+                "name": "Maximale Entladeleistung"
+            },
+            "storage_rated_capacity": {
+                "name": "Rated Capacity"
             },
             "storage_state_of_capacity": {
                 "name": "Batterieladung"
