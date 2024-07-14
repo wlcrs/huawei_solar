@@ -78,6 +78,20 @@ class HuaweiSolarSensorEntityDescription(SensorEntityDescription):
 
 INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
+        key=rn.RATED_POWER,
+        native_unit_of_measurement=UnitOfPower.WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.P_MAX,
+        native_unit_of_measurement=UnitOfPower.WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
         key=rn.INPUT_POWER,
         native_unit_of_measurement=UnitOfPower.WATT,
         device_class=SensorDeviceClass.POWER,
@@ -563,6 +577,29 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
 )
 
 BATTERIES_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
+    HuaweiSolarSensorEntityDescription(
+        key=rn.STORAGE_MAXIMUM_CHARGE_POWER,
+        icon="mdi:battery-plus-variant",
+        native_unit_of_measurement=UnitOfPower.WATT,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.POWER,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.STORAGE_MAXIMUM_DISCHARGE_POWER,
+        icon="mdi:battery-minus-variant",
+        native_unit_of_measurement=UnitOfPower.WATT,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.POWER,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.STORAGE_RATED_CAPACITY,
+        icon="mdi:home-battery",
+        native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_STATE_OF_CAPACITY,
         icon="mdi:home-battery",
