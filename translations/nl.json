@@ -500,12 +500,6 @@
             "battery_working_mode": {
                 "name": "Werkmodus"
             },
-            "battery_rated_charge_power": {
-                "name": "Nominaal oplaadvermogen"
-            },
-            "battery_rated_discharge_power": {
-                "name": "Nominaal ontlaadvermogen"
-            },
             "battery_remaining_charge_discharge_time": {
                 "name": "Resterende (ont)laadtijd"
             }
