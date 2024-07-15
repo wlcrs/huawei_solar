@@ -421,12 +421,6 @@
             "battery_working_mode": {
                 "name": "Working mode"
             },
-            "battery_rated_charge_power": {
-                "name": "Rated charge power"
-            },
-            "battery_rated_discharge_power": {
-                "name": "Rated discharge power"
-            },
             "battery_remaining_charge_discharge_time": {
                 "name": "Remaining charge/discharge time"
             },
