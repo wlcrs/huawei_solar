@@ -83,6 +83,7 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.P_MAX,
@@ -90,6 +91,7 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.INPUT_POWER,
@@ -584,6 +586,7 @@ BATTERIES_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = 
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.POWER,
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_MAXIMUM_DISCHARGE_POWER,
@@ -592,6 +595,7 @@ BATTERIES_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = 
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.POWER,
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_RATED_CAPACITY,
@@ -599,6 +603,7 @@ BATTERIES_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = 
         native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
         state_class=SensorStateClass.MEASUREMENT,
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_STATE_OF_CAPACITY,
