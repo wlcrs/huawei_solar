@@ -745,7 +745,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         icon="mdi:battery-plus-variant",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         state_class=SensorStateClass.TOTAL,
-        device_class=SensorDeviceClass.ENERGY_STORAGE,
+        device_class=SensorDeviceClass.ENERGY,
     ),
     BatteryTemplateEntityDescription(
         battery_1_key=rn.STORAGE_UNIT_1_TOTAL_DISCHARGE,
@@ -754,7 +754,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         icon="mdi:battery-minus-variant",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         state_class=SensorStateClass.TOTAL,
-        device_class=SensorDeviceClass.ENERGY_STORAGE,
+        device_class=SensorDeviceClass.ENERGY,
     ),
     BatteryTemplateEntityDescription(
         battery_1_key=rn.STORAGE_UNIT_1_STATE_OF_CAPACITY,
@@ -777,7 +777,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         icon="mdi:home-battery-outline",
         native_unit_of_measurement=UnitOfPower.WATT,
         state_class=SensorStateClass.MEASUREMENT,
-        device_class=SensorDeviceClass.ENERGY,
+        device_class=SensorDeviceClass.POWER,
     ),
 )
 
