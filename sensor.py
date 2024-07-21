@@ -734,7 +734,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         battery_1_key=rn.STORAGE_UNIT_1_REMAINING_CHARGE_DIS_CHARGE_TIME,
         battery_2_key=None,
         translation_key="battery_remaining_charge_discharge_time",
-        icon="mdi:time-sand",
+        icon="mdi:timer-sand",
         native_unit_of_measurement=UnitOfTime.MINUTES,
         state_class=SensorStateClass.MEASUREMENT,
     ),
