@@ -11,6 +11,7 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorEntityDescription,
     SensorStateClass,
+    ENTITY_ID_FORMAT,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
@@ -983,6 +984,7 @@ class HuaweiSolarSensorEntity(CoordinatorEntity, HuaweiSolarEntity, SensorEntity
 
         self._attr_device_info = device_info
         self._attr_unique_id = f"{coordinator.bridge.serial_number}_{description.key}"
+        self.entity_id = ENTITY_ID_FORMAT.format(f"{DOMAIN.lower()}_{self._attr_unique_id.lower()}")
 
         self._register_key = self.entity_description.key
         if "#" in self._register_key:
@@ -1105,6 +1107,7 @@ class HuaweiSolarTOUPricePeriodsSensorEntity(
         self._bridge = bridge
         self._attr_device_info = device_info
         self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
+        self.entity_id = ENTITY_ID_FORMAT.format(f"{DOMAIN.lower()}_{self._attr_unique_id.lower()}")
 
     def _lg_resu_period_to_text(self, period: LG_RESU_TimeOfUsePeriod):
         return (
@@ -1184,6 +1187,7 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
         self._bridge = bridge
         self._attr_device_info = device_info
         self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
+        self.entity_id = ENTITY_ID_FORMAT.format(f"{DOMAIN.lower()}_{self._attr_unique_id.lower()}")
 
     def _period_to_text(self, psp: PeakSettingPeriod):
         return (
@@ -1248,6 +1252,7 @@ class HuaweiSolarFixedChargingPeriodsSensorEntity(
         self._bridge = bridge
         self._attr_device_info = device_info
         self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
+        self.entity_id = ENTITY_ID_FORMAT.format(f"{DOMAIN.lower()}_{self._attr_unique_id.lower()}")
 
     def _period_to_text(self, cdp: ChargeDischargePeriod):
         return (
@@ -1316,6 +1321,7 @@ class HuaweiSolarForcibleChargeEntity(
         self._bridge = bridge
         self._attr_device_info = device_info
         self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
+        self.entity_id = ENTITY_ID_FORMAT.format(f"{DOMAIN.lower()}_{self._attr_unique_id.lower()}")
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -1407,6 +1413,7 @@ class HuaweiSolarActivePowerControlModeEntity(
         self._bridge = bridge
         self._attr_device_info = device_info
         self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
+        self.entity_id = ENTITY_ID_FORMAT.format(f"{DOMAIN.lower()}_{self._attr_unique_id.lower()}")
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -1475,6 +1482,7 @@ class HuaweiSolarOptimizerSensorEntity(
 
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device_info['name']}_{description.key}"
+        self.entity_id = ENTITY_ID_FORMAT.format(f"{DOMAIN.lower()}_{self._attr_unique_id.lower()}")
 
     @callback
     def _handle_coordinator_update(self) -> None:
