@@ -113,6 +113,12 @@
             "accumulated_yield_energy": {
                 "name": "Totale opbrengst"
             },
+            "rated_power": {
+                "name": "Nominaal vermogen"
+            },
+            "p_max": {
+                "name": "Maximaal actief vermogen"
+            },
             "total_dc_input_power": {
                 "name": "Totale DC ingangsenergie"
             },
@@ -464,6 +470,15 @@
             "storage_running_status": {
                 "name": "Status"
             },
+            "storage_maximum_charge_power": {
+                "name": "Maximaal laadvermogen"
+            },
+            "storage_maximum_discharge_power": {
+                "name": "Maximaal ontladingsvermogen"
+            },
+            "storage_rated_capacity": {
+                "name": "Beoordeelde capaciteit"
+            },
             "storage_state_of_capacity": {
                 "name": "Batterijpercentage"
             },
@@ -484,12 +499,6 @@
             },
             "battery_working_mode": {
                 "name": "Werkmodus"
-            },
-            "battery_rated_charge_power": {
-                "name": "Nominaal oplaadvermogen"
-            },
-            "battery_rated_discharge_power": {
-                "name": "Nominaal ontlaadvermogen"
             },
             "battery_remaining_charge_discharge_time": {
                 "name": "Resterende (ont)laadtijd"

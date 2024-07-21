@@ -110,7 +110,13 @@
 			"accumulated_yield_energy": {
 				"name": "Production totale"
 			},
-			"active_grid_a_b_voltage": {
+		        "rated_power": {
+                                "name": "Puissance nominale"
+                        },
+                        "p_max": {
+                                "name": "Puissance active maximale"
+                        },
+		        "active_grid_a_b_voltage": {
 				"name": "Tension ligne A-B"
 			},
 			"active_grid_a_power": {
@@ -449,6 +455,15 @@
 			"storage_running_status": {
 				"name": "État de fonctionnement"
 			},
+	                "storage_maximum_charge_power": {
+                	        "name": "Puissance de charge maximale"
+	                },
+	                "storage_maximum_discharge_power": {
+	                        "name": "Puissance de décharge maximale"
+	                },
+            	        "storage_rated_capacity": {
+                	        "name": "Capacité nominale"
+            	        },
 			"storage_state_of_capacity": {
 				"name": "État de la capacité"
 			},
