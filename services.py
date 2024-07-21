@@ -227,7 +227,15 @@ def get_battery_bridge(
 ) -> tuple[HuaweiSolarBridge, HuaweiSolarUpdateCoordinator]:
     """Return the HuaweiSolarBridge associated with the battery device_id in the service call."""
     device_id = service_call.data[DATA_DEVICE_ID]
-    return _get_battery_bridge(hass, device_id)
+    bridge, uc = _get_battery_bridge(hass, device_id)
+
+    _LOGGER.info(
+        "Got the following bridge and update_coordinators in get_battery_bridge: %r, %r",
+        bridge,
+        uc,
+    )
+
+    return bridge, uc
 
 
 @callback
@@ -566,6 +574,12 @@ async def set_capacity_control_periods(
         return result
 
     bridge, uc = get_battery_bridge(hass, service_call)
+
+    _LOGGER.info(
+        "Got the following bridge and update_coordinators in set_capacity_control_periods: %r, %r",
+        bridge,
+        uc,
+    )
 
     if not re.fullmatch(
         CAPACITY_CONTROL_PERIODS_PATTERN, service_call.data[DATA_PERIODS]
