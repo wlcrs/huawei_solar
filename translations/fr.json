@@ -1,7 +1,7 @@
 {
     "config": {
         "abort": {
-            "already_configured": "[%key:common::config_flow::abort::already_configured_device%]",
+            "already_configured": "Le périphérique est déjà configuré",
             "reauth_successful": "[%key:common::config_flow::abort::reauth_successful%]",
             "reconfigure_successful": "[%key:common::config_flow::abort::reconfigure_successful%]"
         },
@@ -84,6 +84,12 @@
             }
         },
         "sensor": {
+            "rated_power": {
+                "name": "Puissance nominale"
+            },
+            "p_max": {
+                "name": "Puissance active maximale"
+            },
             "input_power": {
                 "name": "Puissance d'entrée"
             },
@@ -269,6 +275,15 @@
             },
             "active_grid_c_power": {
                 "name": "Puissance active de la phase C"
+            },
+            "storage_maximum_charge_power": {
+                "name": "Puissance de charge maximale"
+            },
+            "storage_maximum_discharge_power": {
+                "name": "Puissance de décharge maximale"
+            },
+            "storage_rated_capacity": {
+                "name": "Capacité nominale"
             },
             "storage_state_of_capacity": {
                 "name": "État de la capacité"
@@ -458,12 +473,6 @@
             },
             "battery_working_mode": {
                 "name": "Working mode"
-            },
-            "battery_rated_charge_power": {
-                "name": "Rated charge power"
-            },
-            "battery_rated_discharge_power": {
-                "name": "Rated discharge power"
             },
             "battery_remaining_charge_discharge_time": {
                 "name": "Remaining charge/discharge time"
