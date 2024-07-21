@@ -1,7 +1,7 @@
 {
     "config": {
         "abort": {
-            "already_configured": "[%key:common::config_flow::abort::already_configured_device%]",
+            "already_configured": "ڈیوائس پہلے سے تشکیل شدہ ہے",
             "reauth_successful": "[%key:common::config_flow::abort::reauth_successful%]",
             "reconfigure_successful": "[%key:common::config_flow::abort::reconfigure_successful%]"
         },
@@ -84,6 +84,12 @@
             }
         },
         "sensor": {
+            "rated_power": {
+                "name": "شرح شدہ طاقت"
+            },
+            "p_max": {
+                "name": "زیادہ سے زیادہ فعال طاقت"
+            },
             "input_power": {
                 "name": "ان پٹ پاورr"
             },
@@ -269,6 +275,15 @@
             },
             "active_grid_c_power": {
                 "name": "فیز سی فعال طاقت"
+            },
+            "storage_maximum_charge_power": {
+                "name": "زیادہ سے زیادہ چارج پاور"
+            },
+            "storage_maximum_discharge_power": {
+                "name": "زیادہ سے زیادہ خارج ہونے والی طاقت"
+            },
+            "storage_rated_capacity": {
+                "name": "شرح شدہ صلاحیت"
             },
             "storage_state_of_capacity": {
                 "name": "صلاحیت کی حالت"
@@ -458,12 +473,6 @@
             },
             "battery_working_mode": {
                 "name": "Working mode"
-            },
-            "battery_rated_charge_power": {
-                "name": "Rated charge power"
-            },
-            "battery_rated_discharge_power": {
-                "name": "Rated discharge power"
             },
             "battery_remaining_charge_discharge_time": {
                 "name": "Remaining charge/discharge time"
