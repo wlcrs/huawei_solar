@@ -318,14 +318,8 @@
             "current_electricity_generation_statistics_time": {
                 "name": "Current electricity generation statistics time"
             },
-            "storage_time_of_use_charging_and_discharging_periods": {
-                "name": "Tempo di utilizzo"
-            },
             "storage_capacity_control_periods": {
                 "name": "Tempo di controllo della capacità"
-            },
-            "storage_fixed_charging_and_discharging_periods": {
-                "name": "Tempi di carica e scarica predefiniti"
             },
             "pv_01_voltage": {
                 "name": "Tensione FV 1"
@@ -482,6 +476,51 @@
             },
             "active_power_control": {
                 "name": "Active power control"
+            },
+            "storage_lg_resu_time_of_use_price_periods": {
+                "name": "TOU price periods"
+            },
+            "storage_huawei_luna2000_time_of_use_price_periods": {
+                "name": "TOU price periods"
+            },
+            "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
+                "name": "TOU charging and discharging periods"
+            },
+            "storage_lg_resu_time_of_use_charging_and_discharging_periods": {
+                "name": "TOU charging and discharging periods"
+            },
+            "storage_fixed_charging_and_discharging_periods": {
+                "name": "Tempi di carica e scarica predefiniti"
+            },
+            "inverter_total_absorbed_energy": {
+                "name": "Total absorbed energy"
+            },
+            "energy_charged_today": {
+                "name": "Energy charged today"
+            },
+            "total_charged_energy": {
+                "name": "Total charged energy"
+            },
+            "energy_discharged_today": {
+                "name": "Energy discharged today"
+            },
+            "total_discharged_energy": {
+                "name": "Total discharged energy"
+            },
+            "ess_chargeable_energy": {
+                "name": "ESS Chargeable energy"
+            },
+            "ess_dischargeable_energy": {
+                "name": "ESS Dischargeable energy"
+            },
+            "rated_ess_capacity": {
+                "name": "Rated ESS capacity"
+            },
+            "consumption_today": {
+                "name": "Consumption today"
+            },
+            "total_energy_consumption": {
+                "name": "Total energy consumption"
             }
         },
         "select": {
