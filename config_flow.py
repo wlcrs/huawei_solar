@@ -5,6 +5,15 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from huawei_solar import (
+    ConnectionException,
+    HuaweiSolarException,
+    InvalidCredentials,
+    ReadException,
+    create_rtu_bridge,
+    create_sub_bridge,
+    create_tcp_bridge,
+)
 import serial.tools.list_ports
 import voluptuous as vol
 
@@ -19,13 +28,6 @@ from homeassistant.const import (
 )
 from homeassistant.data_entry_flow import FlowResult
 import homeassistant.helpers.config_validation as cv
-from huawei_solar import (
-    ConnectionException,
-    HuaweiSolarBridge,
-    HuaweiSolarException,
-    InvalidCredentials,
-    ReadException,
-)
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
@@ -46,7 +48,7 @@ async def validate_serial_setup(port: str, slave_ids: list[int]) -> dict[str, An
     """Validate the serial device that was passed by the user."""
     bridge = None
     try:
-        bridge = await HuaweiSolarBridge.create_rtu(
+        bridge = await create_rtu_bridge(
             port=port,
             slave_id=slave_ids[0],
         )
@@ -65,9 +67,7 @@ async def validate_serial_setup(port: str, slave_ids: list[int]) -> dict[str, An
         # Also validate the other slave-ids
         for slave_id in slave_ids[1:]:
             try:
-                slave_bridge = await HuaweiSolarBridge.create_extra_slave(
-                    bridge, slave_id
-                )
+                slave_bridge = await create_sub_bridge(bridge, slave_id)
 
                 _LOGGER.info(
                     "Successfully connected to slave inverter %s: %s with SN %s",
@@ -101,7 +101,7 @@ async def validate_network_setup(
     """
     bridge = None
     try:
-        bridge = await HuaweiSolarBridge.create(
+        bridge = await create_tcp_bridge(
             host=host,
             port=port,
             slave_id=slave_ids[0],
@@ -113,7 +113,7 @@ async def validate_network_setup(
             bridge.serial_number,
         )
 
-        result = {
+        result: dict[str, Any] = {
             "model_name": bridge.model_name,
             "serial_number": bridge.serial_number,
         }
@@ -126,9 +126,7 @@ async def validate_network_setup(
         # Also validate the other slave-ids
         for slave_id in slave_ids[1:]:
             try:
-                slave_bridge = await HuaweiSolarBridge.create_extra_slave(
-                    bridge, slave_id
-                )
+                slave_bridge = await create_sub_bridge(bridge, slave_id)
 
                 _LOGGER.info(
                     "Successfully connected to slave inverter %s: %s with SN %s",
@@ -161,7 +159,7 @@ async def validate_network_setup_login(
     bridge = None
     try:
         # these parameters have already been tested in validate_input, so they should work fine!
-        bridge = await HuaweiSolarBridge.create(
+        bridge = await create_tcp_bridge(
             host=host,
             port=port,
             slave_id=slave_id,
@@ -222,9 +220,10 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._port = entry_data.get(CONF_PORT)
 
         slave_ids = entry_data.get(CONF_SLAVE_IDS)
+        assert isinstance(slave_ids, list | int)
         if not isinstance(slave_ids, list):
             slave_ids = [slave_ids]
-        self._slave_ids = ",".join(map(str, slave_ids))
+        self._slave_ids = slave_ids
 
         self._username = entry_data.get(CONF_USERNAME)
         self._password = entry_data.get(CONF_PASSWORD)
@@ -301,6 +300,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 )
 
                 try:
+                    assert isinstance(self._port, str)
                     info = await validate_serial_setup(self._port, self._slave_ids)
 
                 except ConnectionException:
@@ -430,8 +430,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     # Check if we need to ask for the login details
                     if (
                         self._elevated_permissions
-                        # This can also be None, in which case login is not supported.
-                        and info["has_write_permission"] is not None
                         and info["has_write_permission"] is False
                     ):
                         self.context["title_placeholders"] = {
