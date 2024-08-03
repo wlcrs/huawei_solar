@@ -1,7 +1,5 @@
 """Specialized DataUpdateCoordinators for Huawei Solar entities."""
 
-from __future__ import annotations
-
 import asyncio
 from collections.abc import Awaitable, Callable
 from datetime import timedelta
@@ -9,11 +7,12 @@ from itertools import chain
 import logging
 from typing import Any
 
+from huawei_solar import HuaweiSolarBridge, HuaweiSolarException, HuaweiSUN2000Bridge
+
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.debounce import Debouncer
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-from huawei_solar import HuaweiSolarBridge, HuaweiSolarException
 
 from .const import OPTIMIZER_UPDATE_TIMEOUT, UPDATE_TIMEOUT
 
@@ -70,7 +69,7 @@ class HuaweiSolarOptimizerUpdateCoordinator(DataUpdateCoordinator):
         self,
         hass: HomeAssistant,
         logger: logging.Logger,
-        bridge: HuaweiSolarBridge,
+        bridge: HuaweiSUN2000Bridge,
         optimizer_device_infos: dict[int, DeviceInfo],
         name: str,
         update_interval: timedelta | None = None,
@@ -99,8 +98,8 @@ class HuaweiSolarOptimizerUpdateCoordinator(DataUpdateCoordinator):
 
 
 async def create_optimizer_update_coordinator(
-    hass,
-    bridge: HuaweiSolarBridge,
+    hass: HomeAssistant,
+    bridge: HuaweiSUN2000Bridge,
     optimizer_device_infos: dict[int, DeviceInfo],
     update_interval,
 ) -> HuaweiSolarOptimizerUpdateCoordinator:

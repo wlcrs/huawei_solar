@@ -496,11 +496,17 @@
             "storage_state_of_capacity": {
                 "name": "State of capacity"
             },
-            "storage_rated_capacity": {
-                "name": "Rated Capacity"
+            "storage_lg_resu_time_of_use_price_periods": {
+                "name": "TOU price periods"
             },
-            "storage_time_of_use_charging_and_discharging_periods": {
-                "name": "Time Of use periods"
+            "storage_huawei_luna2000_time_of_use_price_periods": {
+                "name": "TOU price periods"
+            },
+            "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
+                "name": "TOU charging and discharging periods"
+            },
+            "storage_lg_resu_time_of_use_charging_and_discharging_periods": {
+                "name": "TOU charging and discharging periods"
             },
             "storage_total_charge": {
                 "name": "Total charge"
@@ -513,6 +519,36 @@
             },
             "voltage_to_ground": {
                 "name": "Voltage to ground"
+            },
+            "inverter_total_absorbed_energy": {
+                "name": "Total absorbed energy"
+            },
+            "energy_charged_today": {
+                "name": "Energy charged today"
+            },
+            "total_charged_energy": {
+                "name": "Total charged energy"
+            },
+            "energy_discharged_today": {
+                "name": "Energy discharged today"
+            },
+            "total_discharged_energy": {
+                "name": "Total discharged energy"
+            },
+            "ess_chargeable_energy": {
+                "name": "ESS Chargeable energy"
+            },
+            "ess_dischargeable_energy": {
+                "name": "ESS Dischargeable energy"
+            },
+            "rated_ess_capacity": {
+                "name": "Rated ESS capacity"
+            },
+            "consumption_today": {
+                "name": "Consumption today"
+            },
+            "total_energy_consumption": {
+                "name": "Total energy consumption"
             }
         },
         "switch": {

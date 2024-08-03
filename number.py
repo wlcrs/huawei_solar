@@ -5,6 +5,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 import logging
 
+from huawei_solar import (
+    HuaweiSolarBridge,
+    HuaweiSUN2000Bridge,
+    register_names as rn,
+    register_values as rv,
+)
+
 from homeassistant.components.number import (
     NumberEntity,
     NumberEntityDescription,
@@ -17,7 +24,6 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
 
 from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinators
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
@@ -178,22 +184,23 @@ async def async_setup_entry(
     for ucs in update_coordinators:
         if not ucs.configuration_update_coordinator:
             continue
+        slave_entities: list[HuaweiSolarNumberEntity] = []
+        if ucs.device_infos["inverter"]:
+            assert isinstance(ucs.bridge, HuaweiSUN2000Bridge)
+            for entity_description in INVERTER_NUMBER_DESCRIPTIONS:
+                slave_entities.append(  # noqa: PERF401
+                    await HuaweiSolarNumberEntity.create(
+                        ucs.configuration_update_coordinator,
+                        ucs.bridge,
+                        entity_description,
+                        ucs.device_infos["inverter"],
+                    )
+                )
 
-        slave_entities: list[HuaweiSolarNumberEntity] = [
-            await HuaweiSolarNumberEntity.create(
-                ucs.configuration_update_coordinator,
-                ucs.bridge,
-                entity_description,
-                ucs.device_infos["inverter"],
-            )
-            for entity_description in INVERTER_NUMBER_DESCRIPTIONS
-        ]
-
-        if ucs.bridge.battery_type != rv.StorageProductModel.NONE:
-            assert ucs.device_infos["connected_energy_storage"]
-
+        if ucs.device_infos["connected_energy_storage"]:
+            assert isinstance(ucs.bridge, HuaweiSUN2000Bridge)
             for entity_description in ENERGY_STORAGE_NUMBER_DESCRIPTIONS:
-                slave_entities.append(
+                slave_entities.append(  # noqa: PERF401
                     await HuaweiSolarNumberEntity.create(
                         ucs.configuration_update_coordinator,
                         ucs.bridge,
@@ -204,7 +211,7 @@ async def async_setup_entry(
 
             if ucs.bridge.supports_capacity_control:
                 for entity_description in CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
-                    slave_entities.append(
+                    slave_entities.append(  # noqa: PERF401
                         await HuaweiSolarNumberEntity.create(
                             ucs.configuration_update_coordinator,
                             ucs.bridge,
@@ -268,7 +275,7 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
         bridge: HuaweiSolarBridge,
         description: HuaweiSolarNumberEntityDescription,
         device_info: DeviceInfo,
-    ):
+    ) -> HuaweiSolarNumberEntity:
         """Huawei Solar Number Entity constructor.
 
         This async constructor fills in the necessary min/max values

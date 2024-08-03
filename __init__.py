@@ -6,6 +6,18 @@ from dataclasses import dataclass
 import logging
 from typing import TypedDict, TypeVar
 
+from huawei_solar import (
+    HuaweiEMMABridge,
+    HuaweiSolarBridge,
+    HuaweiSolarException,
+    HuaweiSUN2000Bridge,
+    InvalidCredentials,
+    create_rtu_bridge,
+    create_sub_bridge,
+    create_tcp_bridge,
+    register_values as rv,
+)
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONF_HOST,
@@ -17,12 +29,6 @@ from homeassistant.const import (
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.entity import DeviceInfo, Entity
-from huawei_solar import (
-    HuaweiSolarBridge,
-    HuaweiSolarException,
-    InvalidCredentials,
-    register_values as rv,
-)
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
@@ -82,11 +88,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         #  └─────────┘     └─────────┘    └─────────┘
 
         if entry.data[CONF_HOST] is None:
-            primary_bridge = await HuaweiSolarBridge.create_rtu(
+            primary_bridge = await create_rtu_bridge(
                 port=entry.data[CONF_PORT], slave_id=entry.data[CONF_SLAVE_IDS][0]
             )
         else:
-            primary_bridge = await HuaweiSolarBridge.create(
+            primary_bridge = await create_tcp_bridge(
                 host=entry.data[CONF_HOST],
                 port=entry.data[CONF_PORT],
                 slave_id=entry.data[CONF_SLAVE_IDS][0],
@@ -99,7 +105,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                             entry.data[CONF_USERNAME], entry.data[CONF_PASSWORD]
                         )
                     except InvalidCredentials as err:
-                        raise ConfigEntryAuthFailed() from err
+                        raise ConfigEntryAuthFailed from err
 
         primary_bridge_device_infos = await compute_device_infos(
             primary_bridge,
@@ -111,9 +117,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         ] = [(primary_bridge, primary_bridge_device_infos)]
 
         for extra_slave_id in entry.data[CONF_SLAVE_IDS][1:]:
-            extra_bridge = await HuaweiSolarBridge.create_extra_slave(
-                primary_bridge, extra_slave_id
-            )
+            extra_bridge = await create_sub_bridge(primary_bridge, extra_slave_id)
 
             extra_bridge_device_infos = await compute_device_infos(
                 extra_bridge,
@@ -138,8 +142,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             )
 
             power_meter_update_coordinator = None
-            if bridge.power_meter_type is not None:
-                assert device_infos["power_meter"]
+            if device_infos["power_meter"]:
                 power_meter_update_coordinator = HuaweiSolarUpdateCoordinator(
                     hass,
                     _LOGGER,
@@ -149,8 +152,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 )
 
             energy_storage_update_coordinator = None
-            if bridge.battery_type != rv.StorageProductModel.NONE:
-                assert device_infos["connected_energy_storage"]
+            if device_infos["connected_energy_storage"]:
                 energy_storage_update_coordinator = HuaweiSolarUpdateCoordinator(
                     hass,
                     _LOGGER,
@@ -170,7 +172,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 )
 
             optimizer_update_coordinator = None
-            if bridge.has_optimizers:
+            if isinstance(bridge, HuaweiSUN2000Bridge) and bridge.has_optimizers:
                 optimizers_device_infos = {}
                 try:
                     optimizer_system_infos = (
@@ -229,13 +231,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
         raise ConfigEntryNotReady from err
 
-    except Exception as err:
+    except Exception:
         # always try to stop the bridge, as it will keep retrying
         # in the background otherwise!
         if primary_bridge is not None:
             await primary_bridge.stop()
-
-        raise err
+        raise
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     await async_setup_services(hass, entry)
@@ -262,7 +263,8 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 class HuaweiInverterBridgeDeviceInfos(TypedDict):
     """Device Infos for a specific inverter."""
 
-    inverter: DeviceInfo
+    emma: DeviceInfo | None
+    inverter: DeviceInfo | None
     power_meter: DeviceInfo | None
 
     connected_energy_storage: DeviceInfo | None
@@ -270,85 +272,105 @@ class HuaweiInverterBridgeDeviceInfos(TypedDict):
     battery_2: DeviceInfo | None
 
 
+def _battery_product_model_to_manufacturer(spm: rv.StorageProductModel):
+    if spm == rv.StorageProductModel.HUAWEI_LUNA2000:
+        return "Huawei"
+    if spm == rv.StorageProductModel.LG_RESU:
+        return "LG Chem"
+    return None
+
+
+def _battery_product_model_to_model(spm: rv.StorageProductModel):
+    if spm == rv.StorageProductModel.HUAWEI_LUNA2000:
+        return "LUNA 2000"
+    if spm == rv.StorageProductModel.LG_RESU:
+        return "RESU"
+    return None
+
+
 async def compute_device_infos(
     bridge: HuaweiSolarBridge,
     connecting_inverter_device_id: tuple[str, str] | None,
 ) -> HuaweiInverterBridgeDeviceInfos:
     """Create the correct DeviceInfo-objects, which can be used to correctly assign to entities in this integration."""
-    inverter_device_info = DeviceInfo(
-        identifiers={(DOMAIN, bridge.serial_number)},
-        translation_key="inverter",
-        manufacturer="Huawei",
-        model=bridge.model_name,
-        serial_number=bridge.serial_number,
-        sw_version=bridge.software_version,
-        via_device=connecting_inverter_device_id,  # type: ignore[typeddict-item]
-    )
 
-    # Add power meter device if a power meter is detected
+    emma_device_info = None
+    inverter_device_info = None
     power_meter_device_info = None
-
-    if bridge.power_meter_type is not None:
-        power_meter_device_info = DeviceInfo(
-            identifiers={
-                (DOMAIN, f"{bridge.serial_number}/power_meter"),
-            },
-            translation_key="power_meter",
-            via_device=(DOMAIN, bridge.serial_number),
-        )
-
-    # Add battery device if a battery is detected
     battery_device_info = None
-
-    if bridge.battery_type != rv.StorageProductModel.NONE:
-        battery_device_info = DeviceInfo(
-            identifiers={
-                (DOMAIN, f"{bridge.serial_number}/connected_energy_storage"),
-            },
-            translation_key="connected_energy_storage",
-            manufacturer=inverter_device_info.get("manufacturer"),
-            via_device=(DOMAIN, bridge.serial_number),
-        )
-
-    def _battery_product_model_to_manufacturer(spm: rv.StorageProductModel):
-        if spm == rv.StorageProductModel.HUAWEI_LUNA2000:
-            return "Huawei"
-        if spm == rv.StorageProductModel.LG_RESU:
-            return "LG Chem"
-        return None
-
-    def _battery_product_model_to_model(spm: rv.StorageProductModel):
-        if spm == rv.StorageProductModel.HUAWEI_LUNA2000:
-            return "LUNA 2000"
-        if spm == rv.StorageProductModel.LG_RESU:
-            return "RESU"
-        return None
-
     battery_1_device_info = None
-    if bridge.battery_1_type != rv.StorageProductModel.NONE:
-        battery_1_device_info = DeviceInfo(
-            identifiers={
-                (DOMAIN, f"{bridge.serial_number}/battery_1"),
-            },
-            translation_key="battery_1",
-            manufacturer=_battery_product_model_to_manufacturer(bridge.battery_1_type),
-            model=_battery_product_model_to_model(bridge.battery_1_type),
-            via_device=(DOMAIN, bridge.serial_number),
+    battery_2_device_info = None
+
+    if isinstance(bridge, HuaweiEMMABridge):
+        emma_device_info = DeviceInfo(
+            identifiers={(DOMAIN, bridge.serial_number)},
+            translation_key="emma",
+            manufacturer="Huawei",
+            model=bridge.model_name,
+            serial_number=bridge.serial_number,
+            sw_version=bridge.software_version,
+        )
+    else:
+        assert isinstance(bridge, HuaweiSUN2000Bridge)
+        inverter_device_info = DeviceInfo(
+            identifiers={(DOMAIN, bridge.serial_number)},
+            translation_key="inverter",
+            manufacturer="Huawei",
+            model=bridge.model_name,
+            serial_number=bridge.serial_number,
+            sw_version=bridge.software_version,
+            via_device=connecting_inverter_device_id,  # type: ignore[typeddict-item]
         )
 
-    battery_2_device_info = None
-    if bridge.battery_2_type != rv.StorageProductModel.NONE:
-        battery_2_device_info = DeviceInfo(
-            identifiers={
-                (DOMAIN, f"{bridge.serial_number}/battery_2"),
-            },
-            translation_key="battery_2",
-            manufacturer=_battery_product_model_to_manufacturer(bridge.battery_2_type),
-            model=_battery_product_model_to_model(bridge.battery_2_type),
-            via_device=(DOMAIN, bridge.serial_number),
-        )
+        # Add power meter device if a power meter is detected
+        if bridge.power_meter_type is not None:
+            power_meter_device_info = DeviceInfo(
+                identifiers={
+                    (DOMAIN, f"{bridge.serial_number}/power_meter"),
+                },
+                translation_key="power_meter",
+                via_device=(DOMAIN, bridge.serial_number),
+            )
+
+        # Add battery device if a battery is detected
+        if bridge.battery_type != rv.StorageProductModel.NONE:
+            battery_device_info = DeviceInfo(
+                identifiers={
+                    (DOMAIN, f"{bridge.serial_number}/connected_energy_storage"),
+                },
+                translation_key="connected_energy_storage",
+                manufacturer=inverter_device_info.get("manufacturer"),
+                via_device=(DOMAIN, bridge.serial_number),
+            )
+
+        if bridge.battery_1_type != rv.StorageProductModel.NONE:
+            battery_1_device_info = DeviceInfo(
+                identifiers={
+                    (DOMAIN, f"{bridge.serial_number}/battery_1"),
+                },
+                translation_key="battery_1",
+                manufacturer=_battery_product_model_to_manufacturer(
+                    bridge.battery_1_type
+                ),
+                model=_battery_product_model_to_model(bridge.battery_1_type),
+                via_device=(DOMAIN, bridge.serial_number),
+            )
+
+        if bridge.battery_2_type != rv.StorageProductModel.NONE:
+            battery_2_device_info = DeviceInfo(
+                identifiers={
+                    (DOMAIN, f"{bridge.serial_number}/battery_2"),
+                },
+                translation_key="battery_2",
+                manufacturer=_battery_product_model_to_manufacturer(
+                    bridge.battery_2_type
+                ),
+                model=_battery_product_model_to_model(bridge.battery_2_type),
+                via_device=(DOMAIN, bridge.serial_number),
+            )
 
     return HuaweiInverterBridgeDeviceInfos(
+        emma=emma_device_info,
         inverter=inverter_device_info,
         power_meter=power_meter_device_info,
         connected_energy_storage=battery_device_info,
@@ -365,6 +387,7 @@ class HuaweiSolarUpdateCoordinators:
     device_infos: HuaweiInverterBridgeDeviceInfos
 
     inverter_update_coordinator: HuaweiSolarUpdateCoordinator
+    """Also used for EMMA devices."""
     power_meter_update_coordinator: HuaweiSolarUpdateCoordinator | None
     energy_storage_update_coordinator: HuaweiSolarUpdateCoordinator | None
     optimizer_update_coordinator: HuaweiSolarOptimizerUpdateCoordinator | None

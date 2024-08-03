@@ -1,122 +1,122 @@
 {
-    "config": {
-        "abort": {
-            "already_configured": "Le périphérique est déjà configuré"
-        },
-        "error": {
-            "cannot_connect": "Échec de la connexion",
-            "invalid_auth": "Authentification invalide",
-            "invalid_slave_ids": "Les ID d'esclaves doivent être une liste de nombres entiers séparés par des virgules",
-            "read_error": "Échec de la lecture de l'onduleur.",
-            "slave_cannot_connect": "Échec de la connexion à un esclave supplémentaire",
-            "unknown": "Erreur inattendue"
-        },
-        "step": {
-            "network_login": {
-                "data": {
-                    "password": "Mot de passe",
-                    "username": "Nom d'utilisateur"
-                },
-                "description": "Veuillez saisir les identifiants de l'installateur"
-            },
-            "setup_network": {
-                "data": {
-                    "enable_parameter_configuration": "Avancé : élever les permissions",
-                    "host": "Hôte",
-                    "port": "Port",
-                    "slave_ids": "ID d'esclaves (séparés par des virgules)"
-                }
-            },
-            "setup_serial": {
-                "data": {
-                    "port": "Sélectionner le périphérique",
-                    "slave_ids": "ID d'esclaves (séparés par des virgules)"
-                },
-                "title": "Périphérique"
-            },
-            "setup_serial_manual_path": {
-                "data": {
-                    "port": "Chemin du périphérique USB"
-                },
-                "title": "Chemin"
-            },
-            "user": {
-                "data": {
-                    "type": "Type de connexion"
-                },
-                "title": "Sélectionner le type de connexion"
-            }
-        }
-    },
-    "entity": {
-        "number": {
-            "storage_backup_power_state_of_charge": {
-                "name": "SOC de la batterie de secours"
-            },
-            "storage_capacity_control_soc_peak_shaving": {
-                "name": "SOC de l'écrêtage de puissance de la batterie"
-            },
-            "storage_charging_cutoff_capacity": {
-                "name": "SOC de fin de charge"
-            },
-            "storage_discharging_cutoff_capacity": {
-                "name": "SOC de fin de décharge"
-            },
-            "storage_grid_charge_cutoff_state_of_charge": {
-                "name": "SOC de coupure de charge réseau"
-            },
-            "storage_maximum_charging_power": {
-                "name": "Puissance de charge maximale"
-            },
-            "storage_maximum_discharging_power": {
-                "name": "Puissance de décharge maximale"
-            },
-            "storage_power_of_charge_from_grid": {
-                "name": "Puissance de charge maximale depuis le réseau"
-            }
-        },
-        "select": {
-            "storage_capacity_control_mode": {
-                "name": "Mode de contrôle de capacité",
-                "state": {
-                    "active_capacity_control": "Contrôle de capacité actif",
-                    "apparent_power_limit": "Limite de puissance apparente",
-                    "disable": "Désactiver"
-                }
-            },
-            "storage_excess_pv_energy_use_in_tou": {
-                "name": "Utilisation de l'énergie PV excédentaire en TOU",
-                "state": {
-                    "charge": "Charge",
-                    "fed_to_grid": "Alimenté au réseau"
-                }
-            },
-            "storage_working_mode_settings": {
-                "name": "Mode de fonctionnement",
-                "state": {
-                    "adaptive": "Adaptatif",
-                    "fixed_charge_discharge": "Charge/décharge fixe",
-                    "fully_fed_to_grid": "Entièrement alimenté au réseau",
-                    "maximise_self_consumption": "Maximiser l'autoconsommation",
-                    "time_of_use_lg": "Heure creuse",
-                    "time_of_use_luna2000": "Heure creuse"
-                }
-            }
-        },
-        "sensor": {
+	"config": {
+		"abort": {
+			"already_configured": "Le périphérique est déjà configuré"
+		},
+		"error": {
+			"cannot_connect": "Échec de la connexion",
+			"invalid_auth": "Authentification invalide",
+			"invalid_slave_ids": "Les ID d'esclaves doivent être une liste de nombres entiers séparés par des virgules",
+			"read_error": "Échec de la lecture de l'onduleur.",
+			"slave_cannot_connect": "Échec de la connexion à un esclave supplémentaire",
+			"unknown": "Erreur inattendue"
+		},
+		"step": {
+			"network_login": {
+				"data": {
+					"password": "Mot de passe",
+					"username": "Nom d'utilisateur"
+				},
+				"description": "Veuillez saisir les identifiants de l'installateur"
+			},
+			"setup_network": {
+				"data": {
+					"enable_parameter_configuration": "Avancé : élever les permissions",
+					"host": "Hôte",
+					"port": "Port",
+					"slave_ids": "ID d'esclaves (séparés par des virgules)"
+				}
+			},
+			"setup_serial": {
+				"data": {
+					"port": "Sélectionner le périphérique",
+					"slave_ids": "ID d'esclaves (séparés par des virgules)"
+				},
+				"title": "Périphérique"
+			},
+			"setup_serial_manual_path": {
+				"data": {
+					"port": "Chemin du périphérique USB"
+				},
+				"title": "Chemin"
+			},
+			"user": {
+				"data": {
+					"type": "Type de connexion"
+				},
+				"title": "Sélectionner le type de connexion"
+			}
+		}
+	},
+	"entity": {
+		"number": {
+			"storage_backup_power_state_of_charge": {
+				"name": "SOC de la batterie de secours"
+			},
+			"storage_capacity_control_soc_peak_shaving": {
+				"name": "SOC de l'écrêtage de puissance de la batterie"
+			},
+			"storage_charging_cutoff_capacity": {
+				"name": "SOC de fin de charge"
+			},
+			"storage_discharging_cutoff_capacity": {
+				"name": "SOC de fin de décharge"
+			},
+			"storage_grid_charge_cutoff_state_of_charge": {
+				"name": "SOC de coupure de charge réseau"
+			},
+			"storage_maximum_charging_power": {
+				"name": "Puissance de charge maximale"
+			},
+			"storage_maximum_discharging_power": {
+				"name": "Puissance de décharge maximale"
+			},
+			"storage_power_of_charge_from_grid": {
+				"name": "Puissance de charge maximale depuis le réseau"
+			}
+		},
+		"select": {
+			"storage_capacity_control_mode": {
+				"name": "Mode de contrôle de capacité",
+				"state": {
+					"active_capacity_control": "Contrôle de capacité actif",
+					"apparent_power_limit": "Limite de puissance apparente",
+					"disable": "Désactiver"
+				}
+			},
+			"storage_excess_pv_energy_use_in_tou": {
+				"name": "Utilisation de l'énergie PV excédentaire en TOU",
+				"state": {
+					"charge": "Charge",
+					"fed_to_grid": "Alimenté au réseau"
+				}
+			},
+			"storage_working_mode_settings": {
+				"name": "Mode de fonctionnement",
+				"state": {
+					"adaptive": "Adaptatif",
+					"fixed_charge_discharge": "Charge/décharge fixe",
+					"fully_fed_to_grid": "Entièrement alimenté au réseau",
+					"maximise_self_consumption": "Maximiser l'autoconsommation",
+					"time_of_use_lg": "Heure creuse",
+					"time_of_use_luna2000": "Heure creuse"
+				}
+			}
+		},
+		"sensor": {
 			"accumulated_energy_yield": {
 				"name": "Production d'énergie accumulée"
 			},
 			"accumulated_yield_energy": {
 				"name": "Production totale"
 			},
-		        "rated_power": {
-                                "name": "Puissance nominale"
-                        },
-                        "p_max": {
-                                "name": "Puissance active maximale"
-                        },
-		        "active_grid_a_b_voltage": {
+			"rated_power": {
+				"name": "Puissance nominale"
+			},
+			"p_max": {
+				"name": "Puissance active maximale"
+			},
+			"active_grid_a_b_voltage": {
 				"name": "Tension ligne A-B"
 			},
 			"active_grid_a_power": {
@@ -455,15 +455,15 @@
 			"storage_running_status": {
 				"name": "État de fonctionnement"
 			},
-	                "storage_maximum_charge_power": {
-                	        "name": "Puissance de charge maximale"
-	                },
-	                "storage_maximum_discharge_power": {
-	                        "name": "Puissance de décharge maximale"
-	                },
-            	        "storage_rated_capacity": {
-                	        "name": "Capacité nominale"
-            	        },
+			"storage_maximum_charge_power": {
+				"name": "Puissance de charge maximale"
+			},
+			"storage_maximum_discharge_power": {
+				"name": "Puissance de décharge maximale"
+			},
+			"storage_rated_capacity": {
+				"name": "Capacité nominale"
+			},
 			"storage_state_of_capacity": {
 				"name": "État de la capacité"
 			},
@@ -481,6 +481,48 @@
 			},
 			"voltage_to_ground": {
 				"name": "Tension à la terre"
+			},
+			"storage_lg_resu_time_of_use_price_periods": {
+				"name": "TOU price periods"
+			},
+			"storage_huawei_luna2000_time_of_use_price_periods": {
+				"name": "TOU price periods"
+			},
+			"storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
+				"name": "TOU charging and discharging periods"
+			},
+			"storage_lg_resu_time_of_use_charging_and_discharging_periods": {
+				"name": "TOU charging and discharging periods"
+			},
+			"inverter_total_absorbed_energy": {
+				"name": "Total absorbed energy"
+			},
+			"energy_charged_today": {
+				"name": "Energy charged today"
+			},
+			"total_charged_energy": {
+				"name": "Total charged energy"
+			},
+			"energy_discharged_today": {
+				"name": "Energy discharged today"
+			},
+			"total_discharged_energy": {
+				"name": "Total discharged energy"
+			},
+			"ess_chargeable_energy": {
+				"name": "ESS Chargeable energy"
+			},
+			"ess_dischargeable_energy": {
+				"name": "ESS Dischargeable energy"
+			},
+			"rated_ess_capacity": {
+				"name": "Rated ESS capacity"
+			},
+			"consumption_today": {
+				"name": "Consumption today"
+			},
+			"total_energy_consumption": {
+				"name": "Total energy consumption"
 			}
 		},
 		"switch": {
@@ -677,4 +719,3 @@
 		}
 	}
 }
-

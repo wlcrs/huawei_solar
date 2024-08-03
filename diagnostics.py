@@ -5,11 +5,12 @@ from __future__ import annotations
 from importlib.metadata import version
 from typing import Any
 
+from huawei_solar import HuaweiEMMABridge, HuaweiSUN2000Bridge
+
 from homeassistant.components.diagnostics import async_redact_data
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_PASSWORD
 from homeassistant.core import HomeAssistant
-from huawei_solar import HuaweiSolarBridge
 
 from . import HuaweiSolarUpdateCoordinators
 from .const import DATA_UPDATE_COORDINATORS, DOMAIN
@@ -30,9 +31,21 @@ async def async_get_config_entry_diagnostics(
         "pymodbus_version": version("pymodbus"),
     }
     for ucs in coordinators:
-        diagnostics_data[
-            f"slave_{ucs.bridge.slave_id}"
-        ] = await _build_bridge_diagnostics_info(ucs.bridge)
+        if isinstance(ucs.bridge, HuaweiSUN2000Bridge):
+            diagnostics_data[
+                f"slave_{ucs.bridge.slave_id}"
+            ] = await _build_sun2000_bridge_diagnostics_info(ucs.bridge)
+        elif isinstance(ucs.bridge, HuaweiEMMABridge):
+            diagnostics_data[
+                f"slave_{ucs.bridge.slave_id}"
+            ] = await _build_emma_bridge_diagnostics_info(ucs.bridge)
+        else:
+            diagnostics_data[f"slave_{ucs.bridge.slave_id}"] = {
+                "_type": "Unknown",
+                "model_name": ucs.bridge.model_name,
+                "firmware_version": ucs.bridge.firmware_version,
+                "software_version": ucs.bridge.software_version,
+            }
 
         diagnostics_data[f"slave_{ucs.bridge.slave_id}_inverter_data"] = (
             ucs.inverter_update_coordinator.data
@@ -61,8 +74,11 @@ async def async_get_config_entry_diagnostics(
     return diagnostics_data
 
 
-async def _build_bridge_diagnostics_info(bridge: HuaweiSolarBridge) -> dict[str, Any]:
-    diagnostics_data = {
+async def _build_sun2000_bridge_diagnostics_info(
+    bridge: HuaweiSUN2000Bridge,
+) -> dict[str, Any]:
+    return {
+        "_type": "SUN2000",
         "model_name": bridge.model_name,
         "firmware_version": bridge.firmware_version,
         "software_version": bridge.software_version,
@@ -75,4 +91,13 @@ async def _build_bridge_diagnostics_info(bridge: HuaweiSolarBridge) -> dict[str,
         "supports_capacity_control": bridge.supports_capacity_control,
     }
 
-    return diagnostics_data
+
+async def _build_emma_bridge_diagnostics_info(
+    bridge: HuaweiEMMABridge,
+) -> dict[str, Any]:
+    return {
+        "_type": "EMMA",
+        "model_name": bridge.model_name,
+        "firmware_version": bridge.firmware_version,
+        "software_version": bridge.software_version,
+    }
