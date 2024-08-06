@@ -26,7 +26,7 @@
                     "enable_parameter_configuration": "Avanzato: Permessi di accesso elevati",
                     "host": "Host",
                     "port": "Porta",
-                    "slave_ids": "Slave IDs (Separati dalla virgola)"
+                    "slave_ids": "Slave IDs: AUTO for auto-discovery, otherwise a comma separated list"
                 }
             },
             "setup_serial": {
