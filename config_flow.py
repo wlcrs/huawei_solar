@@ -88,6 +88,97 @@ async def validate_serial_setup(port: str, slave_ids: list[int]) -> dict[str, An
             await bridge.stop()
 
 
+async def validate_network_setup_auto_slave_discovery(
+    *,
+    host: str,
+    port: int,
+    elevated_permissions: bool,
+) -> dict[str, Any]:
+    """Validate that we can connect to the device via the provided host and port. Try to autodiscover the slave ids."""
+    bridge = None
+    try:
+        bridge = await create_tcp_bridge(
+            host=host,
+            port=port,
+            slave_id=0,
+        )
+
+        _LOGGER.info(
+            "Successfully connected to inverter %s with SN %s",
+            bridge.model_name,
+            bridge.serial_number,
+        )
+
+        result: dict[str, Any] = {
+            "model_name": bridge.model_name,
+            "serial_number": bridge.serial_number,
+        }
+        if elevated_permissions:
+            # Check if we have write access. If this is not the case, we will
+            # need to login (and request the username/password from the user to be
+            # able to do this).
+            result["has_write_permission"] = await bridge.has_write_permission()
+
+        device_infos = await bridge.client.get_device_infos()
+
+        _LOGGER.info("Received %d device infos", len(device_infos))
+
+        slave_ids = [0]
+
+        for device_info in device_infos:
+            if device_info.device_id is None:
+                _LOGGER.warning(
+                    "Slave with no device_id found. Skipping. Product type: %s, model: %s, software version: %s",
+                    device_info.product_type,
+                    device_info.model,
+                    device_info.software_version,
+                )
+                continue
+
+            if device_info.device_id == 0:
+                _LOGGER.warning(
+                    "Skipping slave 0. Product type: %s, model: %s, software version: %s",
+                    device_info.product_type,
+                    device_info.model,
+                    device_info.software_version,
+                )
+                continue
+
+            _LOGGER.info(
+                "Slave %s was auto-discovered of type %s with model %s and software version %s",
+                device_info.device_id,
+                device_info.product_type,
+                device_info.model,
+                device_info.software_version,
+            )
+
+            slave_id = device_info.device_id
+
+            try:
+                slave_bridge = await create_sub_bridge(bridge, slave_id)
+
+                _LOGGER.info(
+                    "Successfully connected to slave inverter %s: %s with SN %s",
+                    slave_id,
+                    slave_bridge.model_name,
+                    slave_bridge.serial_number,
+                )
+
+                slave_ids.append(slave_id)
+            except HuaweiSolarException:
+                _LOGGER.exception("Could not connect to slave %s. Skipping.", slave_id)
+
+        # Return info that you want to store in the config entry.
+
+        result["slave_ids"] = slave_ids
+        return result
+
+    finally:
+        if bridge:
+            # Cleanup this inverter object explicitly to prevent it from trying to maintain a modbus connection
+            await bridge.stop()
+
+
 async def validate_network_setup(
     *,
     host: str,
@@ -401,18 +492,16 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._host = user_input[CONF_HOST]
             self._port = user_input[CONF_PORT]
             self._elevated_permissions = user_input[CONF_ENABLE_PARAMETER_CONFIGURATION]
-            try:
-                self._slave_ids = list(map(int, user_input[CONF_SLAVE_IDS].split(",")))
-            except ValueError:
-                errors["base"] = "invalid_slave_ids"
-            else:
+
+            info = None
+            if user_input[CONF_SLAVE_IDS].lower() == "auto":
                 try:
-                    info = await validate_network_setup(
+                    info = await validate_network_setup_auto_slave_discovery(
                         host=self._host,
                         port=self._port,
-                        slave_ids=self._slave_ids,
                         elevated_permissions=self._elevated_permissions,
                     )
+                    self._slave_ids = info.pop("slave_ids")
 
                 except ConnectionException:
                     errors["base"] = "cannot_connect"
@@ -426,24 +515,51 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         "Unexpected exception while connecting via ModbusTCP"
                     )
                     errors["base"] = "unknown"
+            else:
+                try:
+                    self._slave_ids = list(
+                        map(int, user_input[CONF_SLAVE_IDS].split(","))
+                    )
+                except ValueError:
+                    errors["base"] = "invalid_slave_ids"
                 else:
-                    # Check if we need to ask for the login details
-                    if (
-                        self._elevated_permissions
-                        and info["has_write_permission"] is False
-                    ):
-                        self.context["title_placeholders"] = {
-                            "name": info["model_name"]
-                        }
-                        self._inverter_info = info
-                        return await self.async_step_network_login()
+                    try:
+                        info = await validate_network_setup(
+                            host=self._host,
+                            port=self._port,
+                            slave_ids=self._slave_ids,
+                            elevated_permissions=self._elevated_permissions,
+                        )
 
-                    # In case of a reconfigure, the user can have unchecked the elevated permissions checkbox
-                    self._username = None
-                    self._password = None
+                    except ConnectionException:
+                        errors["base"] = "cannot_connect"
+                    except SlaveException:
+                        errors["base"] = "slave_cannot_connect"
+                    except ReadException:
+                        _LOGGER.exception(
+                            "Read exception while connecting via ModbusTCP"
+                        )
+                        errors["base"] = "read_error"
+                    except Exception:  # pylint: disable=broad-except
+                        _LOGGER.exception(
+                            "Unexpected exception while connecting via ModbusTCP"
+                        )
+                        errors["base"] = "unknown"
 
-                    # Otherwise, we can directly create the device entry!
-                    return await self._create_or_update_entry(info)
+            # info will be set when we successfully connected to the inverter
+            if info:
+                # Check if we need to ask for the login details
+                if self._elevated_permissions and info["has_write_permission"] is False:
+                    self.context["title_placeholders"] = {"name": info["model_name"]}
+                    self._inverter_info = info
+                    return await self.async_step_network_login()
+
+                # In case of a reconfigure, the user can have unchecked the elevated permissions checkbox
+                self._username = None
+                self._password = None
+
+                # Otherwise, we can directly create the device entry!
+                return await self._create_or_update_entry(info)
 
         return self.async_show_form(
             step_id="setup_network",
@@ -457,7 +573,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_SLAVE_IDS,
                         default=",".join(map(str, self._slave_ids))
                         if self._slave_ids
-                        else str(DEFAULT_SLAVE_ID),
+                        else "AUTO",
                     ): str,
                     vol.Required(
                         CONF_ENABLE_PARAMETER_CONFIGURATION,
