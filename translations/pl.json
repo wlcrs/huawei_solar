@@ -26,7 +26,7 @@
                     "enable_parameter_configuration": "Zaawansowane: podnieś uprawnienia",
                     "host": "Host",
                     "port": "Port",
-                    "slave_ids": "Identyfikatory urządzeń (oddzielone przecinkami)"
+                    "slave_ids": "Slave IDs: AUTO for auto-discovery, otherwise a comma separated list"
                 }
             },
             "setup_serial": {
