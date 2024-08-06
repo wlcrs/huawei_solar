@@ -26,7 +26,7 @@
                     "enable_parameter_configuration": "Avanzado: elevar permisos",
                     "host": "Host",
                     "port": "Puerto",
-                    "slave_ids": "IDs esclavos (separados por comas)"
+                    "slave_ids": "Slave IDs: AUTO for auto-discovery, otherwise a comma separated list"
                 }
             },
             "setup_serial": {
