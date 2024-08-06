@@ -26,7 +26,7 @@
                     "enable_parameter_configuration": "اعلی درجے کی: اجازتیں بلند کریں۔",
                     "host": "Host",
                     "port": "Port",
-                    "slave_ids": "غلام کی شناختیں (کوما سے الگ)"
+                    "slave_ids": "Slave IDs: AUTO for auto-discovery, otherwise a comma separated list"
                 }
             },
             "setup_serial": {
