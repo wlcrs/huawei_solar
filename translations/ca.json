@@ -26,7 +26,7 @@
                     "enable_parameter_configuration": "Avançat: elevar permisos",
                     "host": "Host",
                     "port": "Port",
-                    "slave_ids": "IDs d'esclaus (separats per comes)"
+                    "slave_ids": "Slave IDs: AUTO for auto-discovery, otherwise a comma separated list"
                 }
             },
             "setup_serial": {
