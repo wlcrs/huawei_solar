@@ -26,7 +26,7 @@
                     "enable_parameter_configuration": "Geavanceerd: Verhoog rechten",
                     "host": "Host",
                     "port": "Poort",
-                    "slave_ids": "Slave IDs (kommagescheiden)"
+                    "slave_ids": "Slave IDs: AUTO for auto-discovery, otherwise a comma separated list"
                 }
             },
             "setup_serial": {
