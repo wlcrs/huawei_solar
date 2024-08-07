@@ -5,13 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 import logging
 
-from huawei_solar import (
-    HuaweiSolarBridge,
-    HuaweiSUN2000Bridge,
-    register_names as rn,
-    register_values as rv,
-)
-
 from homeassistant.components.number import (
     NumberEntity,
     NumberEntityDescription,
@@ -24,6 +17,13 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from huawei_solar import (
+    HuaweiEMMABridge,
+    HuaweiSolarBridge,
+    HuaweiSUN2000Bridge,
+    register_names as rn,
+    register_values as rv,
+)
 
 from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinators
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
@@ -81,6 +81,27 @@ INVERTER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.ACTIVE_POWER_FIXED_VALUE_DERATING,
         static_maximum_key=rn.P_MAX,
+        native_step=1,
+        native_min_value=0,
+        icon="mdi:transmission-tower-off",
+        native_unit_of_measurement=UnitOfPower.WATT,
+        entity_category=EntityCategory.CONFIG,
+    ),
+)
+
+EMMA_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
+    HuaweiSolarNumberEntityDescription(
+        key=rn.EMMA_MAXIMUM_FEED_GRID_POWER_PERCENT,
+        native_max_value=100,
+        native_step=0.1,
+        native_min_value=-100,
+        icon="mdi:transmission-tower-off",
+        native_unit_of_measurement=PERCENTAGE,
+        entity_category=EntityCategory.CONFIG,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.EMMA_MAXIMUM_FEED_GRID_POWER_WATT,
         native_step=1,
         native_min_value=0,
         icon="mdi:transmission-tower-off",
@@ -185,6 +206,18 @@ async def async_setup_entry(
         if not ucs.configuration_update_coordinator:
             continue
         slave_entities: list[HuaweiSolarNumberEntity] = []
+        if ucs.device_infos["emma"]:
+            assert isinstance(ucs.bridge, HuaweiEMMABridge)
+            for entity_description in EMMA_NUMBER_DESCRIPTIONS:
+                slave_entities.append(  # noqa: PERF401
+                    await HuaweiSolarNumberEntity.create(
+                        ucs.configuration_update_coordinator,
+                        ucs.bridge,
+                        entity_description,
+                        ucs.device_infos["emma"],
+                    )
+                )
+
         if ucs.device_infos["inverter"]:
             assert isinstance(ucs.bridge, HuaweiSUN2000Bridge)
             for entity_description in INVERTER_NUMBER_DESCRIPTIONS:

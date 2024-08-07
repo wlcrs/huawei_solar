@@ -81,6 +81,12 @@
             },
             "storage_capacity_control_soc_peak_shaving": {
                 "name": "Peak Shaving SOC"
+            },
+            "emma_maximum_feed_grid_power_percent": {
+                "name": "Maximum feed grid power (%)"
+            },
+            "emma_maximum_feed_grid_power_watt": {
+                "name": "Maximum feed grid power"
             }
         },
         "sensor": {
@@ -549,6 +555,24 @@
                     "fully_fed_to_grid": "Fully fed to grid",
                     "time_of_use_luna2000": "Time of use"
                 }
+            },
+            "emma_ess_control_mode": {
+                "name": "ESS Control Mode",
+                "state": {
+                    "reserved_1": "Reserved 1",
+                    "maximum_self_consumption": "Maximum self consumption",
+                    "reserved_3": "Reserved 3",
+                    "fully_fed_to_grid": "Fully fed to grid",
+                    "time_of_use": "Time of use",
+                    "third_party_dispatch": "Third party dispatch"
+                }
+            },
+            "emma_tou_preferred_use_of_surplus_pv_power": {
+                "name": "Excess PV energy use in TOU",
+                "state": {
+                    "fed_to_grid": "Fed to grid",
+                    "charge": "Charge"
+                }
             }
         },
         "switch": {
@@ -745,6 +769,9 @@
         }
     },
     "device": {
+        "emma": {
+            "name": "EMMA"
+        },
         "inverter": {
             "name": "Inverter"
         },

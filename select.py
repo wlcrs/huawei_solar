@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Any, Generic, TypeVar, cast
 
 from huawei_solar import (
     HuaweiSolarBridge,
+    HuaweiEMMABridge,
     HuaweiSUN2000Bridge,
     register_names as rn,
     register_values as rv,
@@ -85,6 +86,17 @@ CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, 
     ),
 )
 
+EMMA_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
+    HuaweiSolarSelectEntityDescription(
+        key=rn.EMMA_ESS_CONTROL_MODE,
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarSelectEntityDescription(
+        key=rn.EMMA_TOU_PREFERRED_USE_OF_SURPLUS_PV_POWER,
+        entity_category=EntityCategory.CONFIG,
+    ),
+)
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -106,6 +118,17 @@ async def async_setup_entry(
             continue
 
         slave_entities: list[HuaweiSolarSelectEntity | StorageModeSelectEntity] = []
+        if ucs.device_infos["emma"]:
+            assert isinstance(ucs.bridge, HuaweiEMMABridge)
+            for entity_description in EMMA_SELECT_DESCRIPTIONS:
+                slave_entities.append(  # noqa: PERF401
+                    HuaweiSolarSelectEntity(
+                        ucs.configuration_update_coordinator,
+                        ucs.bridge,
+                        entity_description,
+                        ucs.device_infos["emma"],
+                    )
+                )
 
         if ucs.device_infos["connected_energy_storage"]:
             assert isinstance(ucs.bridge, HuaweiSUN2000Bridge)
