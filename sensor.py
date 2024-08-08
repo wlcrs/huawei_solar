@@ -880,11 +880,6 @@ def create_sun2000_entities(ucs: HuaweiSolarUpdateCoordinators) -> list[SensorEn
                         ucs.bridge,
                         ucs.device_infos["connected_energy_storage"],
                     ),
-                    HuaweiSolarFixedChargingPeriodsSensorEntity(
-                        ucs.configuration_update_coordinator,
-                        ucs.configuration_update_coordinator.bridge,
-                        ucs.device_infos["connected_energy_storage"],
-                    ),
                     HuaweiSolarForcibleChargeEntity(
                         ucs.configuration_update_coordinator,
                         ucs.configuration_update_coordinator.bridge,
@@ -1425,68 +1420,6 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
             self._attr_native_value = None
             self._attr_extra_state_attributes.clear()
 
-        self.async_write_ha_state()
-
-
-class HuaweiSolarFixedChargingPeriodsSensorEntity(
-    CoordinatorEntity, HuaweiSolarEntity, SensorEntity
-):
-    """Huawei Solar Sensor for configured Fixed Charging and Discharging periods.
-
-    It shows the number of configured fixed charging and discharging periods, and has the
-    contents of them as extended attributes
-    """
-
-    def __init__(
-        self,
-        coordinator: HuaweiSolarUpdateCoordinator,
-        bridge: HuaweiSolarBridge,
-        device_info: DeviceInfo,
-    ) -> None:
-        """Huawei Solar Capacity Control Periods Sensor Entity constructor."""
-        super().__init__(
-            coordinator,
-            {"register_names": [rn.STORAGE_FIXED_CHARGING_AND_DISCHARGING_PERIODS]},
-        )
-        self.coordinator = coordinator
-
-        self.entity_description = HuaweiSolarSensorEntityDescription(
-            key=rn.STORAGE_FIXED_CHARGING_AND_DISCHARGING_PERIODS,
-            icon="mdi:calendar-text",
-        )
-
-        self._bridge = bridge
-        self._attr_device_info = device_info
-        self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
-
-    def _period_to_text(self, cdp: ChargeDischargePeriod):
-        return (
-            f"{_time_int_to_str(cdp.start_time)}"
-            f"-{_time_int_to_str(cdp.end_time)}"
-            f"/{cdp.power}W"
-        )
-
-    @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
-        if (
-            self.coordinator.data
-            and self.entity_description.key in self.coordinator.data
-        ):
-            data: list[ChargeDischargePeriod] = self.coordinator.data[
-                self.entity_description.key
-            ].value
-
-            self._attr_available = True
-            self._attr_native_value = len(data)
-            self._attr_extra_state_attributes = {
-                f"Period {idx+1}": self._period_to_text(period)
-                for idx, period in enumerate(data)
-            }
-        else:
-            self._attr_available = False
-            self._attr_native_value = None
-            self._attr_extra_state_attributes.clear()
         self.async_write_ha_state()
 
 
