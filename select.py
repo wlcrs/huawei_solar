@@ -149,6 +149,10 @@ async def async_setup_entry(
                 )
             )
             if ucs.bridge.supports_capacity_control:
+                _LOGGER.debug(
+                    "Adding capacity control switch entities for %s",
+                    ucs.bridge.serial_number,
+                )
                 slave_entities.extend(
                     HuaweiSolarSelectEntity(
                         ucs.configuration_update_coordinator,
@@ -157,6 +161,11 @@ async def async_setup_entry(
                         ucs.device_infos["connected_energy_storage"],
                     )
                     for entity_description in CAPACITY_CONTROL_SWITCH_DESCRIPTIONS
+                )
+            else:
+                _LOGGER.debug(
+                    "Storage capacity control is not supported by inverter %s",
+                    ucs.bridge.serial_number,
                 )
 
         entities_to_add.extend(slave_entities)

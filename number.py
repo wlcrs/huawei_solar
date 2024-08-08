@@ -243,6 +243,10 @@ async def async_setup_entry(
                 )
 
             if ucs.bridge.supports_capacity_control:
+                _LOGGER.debug(
+                    "Adding capacity control number entities on slave %s",
+                    ucs.bridge.serial_number,
+                )
                 for entity_description in CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
                     slave_entities.append(  # noqa: PERF401
                         await HuaweiSolarNumberEntity.create(
@@ -252,6 +256,11 @@ async def async_setup_entry(
                             ucs.device_infos["connected_energy_storage"],
                         )
                     )
+            else:
+                _LOGGER.debug(
+                    "Capacity control not supported on slave %s. Skipping capacity control number entities",
+                    ucs.bridge.serial_number,
+                )
 
         else:
             _LOGGER.debug(
