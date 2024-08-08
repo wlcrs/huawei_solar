@@ -573,6 +573,57 @@
             },
             "total_energy_consumption": {
                 "name": "Total energy consumption"
+            },
+            "feed_in_to_grid_today": {
+                "name": "Feed in to grid today"
+            },
+            "supply_from_grid_today": {
+                "name": "Supply from grid today"
+            },
+            "total_supply_from_grid": {
+                "name": "Total supply from grid"
+            },
+            "inverter_energy_yield_today": {
+                "name": "Inverter energy yield today"
+            },
+            "inverter_total_energy_yield": {
+                "name": "Inverter total energy yield"
+            },
+            "pv_yield_today": {
+                "name": "PV yield today"
+            },
+            "total_pv_energy_yield": {
+                "name": "Total PV energy yield"
+            },
+            "pv_output_power": {
+                "name": "PV output power"
+            },
+            "load_power": {
+                "name": "Load power"
+            },
+            "feed_in_power": {
+                "name": "Feed in power"
+            },
+            "battery_charge_discharge_power": {
+                "name": "Battery charge/discharge power"
+            },
+            "inverter_rated_power": {
+                "name": "Inverter rated power"
+            },
+            "inverter_active_power": {
+                "name": "Inverter active power"
+            },
+            "state_of_capacity": {
+                "name": "State of capacity"
+            },
+            "ess_chargeable_capacity": {
+                "name": "ESS chargeable capacity"
+            },
+            "ess_dischargeable_capacity": {
+                "name": "ESS dischargeable capacity"
+            },
+            "backup_power_state_of_charge": {
+                "name": "Backup power state of charge"
             }
         },
         "switch": {
