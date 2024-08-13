@@ -55,9 +55,7 @@ Detailed information can be found on the ['Connecting to the inverter' Wiki-page
 
 **Firmware**
 
-This integration supports inverters running **V200**R001C00 firmware.
-If you are running an older *V100*R001C00 firmware, then please consult the "Upgrade guide" included
-with *V200*R001C00 firmware versions to check if your inverter is eligibile for an upgrade.
+This integration supports inverters running firmware versions released in 2023 and later. Older firmware versions don't have support for all registers, which can result in the integration failing to work properly.
 
 ## Installation
 
