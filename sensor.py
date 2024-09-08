@@ -29,7 +29,7 @@ from homeassistant.components.sensor import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     PERCENTAGE,
-    POWER_VOLT_AMPERE_REACTIVE,
+    VOLT_AMPERE_REACTIVE,
     UnitOfElectricCurrent,
     UnitOfElectricPotential,
     UnitOfEnergy,
@@ -181,7 +181,7 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.REACTIVE_POWER,
-        native_unit_of_measurement=POWER_VOLT_AMPERE_REACTIVE,
+        native_unit_of_measurement=VOLT_AMPERE_REACTIVE,
         device_class=SensorDeviceClass.REACTIVE_POWER,
         state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
@@ -400,7 +400,7 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     HuaweiSolarSensorEntityDescription(
         key=rn.POWER_METER_REACTIVE_POWER,
         icon="mdi:flash",
-        native_unit_of_measurement=POWER_VOLT_AMPERE_REACTIVE,
+        native_unit_of_measurement=VOLT_AMPERE_REACTIVE,
         device_class=SensorDeviceClass.REACTIVE_POWER,
         state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
@@ -502,7 +502,7 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     HuaweiSolarSensorEntityDescription(
         key=rn.POWER_METER_REACTIVE_POWER,
         icon="mdi:flash",
-        native_unit_of_measurement=POWER_VOLT_AMPERE_REACTIVE,
+        native_unit_of_measurement=VOLT_AMPERE_REACTIVE,
         device_class=SensorDeviceClass.REACTIVE_POWER,
         state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
