@@ -378,8 +378,8 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
 
     async def async_set_native_value(self, value: float) -> None:
         """Set a new value."""
-        if await self.bridge.set(self.entity_description.key, int(value)):
-            self._attr_native_value = int(value)
+        if await self.bridge.set(self.entity_description.key, float(value)):
+            self._attr_native_value = float(value)
 
         await self.coordinator.async_request_refresh()
 
