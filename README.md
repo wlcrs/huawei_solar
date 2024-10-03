@@ -138,6 +138,12 @@ The integration will poll the inverter for new values every 30 seconds. If you w
 
 ## FAQ - Troubleshooting
 
+**Q**: The Daily Yield/Total Yield is incorrect: it also goes up when the battery is discharging.
+
+**A**: Huawei does not provide a Modbus register that represents the *output* of the inverter produced by energy coming only from the solar panels. It does provide a register that represents the *input* of the solar panels, but that does not take into account the conversion losses of the inverter. cfr. the Wiki page '[Daily Solar Yield](https://github.com/wlcrs/huawei_solar/wiki/Daily-Solar-Yield)' for some possible workarounds. cfr. [#1](https://github.com/wlcrs/huawei_solar/issues/1) for more context. 
+
+---
+
 **Q**: Why do I get the error "Connection succeeded, but failed to read from inverter." while setting up this integration?
 
 **A**: While the integration was able to setup the initial connection to the Huawei Inverter, it did not respond to any queries in time. This is either caused by using an invalid slave ID (typically 0 or 1, try both or ask your installer if unsure), or because an other device established a connection with the inverter, causing the integration to lose it's connection
