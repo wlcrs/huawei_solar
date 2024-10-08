@@ -698,7 +698,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         battery_2_key=rn.STORAGE_UNIT_2_CURRENT_DAY_CHARGE_CAPACITY,
         translation_key="storage_current_day_charge_capacity",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
-        state_class=SensorStateClass.TOTAL,
+        state_class=SensorStateClass.TOTAL_INCREASING,
         device_class=SensorDeviceClass.ENERGY,
     ),
     BatteryTemplateEntityDescription(
@@ -706,7 +706,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         battery_2_key=rn.STORAGE_UNIT_2_CURRENT_DAY_DISCHARGE_CAPACITY,
         translation_key="storage_current_day_discharge_capacity",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
-        state_class=SensorStateClass.TOTAL,
+        state_class=SensorStateClass.TOTAL_INCREASING,
         device_class=SensorDeviceClass.ENERGY,
     ),
     BatteryTemplateEntityDescription(
