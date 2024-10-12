@@ -511,7 +511,7 @@
                 "name": "Energy discharged today"
             },
             "total_discharged_energy": {
-                "name": "Total discharged energy"
+                "name": "Gesamt entladen"
             },
             "ess_chargeable_energy": {
                 "name": "ESS Chargeable energy"
