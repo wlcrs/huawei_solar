@@ -26,7 +26,7 @@
                     "enable_parameter_configuration": "Geavanceerd: Verhoog rechten",
                     "host": "Host",
                     "port": "Poort",
-                    "slave_ids": "Slave IDs: AUTO for auto-discovery, otherwise a comma separated list"
+                    "slave_ids": "Slave-IDs: AUTO voor automatische ontdekking, anders een door komma's gescheiden lijst"
                 }
             },
             "setup_serial": {
@@ -478,7 +478,7 @@
                 "name": "Resterende (ont)laadtijd"
             },
             "forcible_charge_summary": {
-                "name": "Forcible charge"
+                "name": "Geforceerd laden"
             },
             "active_power_control": {
                 "name": "Active power control"
@@ -568,16 +568,16 @@
                 "name": "Inverter active power"
             },
             "state_of_capacity": {
-                "name": "State of capacity"
+                "name": "Batterijpercentage"
             },
             "ess_chargeable_capacity": {
-                "name": "ESS chargeable capacity"
+                "name": "ESS laadbare capaciteit"
             },
             "ess_dischargeable_capacity": {
-                "name": "ESS dischargeable capacity"
+                "name": "ESS ontlaadbare capaciteit"
             },
             "backup_power_state_of_charge": {
-                "name": "Backup power state of charge"
+                "name": "Backup batterijpercentage"
             }
         },
         "select": {
@@ -608,21 +608,21 @@
                 }
             },
             "emma_ess_control_mode": {
-                "name": "ESS Control Mode",
+                "name": "ESS regelmodus",
                 "state": {
-                    "reserved_1": "Reserved 1",
-                    "maximum_self_consumption": "Maximum self consumption",
-                    "reserved_3": "Reserved 3",
-                    "fully_fed_to_grid": "Fully fed to grid",
-                    "time_of_use": "Time of use",
-                    "third_party_dispatch": "Third party dispatch"
+                    "reserved_1": "Gereserveerd 1",
+                    "maximum_self_consumption": "Maximaliseer eigen gebruik",
+                    "reserved_3": "Gereserveerd 3",
+                    "fully_fed_to_grid": "Volledig aan stroomnet gevoed",
+                    "time_of_use": "Tijdstip van gebruik",
+                    "third_party_dispatch": "Controle door derde partij"
                 }
             },
             "emma_tou_preferred_use_of_surplus_pv_power": {
-                "name": "Excess PV energy use in TOU",
+                "name": "Gebruik overtollige PV-energie in gebruikstijdmodus",
                 "state": {
-                    "fed_to_grid": "Fed to grid",
-                    "charge": "Charge"
+                    "fed_to_grid": "Voeden aan net",
+                    "charge": "Laden"
                 }
             }
         },
