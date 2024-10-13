@@ -472,7 +472,7 @@
                 "name": "PV 24 Strom"
             },
             "battery_working_mode": {
-                "name": "Working mode"
+                "name": "Arbeitsmodus"
             },
             "battery_remaining_charge_discharge_time": {
                 "name": "Remaining charge/discharge time"
