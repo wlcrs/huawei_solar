@@ -36,7 +36,8 @@ from .const import (
     DEFAULT_SERIAL_SLAVE_ID,
     DEFAULT_SLAVE_ID,
     DEFAULT_USERNAME,
-    DOMAIN,
+    DOMAIN, CONF_INVERTER_UPDATE_INTERVAL, CONF_POWER_METER_UPDATE_INTERVAL, CONF_ENERGY_STORAGE_UPDATE_INTERVAL,
+    INVERTER_UPDATE_INTERVAL, POWER_METER_UPDATE_INTERVAL, ENERGY_STORAGE_UPDATE_INTERVAL,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -299,6 +300,10 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     _elevated_permissions = False
 
+    _inverter_update_interval: float | None = None
+    _power_meter_update_interval: float | None = None
+    _energy_storage_update_interval: float | None = None
+
     # Only used in reauth flows:
     _reauth_entry: config_entries.ConfigEntry | None = None
     # Only used in reconfigure flows:
@@ -318,6 +323,10 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     def _update_config_data_from_entry_data(self, entry_data: dict[str, Any]):
         self._host = entry_data.get(CONF_HOST)
         self._port = entry_data.get(CONF_PORT)
+
+        self._inverter_update_interval = entry_data.get(CONF_INVERTER_UPDATE_INTERVAL, INVERTER_UPDATE_INTERVAL.total_seconds())
+        self._power_meter_update_interval = entry_data.get(CONF_POWER_METER_UPDATE_INTERVAL, POWER_METER_UPDATE_INTERVAL.total_seconds())
+        self._energy_storage_update_interval = entry_data.get(CONF_ENERGY_STORAGE_UPDATE_INTERVAL, ENERGY_STORAGE_UPDATE_INTERVAL.total_seconds())
 
         slave_ids = entry_data.get(CONF_SLAVE_IDS)
         assert isinstance(slave_ids, list | int)
@@ -387,6 +396,13 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             self._host = None
+            self._inverter_update_interval = user_input.get(CONF_INVERTER_UPDATE_INTERVAL,
+                                                            INVERTER_UPDATE_INTERVAL.total_seconds())
+            self._power_meter_update_interval = user_input.get(CONF_POWER_METER_UPDATE_INTERVAL,
+                                                               POWER_METER_UPDATE_INTERVAL.total_seconds())
+            self._energy_storage_update_interval = user_input.get(CONF_ENERGY_STORAGE_UPDATE_INTERVAL,
+                                                                  ENERGY_STORAGE_UPDATE_INTERVAL.total_seconds())
+
             try:
                 self._slave_ids = parse_slave_ids(user_input[CONF_SLAVE_IDS])
             except SlaveIdsParseException:
@@ -441,6 +457,18 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     if self._slave_ids
                     else str(DEFAULT_SERIAL_SLAVE_ID),
                 ): str,
+                vol.Required(
+                    CONF_INVERTER_UPDATE_INTERVAL,
+                    default=self._inverter_update_interval or INVERTER_UPDATE_INTERVAL.total_seconds(),
+                ): float,
+                vol.Required(
+                    CONF_POWER_METER_UPDATE_INTERVAL,
+                    default=self._power_meter_update_interval or POWER_METER_UPDATE_INTERVAL.total_seconds(),
+                ): float,
+                vol.Required(
+                    CONF_ENERGY_STORAGE_UPDATE_INTERVAL,
+                    default=self._energy_storage_update_interval or ENERGY_STORAGE_UPDATE_INTERVAL.total_seconds(),
+                ): float,
             }
         )
         return self.async_show_form(
@@ -501,6 +529,13 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._host = user_input[CONF_HOST]
             self._port = user_input[CONF_PORT]
             self._elevated_permissions = user_input[CONF_ENABLE_PARAMETER_CONFIGURATION]
+
+            self._inverter_update_interval = user_input.get(CONF_INVERTER_UPDATE_INTERVAL,
+                                                            INVERTER_UPDATE_INTERVAL.total_seconds())
+            self._power_meter_update_interval = user_input.get(CONF_POWER_METER_UPDATE_INTERVAL,
+                                                               POWER_METER_UPDATE_INTERVAL.total_seconds())
+            self._energy_storage_update_interval = user_input.get(CONF_ENERGY_STORAGE_UPDATE_INTERVAL,
+                                                                  ENERGY_STORAGE_UPDATE_INTERVAL.total_seconds())
 
             info = None
             if user_input[CONF_SLAVE_IDS].lower() == "auto":
@@ -588,6 +623,18 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_ENABLE_PARAMETER_CONFIGURATION,
                         default=self._elevated_permissions,
                     ): bool,
+                    vol.Required(
+                        CONF_INVERTER_UPDATE_INTERVAL,
+                        default=self._inverter_update_interval or INVERTER_UPDATE_INTERVAL.total_seconds(),
+                    ): float,
+                    vol.Required(
+                        CONF_POWER_METER_UPDATE_INTERVAL,
+                        default=self._power_meter_update_interval or POWER_METER_UPDATE_INTERVAL.total_seconds(),
+                    ): float,
+                    vol.Required(
+                        CONF_ENERGY_STORAGE_UPDATE_INTERVAL,
+                        default=self._energy_storage_update_interval or ENERGY_STORAGE_UPDATE_INTERVAL.total_seconds(),
+                    ): float,
                 }
             ),
             errors=errors,
@@ -658,6 +705,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_ENABLE_PARAMETER_CONFIGURATION: self._elevated_permissions,
             CONF_USERNAME: self._username,
             CONF_PASSWORD: self._password,
+            CONF_INVERTER_UPDATE_INTERVAL: self._inverter_update_interval,
+            CONF_POWER_METER_UPDATE_INTERVAL: self._power_meter_update_interval,
+            CONF_ENERGY_STORAGE_UPDATE_INTERVAL: self._energy_storage_update_interval
         }
 
         if self._reauth_entry:

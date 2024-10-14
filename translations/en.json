@@ -26,13 +26,19 @@
                     "enable_parameter_configuration": "Advanced: elevate permissions",
                     "host": "Host",
                     "port": "Port",
-                    "slave_ids": "Slave IDs: AUTO for auto-discovery, otherwise a comma separated list"
+                    "slave_ids": "Slave IDs: AUTO for auto-discovery, otherwise a comma separated list",
+                    "inverter_update_interval": "Inverter polling frequency in seconds, depends on your setup, use default if not sure",
+                    "power_meter_update_interval": "Power Meter polling frequency in seconds, depends on your setup, use default if not sure",
+                    "energy_storage_update_interval": "Energy Storage polling frequency in seconds, depends on your setup, use default if not sure"
                 }
             },
             "setup_serial": {
                 "data": {
                     "port": "Select device",
-                    "slave_ids": "Slave IDs (Comma separated)"
+                    "slave_ids": "Slave IDs (Comma separated)",
+                    "inverter_update_interval": "Inverter polling frequency in seconds, depends on your setup, use default if not sure",
+                    "power_meter_update_interval": "Power Meter polling frequency in seconds, depends on your setup, use default if not sure",
+                    "energy_storage_update_interval": "Energy Storage polling frequency in seconds, depends on your setup, use default if not sure"
                 },
                 "title": "Device"
             },

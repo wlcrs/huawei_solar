@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import logging
+from datetime import timedelta
 from typing import TypedDict, TypeVar
 
 from huawei_solar import (
@@ -39,7 +40,8 @@ from .const import (
     ENERGY_STORAGE_UPDATE_INTERVAL,
     INVERTER_UPDATE_INTERVAL,
     OPTIMIZER_UPDATE_INTERVAL,
-    POWER_METER_UPDATE_INTERVAL,
+    POWER_METER_UPDATE_INTERVAL, CONF_INVERTER_UPDATE_INTERVAL, CONF_POWER_METER_UPDATE_INTERVAL,
+    CONF_ENERGY_STORAGE_UPDATE_INTERVAL,
 )
 from .services import async_cleanup_services, async_setup_services
 from .update_coordinator import (
@@ -132,13 +134,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Now create update coordinators for each bridge
         update_coordinators: list[HuaweiSolarUpdateCoordinators] = []
 
+        inverter_update_interval = timedelta(entry.data.get(CONF_INVERTER_UPDATE_INTERVAL, INVERTER_UPDATE_INTERVAL.total_seconds()))
+        power_meter_update_interval = timedelta(entry.data.get(CONF_POWER_METER_UPDATE_INTERVAL, POWER_METER_UPDATE_INTERVAL.total_seconds()))
+        energy_storage_update_interval = timedelta(entry.data.get(CONF_ENERGY_STORAGE_UPDATE_INTERVAL, ENERGY_STORAGE_UPDATE_INTERVAL.total_seconds()))
+
         for bridge, device_infos in bridges_with_device_infos:
             inverter_update_coordinator = HuaweiSolarUpdateCoordinator(
                 hass,
                 _LOGGER,
                 bridge=bridge,
                 name=f"{bridge.serial_number}_inverter_data_update_coordinator",
-                update_interval=INVERTER_UPDATE_INTERVAL,
+                update_interval=inverter_update_interval,
             )
 
             power_meter_update_coordinator = None
@@ -148,7 +154,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     _LOGGER,
                     bridge=bridge,
                     name=f"{bridge.serial_number}_power_meter_data_update_coordinator",
-                    update_interval=POWER_METER_UPDATE_INTERVAL,
+                    update_interval=power_meter_update_interval,
                 )
 
             energy_storage_update_coordinator = None
@@ -158,7 +164,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     _LOGGER,
                     bridge=bridge,
                     name=f"{bridge.serial_number}_battery_data_update_coordinator",
-                    update_interval=ENERGY_STORAGE_UPDATE_INTERVAL,
+                    update_interval=energy_storage_update_interval,
                 )
 
             configuration_update_coordinator = None
