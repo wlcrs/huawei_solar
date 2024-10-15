@@ -27,7 +27,7 @@ from homeassistant.const import (
     CONF_USERNAME,
 )
 from homeassistant.data_entry_flow import FlowResult
-import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers import config_validation as cv, selector
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
@@ -459,16 +459,35 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 ): str,
                 vol.Required(
                     CONF_INVERTER_UPDATE_INTERVAL,
-                    default=self._inverter_update_interval or INVERTER_UPDATE_INTERVAL.total_seconds(),
-                ): float,
+                    default=self._inverter_update_interval or float(INVERTER_UPDATE_INTERVAL.total_seconds()),
+                ): selector.NumberSelector(
+                        selector.NumberSelectorConfig(
+                            min=0.0,
+                            step=0.1,
+                            mode=selector.NumberSelectorMode.BOX,
+                        )
+                    ),
                 vol.Required(
                     CONF_POWER_METER_UPDATE_INTERVAL,
-                    default=self._power_meter_update_interval or POWER_METER_UPDATE_INTERVAL.total_seconds(),
-                ): float,
+                    default=self._power_meter_update_interval or float(POWER_METER_UPDATE_INTERVAL.total_seconds()),
+                ): selector.NumberSelector(
+                        selector.NumberSelectorConfig(
+                            min=0.0,
+                            step=0.1,
+                            mode=selector.NumberSelectorMode.BOX,
+                        )
+                    ),
                 vol.Required(
                     CONF_ENERGY_STORAGE_UPDATE_INTERVAL,
-                    default=self._energy_storage_update_interval or ENERGY_STORAGE_UPDATE_INTERVAL.total_seconds(),
-                ): float,
+                    default=self._energy_storage_update_interval or float(
+                        ENERGY_STORAGE_UPDATE_INTERVAL.total_seconds()),
+                ): selector.NumberSelector(
+                        selector.NumberSelectorConfig(
+                            min=0.0,
+                            step=0.1,
+                            mode=selector.NumberSelectorMode.BOX,
+                        )
+                    ),
             }
         )
         return self.async_show_form(
@@ -626,15 +645,33 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required(
                         CONF_INVERTER_UPDATE_INTERVAL,
                         default=self._inverter_update_interval or INVERTER_UPDATE_INTERVAL.total_seconds(),
-                    ): float,
+                    ): selector.NumberSelector(
+                        selector.NumberSelectorConfig(
+                            min=0.0,
+                            step=0.1,
+                            mode=selector.NumberSelectorMode.BOX,
+                        )
+                    ),
                     vol.Required(
                         CONF_POWER_METER_UPDATE_INTERVAL,
                         default=self._power_meter_update_interval or POWER_METER_UPDATE_INTERVAL.total_seconds(),
-                    ): float,
+                    ): selector.NumberSelector(
+                        selector.NumberSelectorConfig(
+                            min=0.0,
+                            step=0.1,
+                            mode=selector.NumberSelectorMode.BOX,
+                        )
+                    ),
                     vol.Required(
                         CONF_ENERGY_STORAGE_UPDATE_INTERVAL,
                         default=self._energy_storage_update_interval or ENERGY_STORAGE_UPDATE_INTERVAL.total_seconds(),
-                    ): float,
+                    ): selector.NumberSelector(
+                        selector.NumberSelectorConfig(
+                            min=0.0,
+                            step=0.1,
+                            mode=selector.NumberSelectorMode.BOX,
+                        )
+                    ),
                 }
             ),
             errors=errors,
