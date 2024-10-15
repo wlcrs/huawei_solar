@@ -138,6 +138,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         power_meter_update_interval = timedelta(entry.data.get(CONF_POWER_METER_UPDATE_INTERVAL, POWER_METER_UPDATE_INTERVAL.total_seconds()))
         energy_storage_update_interval = timedelta(entry.data.get(CONF_ENERGY_STORAGE_UPDATE_INTERVAL, ENERGY_STORAGE_UPDATE_INTERVAL.total_seconds()))
 
+        _LOGGER.info(f"Using update intervals: inverter={inverter_update_interval}, power_meter={power_meter_update_interval}, energy_storage={energy_storage_update_interval}")
+
         for bridge, device_infos in bridges_with_device_infos:
             inverter_update_coordinator = HuaweiSolarUpdateCoordinator(
                 hass,
