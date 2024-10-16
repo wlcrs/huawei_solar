@@ -145,7 +145,7 @@
                 "name": "Interne Temperatur"
             },
             "insulation_resistance": {
-                "name": "Insulation resistance"
+                "name": "Isolierungswiderstand"
             },
             "device_status": {
                 "name": "Gerätestatus"
@@ -578,7 +578,35 @@
             },
             "backup_power_state_of_charge": {
                 "name": "Backup power state of charge"
+            },
+            "pack_1_max_temperature": {
+                "name": "Pack 1 max Temperatur"
+            },
+            "pack_1_min_temperature": {
+                "name": "Pack 1 min Temperatur"
+            }, 
+            "pack_2_max_temperature": {
+                "name": "Pack 2 max Temperatur"
+            },
+            "pack_2_min_temperature": {
+                "name": "Pack 2 min Temperatur"
+            }, 
+            "pack_3_max_temperature": {
+                "name": "Pack 3 max Temperatur"
+            },
+            "pack_3_min_temperature": {
+                "name": "Pack 3 min Temperatur"
+            },
+            "pack_1_working_status": {
+                "name": "Pack 1 Arbeitsstatus"
+            }, 
+            "pack_1_firmware_version": {
+                "name": "Pack 1 Firmware Version"
+            },
+            "bms_temperature": {
+                "name": "BMS Temperatur"
             }
+
         },
         "select": {
             "storage_excess_pv_energy_use_in_tou": {
@@ -619,10 +647,10 @@
                 }
             },
             "emma_tou_preferred_use_of_surplus_pv_power": {
-                "name": "Excess PV energy use in TOU",
+                "name": "Verwendung überschüssiger PV-Energie in TOU",
                 "state": {
-                    "fed_to_grid": "Fed to grid",
-                    "charge": "Charge"
+                    "fed_to_grid": "Einspeisen ins Netz",
+                    "charge": "Laden"
                 }
             }
         },
@@ -632,6 +660,9 @@
             },
             "startup": {
                 "name": "Inverter EIN/AUS"
+            },
+            "mppt_multimodal_scanning": {
+                "name": "MPPT-Scan"
             }
         }
     },
@@ -833,10 +864,10 @@
             "name": "Power meter"
         },
         "battery_1": {
-            "name": "Battery 1"
+            "name": "Batterie 1"
         },
         "battery_2": {
-            "name": "Battery 2"
+            "name": "Batterie 2"
         }
     }
 }
