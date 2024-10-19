@@ -87,6 +87,9 @@
             },
             "emma_maximum_feed_grid_power_watt": {
                 "name": "Maximum feed grid power"
+            }, 
+            "mppt_scanning_interval":{
+                "name": "MPPT scan interval"
             }
         },
         "select": {
