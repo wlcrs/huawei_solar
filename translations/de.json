@@ -88,8 +88,7 @@
             "emma_maximum_feed_grid_power_watt": {
                 "name": "Maximale Netzleistung"
             }, 
-            "mppt_scanning_interval":
-            {
+            "mppt_scanning_interval": {
                 "name": "MPPT Scan Intervall"
             }
         },
