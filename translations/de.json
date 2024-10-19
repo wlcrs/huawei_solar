@@ -53,10 +53,10 @@
     "entity": {
         "number": {
             "active_power_percentage_derating": {
-                "name": "Power derating (by percentage)"
+                "name": "Eingangsleistung Wechselrichter in %"
             },
             "active_power_fixed_value_derating": {
-                "name": "Power derating"
+                "name": "Maximale Wechselrichterleistung"
             },
             "storage_maximum_charging_power": {
                 "name": "Maximale Ladeleistung"
@@ -289,7 +289,7 @@
                 "name": "Maximale Entladeleistung"
             },
             "storage_rated_capacity": {
-                "name": "Bewertete Kapazität"
+                "name": "Akkukapazität"
             },
             "storage_state_of_capacity": {
                 "name": "Batterieladung"
