@@ -76,6 +76,7 @@ INVERTER_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
         key=rn.MPPT_MULTIMODAL_SCANNING,
         icon="mdi:magnify-scan",
         entity_category=EntityCategory.CONFIG,
+        entity_registry_enabled_default=False,
     ),
 ) 
 

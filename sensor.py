@@ -791,6 +791,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
+        entity_registry_enabled_default=False,
     ),
     BatteryTemplateEntityDescription(
         battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_1_MINIMUM_TEMPERATURE,
@@ -799,6 +800,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
+        entity_registry_enabled_default=False,
     ),
     BatteryTemplateEntityDescription(
         battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_2_MAXIMUM_TEMPERATURE,
@@ -807,6 +809,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
+        entity_registry_enabled_default=False,
     ),
     BatteryTemplateEntityDescription(
         battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_2_MINIMUM_TEMPERATURE,
@@ -815,6 +818,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
+        entity_registry_enabled_default=False,
     ),
     BatteryTemplateEntityDescription(
         battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_3_MAXIMUM_TEMPERATURE,
@@ -823,6 +827,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
+        entity_registry_enabled_default=False,
     ),
     BatteryTemplateEntityDescription(
         battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_3_MINIMUM_TEMPERATURE,
@@ -831,18 +836,21 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
+        entity_registry_enabled_default=False,
     ),
     BatteryTemplateEntityDescription(
         battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_1_WORKING_STATUS,
         battery_2_key=rn.STORAGE_UNIT_2_BATTERY_PACK_1_WORKING_STATUS,
         translation_key="pack_1_working_status",
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
     ),
     BatteryTemplateEntityDescription(
         battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_1_FIRMWARE_VERSION,
         battery_2_key=rn.STORAGE_UNIT_2_BATTERY_PACK_1_FIRMWARE_VERSION,
         translation_key="pack_1_firmware_version",
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
     ),
 )
 

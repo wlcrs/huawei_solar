@@ -95,6 +95,7 @@ INVERTER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
         icon="mdi:sun-clock",
         native_unit_of_measurement="minutes",
         entity_category=EntityCategory.CONFIG,
+        entity_registry_enabled_default=False,
     ),
 )
 
