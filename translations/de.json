@@ -53,10 +53,10 @@
     "entity": {
         "number": {
             "active_power_percentage_derating": {
-                "name": "Power derating (by percentage)"
+                "name": "Eingangsleistung Wechselrichter in %"
             },
             "active_power_fixed_value_derating": {
-                "name": "Power derating"
+                "name": "Maximale Wechselrichterleistung"
             },
             "storage_maximum_charging_power": {
                 "name": "Maximale Ladeleistung"
@@ -87,6 +87,9 @@
             },
             "emma_maximum_feed_grid_power_watt": {
                 "name": "Maximale Netzleistung"
+            }, 
+            "mppt_scanning_interval": {
+                "name": "MPPT Scan Intervall"
             }
         },
         "sensor": {
@@ -289,7 +292,7 @@
                 "name": "Maximale Entladeleistung"
             },
             "storage_rated_capacity": {
-                "name": "Bewertete Kapazität"
+                "name": "Akkukapazität"
             },
             "storage_state_of_capacity": {
                 "name": "Batterieladung"
@@ -514,7 +517,7 @@
                 "name": "Gesamt entladen"
             },
             "ess_chargeable_energy": {
-                "name": "ESS Chargeable energy"
+                "name": "ESS aufladbare Energie"
             },
             "ess_dischargeable_energy": {
                 "name": "ESS entladbare Energie"
@@ -562,7 +565,7 @@
                 "name": "Akkuaufladung/Entladung"
             },
             "inverter_rated_power": {
-                "name": ""
+                "name": "Maximale Wechselrichterleistung"
             },
             "inverter_active_power": {
                 "name": "Aktive Wechselrichterleistung"
@@ -571,14 +574,42 @@
                 "name": "Batterieladung"
             },
             "ess_chargeable_capacity": {
-                "name": "ESS chargeable capacity"
+                "name": "ESS aufladbare Kapazität"
             },
             "ess_dischargeable_capacity": {
                 "name": "ESS entladbare Kapazität"
             },
             "backup_power_state_of_charge": {
-                "name": "Backup power state of charge"
+                "name": "Backup power Ladezustand"
+            },
+            "pack_1_max_temperature": {
+                "name": "Pack 1 max Temperatur"
+            },
+            "pack_1_min_temperature": {
+                "name": "Pack 1 min Temperatur"
+            }, 
+            "pack_2_max_temperature": {
+                "name": "Pack 2 max Temperatur"
+            },
+            "pack_2_min_temperature": {
+                "name": "Pack 2 min Temperatur"
+            }, 
+            "pack_3_max_temperature": {
+                "name": "Pack 3 max Temperatur"
+            },
+            "pack_3_min_temperature": {
+                "name": "Pack 3 min Temperatur"
+            },
+            "pack_1_working_status": {
+                "name": "Pack 1 Arbeitsstatus"
+            }, 
+            "pack_1_firmware_version": {
+                "name": "Pack 1 Firmware Version"
+            },
+            "bms_temperature": {
+                "name": "BMS Temperatur"
             }
+
         },
         "select": {
             "storage_excess_pv_energy_use_in_tou": {
@@ -613,16 +644,16 @@
                     "reserved_1": "Reserviert 1",
                     "maximum_self_consumption": "Maximaler Eigenverbrauch",
                     "reserved_3": "Reserviert 3",
-                    "fully_fed_to_grid": "Fully fed to grid",
-                    "time_of_use": "Time of use",
+                    "fully_fed_to_grid": "Volle Einspeisung ins Netz",
+                    "time_of_use": "Zeitbasierte Nutzung",
                     "third_party_dispatch": "Third party dispatch"
                 }
             },
             "emma_tou_preferred_use_of_surplus_pv_power": {
-                "name": "Excess PV energy use in TOU",
+                "name": "Verwendung überschüssiger PV-Energie in TOU",
                 "state": {
                     "fed_to_grid": "Einspeisen ins Netz",
-                    "charge": "Charge"
+                    "charge": "Laden"
                 }
             }
         },
@@ -632,6 +663,9 @@
             },
             "startup": {
                 "name": "Inverter EIN/AUS"
+            },
+            "mppt_multimodal_scanning": {
+                "name": "MPPT-Scan"
             }
         }
     },
@@ -650,7 +684,7 @@
                 },
                 "power": {
                     "name": "Leistung",
-                    "description": "Wattage used for the charge"
+                    "description": "Maximale Ladeleistung"
                 }
             }
         },
@@ -668,25 +702,25 @@
                 },
                 "power": {
                     "name": "Leistung",
-                    "description": "Wattage used for the discharge"
+                    "description": "Maximale Entladeleistung"
                 }
             }
         },
         "forcible_charge_soc": {
-            "name": "Forcible Charge to a SoC level",
-            "description": "Forcible Charge of the battery to a certain State of Charge level",
+            "name": "Erzwungene Ladung bis SOC",
+            "description": "Erzwungene Ladung der Batterie bis zu einem bestimmten Ladezustand",
             "fields": {
                 "device_id": {
                     "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
                     "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
                 },
                 "target_soc": {
-                    "name": "Target SoC",
+                    "name": "Ziel SoC",
                     "description": ""
                 },
                 "power": {
-                    "name": "Power",
-                    "description": "Wattage für die Ladung verwendet"
+                    "name": "Leistung",
+                    "description": "Für die Ladung verwendete Leistung"
                 }
             }
         },
