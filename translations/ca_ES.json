@@ -73,6 +73,9 @@
             },
             "storage_power_of_charge_from_grid": {
                 "name": "Potència màxima de càrrega des de la xarxa"
+            }, 
+            "mppt_scanning_interval":{
+                "name": "MPPT scan interval"
             }
         },
         "select": {
@@ -526,6 +529,33 @@
             },
             "total_energy_consumption": {
                 "name": "Total energy consumption"
+            },
+            "pack_1_max_temperature": {
+                "name": "Pack 1 max temperature"
+            },
+            "pack_1_min_temperature": {
+                "name": "Pack 1 min temperature"
+            }, 
+            "pack_2_max_temperature": {
+                "name": "Pack 2 max temperature"
+            },
+            "pack_2_min_temperature": {
+                "name": "Pack 2 min temperature"
+            }, 
+            "pack_3_max_temperature": {
+                "name": "Pack 3 max temperature"
+            },
+            "pack_3_min_temperature": {
+                "name": "Pack 3 min temperature"
+            },
+            "pack_1_working_status": {
+                "name": "Pack 1 working status"
+            }, 
+            "pack_1_firmware_version": {
+                "name": "Pack 1 firmware version"
+            },
+            "bms_temperature": {
+                "name": "BMS temperature"
             }
         },
         "switch": {
@@ -534,6 +564,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Càrrega des de la xarxa"
+            },
+            "mppt_multimodal_scanning": {
+                "name": "MPPT scanning"
             }
         }
     },
