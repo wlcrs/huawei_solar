@@ -583,7 +583,7 @@
                 "name": "PV output power"
             },
             "load_power": {
-                "name": "Load power"
+                "name": "لوڈ پاور"
             },
             "feed_in_power": {
                 "name": "Feed in power"
