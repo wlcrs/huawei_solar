@@ -586,7 +586,7 @@
                 "name": "Ladestrom"
             },
             "feed_in_power": {
-                "name": "Feed in power"
+                "name": ""
             },
             "battery_charge_discharge_power": {
                 "name": "Akkuaufladung/Entladung"
@@ -661,7 +661,7 @@
                 "name": "Laden aus dem Netz"
             },
             "mppt_multimodal_scanning": {
-                "name": "MPPT-Scan"
+                "name": "MPPT Scan"
             },
             "startup": {
                 "name": "Inverter EIN/AUS"
@@ -710,12 +710,12 @@
             "description": "Erzwungene Ladung der Batterie bis zu einem bestimmten Ladezustand",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
+                    "name": "",
                     "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
                 },
                 "target_soc": {
                     "name": "Ziel SoC",
-                    "description": ""
+                    "description": "Zu erreichender Ladezustand"
                 },
                 "power": {
                     "name": "Leistung",
@@ -842,7 +842,7 @@
             "description": "Sets Fixed Charge and Discharge Periods",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
+                    "name": "",
                     "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
                 },
                 "periods": {
