@@ -736,14 +736,14 @@
                     "description": "[%key:component::huawei_solar::services::forcible_charge_soc::fields::target_soc::description%]"
                 },
                 "power": {
-                    "name": "Power",
-                    "description": "Wattage used for the discharge"
+                    "name": "Energie",
+                    "description": "Einstellung wie hoch die Entladeleistung maximal sein darf"
                 }
             }
         },
         "stop_forcible_charge": {
             "name": "Zwangs-Ladung oder -Entladung stoppen",
-            "description": "Cancel the running forcible charge command",
+            "description": "Abbrechen des laufenden erzwungenen Entlade-Befehls",
             "fields": {
                 "device_id": {
                     "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
@@ -752,8 +752,8 @@
             }
         },
         "reset_maximum_feed_grid_power": {
-            "name": "Set Active Power Control to Maximum Feed Grid Power",
-            "description": "Set Active Power Control to the default Unlimited mode",
+            "name": "Setze aktive Energiesteuerung auf maximale Netzexport-Leistung",
+            "description": "Setze aktive Energiesteuerung in den Standardmodus zurück",
             "fields": {
                 "device_id": {
                     "name": "Wechselrichter",
