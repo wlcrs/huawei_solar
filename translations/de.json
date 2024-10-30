@@ -2,7 +2,7 @@
     "config": {
         "abort": {
             "already_configured": "Das Gerät ist bereits konfiguriert",
-            "reauth_successful": "[%key:common::config_flow::abort::reauth_successful%]",
+            "reauth_successful": "",
             "reconfigure_successful": "[%key:common::config_flow::abort::reconfigure_successful%]"
         },
         "error": {
@@ -52,6 +52,9 @@
     },
     "entity": {
         "number": {
+            "mppt_scanning_interval": {
+                "name": "MPPT Scan Intervall"
+            },
             "active_power_percentage_derating": {
                 "name": "Eingangsleistung Wechselrichter in %"
             },
@@ -486,6 +489,33 @@
             "active_power_control": {
                 "name": "Aktive Leistungssteuerung"
             },
+            "pack_1_max_temperature": {
+                "name": "Pack 1 max Temperatur"
+            },
+            "pack_1_min_temperature": {
+                "name": "Pack 1 min Temperatur"
+            },
+            "pack_2_max_temperature": {
+                "name": "Pack 2 max Temperatur"
+            },
+            "pack_2_min_temperature": {
+                "name": "Pack 2 min Temperatur"
+            },
+            "pack_3_max_temperature": {
+                "name": "Pack 3 max Temperatur"
+            },
+            "pack_3_min_temperature": {
+                "name": "Pack 3 min Temperatur"
+            },
+            "pack_1_working_status": {
+                "name": "Pack 1 Arbeitsstatus"
+            },
+            "pack_1_firmware_version": {
+                "name": "Pack 1 Firmware Version"
+            },
+            "bms_temperature": {
+                "name": "BMS Temperatur"
+            },
             "storage_lg_resu_time_of_use_price_periods": {
                 "name": "TOU-Preisperioden"
             },
@@ -559,7 +589,7 @@
                 "name": "Ladestrom"
             },
             "feed_in_power": {
-                "name": "Feed in power"
+                "name": ""
             },
             "battery_charge_discharge_power": {
                 "name": "Akkuaufladung/Entladung"
@@ -581,33 +611,6 @@
             },
             "backup_power_state_of_charge": {
                 "name": "Backup power Ladezustand"
-            },
-            "pack_1_max_temperature": {
-                "name": "Pack 1 max Temperatur"
-            },
-            "pack_1_min_temperature": {
-                "name": "Pack 1 min Temperatur"
-            }, 
-            "pack_2_max_temperature": {
-                "name": "Pack 2 max Temperatur"
-            },
-            "pack_2_min_temperature": {
-                "name": "Pack 2 min Temperatur"
-            }, 
-            "pack_3_max_temperature": {
-                "name": "Pack 3 max Temperatur"
-            },
-            "pack_3_min_temperature": {
-                "name": "Pack 3 min Temperatur"
-            },
-            "pack_1_working_status": {
-                "name": "Pack 1 Arbeitsstatus"
-            }, 
-            "pack_1_firmware_version": {
-                "name": "Pack 1 Firmware Version"
-            },
-            "bms_temperature": {
-                "name": "BMS Temperatur"
             }
 
         },
@@ -646,7 +649,7 @@
                     "reserved_3": "Reserviert 3",
                     "fully_fed_to_grid": "Volle Einspeisung ins Netz",
                     "time_of_use": "Zeitbasierte Nutzung",
-                    "third_party_dispatch": "Third party dispatch"
+                    "third_party_dispatch": "Drittanbieter-System im Energiespeichersystem wurde eingerichtet"
                 }
             },
             "emma_tou_preferred_use_of_surplus_pv_power": {
@@ -660,6 +663,9 @@
         "switch": {
             "storage_charge_from_grid_function": {
                 "name": "Laden aus dem Netz"
+            },
+            "mppt_multimodal_scanning": {
+                "name": "MPPT Scan"
             },
             "startup": {
                 "name": "Inverter EIN/AUS"
@@ -711,12 +717,12 @@
             "description": "Erzwungene Ladung der Batterie bis zu einem bestimmten Ladezustand",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
+                    "name": "",
                     "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
                 },
                 "target_soc": {
                     "name": "Ziel SoC",
-                    "description": ""
+                    "description": "Zu erreichender Ladezustand"
                 },
                 "power": {
                     "name": "Leistung",
@@ -725,8 +731,8 @@
             }
         },
         "forcible_discharge_soc": {
-            "name": "Forcible Discharge to a SoC level",
-            "description": "Forcible Discharge of the battery to a certain State of Charge level",
+            "name": "Erzwungenes Entladen",
+            "description": "Entlädt die Batterie bis zu einem vorher angegebenen Wert",
             "fields": {
                 "device_id": {
                     "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
@@ -737,14 +743,14 @@
                     "description": "[%key:component::huawei_solar::services::forcible_charge_soc::fields::target_soc::description%]"
                 },
                 "power": {
-                    "name": "Power",
-                    "description": "Wattage used for the discharge"
+                    "name": "Energie",
+                    "description": "Einstellung wie hoch die Entladeleistung maximal sein darf"
                 }
             }
         },
         "stop_forcible_charge": {
             "name": "Zwangs-Ladung oder -Entladung stoppen",
-            "description": "Cancel the running forcible charge command",
+            "description": "Abbrechen des laufenden erzwungenen Entlade-Befehls",
             "fields": {
                 "device_id": {
                     "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
@@ -753,12 +759,12 @@
             }
         },
         "reset_maximum_feed_grid_power": {
-            "name": "Set Active Power Control to Maximum Feed Grid Power",
-            "description": "Set Active Power Control to the default Unlimited mode",
+            "name": "Setze aktive Energiesteuerung auf maximale Netzexport-Leistung",
+            "description": "Setze aktive Energiesteuerung in den Standardmodus zurück",
             "fields": {
                 "device_id": {
                     "name": "Wechselrichter",
-                    "description": "Must be a 'Inverter' device"
+                    "description": "Muss ein \"Wechselrichter\"sein"
                 }
             }
         },
@@ -843,7 +849,7 @@
             "description": "Sets Fixed Charge and Discharge Periods",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
+                    "name": "",
                     "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
                 },
                 "periods": {

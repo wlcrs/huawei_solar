@@ -52,6 +52,9 @@
     },
     "entity": {
         "number": {
+            "mppt_scanning_interval": {
+                "name": "MPPT scan interval"
+            },
             "active_power_percentage_derating": {
                 "name": "Riduzione della Potenza (in percentuale)"
             },
@@ -486,6 +489,33 @@
             "active_power_control": {
                 "name": "Active power control"
             },
+            "pack_1_max_temperature": {
+                "name": "Pack 1 max temperature"
+            },
+            "pack_1_min_temperature": {
+                "name": "Pack 1 min temperature"
+            },
+            "pack_2_max_temperature": {
+                "name": "Pack 2 max temperature"
+            },
+            "pack_2_min_temperature": {
+                "name": "Pack 2 min temperature"
+            },
+            "pack_3_max_temperature": {
+                "name": "Pack 3 max temperature"
+            },
+            "pack_3_min_temperature": {
+                "name": "Pack 3 min temperature"
+            },
+            "pack_1_working_status": {
+                "name": "Pack 1 working status"
+            },
+            "pack_1_firmware_version": {
+                "name": "Pack 1 firmware version"
+            },
+            "bms_temperature": {
+                "name": "BMS temperature"
+            },
             "storage_lg_resu_time_of_use_price_periods": {
                 "name": "TOU price periods"
             },
@@ -659,6 +689,9 @@
         "switch": {
             "storage_charge_from_grid_function": {
                 "name": "Carica dalla rete"
+            },
+            "mppt_multimodal_scanning": {
+                "name": "MPPT scanning"
             },
             "startup": {
                 "name": "Inverter ACCESO/SPENTO"
