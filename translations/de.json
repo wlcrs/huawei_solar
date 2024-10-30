@@ -90,6 +90,9 @@
             },
             "emma_maximum_feed_grid_power_watt": {
                 "name": "Maximale Netzleistung"
+            }, 
+            "mppt_scanning_interval": {
+                "name": "MPPT Scan Intervall"
             }
         },
         "sensor": {
@@ -609,6 +612,7 @@
             "backup_power_state_of_charge": {
                 "name": "Backup power Ladezustand"
             }
+
         },
         "select": {
             "storage_excess_pv_energy_use_in_tou": {
@@ -665,6 +669,9 @@
             },
             "startup": {
                 "name": "Inverter EIN/AUS"
+            },
+            "mppt_multimodal_scanning": {
+                "name": "MPPT-Scan"
             }
         }
     },

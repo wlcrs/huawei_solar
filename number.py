@@ -87,6 +87,16 @@ INVERTER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfPower.WATT,
         entity_category=EntityCategory.CONFIG,
     ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.MPPT_SCANNING_INTERVAL,
+        native_max_value=30,
+        native_step=1,
+        native_min_value=5,
+        icon="mdi:sun-clock",
+        native_unit_of_measurement="minutes",
+        entity_category=EntityCategory.CONFIG,
+        entity_registry_enabled_default=False,
+    ),
 )
 
 EMMA_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (

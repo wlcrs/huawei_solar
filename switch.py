@@ -71,6 +71,14 @@ ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ..
     ),
 )
 
+INVERTER_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
+    HuaweiSolarSwitchEntityDescription(
+        key=rn.MPPT_MULTIMODAL_SCANNING,
+        icon="mdi:magnify-scan",
+        entity_category=EntityCategory.CONFIG,
+        entity_registry_enabled_default=False,
+    ),
+) 
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -104,6 +112,15 @@ async def async_setup_entry(
                     ucs.device_infos["inverter"],
                 )
             )
+            for entity_description in INVERTER_SWITCH_DESCRIPTIONS:
+                slave_entities.append(
+                    HuaweiSolarSwitchEntity(
+                        ucs.inverter_update_coordinator,
+                        ucs.bridge,
+                        entity_description,
+                        ucs.device_infos["inverter"],
+                    )
+                )
 
         if ucs.device_infos["connected_energy_storage"]:
             slave_entities.extend(
