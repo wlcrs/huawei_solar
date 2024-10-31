@@ -8,7 +8,7 @@
         "error": {
             "cannot_connect": "Połączenie się nie powiodło",
             "invalid_auth": "Nieudane logowanie",
-            "invalid_slave_ids": "Identyfikatory urządzeń muszą być listą oddzielonych przeninkami liczb",
+            "invalid_slave_ids": "Identyfikatory urządzeń muszą być listą liczb oddzielonych przecinkami",
             "read_error": "Odczyd z inwertera nie powódł się.",
             "slave_cannot_connect": "Nie udało się połączyć z kolejnym urządzeniem",
             "unknown": "Nieoczekiwany error"
