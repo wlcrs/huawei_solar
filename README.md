@@ -61,12 +61,14 @@ This integration supports inverters running firmware versions released in 2023 a
 
 1. Install this integration with HACS, or copy the contents of this
 repository into the `custom_components/huawei_solar` directory
-2. Restart HA
-3. Start the configuration flow:
+   [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=wlcrs&repository=huawei_solar&category=integration)
+   
+3. Restart HA
+4. Start the configuration flow:
    - [![Start Config Flow](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start?domain=huawei_solar)
    - Or: Go to `Configuration` -> `Integrations` and click the `+ Add Integration`. Select `Huawei Solar` from the list
 
-4. Choose whether you want to connect via serial or network connection
+5. Choose whether you want to connect via serial or network connection
 
 
 ![](images/select-connection-type.png)
