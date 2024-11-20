@@ -90,9 +90,6 @@
             },
             "emma_maximum_feed_grid_power_watt": {
                 "name": "Maximale Netzleistung"
-            }, 
-            "mppt_scanning_interval": {
-                "name": "MPPT Scan Intervall"
             }
         },
         "sensor": {
@@ -612,7 +609,6 @@
             "backup_power_state_of_charge": {
                 "name": "Backup power Ladezustand"
             }
-
         },
         "select": {
             "storage_excess_pv_energy_use_in_tou": {
@@ -669,9 +665,6 @@
             },
             "startup": {
                 "name": "Inverter EIN/AUS"
-            },
-            "mppt_multimodal_scanning": {
-                "name": "MPPT-Scan"
             }
         }
     },
@@ -831,8 +824,8 @@
             }
         },
         "set_capacity_control_periods": {
-            "name": "Set Capacity Control Periods",
-            "description": "Set Capacity Control Periods",
+            "name": "Kapazitätsregelungsperioden",
+            "description": "Kapazitätsregelungsperioden",
             "fields": {
                 "device_id": {
                     "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
@@ -846,7 +839,7 @@
         },
         "set_fixed_charge_periods": {
             "name": "Festgelegte Ladezeiten",
-            "description": "Sets Fixed Charge and Discharge Periods",
+            "description": "Feste Ladungs- und Entladungszeiten festlegen",
             "fields": {
                 "device_id": {
                     "name": "",

@@ -8,7 +8,7 @@
         "error": {
             "cannot_connect": "Połączenie się nie powiodło",
             "invalid_auth": "Nieudane logowanie",
-            "invalid_slave_ids": "Identyfikatory urządzeń muszą być listą oddzielonych przeninkami liczb",
+            "invalid_slave_ids": "Identyfikatory urządzeń muszą być listą liczb oddzielonych przecinkami",
             "read_error": "Odczyd z inwertera nie powódł się.",
             "slave_cannot_connect": "Nie udało się połączyć z kolejnym urządzeniem",
             "unknown": "Nieoczekiwany error"
@@ -90,9 +90,6 @@
             },
             "emma_maximum_feed_grid_power_watt": {
                 "name": "Maximum feed grid power"
-            }, 
-            "mppt_scanning_interval":{
-                "name": "MPPT scan interval"
             }
         },
         "sensor": {
@@ -151,7 +148,7 @@
                 "name": "Temperatura wewnętrzna"
             },
             "insulation_resistance": {
-                "name": "Insulation resistance"
+                "name": ""
             },
             "device_status": {
                 "name": "Status urządzenia"
@@ -577,7 +574,7 @@
                 "name": "Inverter total energy yield"
             },
             "pv_yield_today": {
-                "name": "PV yield today"
+                "name": ""
             },
             "total_pv_energy_yield": {
                 "name": "Total PV energy yield"
@@ -611,33 +608,6 @@
             },
             "backup_power_state_of_charge": {
                 "name": "Backup power state of charge"
-            },
-            "pack_1_max_temperature": {
-                "name": "Pack 1 max temperature"
-            },
-            "pack_1_min_temperature": {
-                "name": "Pack 1 min temperature"
-            }, 
-            "pack_2_max_temperature": {
-                "name": "Pack 2 max temperature"
-            },
-            "pack_2_min_temperature": {
-                "name": "Pack 2 min temperature"
-            }, 
-            "pack_3_max_temperature": {
-                "name": "Pack 3 max temperature"
-            },
-            "pack_3_min_temperature": {
-                "name": "Pack 3 min temperature"
-            },
-            "pack_1_working_status": {
-                "name": "Pack 1 working status"
-            }, 
-            "pack_1_firmware_version": {
-                "name": "Pack 1 firmware version"
-            },
-            "bms_temperature": {
-                "name": "BMS temperature"
             }
         },
         "select": {
@@ -695,9 +665,6 @@
             },
             "startup": {
                 "name": "Włącz/wyłącz inwerter"
-            },
-            "mppt_multimodal_scanning": {
-                "name": "MPPT scanning"
             }
         }
     },
