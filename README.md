@@ -6,7 +6,7 @@
 ![](https://img.shields.io/badge/dynamic/json?color=41BDF5&logo=home-assistant&label=integration%20usage&suffix=%20installs&cacheSeconds=15600&url=https://analytics.home-assistant.io/custom_integrations.json&query=$.huawei_solar.total)
 
 > [!WARNING]
-> Users that use the native modbus-integration alongside this integration should not upgrade to Home Assistant 2024.12.4, as it contains an upgrade to an incompatible version 3.7.4 of the pyModbus library. Significant work has already been done to upgrade this integration to support v3.8.0 of this library. We expect this to release alongside Home Assistant 2025.1, which is expected to also upgrade to that latest pyModbus version. This will solve the compatibility issue.
+> Users that use the native modbus-integration alongside this integration should not upgrade to Home Assistant 2025.1, as it contains an upgrade to an incompatible version 3.7.4 of the pyModbus library. Significant work has already been done to upgrade this integration to support v3.8.0 of this library. We expect this to release alongside Home Assistant 2025.2, which is expected to also upgrade to that latest pyModbus version. This will solve the compatibility issue.
 
 
 This integration exposes the information and functions made available by Huawei Solar inverters directly via one of its Modbus interfaces in Home Assistant.
