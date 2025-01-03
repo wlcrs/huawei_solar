@@ -762,8 +762,8 @@
             }
         },
         "set_di_active_power_scheduling": {
-            "name": "Set Active Power Control to 'DI active scheduling'",
-            "description": "Set Active Power Control to 'DI active scheduling'",
+            "name": "Wirkleistungssteuerung auf 'DI aktive Zeitplanung' setzen",
+            "description": "Wirkleistungssteuerung auf 'DI aktive Zeitplanung' setzen",
             "fields": {
                 "device_id": {
                     "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
@@ -782,7 +782,7 @@
             }
         },
         "set_maximum_feed_grid_power": {
-            "name": "Limit the power fed to the grid",
+            "name": "Netzeinspeisung beschränken",
             "description": "",
             "fields": {
                 "device_id": {
@@ -791,13 +791,13 @@
                 },
                 "power": {
                     "name": "Leistung",
-                    "description": "Maximum Wattage"
+                    "description": "Maximale Leistung"
                 }
             }
         },
         "set_maximum_feed_grid_power_percent": {
-            "name": "Limit the power fed to the grid to percentage",
-            "description": "Sets Active Power Control to 'Power-limited grid connection (%)' with the given percentage",
+            "name": "Netzeinspeisung auf Prozentsatz beschränken",
+            "description": "Wirkleistungssteuerung auf 'Netzanschluss mit limitierter Leistung (%)' mit dem angegebenen Prozentsatz setzen",
             "fields": {
                 "device_id": {
                     "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
@@ -811,7 +811,7 @@
         },
         "set_tou_periods": {
             "name": "TOU-Perioden festlegen",
-            "description": "Sets Time Of Use Periods",
+            "description": "Setzt Zeiten der Benutzung",
             "fields": {
                 "device_id": {
                     "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
@@ -833,7 +833,7 @@
                 },
                 "periods": {
                     "name": "Perioden",
-                    "description": "One period per line. Format: '[start time]-[end time]/[days effective]/[power]W', with 1=Monday, 7=Sunday. Example: '00:00-23:59/1234567/2500W'."
+                    "description": "Ein Zeitraum pro Zeile. Format: '[Startzeit]-[Endzeit]/[Wochentage]/[Leistung]W', mit 1=Montag, 7=Sonntag. Beispiel: '00:00-23:59/1234567/2500W'."
                 }
             }
         },
@@ -847,7 +847,7 @@
                 },
                 "periods": {
                     "name": "Perioden",
-                    "description": "One period per line. Format: '[start time]-[end time]/[power]W'. Example: '12:00-15:59/-1000W'."
+                    "description": "Ein Zeitraum pro Zeile. Format: '[Startzeit]-[Endzeit]/[Leistung]W'. Beispiel: '12:00-15:59/-1000W'."
                 }
             }
         }
