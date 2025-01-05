@@ -136,8 +136,8 @@ async def validate_network_setup_auto_slave_discovery(
                 continue
 
             if device_info.device_id == 0:
-                _LOGGER.warning(
-                    "Skipping slave 0. Product type: %s, model: %s, software version: %s",
+                _LOGGER.info(
+                    "Skipping already processed slave 0. Product type: %s, model: %s, software version: %s",
                     device_info.product_type,
                     device_info.model,
                     device_info.software_version,
