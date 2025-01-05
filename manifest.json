@@ -8,13 +8,13 @@
     "documentation": "https://github.com/wlcrs/huawei_solar/wiki",
     "issue_tracker": "https://github.com/wlcrs/huawei_solar/issues",
     "requirements": [
-        "huawei-solar==2.4.0a8"
+        "huawei-solar==2.4.0b4"
     ],
     "codeowners": [
         "@wlcrs"
     ],
     "iot_class": "local_polling",
-    "version": "1.5.0a1",
+    "version": "1.5.0b1",
     "loggers": [
         "huawei_solar",
         "pymodbus"
