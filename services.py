@@ -7,8 +7,13 @@ import logging
 import re
 from typing import TYPE_CHECKING, Any
 
+import voluptuous as vol
+
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant, ServiceCall, async_get_hass, callback
+from homeassistant.helpers import device_registry as dr
+import homeassistant.helpers.config_validation as cv
 from huawei_solar import (
-    HuaweiEMMABridge,
     HuaweiSolarBridge,
     HuaweiSUN2000Bridge,
     register_names as rn,
@@ -21,12 +26,6 @@ from huawei_solar.registers import (
     LG_RESU_TimeOfUsePeriod,
     PeakSettingPeriod,
 )
-import voluptuous as vol
-
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant, ServiceCall, async_get_hass, callback
-from homeassistant.helpers import device_registry as dr
-import homeassistant.helpers.config_validation as cv
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,

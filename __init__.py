@@ -6,6 +6,18 @@ from dataclasses import dataclass
 import logging
 from typing import TypedDict, TypeVar
 
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import (
+    CONF_HOST,
+    CONF_PASSWORD,
+    CONF_PORT,
+    CONF_USERNAME,
+    Platform,
+)
+from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
+from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers.entity import DeviceInfo, Entity
 from huawei_solar import (
     HuaweiEMMABridge,
     HuaweiSolarBridge,
@@ -17,18 +29,6 @@ from huawei_solar import (
     create_tcp_bridge,
     register_values as rv,
 )
-
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (
-    CONF_HOST,
-    CONF_PASSWORD,
-    CONF_PORT,
-    CONF_USERNAME,
-    Platform,
-)
-from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
-from homeassistant.helpers.entity import DeviceInfo, Entity
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
@@ -62,6 +62,7 @@ PLATFORMS: list[Platform] = [
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Huawei Solar from a config entry."""
+
     primary_bridge = None
     try:
         # Multiple inverters can be connected to each other via a daisy chain,
@@ -107,7 +108,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     except InvalidCredentials as err:
                         raise ConfigEntryAuthFailed from err
 
-        primary_bridge_device_infos = await compute_device_infos(
+        primary_bridge_device_infos = await compute_and_register_device_infos(
+            hass,
+            entry,
             primary_bridge,
             connecting_inverter_device_id=None,
         )
@@ -119,7 +122,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         for extra_slave_id in entry.data[CONF_SLAVE_IDS][1:]:
             extra_bridge = await create_sub_bridge(primary_bridge, extra_slave_id)
 
-            extra_bridge_device_infos = await compute_device_infos(
+            extra_bridge_device_infos = await compute_and_register_device_infos(
+                hass,
+                entry,
                 extra_bridge,
                 connecting_inverter_device_id=(
                     DOMAIN,
@@ -288,7 +293,9 @@ def _battery_product_model_to_model(spm: rv.StorageProductModel):
     return None
 
 
-async def compute_device_infos(
+async def compute_and_register_device_infos(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
     bridge: HuaweiSolarBridge,
     connecting_inverter_device_id: tuple[str, str] | None,
 ) -> HuaweiInverterBridgeDeviceInfos:
@@ -301,6 +308,8 @@ async def compute_device_infos(
     battery_1_device_info = None
     battery_2_device_info = None
 
+    device_registry = dr.async_get(hass)
+
     if isinstance(bridge, HuaweiEMMABridge):
         emma_device_info = DeviceInfo(
             identifiers={(DOMAIN, bridge.serial_number)},
@@ -308,6 +317,16 @@ async def compute_device_infos(
             manufacturer="Huawei",
             model=bridge.model_name,
             serial_number=bridge.serial_number,
+            sw_version=bridge.software_version,
+        )
+
+        # Add EMMA device to device registery
+        device_registry.async_get_or_create(
+            config_entry_id=entry.entry_id,
+            identifiers={(DOMAIN, bridge.serial_number)},
+            manufacturer="Huawei",
+            name=bridge.model_name,
+            model=bridge.model_name,
             sw_version=bridge.software_version,
         )
     else:
@@ -320,6 +339,16 @@ async def compute_device_infos(
             serial_number=bridge.serial_number,
             sw_version=bridge.software_version,
             via_device=connecting_inverter_device_id,  # type: ignore[typeddict-item]
+        )
+
+        # Add inverter device to device registery
+        de = device_registry.async_get_or_create(
+            config_entry_id=entry.entry_id,
+            identifiers={(DOMAIN, bridge.serial_number)},
+            manufacturer="Huawei",
+            name=bridge.model_name,
+            model=bridge.model_name,
+            sw_version=bridge.software_version,
         )
 
         # Add power meter device if a power meter is detected

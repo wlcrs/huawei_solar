@@ -762,8 +762,8 @@
             }
         },
         "set_di_active_power_scheduling": {
-            "name": "Set Active Power Control to 'DI active scheduling'",
-            "description": "Set Active Power Control to 'DI active scheduling'",
+            "name": "Wirkleistungssteuerung auf 'DI active scheduling' setzen",
+            "description": "Wirkleistungssteuerung auf 'DI active scheduling' setzen",
             "fields": {
                 "device_id": {
                     "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
@@ -772,8 +772,8 @@
             }
         },
         "set_zero_power_grid_connection": {
-            "name": "Set Active Power Control to 'Zero power grid connection'",
-            "description": "Set Active Power Control to 'Zero power grid connection'",
+            "name": "Wirkleistungssteuerung auf 'Zero power grid connection' setzen",
+            "description": "Wirkleistungssteuerung auf 'Zero power grid connection' setzen",
             "fields": {
                 "device_id": {
                     "name": "",
@@ -782,7 +782,7 @@
             }
         },
         "set_maximum_feed_grid_power": {
-            "name": "Limit the power fed to the grid",
+            "name": "Netzeinspeisung beschränken",
             "description": "",
             "fields": {
                 "device_id": {
@@ -791,13 +791,13 @@
                 },
                 "power": {
                     "name": "Leistung",
-                    "description": "Maximum Wattage"
+                    "description": "Maximale Leistung"
                 }
             }
         },
         "set_maximum_feed_grid_power_percent": {
-            "name": "Limit the power fed to the grid to percentage",
-            "description": "Sets Active Power Control to 'Power-limited grid connection (%)' with the given percentage",
+            "name": "Netzeinspeisung auf Prozentsatz beschränken",
+            "description": "Wirkleistungssteuerung auf 'Power-limited grid connection (%)' mit dem angegebenen Prozentsatz setzen",
             "fields": {
                 "device_id": {
                     "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
@@ -811,7 +811,7 @@
         },
         "set_tou_periods": {
             "name": "TOU-Perioden festlegen",
-            "description": "Sets Time Of Use Periods",
+            "description": "Setzt Zeiten der Benutzung",
             "fields": {
                 "device_id": {
                     "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
@@ -819,7 +819,7 @@
                 },
                 "periods": {
                     "name": "Perioden",
-                    "description": "One period per line. For Huawei LUNA2000 batteries: '[start time]-[end time]/[days effective]/[charge]', with 1=Monday, 7=Sunday (example: '12:00-14:00/1234567/-'). For LG RESU batteries: '[start time]-[end time]/[electricity price]' (example: 13:00-14:00/0.50)"
+                    "description": "Ein Zeitraum pro Zeile. Für Huawei LUNA2000 Batterien: '[Startzeit]-[Endzeit]/[Wochentage]/[Ladung]', mit 1=Montag, 7=Sonntag (Beispiel: '12:00-14:00/1234567/-'). Für LG RESU Batterien: '[Startzeit]-[Endzeit]/[Strompreis]' (Beispiel: 13:00-14:00/0.50)"
                 }
             }
         },
@@ -833,7 +833,7 @@
                 },
                 "periods": {
                     "name": "Perioden",
-                    "description": "One period per line. Format: '[start time]-[end time]/[days effective]/[power]W', with 1=Monday, 7=Sunday. Example: '00:00-23:59/1234567/2500W'."
+                    "description": "Ein Zeitraum pro Zeile. Format: '[Startzeit]-[Endzeit]/[Wochentage]/[Leistung]W', mit 1=Montag, 7=Sonntag. Beispiel: '00:00-23:59/1234567/2500W'."
                 }
             }
         },
@@ -847,7 +847,7 @@
                 },
                 "periods": {
                     "name": "Perioden",
-                    "description": "One period per line. Format: '[start time]-[end time]/[power]W'. Example: '12:00-15:59/-1000W'."
+                    "description": "Ein Zeitraum pro Zeile. Format: '[Startzeit]-[Endzeit]/[Leistung]W'. Beispiel: '12:00-15:59/-1000W'."
                 }
             }
         }
