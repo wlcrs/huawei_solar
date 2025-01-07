@@ -589,7 +589,7 @@
                 "name": "Ladestrom"
             },
             "feed_in_power": {
-                "name": ""
+                "name": "Einspeiseleistung"
             },
             "battery_charge_discharge_power": {
                 "name": "Akkuaufladung/Entladung"
@@ -873,7 +873,7 @@
         },
         "set_fixed_charge_periods": {
             "name": "Festgelegte Ladezeiten",
-            "description": "Sets Fixed Charge and Discharge Periods",
+            "description": "Setze feste Lade- und Entladezeiten ein",
             "fields": {
                 "device_id": {
                     "name": "",
