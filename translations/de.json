@@ -90,9 +90,6 @@
             },
             "emma_maximum_feed_grid_power_watt": {
                 "name": "Maximale Netzleistung"
-            }, 
-            "mppt_scanning_interval": {
-                "name": "MPPT Scan Intervall"
             }
         },
         "sensor": {
@@ -611,35 +608,7 @@
             },
             "backup_power_state_of_charge": {
                 "name": "Backup power Ladezustand"
-            },
-            "pack_1_max_temperature": {
-                "name": "Pack 1 max Temperatur"
-            },
-            "pack_1_min_temperature": {
-                "name": "Pack 1 min Temperatur"
-            }, 
-            "pack_2_max_temperature": {
-                "name": "Pack 2 max Temperatur"
-            },
-            "pack_2_min_temperature": {
-                "name": "Pack 2 min Temperatur"
-            }, 
-            "pack_3_max_temperature": {
-                "name": "Pack 3 max Temperatur"
-            },
-            "pack_3_min_temperature": {
-                "name": "Pack 3 min Temperatur"
-            },
-            "pack_1_working_status": {
-                "name": "Pack 1 Arbeitsstatus"
-            }, 
-            "pack_1_firmware_version": {
-                "name": "Pack 1 Firmware Version"
-            },
-            "bms_temperature": {
-                "name": "BMS Temperatur"
             }
-
         },
         "select": {
             "storage_excess_pv_energy_use_in_tou": {
@@ -696,9 +665,6 @@
             },
             "startup": {
                 "name": "Inverter EIN/AUS"
-            },
-            "mppt_multimodal_scanning": {
-                "name": "MPPT-Scan"
             }
         }
     },
@@ -858,8 +824,8 @@
             }
         },
         "set_capacity_control_periods": {
-            "name": "Set Capacity Control Periods",
-            "description": "Set Capacity Control Periods",
+            "name": "Kapazitätsregelungsperioden",
+            "description": "Kapazitätsregelungsperioden",
             "fields": {
                 "device_id": {
                     "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
@@ -873,7 +839,7 @@
         },
         "set_fixed_charge_periods": {
             "name": "Festgelegte Ladezeiten",
-            "description": "Setze feste Lade- und Entladezeiten ein",
+            "description": "Feste Ladungs- und Entladungszeiten festlegen",
             "fields": {
                 "device_id": {
                     "name": "",

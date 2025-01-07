@@ -1487,7 +1487,9 @@ class HuaweiSolarForcibleChargeEntity(
     CoordinatorEntity, HuaweiSolarEntity, SensorEntity
 ):
     """Huawei Solar Sensor for the current forcible charge status."""
-
+    
+    _attr_extra_state_attributes : dict[str, Any] = {}
+    
     REGISTER_NAMES = [
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,  # is SoC or time the target?
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,  # stop/charging/discharging

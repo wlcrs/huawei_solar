@@ -5,6 +5,10 @@
 [![Documentation](https://img.shields.io/badge/Documentation-2D963D?logo=read-the-docs&logoColor=white)](https://github.com/wlcrs/huawei_solar/wiki)
 ![](https://img.shields.io/badge/dynamic/json?color=41BDF5&logo=home-assistant&label=integration%20usage&suffix=%20installs&cacheSeconds=15600&url=https://analytics.home-assistant.io/custom_integrations.json&query=$.huawei_solar.total)
 
+> [!WARNING]
+> Users that use the native modbus-integration alongside this integration should not upgrade to Home Assistant 2024.12.4, as it contains an upgrade to an incompatible version 3.7.4 of the pyModbus library. Significant work has already been done to upgrade this integration to support v3.8.0 of this library. We expect this to release alongside Home Assistant 2025.1, which is expected to also upgrade to that latest pyModbus version. This will solve the compatibility issue.
+
+
 This integration exposes the information and functions made available by Huawei Solar inverters directly via one of its Modbus interfaces in Home Assistant.
 
 ## Table of Contents
@@ -61,12 +65,14 @@ This integration supports inverters running firmware versions released in 2023 a
 
 1. Install this integration with HACS, or copy the contents of this
 repository into the `custom_components/huawei_solar` directory
-2. Restart HA
-3. Start the configuration flow:
+   [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=wlcrs&repository=huawei_solar&category=integration)
+   
+3. Restart HA
+4. Start the configuration flow:
    - [![Start Config Flow](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start?domain=huawei_solar)
    - Or: Go to `Configuration` -> `Integrations` and click the `+ Add Integration`. Select `Huawei Solar` from the list
 
-4. Choose whether you want to connect via serial or network connection
+5. Choose whether you want to connect via serial or network connection
 
 
 ![](images/select-connection-type.png)
