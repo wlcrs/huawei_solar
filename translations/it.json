@@ -26,7 +26,7 @@
                     "enable_parameter_configuration": "Avanzato: Permessi di accesso elevati",
                     "host": "Host",
                     "port": "Porta",
-                    "slave_ids": "Slave IDs: AUTO for auto-discovery, otherwise a comma separated list"
+                    "slave_ids": "Id slave: AUTO per la scansione automatica, altrimenti una lista separata da virgola"
                 }
             },
             "setup_serial": {
@@ -86,13 +86,10 @@
                 "name": "Taglio del picco SOC batteria"
             },
             "emma_maximum_feed_grid_power_percent": {
-                "name": "Maximum feed grid power (%)"
+                "name": "Potenza massima della rete di alimentazione (%)"
             },
             "emma_maximum_feed_grid_power_watt": {
-                "name": "Maximum feed grid power"
-            }, 
-            "mppt_scanning_interval":{
-                "name": "MPPT scan interval"
+                "name": "Potenza massima della rete di alimentazione"
             }
         },
         "sensor": {
@@ -151,7 +148,7 @@
                 "name": "Internal temperature"
             },
             "insulation_resistance": {
-                "name": "Insulation resistance"
+                "name": "Resistenza di isolamento"
             },
             "device_status": {
                 "name": "Stato dispositivo"
@@ -169,7 +166,7 @@
                 "name": "Rendimento giornaliero"
             },
             "hourly_yield_energy": {
-                "name": "Hourly yield"
+                "name": "Resa oraria"
             },
             "state_1": {
                 "name": "Stato dell'inverter"
@@ -214,7 +211,7 @@
                 "name": "Temperatura"
             },
             "total_dc_input_power": {
-                "name": "Total DC input energy"
+                "name": "Energia in ingresso DC totale"
             },
             "running_status": {
                 "name": "Stato di funzionamento"
@@ -328,7 +325,7 @@
                 "name": "Allarmi"
             },
             "current_electricity_generation_statistics_time": {
-                "name": "Current electricity generation statistics time"
+                "name": "Statistiche produzione elettricità attuale"
             },
             "storage_capacity_control_periods": {
                 "name": "Tempo di controllo della capacità"
@@ -484,160 +481,133 @@
                 "name": "Tempo di carica/scarica rimasto"
             },
             "forcible_charge_summary": {
-                "name": "Forcible charge"
+                "name": "Carica forzata"
             },
             "active_power_control": {
-                "name": "Active power control"
+                "name": "Controllo potenza attiva"
             },
             "pack_1_max_temperature": {
-                "name": "Pack 1 max temperature"
+                "name": "Pacco 1 temperatura massima"
             },
             "pack_1_min_temperature": {
-                "name": "Pack 1 min temperature"
+                "name": "Pacco 1 temperatura minima"
             },
             "pack_2_max_temperature": {
-                "name": "Pack 2 max temperature"
+                "name": "Pacco 2 temperatura massima"
             },
             "pack_2_min_temperature": {
-                "name": "Pack 2 min temperature"
+                "name": "Pacco 2 temperatura minima"
             },
             "pack_3_max_temperature": {
-                "name": "Pack 3 max temperature"
+                "name": "Pacco 3 temperatura massima"
             },
             "pack_3_min_temperature": {
-                "name": "Pack 3 min temperature"
+                "name": "Pacco 3 temperatura minima"
             },
             "pack_1_working_status": {
-                "name": "Pack 1 working status"
+                "name": "Pacco 1 stato di funzionamento"
             },
             "pack_1_firmware_version": {
-                "name": "Pack 1 firmware version"
+                "name": "Pacco 1 versione firmware"
             },
             "bms_temperature": {
-                "name": "BMS temperature"
+                "name": "Temperatura BMS"
             },
             "storage_lg_resu_time_of_use_price_periods": {
-                "name": "TOU price periods"
+                "name": "Periodi prezzo TOU"
             },
             "storage_huawei_luna2000_time_of_use_price_periods": {
-                "name": "TOU price periods"
+                "name": "Periodi prezzo TOU"
             },
             "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
-                "name": "TOU charging and discharging periods"
+                "name": "Periodi di carica e di scarico TOU"
             },
             "storage_lg_resu_time_of_use_charging_and_discharging_periods": {
-                "name": "TOU charging and discharging periods"
+                "name": "Periodi di carica e di scarico TOU"
             },
             "storage_fixed_charging_and_discharging_periods": {
                 "name": "Tempi di carica e scarica predefiniti"
             },
             "inverter_total_absorbed_energy": {
-                "name": "Total absorbed energy"
+                "name": "Energia totale assorbita"
             },
             "energy_charged_today": {
-                "name": "Energy charged today"
+                "name": "Energia caricata oggi"
             },
             "total_charged_energy": {
-                "name": "Total charged energy"
+                "name": "Energia totale caricata"
             },
             "energy_discharged_today": {
-                "name": "Energy discharged today"
+                "name": "Energia scaricata oggi"
             },
             "total_discharged_energy": {
-                "name": "Total discharged energy"
+                "name": "Energia totale scaricata"
             },
             "ess_chargeable_energy": {
-                "name": "ESS Chargeable energy"
+                "name": "Energia caricabile ESS"
             },
             "ess_dischargeable_energy": {
-                "name": "ESS Dischargeable energy"
+                "name": "Energia scaricabile ESS"
             },
             "rated_ess_capacity": {
-                "name": "Rated ESS capacity"
+                "name": "Capacità nominale ESS"
             },
             "consumption_today": {
-                "name": "Consumption today"
+                "name": "Consumo di oggi"
             },
             "total_energy_consumption": {
-                "name": "Total energy consumption"
+                "name": "Consumo energetico totale"
             },
             "feed_in_to_grid_today": {
-                "name": "Feed in to grid today"
+                "name": "Immissione in rete di oggi"
             },
             "supply_from_grid_today": {
-                "name": "Supply from grid today"
+                "name": "Prelevamento dalla rete di oggi"
             },
             "total_supply_from_grid": {
-                "name": "Total supply from grid"
+                "name": "Totale prelevato dalla rete"
             },
             "inverter_energy_yield_today": {
-                "name": "Inverter energy yield today"
+                "name": "Rendimento energia inverter oggi"
             },
             "inverter_total_energy_yield": {
-                "name": "Inverter total energy yield"
+                "name": "Rendimento totale di energia inverter"
             },
             "pv_yield_today": {
-                "name": "PV yield today"
+                "name": "Rendimento fotovoltaico oggi"
             },
             "total_pv_energy_yield": {
-                "name": "Total PV energy yield"
+                "name": "Rendimento totale di energia fotovoltaico"
             },
             "pv_output_power": {
-                "name": "PV output power"
+                "name": "Potenza di uscita fotovoltaico"
             },
             "load_power": {
-                "name": "Load power"
+                "name": "Potenza di carico"
             },
             "feed_in_power": {
-                "name": "Feed in power"
+                "name": "Potenza di alimentazione in ingresso"
             },
             "battery_charge_discharge_power": {
-                "name": "Battery charge/discharge power"
+                "name": "Potenza di carica/scarica batteria"
             },
             "inverter_rated_power": {
-                "name": "Inverter rated power"
+                "name": "Potenza nominale inverter"
             },
             "inverter_active_power": {
-                "name": "Inverter active power"
+                "name": "Potenza attiva inverter"
             },
             "state_of_capacity": {
-                "name": "State of capacity"
+                "name": "Stato della capacità"
             },
             "ess_chargeable_capacity": {
-                "name": "ESS chargeable capacity"
+                "name": "Capacità di ricarica ESS"
             },
             "ess_dischargeable_capacity": {
-                "name": "ESS dischargeable capacity"
+                "name": "Capacità di scarica ESS"
             },
             "backup_power_state_of_charge": {
-                "name": "Backup power state of charge"
-            },
-            "pack_1_max_temperature": {
-                "name": "Pack 1 max temperature"
-            },
-            "pack_1_min_temperature": {
-                "name": "Pack 1 min temperature"
-            }, 
-            "pack_2_max_temperature": {
-                "name": "Pack 2 max temperature"
-            },
-            "pack_2_min_temperature": {
-                "name": "Pack 2 min temperature"
-            }, 
-            "pack_3_max_temperature": {
-                "name": "Pack 3 max temperature"
-            },
-            "pack_3_min_temperature": {
-                "name": "Pack 3 min temperature"
-            },
-            "pack_1_working_status": {
-                "name": "Pack 1 working status"
-            }, 
-            "pack_1_firmware_version": {
-                "name": "Pack 1 firmware version"
-            },
-            "bms_temperature": {
-                "name": "BMS temperature"
+                "name": "Stato di carica del backup di potenza"
             }
         },
         "select": {
@@ -668,21 +638,21 @@
                 }
             },
             "emma_ess_control_mode": {
-                "name": "ESS Control Mode",
+                "name": "Modalità Controllo ESS",
                 "state": {
-                    "reserved_1": "Reserved 1",
-                    "maximum_self_consumption": "Maximum self consumption",
-                    "reserved_3": "Reserved 3",
-                    "fully_fed_to_grid": "Fully fed to grid",
-                    "time_of_use": "Time of use",
-                    "third_party_dispatch": "Third party dispatch"
+                    "reserved_1": "Riservato 1",
+                    "maximum_self_consumption": "Massimizzare autoconsumo",
+                    "reserved_3": "Riservato 3",
+                    "fully_fed_to_grid": "Immissione completa nella rete",
+                    "time_of_use": "Orario di utilizzo",
+                    "third_party_dispatch": "Invio a terzi"
                 }
             },
             "emma_tou_preferred_use_of_surplus_pv_power": {
-                "name": "Excess PV energy use in TOU",
+                "name": "Utilizzo di energia FV in eccesso in TOU",
                 "state": {
-                    "fed_to_grid": "Fed to grid",
-                    "charge": "Charge"
+                    "fed_to_grid": "Immetti in rete",
+                    "charge": "Carica"
                 }
             }
         },
@@ -695,9 +665,6 @@
             },
             "startup": {
                 "name": "Inverter ACCESO/SPENTO"
-            },
-            "mppt_multimodal_scanning": {
-                "name": "MPPT scanning"
             }
         }
     },
@@ -893,16 +860,16 @@
             "name": "Inverter"
         },
         "connected_energy_storage": {
-            "name": "Batteries"
+            "name": "Batterie"
         },
         "power_meter": {
-            "name": "Power meter"
+            "name": "Contatore di energia"
         },
         "battery_1": {
-            "name": "Battery 1"
+            "name": "Batteria 1"
         },
         "battery_2": {
-            "name": "Battery 2"
+            "name": "Batteria 2"
         }
     }
 }
