@@ -24,9 +24,9 @@
             "setup_network": {
                 "data": {
                     "enable_parameter_configuration": "Avanzado: elevar permisos",
-                    "host": "Host",
+                    "host": "Equipo",
                     "port": "Puerto",
-                    "slave_ids": "Slave IDs: AUTO for auto-discovery, otherwise a comma separated list"
+                    "slave_ids": "ID de Slave: AUTO para autodescubrimiento, de lo contrario una lista separada por comas"
                 }
             },
             "setup_serial": {
@@ -56,10 +56,10 @@
                 "name": "MPPT scan interval"
             },
             "active_power_percentage_derating": {
-                "name": "Power derating (by percentage)"
+                "name": "Reducción de potencia (en porcentaje)"
             },
             "active_power_fixed_value_derating": {
-                "name": "Power derating"
+                "name": "Reducción de potencia"
             },
             "storage_maximum_charging_power": {
                 "name": "Potencia máxima de carga"
@@ -86,21 +86,18 @@
                 "name": "Afeitado de pico SoC"
             },
             "emma_maximum_feed_grid_power_percent": {
-                "name": "Maximum feed grid power (%)"
+                "name": "Máxima potencia de la red de alimentación (%)"
             },
             "emma_maximum_feed_grid_power_watt": {
-                "name": "Maximum feed grid power"
-            }, 
-            "mppt_scanning_interval":{
-                "name": "MPPT scan interval"
+                "name": "Máxima alimentación de red"
             }
         },
         "sensor": {
             "rated_power": {
-                "name": "Rated power"
+                "name": "Energía calificada"
             },
             "p_max": {
-                "name": "Max active power"
+                "name": "Potencia máxima activa"
             },
             "input_power": {
                 "name": "Potencia de entrada"
@@ -169,7 +166,7 @@
                 "name": "Rendimiento diario"
             },
             "hourly_yield_energy": {
-                "name": "Hourly yield"
+                "name": "Rendimiento por hora"
             },
             "state_1": {
                 "name": "Estado del inversor"
@@ -214,7 +211,7 @@
                 "name": "Temperatura"
             },
             "total_dc_input_power": {
-                "name": "Total DC input energy"
+                "name": "Total de energía de entrada DC"
             },
             "running_status": {
                 "name": "Estado de funcionamiento"
@@ -289,13 +286,13 @@
                 "name": "Potencia activa de fase C"
             },
             "storage_maximum_charge_power": {
-                "name": "Maximum charge power"
+                "name": "Potencia de carga máxima"
             },
             "storage_maximum_discharge_power": {
-                "name": "Maximum discharge power"
+                "name": "Potencia de descarga máxima"
             },
             "storage_rated_capacity": {
-                "name": "Rated Capacity"
+                "name": "Capacidad de puntuación"
             },
             "storage_state_of_capacity": {
                 "name": "Estado de la capacidad"
@@ -328,7 +325,7 @@
                 "name": "Alarmas"
             },
             "current_electricity_generation_statistics_time": {
-                "name": "Current electricity generation statistics time"
+                "name": "Estadísticas actuales de generación de electricidad"
             },
             "storage_capacity_control_periods": {
                 "name": "Períodos de control de capacidad"
@@ -478,103 +475,103 @@
                 "name": "Corriente FV 24"
             },
             "battery_working_mode": {
-                "name": "Working mode"
+                "name": "Modo de funcionamiento"
             },
             "battery_remaining_charge_discharge_time": {
-                "name": "Remaining charge/discharge time"
+                "name": "Tiempo restante de carga/descarga"
             },
             "forcible_charge_summary": {
-                "name": "Forcible charge"
+                "name": "Carga Forzada"
             },
             "active_power_control": {
-                "name": "Active power control"
+                "name": "Control de energía activo"
             },
             "pack_1_max_temperature": {
-                "name": "Pack 1 max temperature"
+                "name": "Pack 1 temperatura máxima"
             },
             "pack_1_min_temperature": {
-                "name": "Pack 1 min temperature"
+                "name": "Pack 1 temperatura mínima"
             },
             "pack_2_max_temperature": {
-                "name": "Pack 2 max temperature"
+                "name": "Pack 2 temperatura máxima"
             },
             "pack_2_min_temperature": {
-                "name": "Pack 2 min temperature"
+                "name": "Pack 2 temperatura mínima"
             },
             "pack_3_max_temperature": {
-                "name": "Pack 3 max temperature"
+                "name": "Pack 3 temperatura máxima"
             },
             "pack_3_min_temperature": {
-                "name": "Pack 3 min temperature"
+                "name": "Pack 3 temperatura mínima"
             },
             "pack_1_working_status": {
-                "name": "Pack 1 working status"
+                "name": "Pack 1 estado de trabajo"
             },
             "pack_1_firmware_version": {
-                "name": "Pack 1 firmware version"
+                "name": "Versión del firmware del Pack 1"
             },
             "bms_temperature": {
-                "name": "BMS temperature"
+                "name": "Temperatura de BMS"
             },
             "storage_lg_resu_time_of_use_price_periods": {
-                "name": "TOU price periods"
+                "name": "Períodos de precio TOU"
             },
             "storage_huawei_luna2000_time_of_use_price_periods": {
-                "name": "TOU price periods"
+                "name": "Períodos de precio TOU"
             },
             "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
-                "name": "TOU charging and discharging periods"
+                "name": "Períodos de carga y descarga de TOU"
             },
             "storage_lg_resu_time_of_use_charging_and_discharging_periods": {
-                "name": "TOU charging and discharging periods"
+                "name": "Períodos de carga y descarga de TOU"
             },
             "storage_fixed_charging_and_discharging_periods": {
                 "name": "Períodos de carga y descarga fija"
             },
             "inverter_total_absorbed_energy": {
-                "name": "Total absorbed energy"
+                "name": "Total de energía absorbida"
             },
             "energy_charged_today": {
-                "name": "Energy charged today"
+                "name": "Energía cargada hoy"
             },
             "total_charged_energy": {
-                "name": "Total charged energy"
+                "name": "Energía total cargada"
             },
             "energy_discharged_today": {
-                "name": "Energy discharged today"
+                "name": "Energía descargada hoy"
             },
             "total_discharged_energy": {
-                "name": "Total discharged energy"
+                "name": "Energía total descargada"
             },
             "ess_chargeable_energy": {
-                "name": "ESS Chargeable energy"
+                "name": "Energía recargable de ESS"
             },
             "ess_dischargeable_energy": {
-                "name": "ESS Dischargeable energy"
+                "name": "Energía descargable de ESS"
             },
             "rated_ess_capacity": {
-                "name": "Rated ESS capacity"
+                "name": "Capacidad ESS valorada"
             },
             "consumption_today": {
-                "name": "Consumption today"
+                "name": "Consumo hoy"
             },
             "total_energy_consumption": {
-                "name": "Total energy consumption"
+                "name": "Consumo total de energía"
             },
             "feed_in_to_grid_today": {
-                "name": "Feed in to grid today"
+                "name": "Alimenta a la red hoy"
             },
             "supply_from_grid_today": {
-                "name": "Supply from grid today"
+                "name": "Suministro desde la red hoy"
             },
             "total_supply_from_grid": {
-                "name": "Total supply from grid"
+                "name": "Suministro total de la red"
             },
             "inverter_energy_yield_today": {
-                "name": "Inverter energy yield today"
+                "name": "Inverter rendimiento energético hoy"
             },
             "inverter_total_energy_yield": {
-                "name": "Inverter total energy yield"
+                "name": "Inversor de rendimiento energético total"
             },
             "pv_yield_today": {
                 "name": "PV yield today"
@@ -611,33 +608,6 @@
             },
             "backup_power_state_of_charge": {
                 "name": "Backup power state of charge"
-            },
-            "pack_1_max_temperature": {
-                "name": "Pack 1 max temperature"
-            },
-            "pack_1_min_temperature": {
-                "name": "Pack 1 min temperature"
-            }, 
-            "pack_2_max_temperature": {
-                "name": "Pack 2 max temperature"
-            },
-            "pack_2_min_temperature": {
-                "name": "Pack 2 min temperature"
-            }, 
-            "pack_3_max_temperature": {
-                "name": "Pack 3 max temperature"
-            },
-            "pack_3_min_temperature": {
-                "name": "Pack 3 min temperature"
-            },
-            "pack_1_working_status": {
-                "name": "Pack 1 working status"
-            }, 
-            "pack_1_firmware_version": {
-                "name": "Pack 1 firmware version"
-            },
-            "bms_temperature": {
-                "name": "BMS temperature"
             }
         },
         "select": {
@@ -695,9 +665,6 @@
             },
             "startup": {
                 "name": "Encendido/Apagado del inversor"
-            },
-            "mppt_multimodal_scanning": {
-                "name": "MPPT scanning"
             }
         }
     },
