@@ -486,6 +486,9 @@
             "active_power_control": {
                 "name": "Aktive Leistungssteuerung"
             },
+            "soh_calibration_status":{
+                "name": "SOH Kalibrationsstatus"
+            },
             "pack_1_max_temperature": {
                 "name": "Pack 1 max Temperatur"
             },
@@ -507,9 +510,96 @@
             "pack_1_working_status": {
                 "name": "Pack 1 Arbeitsstatus"
             },
+            "pack_2_working_status": {
+                "name": "Pack 2 Arbeitsstatus"
+            }, 
+            "pack_3_working_status": {
+                "name": "Pack 3 Arbeitsstatus"
+            }, 
             "pack_1_firmware_version": {
                 "name": "Pack 1 Firmware Version"
             },
+            "pack_1_serial_number": {
+                "name": "Pack 1 Serienummer"
+            },
+            "pack_1_state_of_capacity": {
+                "name": "Pack 1 state of capacity"
+            },
+            "pack_1_charge_discharge_power": {
+                "name": "Pack 1 Lade- und Entladeleistung"
+            },
+            "pack_1_voltage": {
+                "name": "Pack 1 Spannung"
+            },
+            "pack_1_current": {
+                "name": "Pack 1 Strom"
+            },
+            "pack_1_soh_calibration_status": {
+                "name": "Pack 1 SOH Kalibrationsstatus"
+            },
+            "pack_1_total_charge": {
+                "name": "Pack 1 Gesamte Ladung"
+            },
+            "pack_1_total_discharge": {
+                "name": "Pack 1 Gesamte Entladung"
+            },
+
+            "pack_2_firmware_version": {
+                "name": "Pack 2 Firmware Version"
+            }, 
+            "pack_2_serial_number": {
+                "name": "Pack 2 Serienummer"
+            },
+            "pack_2_state_of_capacity": {
+                "name": "Pack 2 state of capacity"
+            },
+            "pack_2_charge_discharge_power": {
+                "name": "Pack 2 Lade- und Entladeleistung"
+            },
+            "pack_2_voltage": {
+                "name": "Pack 2 Spannung"
+            },
+            "pack_2_current": {
+                "name": "Pack 2 Strom"
+            },
+            "pack_2_soh_calibration_status": {
+                "name": "Pack 2 SOH Kalibrationsstatus"
+            },
+            "pack_2_total_charge": {
+                "name": "Pack 2 Gesamte Ladung"
+            },
+            "pack_2_total_discharge": {
+                "name": "Pack 2 Gesamte Entladung"
+            },
+
+            "pack_3_firmware_version": {
+                "name": "Pack 3 Firmware Version"
+            }, 
+            "pack_3_serial_number": {
+                "name": "Pack 3 Serienummer"
+            },
+            "pack_3_state_of_capacity": {
+                "name": "Pack 3 state of capacity"
+            },
+            "pack_3_charge_discharge_power": {
+                "name": "Pack 3 Lade- und Entladeleistung"
+            },
+            "pack_3_voltage": {
+                "name": "Pack 3 Spannung"
+            },
+            "pack_3_current": {
+                "name": "Pack 3 Strom"
+            },
+            "pack_3_soh_calibration_status": {
+                "name": "Pack 3 SOH Kalibrationsstatus"
+            },
+            "pack_3_total_charge": {
+                "name": "Pack 3 Gesamte Ladung"
+            },
+            "pack_3_total_discharge": {
+                "name": "Pack 3 Gesamte Entladung"
+            },
+ 
             "bms_temperature": {
                 "name": "BMS Temperatur"
             },
