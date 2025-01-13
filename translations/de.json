@@ -486,7 +486,7 @@
             "active_power_control": {
                 "name": "Aktive Leistungssteuerung"
             },
-            "soh_calibration_status":{
+            "soh_calibration_status": {
                 "name": "SOH Kalibrationsstatus"
             },
             "pack_1_max_temperature": {
@@ -512,10 +512,10 @@
             },
             "pack_2_working_status": {
                 "name": "Pack 2 Arbeitsstatus"
-            }, 
+            },
             "pack_3_working_status": {
                 "name": "Pack 3 Arbeitsstatus"
-            }, 
+            },
             "pack_1_firmware_version": {
                 "name": "Pack 1 Firmware Version"
             },
@@ -543,10 +543,9 @@
             "pack_1_total_discharge": {
                 "name": "Pack 1 Gesamte Entladung"
             },
-
             "pack_2_firmware_version": {
                 "name": "Pack 2 Firmware Version"
-            }, 
+            },
             "pack_2_serial_number": {
                 "name": "Pack 2 Serienummer"
             },
@@ -571,10 +570,9 @@
             "pack_2_total_discharge": {
                 "name": "Pack 2 Gesamte Entladung"
             },
-
             "pack_3_firmware_version": {
                 "name": "Pack 3 Firmware Version"
-            }, 
+            },
             "pack_3_serial_number": {
                 "name": "Pack 3 Serienummer"
             },
@@ -599,7 +597,6 @@
             "pack_3_total_discharge": {
                 "name": "Pack 3 Gesamte Entladung"
             },
- 
             "bms_temperature": {
                 "name": "BMS Temperatur"
             },
