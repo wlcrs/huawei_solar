@@ -782,9 +782,6 @@
             },
             "startup": {
                 "name": "Encendido/Apagado del inversor"
-            },
-            "mppt_multimodal_scanning": {
-                "name": "MPPT scanning"
             }
         }
     },
