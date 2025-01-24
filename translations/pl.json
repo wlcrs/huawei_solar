@@ -129,6 +129,15 @@
             "phase_c_current": {
                 "name": "Prąd fazowy C"
             },
+            "active_grid_a_current": {
+                "name": "Prąd fazowy A"
+            },
+            "active_grid_b_current": {
+                "name": "Prąd fazowy B"
+            },
+            "active_grid_c_current": {
+                "name": "Prąd fazowy C"
+            },
             "day_active_power_peak": {
                 "name": "Dzienna moc maksymalna"
             },
@@ -265,15 +274,6 @@
                 "name": "Prąd fazowy B"
             },
             "grid_c_current": {
-                "name": "Prąd fazowy C"
-            },
-            "active_grid_a_current": {
-                "name": "Prąd fazowy A"
-            },
-            "active_grid_b_current": {
-                "name": "Prąd fazowy B"
-            },
-            "active_grid_c_current": {
                 "name": "Prąd fazowy C"
             },
             "active_grid_a_b_voltage": {
