@@ -129,6 +129,15 @@
             "phase_c_current": {
                 "name": "Courant de la phase C"
             },
+            "active_grid_a_current": {
+                "name": "Phase A current"
+            },
+            "active_grid_b_current": {
+                "name": "Phase B current"
+            },
+            "active_grid_c_current": {
+                "name": "Phase C current"
+            },
             "day_active_power_peak": {
                 "name": "Pic de puissance active journalière"
             },
