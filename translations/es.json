@@ -130,13 +130,13 @@
                 "name": "Corriente de fase C"
             },
             "active_grid_a_current": {
-                "name": "Phase A current"
+                "name": "Corriente de fase A"
             },
             "active_grid_b_current": {
-                "name": "Phase B current"
+                "name": "Corriente de fase B"
             },
             "active_grid_c_current": {
-                "name": "Phase C current"
+                "name": "Corriente de fase C"
             },
             "day_active_power_peak": {
                 "name": "Pico de potencia diurna"
@@ -274,15 +274,6 @@
                 "name": "Corriente de fase B"
             },
             "grid_c_current": {
-                "name": "Corriente de fase C"
-            },
-            "active_grid_a_current": {
-                "name": "Corriente de fase A"
-            },
-            "active_grid_b_current": {
-                "name": "Corriente de fase B"
-            },
-            "active_grid_c_current": {
                 "name": "Corriente de fase C"
             },
             "active_grid_a_b_voltage": {
