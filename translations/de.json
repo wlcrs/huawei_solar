@@ -129,6 +129,15 @@
             "phase_c_current": {
                 "name": "Phase C Strom"
             },
+            "active_grid_a_current": {
+                "name": "Phase A Strom"
+            },
+            "active_grid_b_current": {
+                "name": "Phase B Strom"
+            },
+            "active_grid_c_current": {
+                "name": "Phase C Strom"
+            },
             "day_active_power_peak": {
                 "name": "Tages-Wirkleistungsspitze"
             },
@@ -265,15 +274,6 @@
                 "name": "Phase B Strom"
             },
             "grid_c_current": {
-                "name": "Phase C Strom"
-            },
-            "active_grid_a_current": {
-                "name": "Phase A Strom"
-            },
-            "active_grid_b_current": {
-                "name": "Phase B Strom"
-            },
-            "active_grid_c_current": {
                 "name": "Phase C Strom"
             },
             "active_grid_a_b_voltage": {
