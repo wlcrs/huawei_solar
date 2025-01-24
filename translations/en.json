@@ -87,8 +87,8 @@
             },
             "emma_maximum_feed_grid_power_watt": {
                 "name": "Maximum feed grid power"
-            }, 
-            "mppt_scanning_interval":{
+            },
+            "mppt_scanning_interval": {
                 "name": "MPPT scan interval"
             }
         },
@@ -628,7 +628,7 @@
             "backup_power_state_of_charge": {
                 "name": "Backup power state of charge"
             },
-            "soh_calibration_status":{
+            "soh_calibration_status": {
                 "name": "SOH calibration status"
             },
             "pack_1_max_temperature": {
@@ -636,13 +636,13 @@
             },
             "pack_1_min_temperature": {
                 "name": "Pack 1 min temperature"
-            }, 
+            },
             "pack_2_max_temperature": {
                 "name": "Pack 2 max temperature"
             },
             "pack_2_min_temperature": {
                 "name": "Pack 2 min temperature"
-            }, 
+            },
             "pack_3_max_temperature": {
                 "name": "Pack 3 max temperature"
             },
@@ -651,14 +651,14 @@
             },
             "pack_1_working_status": {
                 "name": "Pack 1 working status"
-            }, 
+            },
             "pack_2_working_status": {
                 "name": "Pack 2 working status"
-            }, 
+            },
             "pack_3_working_status": {
                 "name": "Pack 3 working status"
-            }, 
-             "pack_1_firmware_version": {
+            },
+            "pack_1_firmware_version": {
                 "name": "Pack 1 firmware version"
             },
             "pack_1_serial_number": {
@@ -685,10 +685,9 @@
             "pack_1_total_discharge": {
                 "name": "Pack 1 total discharge"
             },
-
             "pack_2_firmware_version": {
                 "name": "Pack 2 firmware version"
-            }, 
+            },
             "pack_2_serial_number": {
                 "name": "Pack 2 serial number"
             },
@@ -713,10 +712,9 @@
             "pack_2_total_discharge": {
                 "name": "Pack 2 total discharge"
             },
-
             "pack_3_firmware_version": {
                 "name": "Pack 3 firmware version"
-            }, 
+            },
             "pack_3_serial_number": {
                 "name": "Pack 3 serial number"
             },
@@ -741,9 +739,17 @@
             "pack_3_total_discharge": {
                 "name": "Pack 3 total discharge"
             },
- 
             "bms_temperature": {
                 "name": "BMS temperature"
+            },
+            "active_grid_a_current": {
+                "name": "Phase A current"
+            },
+            "active_grid_b_current": {
+                "name": "Phase B current"
+            },
+            "active_grid_c_current": {
+                "name": "Phase C current"
             }
         },
         "switch": {

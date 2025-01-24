@@ -267,6 +267,15 @@
             "grid_c_current": {
                 "name": "Courant de la phase C"
             },
+            "active_grid_a_current": {
+                "name": "Courant de la phase A"
+            },
+            "active_grid_b_current": {
+                "name": "Courant de la phase B"
+            },
+            "active_grid_c_current": {
+                "name": "Courant de la phase C"
+            },
             "active_grid_a_b_voltage": {
                 "name": "Tension ligne A-B"
             },
