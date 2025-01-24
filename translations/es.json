@@ -89,14 +89,7 @@
                 "name": "Máxima potencia de la red de alimentación (%)"
             },
             "emma_maximum_feed_grid_power_watt": {
-<<<<<<< HEAD
                 "name": "Máxima alimentación de red"
-=======
-                "name": "Maximum feed grid power"
-            },
-            "mppt_scanning_interval": {
-                "name": "MPPT scan interval"
->>>>>>> 18f7306 (Fix missing translations for power meter current sensors)
             }
         },
         "sensor": {
@@ -135,6 +128,15 @@
             },
             "phase_c_current": {
                 "name": "Corriente de fase C"
+            },
+            "active_grid_a_current": {
+                "name": "Phase A current"
+            },
+            "active_grid_b_current": {
+                "name": "Phase B current"
+            },
+            "active_grid_c_current": {
+                "name": "Phase C current"
             },
             "day_active_power_peak": {
                 "name": "Pico de potencia diurna"
@@ -272,15 +274,6 @@
                 "name": "Corriente de fase B"
             },
             "grid_c_current": {
-                "name": "Corriente de fase C"
-            },
-            "active_grid_a_current": {
-                "name": "Corriente de fase A"
-            },
-            "active_grid_b_current": {
-                "name": "Corriente de fase B"
-            },
-            "active_grid_c_current": {
                 "name": "Corriente de fase C"
             },
             "active_grid_a_b_voltage": {
