@@ -1557,13 +1557,13 @@ def _days_effective_to_str(days: tuple[bool, bool, bool, bool, bool, bool, bool]
     value = ""
     for i in range(7):  # Sunday is on index 0, but we want to name it day 7
         if days[(i + 1) % 7]:
-            value += f"{i+1}"
+            value += f"{i + 1}"
 
     return value
 
 
 def _time_int_to_str(time):
-    return f"{time//60:02d}:{time%60:02d}"
+    return f"{time // 60:02d}:{time % 60:02d}"
 
 
 class HuaweiSolarTOUPricePeriodsSensorEntity(
@@ -1633,14 +1633,14 @@ class HuaweiSolarTOUPricePeriodsSensorEntity(
                 self._attr_extra_state_attributes.clear()
             elif isinstance(data[0], LG_RESU_TimeOfUsePeriod):
                 self._attr_extra_state_attributes = {
-                    f"Period {idx+1}": self._lg_resu_period_to_text(
+                    f"Period {idx + 1}": self._lg_resu_period_to_text(
                         cast(LG_RESU_TimeOfUsePeriod, period)
                     )
                     for idx, period in enumerate(data)
                 }
             elif isinstance(data[0], HUAWEI_LUNA2000_TimeOfUsePeriod):
                 self._attr_extra_state_attributes = {
-                    f"Period {idx+1}": self._huawei_luna2000_period_to_text(period)
+                    f"Period {idx + 1}": self._huawei_luna2000_period_to_text(period)
                     for idx, period in enumerate(data)
                 }
         else:
@@ -1704,7 +1704,7 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
             self._attr_available = True
             self._attr_native_value = len(data)
             self._attr_extra_state_attributes = {
-                f"Period {idx+1}": self._period_to_text(period)
+                f"Period {idx + 1}": self._period_to_text(period)
                 for idx, period in enumerate(data)
             }
         else:

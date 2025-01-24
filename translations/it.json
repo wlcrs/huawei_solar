@@ -129,6 +129,15 @@
             "phase_c_current": {
                 "name": "Corrente fase C"
             },
+            "active_grid_a_current": {
+                "name": "Corrente fase A"
+            },
+            "active_grid_b_current": {
+                "name": "Corrente fase B"
+            },
+            "active_grid_c_current": {
+                "name": "Corrente fase C"
+            },
             "day_active_power_peak": {
                 "name": "Picco di potenza giornaliero"
             },
@@ -694,7 +703,38 @@
                 "name": "Capacità di scarica ESS"
             },
             "backup_power_state_of_charge": {
+<<<<<<< HEAD
                 "name": "Stato di carica del backup di potenza"
+=======
+                "name": "Backup power state of charge"
+            },
+            "pack_1_max_temperature": {
+                "name": "Pack 1 max temperature"
+            },
+            "pack_1_min_temperature": {
+                "name": "Pack 1 min temperature"
+            },
+            "pack_2_max_temperature": {
+                "name": "Pack 2 max temperature"
+            },
+            "pack_2_min_temperature": {
+                "name": "Pack 2 min temperature"
+            },
+            "pack_3_max_temperature": {
+                "name": "Pack 3 max temperature"
+            },
+            "pack_3_min_temperature": {
+                "name": "Pack 3 min temperature"
+            },
+            "pack_1_working_status": {
+                "name": "Pack 1 working status"
+            },
+            "pack_1_firmware_version": {
+                "name": "Pack 1 firmware version"
+            },
+            "bms_temperature": {
+                "name": "BMS temperature"
+>>>>>>> 18f7306 (Fix missing translations for power meter current sensors)
             }
         },
         "select": {

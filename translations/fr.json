@@ -90,6 +90,12 @@
             },
             "emma_maximum_feed_grid_power_watt": {
                 "name": "Maximum feed grid power"
+<<<<<<< HEAD
+=======
+            },
+            "mppt_scanning_interval": {
+                "name": "MPPT scan interval"
+>>>>>>> 18f7306 (Fix missing translations for power meter current sensors)
             }
         },
         "sensor": {
@@ -265,6 +271,15 @@
                 "name": "Courant de la phase B"
             },
             "grid_c_current": {
+                "name": "Courant de la phase C"
+            },
+            "active_grid_a_current": {
+                "name": "Courant de la phase A"
+            },
+            "active_grid_b_current": {
+                "name": "Courant de la phase B"
+            },
+            "active_grid_c_current": {
                 "name": "Courant de la phase C"
             },
             "active_grid_a_b_voltage": {
