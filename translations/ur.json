@@ -90,12 +90,6 @@
             },
             "emma_maximum_feed_grid_power_watt": {
                 "name": "Maximum feed grid power"
-<<<<<<< HEAD
-=======
-            },
-            "mppt_scanning_interval": {
-                "name": "MPPT scan interval"
->>>>>>> 18f7306 (Fix missing translations for power meter current sensors)
             }
         },
         "sensor": {
@@ -134,6 +128,15 @@
             },
             "phase_c_current": {
                 "name": "فیز سی کرنٹ"
+            },
+            "active_grid_a_current": {
+                "name": "Phase A current"
+            },
+            "active_grid_b_current": {
+                "name": "Phase B current"
+            },
+            "active_grid_c_current": {
+                "name": "Phase C current"
             },
             "day_active_power_peak": {
                 "name": "دن کی فعال طاقت کی چوٹی"
@@ -271,15 +274,6 @@
                 "name": "فیز بی کرنٹ"
             },
             "grid_c_current": {
-                "name": "فیز سی کرنٹ"
-            },
-            "active_grid_a_current": {
-                "name": "فیز اے کرنٹ"
-            },
-            "active_grid_b_current": {
-                "name": "فیز بی کرنٹ"
-            },
-            "active_grid_c_current": {
                 "name": "فیز سی کرنٹ"
             },
             "active_grid_a_b_voltage": {
