@@ -130,13 +130,13 @@
                 "name": "Corrente fase C"
             },
             "active_grid_a_current": {
-                "name": "Phase A current"
+                "name": "Corrente fase A"
             },
             "active_grid_b_current": {
-                "name": "Phase B current"
+                "name": "Corrente fase B"
             },
             "active_grid_c_current": {
-                "name": "Phase C current"
+                "name": "Corrente fase C"
             },
             "day_active_power_peak": {
                 "name": "Picco di potenza giornaliero"

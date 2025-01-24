@@ -276,6 +276,15 @@
             "grid_c_current": {
                 "name": "Fase C stroom"
             },
+            "active_grid_a_current": {
+                "name": "Fase A stroom"
+            },
+            "active_grid_b_current": {
+                "name": "Fase B stroom"
+            },
+            "active_grid_c_current": {
+                "name": "Fase C stroom"
+            },
             "active_grid_a_b_voltage": {
                 "name": "A-B lijnspanning"
             },
