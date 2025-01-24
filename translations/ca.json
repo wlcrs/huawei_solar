@@ -90,12 +90,6 @@
             },
             "emma_maximum_feed_grid_power_watt": {
                 "name": "Maximum feed grid power"
-<<<<<<< HEAD
-=======
-            },
-            "mppt_scanning_interval": {
-                "name": "MPPT scan interval"
->>>>>>> 18f7306 (Fix missing translations for power meter current sensors)
             }
         },
         "sensor": {
@@ -134,6 +128,15 @@
             },
             "phase_c_current": {
                 "name": "Corrent de fase C"
+            },
+            "active_grid_a_current": {
+                "name": "Phase A current"
+            },
+            "active_grid_b_current": {
+                "name": "Phase B current"
+            },
+            "active_grid_c_current": {
+                "name": "Phase C current"
             },
             "day_active_power_peak": {
                 "name": "Pic de potència diürna"
@@ -495,11 +498,35 @@
             "soh_calibration_status": {
                 "name": "SOH calibration status"
             },
+            "pack_1_max_temperature": {
+                "name": "Pack 1 max temperature"
+            },
+            "pack_1_min_temperature": {
+                "name": "Pack 1 min temperature"
+            },
+            "pack_2_max_temperature": {
+                "name": "Pack 2 max temperature"
+            },
+            "pack_2_min_temperature": {
+                "name": "Pack 2 min temperature"
+            },
+            "pack_3_max_temperature": {
+                "name": "Pack 3 max temperature"
+            },
+            "pack_3_min_temperature": {
+                "name": "Pack 3 min temperature"
+            },
+            "pack_1_working_status": {
+                "name": "Pack 1 working status"
+            },
             "pack_2_working_status": {
                 "name": "Pack 2 working status"
             },
             "pack_3_working_status": {
                 "name": "Pack 3 working status"
+            },
+            "pack_1_firmware_version": {
+                "name": "Pack 1 firmware version"
             },
             "pack_1_serial_number": {
                 "name": "Pack 1 serial number"
@@ -677,39 +704,6 @@
             },
             "backup_power_state_of_charge": {
                 "name": "Backup power state of charge"
-            },
-            "pack_1_max_temperature": {
-                "name": "Pack 1 max temperature"
-            },
-            "pack_1_min_temperature": {
-                "name": "Pack 1 min temperature"
-            },
-            "pack_2_max_temperature": {
-                "name": "Pack 2 max temperature"
-            },
-            "pack_2_min_temperature": {
-                "name": "Pack 2 min temperature"
-            },
-            "pack_3_max_temperature": {
-                "name": "Pack 3 max temperature"
-            },
-            "pack_3_min_temperature": {
-                "name": "Pack 3 min temperature"
-            },
-            "pack_1_working_status": {
-                "name": "Pack 1 working status"
-            },
-            "pack_1_firmware_version": {
-                "name": "Pack 1 firmware version"
-            },
-            "active_grid_a_current": {
-                "name": "Corrent de fase A"
-            },
-            "active_grid_b_current": {
-                "name": "Corrent de fase B"
-            },
-            "active_grid_c_current": {
-                "name": "Corrent de fase C"
             }
         },
         "select": {
