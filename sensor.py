@@ -419,12 +419,14 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_EXPORTED_ENERGY,
+        icon="mdi:transmission-tower-import",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_ACCUMULATED_ENERGY,
+        icon="mdi:transmission-tower-export",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
@@ -520,12 +522,14 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_EXPORTED_ENERGY,
+        icon="mdi:transmission-tower-import",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_ACCUMULATED_ENERGY,
+        icon="mdi:transmission-tower-export",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
@@ -1252,30 +1256,35 @@ EMMA_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ENERGY_CHARGED_TODAY,
+        icon="mdi:battery-plus-variant",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.TOTAL_CHARGED_ENERGY,
+        icon="mdi:battery-plus-variant",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ENERGY_DISCHARGED_TODAY,
+        icon="mdi:battery-minus-variant",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.TOTAL_DISCHARGED_ENERGY,
+        icon="mdi:battery-minus-variant",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ESS_CHARGEABLE_ENERGY,
+        icon="mdi:battery-plus-variant",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY_STORAGE,
         state_class=SensorStateClass.MEASUREMENT,
@@ -1283,6 +1292,7 @@ EMMA_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ESS_DISCHARGEABLE_ENERGY,
+        icon="mdi:battery-minus-variant",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY_STORAGE,
         state_class=SensorStateClass.MEASUREMENT,
@@ -1290,6 +1300,7 @@ EMMA_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.RATED_ESS_CAPACITY,
+        icon="mdi:home-battery-outline",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY_STORAGE,
         state_class=SensorStateClass.TOTAL_INCREASING,
@@ -1310,24 +1321,28 @@ EMMA_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.FEED_IN_TO_GRID_TODAY,
+        icon="mdi:transmission-tower-import",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.TOTAL_FEED_IN_TO_GRID,
+        icon="mdi:transmission-tower-import",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.SUPPLY_FROM_GRID_TODAY,
+        icon="mdi:transmission-tower-export",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.TOTAL_SUPPLY_FROM_GRID,
+        icon="mdi:transmission-tower-export",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL,
@@ -1346,12 +1361,14 @@ EMMA_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.PV_YIELD_TODAY,
+        icon="mdi:solar-power",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.TOTAL_PV_ENERGY_YIELD,
+        icon="mdi:solar-power",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL,
@@ -1395,6 +1412,7 @@ EMMA_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STATE_OF_CAPACITY,
+        icon="mdi:home-battery",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
     ),
