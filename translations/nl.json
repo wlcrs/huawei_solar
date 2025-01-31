@@ -2,7 +2,7 @@
     "config": {
         "abort": {
             "already_configured": "Apparaat is reeds geconfigureerd",
-            "reauth_successful": "[%key:common::config_flow::abort::reauth_successful%]",
+            "reauth_successful": "",
             "reconfigure_successful": "[%key:common::config_flow::abort::reconfigure_successful%]"
         },
         "error": {
@@ -688,7 +688,7 @@
                 "name": "Battery charge/discharge power"
             },
             "inverter_rated_power": {
-                "name": "Inverter rated power"
+                "name": ""
             },
             "inverter_active_power": {
                 "name": "Inverter active power"
