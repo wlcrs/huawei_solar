@@ -550,7 +550,7 @@
                 "name": "Pack 1 total charge"
             },
             "pack_1_total_discharge": {
-                "name": "Pack 1 total discharge"
+                "name": "Décharge cumulée du pack 1"
             },
             "pack_2_firmware_version": {
                 "name": "Pack 2 firmware version"
