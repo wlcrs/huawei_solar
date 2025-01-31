@@ -496,7 +496,7 @@
                 "name": "Controllo potenza attiva"
             },
             "soh_calibration_status": {
-                "name": "SOH calibration status"
+                "name": "Stato calibrazione SOH"
             },
             "pack_1_max_temperature": {
                 "name": "Pacco 1 temperatura massima"
@@ -520,19 +520,19 @@
                 "name": "Pacco 1 stato di funzionamento"
             },
             "pack_2_working_status": {
-                "name": "Pack 2 working status"
+                "name": "Pacco 2 stato di funzionamento"
             },
             "pack_3_working_status": {
-                "name": "Pack 3 working status"
+                "name": "Pacco 3 stato di funzionamento"
             },
             "pack_1_firmware_version": {
                 "name": "Pacco 1 versione firmware"
             },
             "pack_1_serial_number": {
-                "name": "Pack 1 serial number"
+                "name": "Pacco 1 numero di serie"
             },
             "pack_1_state_of_capacity": {
-                "name": "Pack 1 state of capacity"
+                "name": "Pacco 1 stato capacità"
             },
             "pack_1_charge_discharge_power": {
                 "name": "Pack 1 charge discharge power"
@@ -544,7 +544,7 @@
                 "name": "Pack 1 current"
             },
             "pack_1_soh_calibration_status": {
-                "name": "Pack 1 SOH calibration status"
+                "name": "Pacco 1 stato calibrazione SOH"
             },
             "pack_1_total_charge": {
                 "name": "Pack 1 total charge"
