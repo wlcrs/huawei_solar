@@ -2,7 +2,7 @@
     "config": {
         "abort": {
             "already_configured": "Das Gerät ist bereits konfiguriert",
-            "reauth_successful": "",
+            "reauth_successful": "Re-Authentifikation erfolgreich",
             "reconfigure_successful": "[%key:common::config_flow::abort::reconfigure_successful%]"
         },
         "error": {
@@ -10,7 +10,7 @@
             "invalid_auth": "Ungültige Authentifikation",
             "invalid_slave_ids": "Slave IDs muss aus einer kommagetrennten Liste von Integern bestehen",
             "read_error": "Auslesen des Inverters fehlgeschlagen.",
-            "slave_cannot_connect": "Verbindungsversuch mit Zusatz-Slave fehlgeschlagen",
+            "slave_cannot_connect": "Verbindungsversuch mit weiterem Slave fehlgeschlagen",
             "unknown": "Unerwarteter Fehler"
         },
         "step": {
@@ -274,15 +274,6 @@
                 "name": "Phase B Strom"
             },
             "grid_c_current": {
-                "name": "Phase C Strom"
-            },
-            "active_grid_a_current": {
-                "name": "Phase A Strom"
-            },
-            "active_grid_b_current": {
-                "name": "Phase B Strom"
-            },
-            "active_grid_c_current": {
                 "name": "Phase C Strom"
             },
             "active_grid_a_b_voltage": {
@@ -920,7 +911,7 @@
             "fields": {
                 "device_id": {
                     "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
-                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
+                    "description": ""
                 },
                 "periods": {
                     "name": "Perioden",
