@@ -586,7 +586,7 @@
                 "name": "Pack 3 serial number"
             },
             "pack_3_state_of_capacity": {
-                "name": "Pack 3 state of capacity"
+                "name": "Pacco 3 SOC"
             },
             "pack_3_charge_discharge_power": {
                 "name": "Pack 3 charge discharge power"
@@ -604,7 +604,7 @@
                 "name": "Pack 3 total charge"
             },
             "pack_3_total_discharge": {
-                "name": "Pack 3 total discharge"
+                "name": "Pacco 3 scarica totale"
             },
             "bms_temperature": {
                 "name": "Temperatura BMS"
