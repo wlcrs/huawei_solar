@@ -53,7 +53,7 @@
     "entity": {
         "number": {
             "mppt_scanning_interval": {
-                "name": "MPPT Scan Intervall"
+                "name": "MPPT-Scan Intervall"
             },
             "active_power_percentage_derating": {
                 "name": "Eingangsleistung Wechselrichter in %"
