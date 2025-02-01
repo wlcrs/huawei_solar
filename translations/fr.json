@@ -710,7 +710,7 @@
             "storage_excess_pv_energy_use_in_tou": {
                 "name": "Utilisation de l'énergie PV excédentaire en TOU",
                 "state": {
-                    "fed_to_grid": "Alimenté au réseau",
+                    "fed_to_grid": "Alimenté par le réseau",
                     "charge": "Charge"
                 }
             },
@@ -745,7 +745,7 @@
                 }
             },
             "emma_tou_preferred_use_of_surplus_pv_power": {
-                "name": "Utilisation de l'énergie PV excédentaire en heure creuse",
+                "name": "Utilisation de l'énergie PV excédentaire en TOU",
                 "state": {
                     "fed_to_grid": "Alimenté par le réseau",
                     "charge": "Charge"
@@ -915,7 +915,7 @@
                 },
                 "periods": {
                     "name": "Périodes",
-                    "description": "Une période par ligne. Pour les batteries Huawei LUNA2000 : '[heure de début]-[heure de fin]/[jours d'efficacité]/[charge]', avec 1=lundi, 7=dimanche (exemple : '12:00-14:00/1234567/-'). Pour les batteries LG RESU : '[heure de début]-[heure de fin]/[prix de l'électricité]' (exemple : 13:00-14:00/0.50)."
+                    "description": "Une période par ligne. Pour les batteries Huawei LUNA2000 : '[heure de début]-[heure de fin]/[jours effectifs]/[charge]', avec 1=lundi, 7=dimanche (exemple : '12:00-14:00/1234567/-'). Pour les batteries LG RESU : '[heure de début]-[heure de fin]/[prix de l'électricité]' (exemple : 13:00-14:00/0.50)."
                 }
             }
         },
@@ -929,7 +929,7 @@
                 },
                 "periods": {
                     "name": "Périodes",
-                    "description": "Une période par ligne. Format : '[heure de début]-[heure de fin]/[jours d'efficacité]/[puissance]W', avec 1=lundi, 7=dimanche. Exemple : '00:00-23:59/1234567/2500W'."
+                    "description": "Une période par ligne. Format : '[heure de début]-[heure de fin]/[jours effectifs]/[puissance]W', avec 1=lundi, 7=dimanche. Exemple : '00:00-23:59/1234567/2500W'."
                 }
             }
         },
