@@ -174,6 +174,12 @@
             "daily_yield_energy": {
                 "name": "Dzienna produkcja"
             },
+            "monthly_yield_energy": {
+                "name": "Monthly yield"
+            },
+            "yearly_yield_energy": {
+                "name": "Yearly yield"
+            },
             "hourly_yield_energy": {
                 "name": "Hourly yield"
             },
@@ -274,15 +280,6 @@
                 "name": "Prąd fazowy B"
             },
             "grid_c_current": {
-                "name": "Prąd fazowy C"
-            },
-            "active_grid_a_current": {
-                "name": "Prąd fazowy A"
-            },
-            "active_grid_b_current": {
-                "name": "Prąd fazowy B"
-            },
-            "active_grid_c_current": {
                 "name": "Prąd fazowy C"
             },
             "active_grid_a_b_voltage": {
