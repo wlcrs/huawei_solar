@@ -157,7 +157,7 @@
                 "name": "Temperatura wewnętrzna"
             },
             "insulation_resistance": {
-                "name": ""
+                "name": "Insulation resistance"
             },
             "device_status": {
                 "name": "Status urządzenia"
@@ -173,6 +173,12 @@
             },
             "daily_yield_energy": {
                 "name": "Dzienna produkcja"
+            },
+            "monthly_yield_energy": {
+                "name": "Monthly yield"
+            },
+            "yearly_yield_energy": {
+                "name": "Yearly yield"
             },
             "hourly_yield_energy": {
                 "name": "Hourly yield"
@@ -274,15 +280,6 @@
                 "name": "Prąd fazowy B"
             },
             "grid_c_current": {
-                "name": "Prąd fazowy C"
-            },
-            "active_grid_a_current": {
-                "name": "Prąd fazowy A"
-            },
-            "active_grid_b_current": {
-                "name": "Prąd fazowy B"
-            },
-            "active_grid_c_current": {
                 "name": "Prąd fazowy C"
             },
             "active_grid_a_b_voltage": {
@@ -679,7 +676,7 @@
                 "name": "Inverter total energy yield"
             },
             "pv_yield_today": {
-                "name": ""
+                "name": "PV yield today"
             },
             "total_pv_energy_yield": {
                 "name": "Total PV energy yield"

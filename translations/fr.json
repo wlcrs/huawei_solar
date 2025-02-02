@@ -9,7 +9,7 @@
             "cannot_connect": "Échec de la connexion",
             "invalid_auth": "Authentification invalide",
             "invalid_slave_ids": "Les ID d'esclaves doivent être une liste de nombres entiers séparés par des virgules",
-            "read_error": "Échec de la lecture de l'onduleur.",
+            "read_error": "Échec de la lecture depuis l'onduleur.",
             "slave_cannot_connect": "Échec de la connexion à un esclave supplémentaire",
             "unknown": "Erreur inattendue"
         },
@@ -26,7 +26,7 @@
                     "enable_parameter_configuration": "Avancé : élever les permissions",
                     "host": "Hôte",
                     "port": "Port",
-                    "slave_ids": "Slave IDs: AUTO for auto-discovery, otherwise a comma separated list"
+                    "slave_ids": "ID d'esclaves : AUTO pour la découverte automatique, sinon une liste séparée par des virgules"
                 }
             },
             "setup_serial": {
@@ -53,13 +53,13 @@
     "entity": {
         "number": {
             "mppt_scanning_interval": {
-                "name": "MPPT scan interval"
+                "name": "Intervalle d'analyse MPPT"
             },
             "active_power_percentage_derating": {
-                "name": "Power derating (by percentage)"
+                "name": "Réduction de puissance (en pourcentage)"
             },
             "active_power_fixed_value_derating": {
-                "name": "Power derating"
+                "name": "Réduction de puissance"
             },
             "storage_maximum_charging_power": {
                 "name": "Puissance de charge maximale"
@@ -86,10 +86,10 @@
                 "name": "SOC de l'écrêtage de puissance de la batterie"
             },
             "emma_maximum_feed_grid_power_percent": {
-                "name": "Maximum feed grid power (%)"
+                "name": "Puissance maximale fournie au réseau (%)"
             },
             "emma_maximum_feed_grid_power_watt": {
-                "name": "Maximum feed grid power"
+                "name": "Puissance maximale fournie au réseau"
             }
         },
         "sensor": {
@@ -151,13 +151,13 @@
                 "name": "Facteur de puissance"
             },
             "efficiency": {
-                "name": "Efficacité"
+                "name": "Rendement"
             },
             "internal_temperature": {
                 "name": "Température interne"
             },
             "insulation_resistance": {
-                "name": "Insulation resistance"
+                "name": "Résistance à l'isolement"
             },
             "device_status": {
                 "name": "État du périphérique"
@@ -169,13 +169,19 @@
                 "name": "Heure d'arrêt"
             },
             "accumulated_yield_energy": {
-                "name": "Production totale"
+                "name": "Production cumulée"
             },
             "daily_yield_energy": {
                 "name": "Production quotidienne"
             },
+            "monthly_yield_energy": {
+                "name": "Monthly yield"
+            },
+            "yearly_yield_energy": {
+                "name": "Yearly yield"
+            },
             "hourly_yield_energy": {
-                "name": "Hourly yield"
+                "name": "Production horaire"
             },
             "state_1": {
                 "name": "État de l'onduleur"
@@ -193,7 +199,7 @@
                 "name": "Statut hors réseau"
             },
             "state_3_1": {
-                "name": "Interrupteur hors réseau"
+                "name": "Bascule hors réseau"
             },
             "nb_online_optimizers": {
                 "name": "Optimiseurs en ligne"
@@ -220,7 +226,7 @@
                 "name": "Température"
             },
             "total_dc_input_power": {
-                "name": "Total DC input energy"
+                "name": "Cumul de l'énergie entrante continue"
             },
             "running_status": {
                 "name": "État de fonctionnement"
@@ -319,10 +325,10 @@
                 "name": "Puissance de charge/décharge"
             },
             "storage_total_charge": {
-                "name": "Charge totale"
+                "name": "Charge cumulée"
             },
             "storage_total_discharge": {
-                "name": "Décharge totale"
+                "name": "Décharge cumulée"
             },
             "storage_current_day_charge_capacity": {
                 "name": "Charge journalière"
@@ -334,7 +340,7 @@
                 "name": "Alarmes"
             },
             "current_electricity_generation_statistics_time": {
-                "name": "Current electricity generation statistics time"
+                "name": "Heure de génération des statistiques actuelles"
             },
             "storage_capacity_control_periods": {
                 "name": "Périodes de contrôle de la capacité"
@@ -484,223 +490,223 @@
                 "name": "Courant PV 24"
             },
             "battery_working_mode": {
-                "name": "Working mode"
+                "name": "Mode de fonctionnement"
             },
             "battery_remaining_charge_discharge_time": {
-                "name": "Remaining charge/discharge time"
+                "name": "Temps restant de charge/décharge"
             },
             "forcible_charge_summary": {
-                "name": "Forcible charge"
+                "name": "Charge forcée"
             },
             "active_power_control": {
-                "name": "Active power control"
+                "name": "Contrôle de la puissance active"
             },
             "soh_calibration_status": {
-                "name": "SOH calibration status"
+                "name": "État de l'étalonnage du SOH"
             },
             "pack_1_max_temperature": {
-                "name": "Pack 1 max temperature"
+                "name": "Température maximale du pack 1"
             },
             "pack_1_min_temperature": {
-                "name": "Pack 1 min temperature"
+                "name": "Température minimale du pack 1"
             },
             "pack_2_max_temperature": {
-                "name": "Pack 2 max temperature"
+                "name": "Température maximale du pack 2"
             },
             "pack_2_min_temperature": {
-                "name": "Pack 2 min temperature"
+                "name": "Température minimale du pack 2"
             },
             "pack_3_max_temperature": {
-                "name": "Pack 3 max temperature"
+                "name": "Température maximale du pack 3"
             },
             "pack_3_min_temperature": {
-                "name": "Pack 3 min temperature"
+                "name": "Température minimale du pack 3"
             },
             "pack_1_working_status": {
-                "name": "Pack 1 working status"
+                "name": "État de fonctionnement du pack 1"
             },
             "pack_2_working_status": {
-                "name": "Pack 2 working status"
+                "name": "État de fonctionnement du pack 2"
             },
             "pack_3_working_status": {
-                "name": "Pack 3 working status"
+                "name": "État de fonctionnement du pack 3"
             },
             "pack_1_firmware_version": {
-                "name": "Pack 1 firmware version"
+                "name": "Version du firmware du pack 1"
             },
             "pack_1_serial_number": {
-                "name": "Pack 1 serial number"
+                "name": "Numéro de série du pack 1"
             },
             "pack_1_state_of_capacity": {
-                "name": "Pack 1 state of capacity"
+                "name": "État de charge du pack 1"
             },
             "pack_1_charge_discharge_power": {
-                "name": "Pack 1 charge discharge power"
+                "name": "Puissance de décharge du pack 1"
             },
             "pack_1_voltage": {
-                "name": "Pack 1 voltage"
+                "name": "Tension du pack 1"
             },
             "pack_1_current": {
-                "name": "Pack 1 current"
+                "name": "Courant du pack 1"
             },
             "pack_1_soh_calibration_status": {
-                "name": "Pack 1 SOH calibration status"
+                "name": "État de l'étalonnage du SOH du Pack 1"
             },
             "pack_1_total_charge": {
-                "name": "Pack 1 total charge"
+                "name": "Charge cumulée du pack 1"
             },
             "pack_1_total_discharge": {
-                "name": "Pack 1 total discharge"
+                "name": "Décharge cumulée du pack 1"
             },
             "pack_2_firmware_version": {
-                "name": "Pack 2 firmware version"
+                "name": "Version du firmware du pack 2"
             },
             "pack_2_serial_number": {
-                "name": "Pack 2 serial number"
+                "name": "Numéro de série du pack 2"
             },
             "pack_2_state_of_capacity": {
-                "name": "Pack 2 state of capacity"
+                "name": "État de charge du pack 2"
             },
             "pack_2_charge_discharge_power": {
-                "name": "Pack 2 charge discharge power"
+                "name": "Puissance de décharge du pack 2"
             },
             "pack_2_voltage": {
-                "name": "Pack 2 voltage"
+                "name": "Tension du pack 2"
             },
             "pack_2_current": {
-                "name": "Pack 2 current"
+                "name": "Courant du pack 2"
             },
             "pack_2_soh_calibration_status": {
-                "name": "Pack 2 SOH calibration status"
+                "name": "État de l'étalonnage du SOH du pack 2"
             },
             "pack_2_total_charge": {
-                "name": "Pack 2 total charge"
+                "name": "Charge cumulée du pack 2"
             },
             "pack_2_total_discharge": {
-                "name": "Pack 2 total discharge"
+                "name": "Décharge cumulée du pack 2"
             },
             "pack_3_firmware_version": {
-                "name": "Pack 3 firmware version"
+                "name": "Version du firmware du pack 3"
             },
             "pack_3_serial_number": {
-                "name": "Pack 3 serial number"
+                "name": "Numéro de série du pack 3"
             },
             "pack_3_state_of_capacity": {
-                "name": "Pack 3 state of capacity"
+                "name": "État de charge du pack 3"
             },
             "pack_3_charge_discharge_power": {
-                "name": "Pack 3 charge discharge power"
+                "name": "Puissance de décharge du pack 3"
             },
             "pack_3_voltage": {
-                "name": "Pack 3 voltage"
+                "name": "Tension du pack 3"
             },
             "pack_3_current": {
-                "name": "Pack 3 current"
+                "name": "Courant du pack 3"
             },
             "pack_3_soh_calibration_status": {
-                "name": "Pack 3 SOH calibration status"
+                "name": "État de l'étalonnage du SOH du pack 3"
             },
             "pack_3_total_charge": {
-                "name": "Pack 3 total charge"
+                "name": "Charge cumulée du pack 3"
             },
             "pack_3_total_discharge": {
-                "name": "Pack 3 total discharge"
+                "name": "Décharge cumulée du pack 3"
             },
             "bms_temperature": {
-                "name": "BMS temperature"
+                "name": "Température du BMS"
             },
             "storage_lg_resu_time_of_use_price_periods": {
-                "name": "TOU price periods"
+                "name": "Périodes de tarif réduit"
             },
             "storage_huawei_luna2000_time_of_use_price_periods": {
-                "name": "TOU price periods"
+                "name": "Périodes de tarif réduit"
             },
             "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
-                "name": "TOU charging and discharging periods"
+                "name": "Périodes de charge et de décharge à tarif réduit"
             },
             "storage_lg_resu_time_of_use_charging_and_discharging_periods": {
-                "name": "TOU charging and discharging periods"
+                "name": "Périodes de charge et de décharge à tarif réduit"
             },
             "storage_fixed_charging_and_discharging_periods": {
                 "name": "Périodes de charge et de décharge fixes"
             },
             "inverter_total_absorbed_energy": {
-                "name": "Total absorbed energy"
+                "name": "Cumul de l'énergie absorbée"
             },
             "energy_charged_today": {
-                "name": "Energy charged today"
+                "name": "Énergie chargée aujourd'hui"
             },
             "total_charged_energy": {
-                "name": "Total charged energy"
+                "name": "Cumul de l'énergie chargée"
             },
             "energy_discharged_today": {
-                "name": "Energy discharged today"
+                "name": "Énergie déchargée aujourd'hui"
             },
             "total_discharged_energy": {
-                "name": "Total discharged energy"
+                "name": "Cumul de l'énergie déchargée"
             },
             "ess_chargeable_energy": {
-                "name": "ESS Chargeable energy"
+                "name": "Énergie chargée par l'ESS"
             },
             "ess_dischargeable_energy": {
-                "name": "ESS Dischargeable energy"
+                "name": "Énergie déchargée par l'ESS"
             },
             "rated_ess_capacity": {
-                "name": "Rated ESS capacity"
+                "name": "Capacité nominale de l'ESS"
             },
             "consumption_today": {
-                "name": "Consumption today"
+                "name": "Consommation d'aujourd'hui"
             },
             "total_energy_consumption": {
-                "name": "Total energy consumption"
+                "name": "Cumul de la consommation d'énergie"
             },
             "feed_in_to_grid_today": {
-                "name": "Feed in to grid today"
+                "name": "Énergie fournie au réseau aujourd'hui"
             },
             "supply_from_grid_today": {
-                "name": "Supply from grid today"
+                "name": "Approvisionnement depuis le réseau aujourd'hui"
             },
             "total_supply_from_grid": {
-                "name": "Total supply from grid"
+                "name": "Cumul de l'énergie approvisionnée par le réseau"
             },
             "inverter_energy_yield_today": {
-                "name": "Inverter energy yield today"
+                "name": "Production d'énergie par l'onduleur aujourd'hui"
             },
             "inverter_total_energy_yield": {
-                "name": "Inverter total energy yield"
+                "name": "Cumul de la production d'énergie de l'onduleur"
             },
             "pv_yield_today": {
-                "name": "PV yield today"
+                "name": "Production par les Panneaux aujourd'hui"
             },
             "total_pv_energy_yield": {
-                "name": "Total PV energy yield"
+                "name": "Cumul de la production d'énergie des panneaux"
             },
             "pv_output_power": {
-                "name": "PV output power"
+                "name": "Puissance de sortie des panneaux"
             },
             "load_power": {
-                "name": "Load power"
+                "name": "Puissance de soutirée"
             },
             "feed_in_power": {
-                "name": "Feed in power"
+                "name": "Puissance fournie"
             },
             "battery_charge_discharge_power": {
-                "name": "Battery charge/discharge power"
+                "name": "Puissance de charge/décharge de la batterie"
             },
             "inverter_rated_power": {
-                "name": "Inverter rated power"
+                "name": "Puissance nominale de l'onduleur"
             },
             "inverter_active_power": {
-                "name": "Inverter active power"
+                "name": "Puissance active de l'onduleur"
             },
             "state_of_capacity": {
-                "name": "State of capacity"
+                "name": "Pourcentage de la capacité de la batterie"
             },
             "ess_chargeable_capacity": {
-                "name": "ESS chargeable capacity"
+                "name": "Capacité de charge de l'ESS"
             },
             "ess_dischargeable_capacity": {
-                "name": "ESS dischargeable capacity"
+                "name": "Capacité de décharge de la batterie"
             },
             "backup_power_state_of_charge": {
                 "name": "Backup power state of charge"
@@ -710,7 +716,7 @@
             "storage_excess_pv_energy_use_in_tou": {
                 "name": "Utilisation de l'énergie PV excédentaire en TOU",
                 "state": {
-                    "fed_to_grid": "Alimenté au réseau",
+                    "fed_to_grid": "Alimenté par le réseau",
                     "charge": "Charge"
                 }
             },
@@ -734,20 +740,20 @@
                 }
             },
             "emma_ess_control_mode": {
-                "name": "ESS Control Mode",
+                "name": "Mode de contrôle de l'ESS",
                 "state": {
-                    "reserved_1": "Reserved 1",
-                    "maximum_self_consumption": "Maximum self consumption",
-                    "reserved_3": "Reserved 3",
-                    "fully_fed_to_grid": "Fully fed to grid",
-                    "time_of_use": "Time of use",
+                    "reserved_1": "Réservé 1",
+                    "maximum_self_consumption": "Maximiser l'autoconsommation",
+                    "reserved_3": "Réservé 3",
+                    "fully_fed_to_grid": "Entièrement alimenté par le réseau",
+                    "time_of_use": "Heure creuse",
                     "third_party_dispatch": "Third party dispatch"
                 }
             },
             "emma_tou_preferred_use_of_surplus_pv_power": {
-                "name": "Excess PV energy use in TOU",
+                "name": "Utilisation de l'énergie PV excédentaire en TOU",
                 "state": {
-                    "fed_to_grid": "Fed to grid",
+                    "fed_to_grid": "Alimenté par le réseau",
                     "charge": "Charge"
                 }
             }
@@ -906,8 +912,8 @@
             }
         },
         "set_tou_periods": {
-            "name": "Définir les périodes de tarification en fonction de l'utilisation",
-            "description": "Définir les périodes de tarification en fonction de l'utilisation",
+            "name": "Définir les périodes TOU",
+            "description": "Définir les périodes d'heures creuses",
             "fields": {
                 "device_id": {
                     "name": "Batterie",
@@ -915,7 +921,7 @@
                 },
                 "periods": {
                     "name": "Périodes",
-                    "description": "Une période par ligne. Pour les batteries Huawei LUNA2000 : '[heure de début]-[heure de fin]/[jours d'efficacité]/[charge]', avec 1=lundi, 7=dimanche (exemple : '12:00-14:00/1234567/-'). Pour les batteries LG RESU : '[heure de début]-[heure de fin]/[prix de l'électricité]' (exemple : 13:00-14:00/0.50)."
+                    "description": "Une période par ligne. Pour les batteries Huawei LUNA2000 : '[heure de début]-[heure de fin]/[jours effectifs]/[charge]', avec 1=lundi, 7=dimanche (exemple : '12:00-14:00/1234567/-'). Pour les batteries LG RESU : '[heure de début]-[heure de fin]/[prix de l'électricité]' (exemple : 13:00-14:00/0.50)."
                 }
             }
         },
@@ -929,7 +935,7 @@
                 },
                 "periods": {
                     "name": "Périodes",
-                    "description": "Une période par ligne. Format : '[heure de début]-[heure de fin]/[jours d'efficacité]/[puissance]W', avec 1=lundi, 7=dimanche. Exemple : '00:00-23:59/1234567/2500W'."
+                    "description": "Une période par ligne. Format : '[heure de début]-[heure de fin]/[jours effectifs]/[puissance]W', avec 1=lundi, 7=dimanche. Exemple : '00:00-23:59/1234567/2500W'."
                 }
             }
         },
@@ -953,19 +959,19 @@
             "name": "EMMA"
         },
         "inverter": {
-            "name": "Inverter"
+            "name": "Onduleur"
         },
         "connected_energy_storage": {
             "name": "Batteries"
         },
         "power_meter": {
-            "name": "Power meter"
+            "name": "Mesure du courant"
         },
         "battery_1": {
-            "name": "Battery 1"
+            "name": "Batterie 1"
         },
         "battery_2": {
-            "name": "Battery 2"
+            "name": "Batterie 2"
         }
     }
 }

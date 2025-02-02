@@ -9,7 +9,7 @@
             "cannot_connect": "Verbindungsversuch fehlgeschlagen",
             "invalid_auth": "Ungültige Authentifikation",
             "invalid_slave_ids": "Slave IDs muss aus einer kommagetrennten Liste von Integern bestehen",
-            "read_error": "Auslesen des Inverters fehlgeschlagen.",
+            "read_error": "Auslesen des Wechselrichters fehlgeschlagen.",
             "slave_cannot_connect": "Verbindungsversuch mit weiterem Slave fehlgeschlagen",
             "unknown": "Unerwarteter Fehler"
         },
@@ -19,7 +19,7 @@
                     "password": "Passwort",
                     "username": "Benutzername"
                 },
-                "description": "Anmeldedaten eingeben"
+                "description": "Bitte geben Sie die Installateur-Zugangsdaten ein"
             },
             "setup_network": {
                 "data": {
@@ -32,7 +32,7 @@
             "setup_serial": {
                 "data": {
                     "port": "Gerät auswählen",
-                    "slave_ids": "Slave IDs (kommagetrennt)"
+                    "slave_ids": "Slave IDs (kommasepariert)"
                 },
                 "title": "Gerät"
             },
@@ -56,10 +56,10 @@
                 "name": "MPPT-Scan Intervall"
             },
             "active_power_percentage_derating": {
-                "name": "Eingangsleistung Wechselrichter in %"
+                "name": "Wirkleistung beschränken (in %)"
             },
             "active_power_fixed_value_derating": {
-                "name": "Maximale Wechselrichterleistung"
+                "name": "Wechselrichter-Wirkleistung"
             },
             "storage_maximum_charging_power": {
                 "name": "Maximale Ladeleistung"
@@ -86,10 +86,10 @@
                 "name": "Peak-Shaving Ladestand"
             },
             "emma_maximum_feed_grid_power_percent": {
-                "name": "Maximale Netzleistung (%)"
+                "name": "Maximale Netzeinspeiseleistung (%)"
             },
             "emma_maximum_feed_grid_power_watt": {
-                "name": "Maximale Netzleistung"
+                "name": "Maximale Netzeinspeiseleistung"
             }
         },
         "sensor": {
@@ -173,6 +173,12 @@
             },
             "daily_yield_energy": {
                 "name": "Tagesertrag"
+            },
+            "monthly_yield_energy": {
+                "name": "Monthly yield"
+            },
+            "yearly_yield_energy": {
+                "name": "Yearly yield"
             },
             "hourly_yield_energy": {
                 "name": "Stündliche Erträge"
@@ -532,7 +538,7 @@
                 "name": "Pack 1 Serienummer"
             },
             "pack_1_state_of_capacity": {
-                "name": "Pack 1 state of capacity"
+                "name": "Batterie Pack 1 Ladestand"
             },
             "pack_1_charge_discharge_power": {
                 "name": "Pack 1 Lade- und Entladeleistung"
@@ -559,7 +565,7 @@
                 "name": "Pack 2 Serienummer"
             },
             "pack_2_state_of_capacity": {
-                "name": "Pack 2 state of capacity"
+                "name": "Batterie Pack 2 Ladestand"
             },
             "pack_2_charge_discharge_power": {
                 "name": "Pack 2 Lade- und Entladeleistung"
@@ -586,7 +592,7 @@
                 "name": "Pack 3 Serienummer"
             },
             "pack_3_state_of_capacity": {
-                "name": "Pack 3 state of capacity"
+                "name": "Batterie Pack 3 Ladestand"
             },
             "pack_3_charge_discharge_power": {
                 "name": "Pack 3 Lade- und Entladeleistung"
@@ -806,7 +812,7 @@
             "description": "Erzwungene Ladung der Batterie bis zu einem bestimmten Ladezustand",
             "fields": {
                 "device_id": {
-                    "name": "",
+                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
                     "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
                 },
                 "target_soc": {
@@ -872,14 +878,14 @@
             "description": "Wirkleistungssteuerung auf 'Zero power grid connection' setzen",
             "fields": {
                 "device_id": {
-                    "name": "",
+                    "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
                     "description": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::description%]"
                 }
             }
         },
         "set_maximum_feed_grid_power": {
             "name": "Netzeinspeisung beschränken",
-            "description": "",
+            "description": "Wirkleistungssteuerung auf 'Power-limited grid connection (%)' mit dem angegebenen Prozentsatz setzen",
             "fields": {
                 "device_id": {
                     "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
@@ -911,7 +917,7 @@
             "fields": {
                 "device_id": {
                     "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
-                    "description": ""
+                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
                 },
                 "periods": {
                     "name": "Perioden",
@@ -938,7 +944,7 @@
             "description": "Feste Ladungs- und Entladungszeiten festlegen",
             "fields": {
                 "device_id": {
-                    "name": "",
+                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
                     "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
                 },
                 "periods": {

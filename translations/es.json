@@ -174,6 +174,12 @@
             "daily_yield_energy": {
                 "name": "Rendimiento diario"
             },
+            "monthly_yield_energy": {
+                "name": "Monthly yield"
+            },
+            "yearly_yield_energy": {
+                "name": "Yearly yield"
+            },
             "hourly_yield_energy": {
                 "name": "Rendimiento por hora"
             },
@@ -670,13 +676,13 @@
                 "name": "Inversor de rendimiento energético total"
             },
             "pv_yield_today": {
-                "name": "PV yield today"
+                "name": "Producción FV hoy"
             },
             "total_pv_energy_yield": {
-                "name": "Total PV energy yield"
+                "name": "Producción total de energía FV"
             },
             "pv_output_power": {
-                "name": "PV output power"
+                "name": "Potencia de salida FV"
             },
             "load_power": {
                 "name": "Load power"
@@ -691,7 +697,7 @@
                 "name": "Inverter rated power"
             },
             "inverter_active_power": {
-                "name": "Inverter active power"
+                "name": "Potencia activa del inversor"
             },
             "state_of_capacity": {
                 "name": "State of capacity"
@@ -736,9 +742,9 @@
             "emma_ess_control_mode": {
                 "name": "ESS Control Mode",
                 "state": {
-                    "reserved_1": "Reserved 1",
-                    "maximum_self_consumption": "Maximum self consumption",
-                    "reserved_3": "Reserved 3",
+                    "reserved_1": "Reservado 1",
+                    "maximum_self_consumption": "Máximo autoconsumo",
+                    "reserved_3": "Reservado 3",
                     "fully_fed_to_grid": "Fully fed to grid",
                     "time_of_use": "Tiempo de uso",
                     "third_party_dispatch": "Third party dispatch"
