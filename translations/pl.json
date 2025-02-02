@@ -157,7 +157,7 @@
                 "name": "Temperatura wewnętrzna"
             },
             "insulation_resistance": {
-                "name": ""
+                "name": "Insulation resistance"
             },
             "device_status": {
                 "name": "Status urządzenia"
@@ -676,7 +676,7 @@
                 "name": "Inverter total energy yield"
             },
             "pv_yield_today": {
-                "name": ""
+                "name": "PV yield today"
             },
             "total_pv_energy_yield": {
                 "name": "Total PV energy yield"
