@@ -1,8 +1,8 @@
 {
     "config": {
         "abort": {
-            "already_configured": "Apparaat is reeds geconfigureerd",
-            "reauth_successful": "",
+            "already_configured": "[%key:common::config_flow::abort::already_configured_device%]",
+            "reauth_successful": "[%key:common::config_flow::abort::reauth_successful%]",
             "reconfigure_successful": "[%key:common::config_flow::abort::reconfigure_successful%]"
         },
         "error": {
@@ -173,6 +173,12 @@
             },
             "daily_yield_energy": {
                 "name": "Dagelijkse opbrengst"
+            },
+            "monthly_yield_energy": {
+                "name": "Monthly yield"
+            },
+            "yearly_yield_energy": {
+                "name": "Yearly yield"
             },
             "hourly_yield_energy": {
                 "name": "Uur opbrengst"
@@ -688,7 +694,7 @@
                 "name": "Battery charge/discharge power"
             },
             "inverter_rated_power": {
-                "name": ""
+                "name": "Nominaal vermogen"
             },
             "inverter_active_power": {
                 "name": "Inverter active power"
