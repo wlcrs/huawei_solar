@@ -1,11 +1,21 @@
 name: Feature request
 description: Suggest an idea for this project
 title: "[Feature Request]: "
-labels: ["feature", "triage"]
+labels: ["enhancement"]
 body:
 - type: markdown
   attributes:
     value: |
+      > [!CAUTION]
+      > Please do not abuse this form to submit a problem that you are experiencing with installing, 
+      > configuring or using this integration. 
+      > 
+      > * For connectivity problems: use the [Connecting to the inverter](https://github.com/wlcrs/huawei_solar/discussions/categories/connecting-to-the-inverter) discussion category
+      > * For configuration questions: use the [Setting up the integration](https://github.com/wlcrs/huawei_solar/discussions/categories/setting-up-the-integration) discussion category
+      > * For crashes: fill out the complete [Bug report](https://github.com/wlcrs/huawei_solar/issues/new?template=bug_report.yml) issue template
+      >
+      > Your issue will be closed immediately without any reaction if you abuse this form.
+      
       ### Scope of this integration
       
       This integration aims to expose the information and functions made available by Huawei Solar inverters directly **over Modbus** in Home Assistant.
@@ -23,17 +33,6 @@ body:
   id: no-bugreport
   attributes:
     label: "Proper usage"
-    description: |
-      > [!CAUTION]
-      > Please do not abuse this form to submit a problem that you are experiencing with installing, 
-      > configuring or using this integration. 
-      > 
-      > * For connectivity problems: use the [Connecting to the inverter](https://github.com/wlcrs/huawei_solar/discussions/categories/connecting-to-the-inverter) discussion category
-      > * For configuration questions: use the [Setting up the integration](https://github.com/wlcrs/huawei_solar/discussions/categories/setting-up-the-integration) discussion category
-      > * For crashes: fill out the complete [Bug report](https://github.com/wlcrs/huawei_solar/issues/new?template=bug_report.yml) issue template
-      >
-      > Your issue will be closed immediately without any reaction if you abuse this form.
-
     options:
       - label: I confirm that this is not a bug report or support request
         required: true
