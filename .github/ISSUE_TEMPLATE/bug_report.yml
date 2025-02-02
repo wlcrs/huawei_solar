@@ -1,7 +1,7 @@
 name: Bug report
 description: Is the integration crashing, or behaving incorrectly? Create a report to help us improve. Do not use for connectivity problems.
 title: "[Bug]: "
-labels: ["bug", "triage"]
+labels: ["bug"]
 body:
 
       
@@ -50,11 +50,10 @@ body:
     label: "Upload your Diagnostics File"
     description: |
       ![Download diagnostics menu entry](https://raw.githubusercontent.com/wlcrs/huawei_solar/main/.github/ISSUE_TEMPLATE/images/download-diagnostics.png)
-      1. In your Home Assistant, go to Settings > Devices & Services
-      2. Click on the 'Huawei Solar' tile 
-      3. Click on the three dots next to the integration entry
-      4. Select 'Download diagnostis'
-      5. Click on the textarea below, drag & drop the file into the textarea to upload it.
+      1. Go to the 'Huawei Solar' integration settings page [![Open your Home Assistant instance and show an integration.](https://my.home-assistant.io/badges/integration.svg)](https://my.home-assistant.io/redirect/integration/?domain=huawei-solar)
+      2. Click on the three dots next to the integration entry
+      3. Select 'Download diagnostis'
+      4. Click on the textarea below, drag & drop the file into the textarea to upload it.
     value: Drag & Drop your Diagnostics File here.
   validations:
     required: true
@@ -63,8 +62,9 @@ body:
   attributes:
     value: |
       ## Relevant debug logs
-      
-      **You MUST include relevant logfiles to debug your issue.**
+
+      > [!IMPORTANT]
+      > **You MUST include relevant logfiles to debug your issue.**
       
       The easiest way to provide debug logs is by using the `Enable/Disable debug logging` feature as described here: ['Debug Logs and Diagnostics' from the HA documentation](https://www.home-assistant.io/docs/configuration/troubleshooting/#debug-logs-and-diagnostics)
 
@@ -81,7 +81,11 @@ body:
           pymodbus: debug # only include this if you're having connectivity issues
       ```
       
-      Make sure to check for relevant log lines in the **Full logs**, which you can also find in `/config/home-assistant.log`. Do NOT copy&paste info from the summary that you see when going to `System → Logs`, always push the "Load Full Logs" button and look there.
+      Make sure to check for relevant log lines in the **Full logs** on the Logs settings page [![Open your Home Assistant instance and show your Home Assistant logs.](https://my.home-assistant.io/badges/logs.svg)](https://my.home-assistant.io/redirect/logs/?)
+      
+      > [!IMPORTANT]
+      > Do NOT copy&paste info from the summary that you see when going to `System → Logs`, always use "Show raw logs" and look there.
+      > ![Raw logs](https://raw.githubusercontent.com/wlcrs/huawei_solar/main/.github/ISSUE_TEMPLATE/images/raw-logs.png)
 
 - type: textarea
   attributes:
