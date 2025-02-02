@@ -7,8 +7,7 @@ body:
   attributes:
     value: |
       > [!CAUTION]
-      > Please do not abuse this form to submit a problem that you are experiencing with installing, 
-      > configuring or using this integration. 
+      > Please do not abuse this form to submit a problem that you are experiencing with installing, configuring or using this integration. 
       > 
       > * For connectivity problems: use the [Connecting to the inverter](https://github.com/wlcrs/huawei_solar/discussions/categories/connecting-to-the-inverter) discussion category
       > * For configuration questions: use the [Setting up the integration](https://github.com/wlcrs/huawei_solar/discussions/categories/setting-up-the-integration) discussion category
