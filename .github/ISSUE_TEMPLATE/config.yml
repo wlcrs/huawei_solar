@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Connectivity issues
+    url: https://github.com/wlcrs/huawei_solar/discussions/categories/connecting-to-the-inverter
+    about: Please do not use the issue tracker if you are experiencing connectivity issues. Use the 'Connecting to the inverter' Discussions category instead. 
+  - name: Configuration problems
     url: https://github.com/wlcrs/huawei_solar/discussions/categories/setting-up-the-integration
-    about: Please do not use the issue tracker if you are experiencing connectivity issues. Use the 'Setting up the integration' Discussions category instead. 
+    about: Please do not use the issue tracker if you have issues to correctly configure and use this integration. Use the 'Setting up the integration' Discussions category instead. 
