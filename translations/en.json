@@ -196,6 +196,12 @@
             "daily_yield_energy": {
                 "name": "Daily yield"
             },
+            "monthly_yield_energy": {
+                "name": "Monthly yield"
+            },
+            "yearly_yield_energy": {
+                "name": "Yearly yield"
+            },
             "day_active_power_peak": {
                 "name": "Day active power peak"
             },
