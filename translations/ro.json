@@ -142,7 +142,7 @@
                 "name": "Day active power peak"
             },
             "active_power": {
-                "name": "Active power"
+                "name": "Putere activă"
             },
             "reactive_power": {
                 "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
@@ -196,7 +196,7 @@
                 "name": "DSP data collection"
             },
             "state_3_0": {
-                "name": "Off-grid status"
+                "name": "Stare off-grid"
             },
             "state_3_1": {
                 "name": "Off-grid switch"
@@ -316,7 +316,7 @@
                 "name": "Status"
             },
             "storage_bus_voltage": {
-                "name": "Bus voltage"
+                "name": "Tensiune pe bus"
             },
             "storage_bus_current": {
                 "name": "Bus current"
