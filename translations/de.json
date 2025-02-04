@@ -175,10 +175,10 @@
                 "name": "Tagesertrag"
             },
             "monthly_yield_energy": {
-                "name": "Monthly yield"
+                "name": "Monatlicher Ertrag"
             },
             "yearly_yield_energy": {
-                "name": "Yearly yield"
+                "name": "Jährlicher Ertrag"
             },
             "hourly_yield_energy": {
                 "name": "Stündliche Erträge"
