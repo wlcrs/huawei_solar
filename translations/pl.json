@@ -89,7 +89,7 @@
                 "name": "Maximum feed grid power (%)"
             },
             "emma_maximum_feed_grid_power_watt": {
-                "name": "Maximum feed grid power"
+                "name": "Maksymalna moc sieci zasilającej"
             }
         },
         "sensor": {
@@ -157,7 +157,7 @@
                 "name": "Temperatura wewnętrzna"
             },
             "insulation_resistance": {
-                "name": "Insulation resistance"
+                "name": "Rezystancja izolacji"
             },
             "device_status": {
                 "name": "Status urządzenia"
@@ -178,10 +178,10 @@
                 "name": "Monthly yield"
             },
             "yearly_yield_energy": {
-                "name": "Yearly yield"
+                "name": "Roczny uzysk"
             },
             "hourly_yield_energy": {
-                "name": "Hourly yield"
+                "name": "Godzinowy uzysk"
             },
             "state_1": {
                 "name": "Stan inwertera"
@@ -490,7 +490,7 @@
                 "name": "Prąd PV 24"
             },
             "battery_working_mode": {
-                "name": "Working mode"
+                "name": "Tryb pracy"
             },
             "battery_remaining_charge_discharge_time": {
                 "name": "Remaining charge/discharge time"
