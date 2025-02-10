@@ -6,12 +6,12 @@
             "reconfigure_successful": "[%key:common::config_flow::abort::reconfigure_successful%]"
         },
         "error": {
-            "cannot_connect": "Połączenie się nie powiodło",
+            "cannot_connect": "Połączenie nie powiodło się",
             "invalid_auth": "Nieudane logowanie",
             "invalid_slave_ids": "Identyfikatory urządzeń muszą być listą liczb oddzielonych przecinkami",
-            "read_error": "Odczyd z inwertera nie powódł się.",
+            "read_error": "Odczyt z inwertera nie powiódł się.",
             "slave_cannot_connect": "Nie udało się połączyć z kolejnym urządzeniem",
-            "unknown": "Nieoczekiwany error"
+            "unknown": "Nieoczekiwany błąd"
         },
         "step": {
             "network_login": {
@@ -89,7 +89,7 @@
                 "name": "Maximum feed grid power (%)"
             },
             "emma_maximum_feed_grid_power_watt": {
-                "name": "Maximum feed grid power"
+                "name": "Maksymalna moc sieci zasilającej"
             }
         },
         "sensor": {
@@ -157,7 +157,7 @@
                 "name": "Temperatura wewnętrzna"
             },
             "insulation_resistance": {
-                "name": "Insulation resistance"
+                "name": "Rezystancja izolacji"
             },
             "device_status": {
                 "name": "Status urządzenia"
@@ -175,13 +175,13 @@
                 "name": "Dzienna produkcja"
             },
             "monthly_yield_energy": {
-                "name": "Monthly yield"
+                "name": "Miesięczny uzysk"
             },
             "yearly_yield_energy": {
-                "name": "Yearly yield"
+                "name": "Roczny uzysk"
             },
             "hourly_yield_energy": {
-                "name": "Hourly yield"
+                "name": "Godzinowy uzysk"
             },
             "state_1": {
                 "name": "Stan inwertera"
@@ -490,10 +490,10 @@
                 "name": "Prąd PV 24"
             },
             "battery_working_mode": {
-                "name": "Working mode"
+                "name": "Tryb pracy"
             },
             "battery_remaining_charge_discharge_time": {
-                "name": "Remaining charge/discharge time"
+                "name": "Pozostałe czas ładowania/rozładowania"
             },
             "forcible_charge_summary": {
                 "name": "Forcible charge"
@@ -655,10 +655,10 @@
                 "name": "Rated ESS capacity"
             },
             "consumption_today": {
-                "name": "Consumption today"
+                "name": "Zużycie dzisiaj"
             },
             "total_energy_consumption": {
-                "name": "Total energy consumption"
+                "name": "Całkowite zużycie energii"
             },
             "feed_in_to_grid_today": {
                 "name": "Feed in to grid today"
@@ -685,13 +685,13 @@
                 "name": "PV output power"
             },
             "load_power": {
-                "name": "Load power"
+                "name": "Moc obciążenia"
             },
             "feed_in_power": {
                 "name": "Feed in power"
             },
             "battery_charge_discharge_power": {
-                "name": "Battery charge/discharge power"
+                "name": "Moc ładowania/rozładowywania akumulatora"
             },
             "inverter_rated_power": {
                 "name": "Inverter rated power"
@@ -700,7 +700,7 @@
                 "name": "Inverter active power"
             },
             "state_of_capacity": {
-                "name": "State of capacity"
+                "name": "Stan pojemności"
             },
             "ess_chargeable_capacity": {
                 "name": "ESS chargeable capacity"
@@ -743,7 +743,7 @@
                 "name": "ESS Control Mode",
                 "state": {
                     "reserved_1": "Reserved 1",
-                    "maximum_self_consumption": "Maximum self consumption",
+                    "maximum_self_consumption": "Maksymalna konsumpcja własna",
                     "reserved_3": "Reserved 3",
                     "fully_fed_to_grid": "Fully fed to grid",
                     "time_of_use": "Time of use",
@@ -754,7 +754,7 @@
                 "name": "Excess PV energy use in TOU",
                 "state": {
                     "fed_to_grid": "Fed to grid",
-                    "charge": "Charge"
+                    "charge": "Ładowanie"
                 }
             }
         },
@@ -959,19 +959,19 @@
             "name": "EMMA"
         },
         "inverter": {
-            "name": "Inverter"
+            "name": "Inwerter"
         },
         "connected_energy_storage": {
-            "name": "Batteries"
+            "name": "Akumulatory"
         },
         "power_meter": {
-            "name": "Power meter"
+            "name": "Pomiar mocy"
         },
         "battery_1": {
-            "name": "Battery 1"
+            "name": "Akumulator 1"
         },
         "battery_2": {
-            "name": "Battery 2"
+            "name": "Akumulator 2"
         }
     }
 }
