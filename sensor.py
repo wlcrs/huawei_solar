@@ -1848,6 +1848,8 @@ class HuaweiSolarActivePowerControlModeEntity(
 ):
     """Huawei Solar Sensor for the current forcible charge status."""
 
+    _attr_extra_state_attributes: dict[str, Any] = {}
+
     REGISTER_NAMES = [
         rn.ACTIVE_POWER_CONTROL_MODE,
         rn.MAXIMUM_FEED_GRID_POWER_WATT,
