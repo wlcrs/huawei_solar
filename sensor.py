@@ -1693,7 +1693,7 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
     contents of them as extended attributes
     """
 
-    _attr_extra_state_attributes: dict[str, Any] = {}
+    _attr_extra_state_attributes: dict[str, Any]
 
     def __init__(
         self,
@@ -1715,6 +1715,7 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
         self._bridge = bridge
         self._attr_device_info = device_info
         self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
+        self._attr_extra_state_attributes = {}
 
     def _period_to_text(self, psp: PeakSettingPeriod):
         return (
