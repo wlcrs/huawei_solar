@@ -59,7 +59,9 @@ class HuaweiSolarSwitchEntityDescription(Generic[T], SwitchEntityDescription):
         return {"register_names": registers}
 
 
-ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
+ENERGY_STORAGE_WITH_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[
+    HuaweiSolarSwitchEntityDescription, ...
+] = (
     HuaweiSolarSwitchEntityDescription(
         key=rn.STORAGE_CHARGE_FROM_GRID_FUNCTION,
         icon="mdi:battery-charging-50",
@@ -71,6 +73,17 @@ ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ..
     ),
 )
 
+ENERGY_STORAGE_WITHOUT_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[
+    HuaweiSolarSwitchEntityDescription, ...
+] = (
+    HuaweiSolarSwitchEntityDescription(
+        key=rn.STORAGE_CHARGE_FROM_GRID_FUNCTION,
+        icon="mdi:battery-charging-50",
+        entity_category=EntityCategory.CONFIG,
+    ),
+)
+
+
 INVERTER_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     HuaweiSolarSwitchEntityDescription(
         key=rn.MPPT_MULTIMODAL_SCANNING,
@@ -78,7 +91,8 @@ INVERTER_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
         entity_category=EntityCategory.CONFIG,
         entity_registry_enabled_default=False,
     ),
-) 
+)
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -112,26 +126,40 @@ async def async_setup_entry(
                     ucs.device_infos["inverter"],
                 )
             )
-            for entity_description in INVERTER_SWITCH_DESCRIPTIONS:
-                slave_entities.append(
+
+            slave_entities.extend(
+                [
                     HuaweiSolarSwitchEntity(
                         ucs.inverter_update_coordinator,
                         ucs.bridge,
                         entity_description,
                         ucs.device_infos["inverter"],
                     )
-                )
+                    for entity_description in INVERTER_SWITCH_DESCRIPTIONS
+                ]
+            )
 
         if ucs.device_infos["connected_energy_storage"]:
-            slave_entities.extend(
-                HuaweiSolarSwitchEntity(
-                    ucs.configuration_update_coordinator,
-                    ucs.bridge,
-                    entity_description,
-                    ucs.device_infos["connected_energy_storage"],
+            if ucs.bridge.supports_capacity_control:
+                slave_entities.extend(
+                    HuaweiSolarSwitchEntity(
+                        ucs.configuration_update_coordinator,
+                        ucs.bridge,
+                        entity_description,
+                        ucs.device_infos["connected_energy_storage"],
+                    )
+                    for entity_description in ENERGY_STORAGE_WITH_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS
                 )
-                for entity_description in ENERGY_STORAGE_SWITCH_DESCRIPTIONS
-            )
+            else:
+                slave_entities.extend(
+                    HuaweiSolarSwitchEntity(
+                        ucs.configuration_update_coordinator,
+                        ucs.bridge,
+                        entity_description,
+                        ucs.device_infos["connected_energy_storage"],
+                    )
+                    for entity_description in ENERGY_STORAGE_WITHOUT_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS
+                )
 
         entities_to_add.extend(slave_entities)
 
