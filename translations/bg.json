@@ -56,19 +56,19 @@
                 "name": "Ограничаване на мощността"
             },
             "storage_backup_power_state_of_charge": {
-                "name": "СНЗ за резервна мощност"
+                "name": "SOC за резервна мощност"
             },
             "storage_capacity_control_soc_peak_shaving": {
-                "name": "СНЗ за Peak Shaving"
+                "name": "SOC за Peak Shaving"
             },
             "storage_charging_cutoff_capacity": {
-                "name": "СНЗ при край на зареждане"
+                "name": "SOC при край на зареждане"
             },
             "storage_discharging_cutoff_capacity": {
-                "name": "СНЗ при край на разреждане"
+                "name": "SOC при край на разреждане"
             },
             "storage_grid_charge_cutoff_state_of_charge": {
-                "name": "СНЗ за спиране на зареждане от мрежата"
+                "name": "SOC за спиране на зареждане от мрежата"
             },
             "storage_maximum_charging_power": {
                 "name": "Максимална зарядна мощност"
