@@ -6,6 +6,9 @@ on:
   schedule:
     - cron: "0 0 * * *"
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: "ubuntu-latest"
