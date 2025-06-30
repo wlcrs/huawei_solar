@@ -200,3 +200,8 @@ By providing logs directly when creating the issue, you will likely get help muc
 **Q**: I didn't check 'Advanced: Elevate permissions' during the initial setup of this integration and changed my mind. How do I change this?
 
 **A**: 'Reconfigure' the integration. This action is available from the dropdown menu on the [integration settings page](https://my.home-assistant.io/redirect/integration/?domain=huawei_solar).
+
+
+## Translations
+
+Do you want to help out by translating this integration? This project uses Crowdin to make it easy to contribute translations. Use [this invite link to get started](https://crowdin.com/project/huawei-solar/invite?h=4cc071611aab39bd38409ea013f224d12239065).
