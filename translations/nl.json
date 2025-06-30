@@ -710,6 +710,114 @@
             },
             "backup_power_state_of_charge": {
                 "name": "Backup batterijpercentage"
+            },
+            "phase_a_voltage_built_in_energy_sensor": {
+                "name": "Phase A voltage"
+            },
+            "phase_b_voltage_built_in_energy_sensor": {
+                "name": "Phase B voltage"
+            },
+            "phase_c_voltage_built_in_energy_sensor": {
+                "name": "Phase C voltage"
+            },
+            "line_voltage_a_b_built_in_energy_sensor": {
+                "name": "A-B line voltage"
+            },
+            "line_voltage_b_c_built_in_energy_sensor": {
+                "name": "B-C line voltage"
+            },
+            "line_voltage_c_a_built_in_energy_sensor": {
+                "name": "C-A line voltage"
+            },
+            "phase_a_current_built_in_energy_sensor": {
+                "name": "Phase A current"
+            },
+            "phase_b_current_built_in_energy_sensor": {
+                "name": "Phase B current"
+            },
+            "phase_c_current_built_in_energy_sensor": {
+                "name": "Phase C current"
+            },
+            "active_power_built_in_energy_sensor": {
+                "name": "Active power"
+            },
+            "power_factor_built_in_energy_sensor": {
+                "name": "Power factor"
+            },
+            "apparent_power_built_in_energy_sensor": {
+                "name": "Apparent power"
+            },
+            "phase_a_active_power_built_in_energy_sensor": {
+                "name": "Phase A active power"
+            },
+            "phase_b_active_power_built_in_energy_sensor": {
+                "name": "Phase B active power"
+            },
+            "phase_c_active_power_built_in_energy_sensor": {
+                "name": "Phase C active power"
+            },
+            "total_active_energy_built_in_energy_sensor": {
+                "name": "Total active energy"
+            },
+            "total_negative_active_energy_built_in_energy_sensor": {
+                "name": "Total negative active energy"
+            },
+            "total_positive_active_energy_built_in_energy_sensor": {
+                "name": "Total positive active energy"
+            },
+            "phase_a_voltage_external_energy_sensor": {
+                "name": "Phase A voltage"
+            },
+            "phase_b_voltage_external_energy_sensor": {
+                "name": "Phase B voltage"
+            },
+            "phase_c_voltage_external_energy_sensor": {
+                "name": "Phase C voltage"
+            },
+            "line_voltage_a_b_external_energy_sensor": {
+                "name": "A-B line voltage"
+            },
+            "line_voltage_b_c_external_energy_sensor": {
+                "name": "B-C line voltage"
+            },
+            "line_voltage_c_a_external_energy_sensor": {
+                "name": "C-A line voltage"
+            },
+            "phase_a_current_external_energy_sensor": {
+                "name": "Phase A current"
+            },
+            "phase_b_current_external_energy_sensor": {
+                "name": "Phase B current"
+            },
+            "phase_c_current_external_energy_sensor": {
+                "name": "Phase C current"
+            },
+            "active_power_external_energy_sensor": {
+                "name": "Active power"
+            },
+            "power_factor_external_energy_sensor": {
+                "name": "Power factor"
+            },
+            "apparent_power_external_energy_sensor": {
+                "name": "Apparent power"
+            },
+            "phase_a_active_power_external_energy_sensor": {
+                "name": "Phase A active power"
+            },
+            "phase_b_active_power_external_energy_sensor": {
+                "name": "Phase B active power"
+            },
+            "phase_c_active_power_external_energy_sensor": {
+                "name": "Phase C active power"
+            },
+            "total_active_energy_external_energy_sensor": {
+                "name": "Total active energy"
+            },
+            "total_negative_active_energy_external_energy_sensor": {
+                "name": "Total negative active energy"
+            },
+            "total_positive_active_energy_external_energy_sensor": {
+                "name": "Total positive active energy"
             }
         },
         "select": {
