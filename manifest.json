@@ -14,7 +14,7 @@
         "@wlcrs"
     ],
     "iot_class": "local_polling",
-    "version": "1.5.4",
+    "version": "1.5.5",
     "loggers": [
         "huawei_solar",
         "pymodbus"
