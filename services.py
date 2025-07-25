@@ -137,7 +137,7 @@ MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA = INVERTER_DEVICE_SCHEMA.extend(
     }
 )
 
-HUAWEI_LUNA2000_TOU_PATTERN = r"([0-2]\d:\d\d-[0-2]\d:\d\d/[1-7]{1,7}/[+-]\n?){0,14}"
+HUAWEI_LUNA2000_TOU_PATTERN = r"([0-2]\d:\d\d-[0-2]\d:\d\d/[1-7]{0,7}/[+-]\n?){0,14}"
 LG_RESU_TOU_PATTERN = r"([0-2]\d:\d\d-[0-2]\d:\d\d/\d+\.?\d*\n?){0,14}"
 
 TOU_PERIODS_SCHEMA = BATTERY_DEVICE_SCHEMA.extend(
