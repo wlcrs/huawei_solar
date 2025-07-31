@@ -157,7 +157,7 @@
                 "name": "Temperatura interna"
             },
             "insulation_resistance": {
-                "name": "Insulation resistance"
+                "name": "Resistencia de aislamiento"
             },
             "device_status": {
                 "name": "Estado del dispositivo"
@@ -175,7 +175,7 @@
                 "name": "Rendimiento diario"
             },
             "monthly_yield_energy": {
-                "name": "Monthly yield"
+                "name": "Rendimiento mensual"
             },
             "yearly_yield_energy": {
                 "name": "Yearly yield"
