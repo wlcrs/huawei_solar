@@ -175,10 +175,10 @@
                 "name": "Production quotidienne"
             },
             "monthly_yield_energy": {
-                "name": "Monthly yield"
+                "name": "Rendement mensuel"
             },
             "yearly_yield_energy": {
-                "name": "Yearly yield"
+                "name": "Rendement annuel"
             },
             "hourly_yield_energy": {
                 "name": "Production horaire"
@@ -739,10 +739,10 @@
                 "name": "Phase C current"
             },
             "active_power_built_in_energy_sensor": {
-                "name": "Active power"
+                "name": "Puissance Active"
             },
             "power_factor_built_in_energy_sensor": {
-                "name": "Power factor"
+                "name": "Facteur de puissance"
             },
             "apparent_power_built_in_energy_sensor": {
                 "name": "Apparent power"
@@ -793,10 +793,10 @@
                 "name": "Phase C current"
             },
             "active_power_external_energy_sensor": {
-                "name": "Active power"
+                "name": "Puissance active"
             },
             "power_factor_external_energy_sensor": {
-                "name": "Power factor"
+                "name": "Facteur de puissance"
             },
             "apparent_power_external_energy_sensor": {
                 "name": "Apparent power"
