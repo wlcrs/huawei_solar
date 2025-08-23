@@ -2,5 +2,5 @@
     "name": "Huawei Solar",
     "content_in_root": true,
     "render_readme": true,
-    "homeassistant": "2025.1.0"
+    "homeassistant": "2025.9.0"
 }
