@@ -1698,7 +1698,49 @@ EMMA_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL,
         entity_registry_enabled_default=False,
+    ),    
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_RATED_POWER,
+        native_unit_of_measurement=UnitOfPower.WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
     ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_PHASE_A_VOLTAGE_SENSOR,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_PHASE_B_VOLTAGE_SENSOR,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_PHASE_C_VOLTAGE_SENSOR,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_TOTAL_ENERGY_CHARGED_SENSOR,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_TEMPERATURE_SENSOR,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),    
 )
 
 
