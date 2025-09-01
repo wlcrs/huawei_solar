@@ -34,7 +34,7 @@
                     "port": "Select device",
                     "slave_ids": "Slave IDs (Comma separated)"
                 },
-                "title": "Device"
+                "title": "Dispositivo"
             },
             "setup_serial_manual_path": {
                 "data": {
