@@ -175,10 +175,10 @@
                 "name": "Rendimento giornaliero"
             },
             "monthly_yield_energy": {
-                "name": "Monthly yield"
+                "name": "Rendimento mensile"
             },
             "yearly_yield_energy": {
-                "name": "Yearly yield"
+                "name": "Rendimento annuale"
             },
             "hourly_yield_energy": {
                 "name": "Resa oraria"
@@ -541,10 +541,10 @@
                 "name": "Pacco 1 stato capacità"
             },
             "pack_1_charge_discharge_power": {
-                "name": "Pack 1 charge discharge power"
+                "name": "Pacco 1 Potenza di carica/scarica"
             },
             "pack_1_voltage": {
-                "name": "Pack 1 voltage"
+                "name": "Pack 1 Tensione"
             },
             "pack_1_current": {
                 "name": "Pack 1 current"
