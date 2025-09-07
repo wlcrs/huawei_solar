@@ -34,7 +34,7 @@
                     "port": "Select device",
                     "slave_ids": "Slave IDs (Comma separated)"
                 },
-                "title": "Device"
+                "title": "Dispositivo"
             },
             "setup_serial_manual_path": {
                 "data": {
@@ -44,7 +44,7 @@
             },
             "user": {
                 "data": {
-                    "type": "Connection type"
+                    "type": "Tipo de conexão"
                 },
                 "title": "Select connection type"
             }
@@ -74,7 +74,7 @@
                 "name": "End-of-discharge SOC"
             },
             "storage_backup_power_state_of_charge": {
-                "name": "Backup power SOC"
+                "name": "SOC de segurança"
             },
             "storage_grid_charge_cutoff_state_of_charge": {
                 "name": "Grid charge cutoff SOC"
@@ -121,7 +121,7 @@
                 "name": "Phase C voltage"
             },
             "phase_a_current": {
-                "name": "Phase A current"
+                "name": "Fase \"A\" atual"
             },
             "phase_b_current": {
                 "name": "Phase B current"
@@ -133,7 +133,7 @@
                 "name": "Phase A current"
             },
             "active_grid_b_current": {
-                "name": "Phase B current"
+                "name": "Fase B atual"
             },
             "active_grid_c_current": {
                 "name": "Phase C current"
@@ -184,7 +184,7 @@
                 "name": "Hourly yield"
             },
             "state_1": {
-                "name": "Inverter state"
+                "name": "Estado do Inverter"
             },
             "state_2_0": {
                 "name": "Locking status"
@@ -217,7 +217,7 @@
                 "name": "Output current"
             },
             "input_voltage": {
-                "name": "Input voltage"
+                "name": "Tensão de entrada"
             },
             "input_current": {
                 "name": "Input current"
