@@ -144,7 +144,7 @@ async def validate_network_setup_auto_slave_discovery(
                 )
                 continue
 
-            if device_info.model and device_info.model.startswith("SUN2000"):
+            if device_info.model and device_info.model.startswith(("SUN2000", "SCharger")):
                 _LOGGER.info(
                     "Slave %s was auto-discovered of type %s with model %s and software version %s",
                     device_info.device_id,
@@ -172,7 +172,7 @@ async def validate_network_setup_auto_slave_discovery(
                     )
             else:
                 _LOGGER.warning(
-                    "Skipping slave %s with model %s. Only SUN2000 inverters are supported as secondary slaves",
+                    "Skipping slave %s with model %s. Only SUN2000 inverters and SChargers are supported as secondary slaves",
                     device_info.device_id,
                     device_info.model,
                 )
