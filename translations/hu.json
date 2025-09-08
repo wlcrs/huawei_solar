@@ -818,6 +818,24 @@
             },
             "total_positive_active_energy_external_energy_sensor": {
                 "name": "Total positive active energy"
+            },
+            "charger_rated_power": {
+                "name": "Charger rated power"
+            },
+            "charger_phase_a_voltage_sensor": {
+                "name": "Charger Phase A voltage"
+            },
+            "charger_phase_b_voltage_sensor": {
+                "name": "Charger Phase B voltagey"
+            },
+            "charger_phase_c_voltage_sensor": {
+                "name": "Charger Phase C voltage"
+            },
+            "chager_total_energy_charged_sensor": {
+                "name": "Charger total charged energy"
+            },
+            "charger_temperature_sensor": {
+                "name": "Charger temperature"
             }
         },
         "select": {
