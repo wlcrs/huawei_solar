@@ -3,7 +3,7 @@
         "abort": {
             "already_configured": "Das Gerät ist bereits konfiguriert",
             "reauth_successful": "Re-Authentifikation erfolgreich",
-            "reconfigure_successful": "[%key:common::config_flow::abort::reconfigure_successful%]"
+            "reconfigure_successful": "Rekonfiguration erfolgreich"
         },
         "error": {
             "cannot_connect": "Verbindungsversuch fehlgeschlagen",
