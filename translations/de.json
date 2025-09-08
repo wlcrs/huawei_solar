@@ -1,9 +1,9 @@
 {
     "config": {
         "abort": {
-            "already_configured": "Das Gerät ist bereits konfiguriert",
-            "reauth_successful": "Re-Authentifikation erfolgreich",
-            "reconfigure_successful": "Rekonfiguration erfolgreich"
+          "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+          "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+          "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
         },
         "error": {
             "cannot_connect": "Verbindungsversuch fehlgeschlagen",
