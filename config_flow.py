@@ -5,15 +5,6 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from huawei_solar import (
-    ConnectionException,
-    HuaweiSolarException,
-    InvalidCredentials,
-    ReadException,
-    create_rtu_bridge,
-    create_sub_bridge,
-    create_tcp_bridge,
-)
 import serial.tools.list_ports
 import voluptuous as vol
 
@@ -28,13 +19,21 @@ from homeassistant.const import (
 )
 from homeassistant.data_entry_flow import FlowResult
 import homeassistant.helpers.config_validation as cv
+from huawei_solar import (
+    ConnectionException,
+    HuaweiSolarException,
+    InvalidCredentials,
+    ReadException,
+    create_rtu_bridge,
+    create_sub_bridge,
+    create_tcp_bridge,
+)
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
     CONF_SLAVE_IDS,
     DEFAULT_PORT,
     DEFAULT_SERIAL_SLAVE_ID,
-    DEFAULT_SLAVE_ID,
     DEFAULT_USERNAME,
     DOMAIN,
 )
@@ -144,7 +143,9 @@ async def validate_network_setup_auto_slave_discovery(
                 )
                 continue
 
-            if device_info.model and device_info.model.startswith(("SUN2000", "SCharger")):
+            if device_info.model and device_info.model.startswith(
+                ("SUN2000", "SCharger")
+            ):
                 _LOGGER.info(
                     "Slave %s was auto-discovered of type %s with model %s and software version %s",
                     device_info.device_id,

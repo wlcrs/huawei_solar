@@ -19,9 +19,9 @@ from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.entity import DeviceInfo, Entity
 from huawei_solar import (
+    HuaweiChargerBridge,
     HuaweiEMMABridge,
     HuaweiSolarBridge,
-    HuaweiChargerBridge,
     HuaweiSolarException,
     HuaweiSUN2000Bridge,
     InvalidCredentials,

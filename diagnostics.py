@@ -5,12 +5,11 @@ from __future__ import annotations
 from importlib.metadata import version
 from typing import Any
 
-from huawei_solar import HuaweiEMMABridge, HuaweiChargerBridge, HuaweiSUN2000Bridge
-
 from homeassistant.components.diagnostics import async_redact_data
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_PASSWORD
 from homeassistant.core import HomeAssistant
+from huawei_solar import HuaweiChargerBridge, HuaweiEMMABridge, HuaweiSUN2000Bridge
 
 from . import HuaweiSolarUpdateCoordinators
 from .const import DATA_UPDATE_COORDINATORS, DOMAIN
@@ -102,9 +101,9 @@ async def _build_emma_bridge_diagnostics_info(
     return {
         "_type": "EMMA",
         "model_name": bridge.model_name,
-        "firmware_version": bridge.firmware_version,
         "software_version": bridge.software_version,
     }
+
 
 async def _build_charger_bridge_diagnostics_info(
     bridge: HuaweiChargerBridge,
@@ -112,6 +111,5 @@ async def _build_charger_bridge_diagnostics_info(
     return {
         "_type": "SCharger",
         "model_name": bridge.model_name,
-        "firmware_version": bridge.firmware_version,
         "software_version": bridge.software_version,
     }
