@@ -1083,6 +1083,6 @@
         },
         "charger": {
             "name": "Wallbox"
-        },
+        }
     }
 }
