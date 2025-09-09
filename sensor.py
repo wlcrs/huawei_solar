@@ -37,7 +37,6 @@ from huawei_solar import (
 )
 from huawei_solar.files import OptimizerRunningStatus
 from huawei_solar.registers import (
-    ChargeDischargePeriod,
     ChargeFlag,
     HUAWEI_LUNA2000_TimeOfUsePeriod,
     LG_RESU_TimeOfUsePeriod,

@@ -185,7 +185,7 @@ def _parse_days_effective(days_text) -> tuple[bool, bool, bool, bool, bool, bool
     for day in days_text:
         days[int(day) % 7] = True
 
-    return tuple(days)  # type: ignore
+    return tuple(days)
 
 
 def _parse_time(value: str):
@@ -549,14 +549,18 @@ async def set_tou_periods(hass: HomeAssistant, service_call: ServiceCall) -> Non
         if not re.fullmatch(
             HUAWEI_LUNA2000_TOU_PATTERN, service_call.data[DATA_PERIODS]
         ):
-            raise ValueError(f"Invalid periods: validation failed for '{service_call.data[DATA_PERIODS]}' as LUNA2000 TOU periods")
+            raise ValueError(
+                f"Invalid periods: validation failed for '{service_call.data[DATA_PERIODS]}' as LUNA2000 TOU periods"
+            )
         await bridge.set(
             rn.STORAGE_HUAWEI_LUNA2000_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS,
             _parse_huawei_luna2000_periods(service_call.data[DATA_PERIODS]),
         )
     elif bridge.battery_type == rv.StorageProductModel.LG_RESU:
         if not re.fullmatch(LG_RESU_TOU_PATTERN, service_call.data[DATA_PERIODS]):
-            raise ValueError(f"Invalid periods: validation failed for '{service_call.data[DATA_PERIODS]}' as LG RESU TOU periods")
+            raise ValueError(
+                f"Invalid periods: validation failed for '{service_call.data[DATA_PERIODS]}' as LG RESU TOU periods"
+            )
         await bridge.set(
             rn.STORAGE_LG_RESU_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS,
             _parse_lg_resu_periods(service_call.data[DATA_PERIODS]),
@@ -597,7 +601,9 @@ async def set_capacity_control_periods(
     if not re.fullmatch(
         CAPACITY_CONTROL_PERIODS_PATTERN, service_call.data[DATA_PERIODS]
     ):
-        raise ValueError(f"Invalid periods: could not validate '{service_call.data[DATA_PERIODS]}' as capacity control periods")
+        raise ValueError(
+            f"Invalid periods: could not validate '{service_call.data[DATA_PERIODS]}' as capacity control periods"
+        )
 
     await bridge.set(
         rn.STORAGE_CAPACITY_CONTROL_PERIODS,
@@ -630,7 +636,9 @@ async def set_fixed_charge_periods(
     bridge, uc = get_battery_bridge(hass, service_call)
 
     if not re.fullmatch(FIXED_CHARGE_PERIODS_PATTERN, service_call.data[DATA_PERIODS]):
-        raise ValueError(f"Invalid periods: could not validate '{service_call.data[DATA_PERIODS]}' as fixed charging periods")
+        raise ValueError(
+            f"Invalid periods: could not validate '{service_call.data[DATA_PERIODS]}' as fixed charging periods"
+        )
 
     await bridge.set(
         rn.STORAGE_FIXED_CHARGING_AND_DISCHARGING_PERIODS,
@@ -640,7 +648,7 @@ async def set_fixed_charge_periods(
     await uc.async_refresh()
 
 
-async def async_setup_services(  # noqa: C901
+async def async_setup_services(
     hass: HomeAssistant,
     entry: ConfigEntry,
 ):

@@ -22,7 +22,6 @@ from huawei_solar import (
     HuaweiSolarBridge,
     HuaweiSUN2000Bridge,
     register_names as rn,
-    register_values as rv,
 )
 
 from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinators

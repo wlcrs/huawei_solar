@@ -363,7 +363,7 @@ async def compute_and_register_device_infos(
         )
 
         # Add inverter device to device registery
-        de = device_registry.async_get_or_create(
+        device_registry.async_get_or_create(
             config_entry_id=entry.entry_id,
             identifiers={(DOMAIN, bridge.serial_number)},
             manufacturer="Huawei",
