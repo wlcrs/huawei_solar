@@ -103,7 +103,7 @@ async def validate_network_setup_auto_slave_discovery(
         )
 
         _LOGGER.info(
-            "Successfully connected to inverter %s with SN %s",
+            "Successfully connected to device %s with SN %s",
             bridge.model_name,
             bridge.serial_number,
         )
@@ -144,7 +144,7 @@ async def validate_network_setup_auto_slave_discovery(
                 continue
 
             if device_info.model and device_info.model.startswith(
-                ("SUN2000", "SCharger")
+                ("SUN2000", "EDF ESS", "Powershifter", "SWI300", "FusionCharge")
             ):
                 _LOGGER.info(
                     "Slave %s was auto-discovered of type %s with model %s and software version %s",
