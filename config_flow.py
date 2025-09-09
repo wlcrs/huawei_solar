@@ -144,7 +144,7 @@ async def validate_network_setup_auto_slave_discovery(
                 continue
 
             if device_info.model and device_info.model.startswith(
-                ("SUN2000", "EDF ESS", "Powershifter", "SWI300", "FusionCharge")
+                ("SUN2000", "EDF ESS", "Powershifter", "SWI300", "SCharger")
             ):
                 _LOGGER.info(
                     "Slave %s was auto-discovered of type %s with model %s and software version %s",
@@ -160,7 +160,7 @@ async def validate_network_setup_auto_slave_discovery(
                     slave_bridge = await create_sub_bridge(bridge, slave_id)
 
                     _LOGGER.info(
-                        "Successfully connected to slave inverter %s: %s with SN %s",
+                        "Successfully connected to slave %s: %s with SN %s",
                         slave_id,
                         slave_bridge.model_name,
                         slave_bridge.serial_number,
