@@ -1098,6 +1098,9 @@
         },
         "battery_2": {
             "name": "Battery 2"
+        },
+        "charger": {
+            "name": "Charger"
         }
     }
 }
