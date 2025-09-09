@@ -826,7 +826,7 @@
                 "name": "Charger Phase A voltage"
             },
             "charger_phase_b_voltage_sensor": {
-                "name": "Charger Phase B voltagey"
+                "name": "Charger Phase B voltage"
             },
             "charger_phase_c_voltage_sensor": {
                 "name": "Charger Phase C voltage"
