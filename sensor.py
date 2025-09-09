@@ -1161,7 +1161,7 @@ def create_sun2000_entities(ucs: HuaweiSolarUpdateCoordinators) -> list[SensorEn
             for entity_description in THREE_PHASE_METER_ENTITY_DESCRIPTIONS
         )
 
-    if ucs.bridge.has_write_permission and ucs.configuration_update_coordinator:
+    if not ucs.bridge.connected_via_emma and ucs.bridge.has_write_permission and ucs.configuration_update_coordinator:
         entities_to_add.append(
             HuaweiSolarActivePowerControlModeEntity(
                 ucs.configuration_update_coordinator,
