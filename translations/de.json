@@ -1080,6 +1080,9 @@
         },
         "battery_2": {
             "name": "Batterie 2"
-        }
+        },
+        "charger": {
+            "name": "Wallbox"
+        },
     }
 }
