@@ -64,11 +64,17 @@ body:
       ## Relevant debug logs
 
       > [!IMPORTANT]
-      > **You MUST include relevant logfiles to debug your issue.**
+      > Just copy&pasting the error from the HA `System → Logs` page is insufficient in 95% of the cases.
+      >
+      > **You MUST gather debugging logs.**
       
-      The easiest way to provide debug logs is by using the `Enable/Disable debug logging` feature as described here: ['Debug Logs and Diagnostics' from the HA documentation](https://www.home-assistant.io/docs/configuration/troubleshooting/#debug-logs-and-diagnostics)
+      1. Enable debug logging
+         ![Enable Debug Logging menu entry](https://raw.githubusercontent.com/wlcrs/huawei_solar/main/.github/ISSUE_TEMPLATE/images/enable-debug-logging.png)
+      2. Reload the integration
+      3. Perform the action that triggers the error (if applicable)
+      4. Stop debug logging: a text file will be downloaded.
 
-      ![Enable Debug Logging menu entry](https://raw.githubusercontent.com/wlcrs/huawei_solar/main/.github/ISSUE_TEMPLATE/images/enable-debug-logging.png)
+      Full instructions here: ['Debug Logs and Diagnostics' from the HA documentation](https://www.home-assistant.io/docs/configuration/troubleshooting/#debug-logs-and-diagnostics)
 
       If you are having problems during initial setup of this integration, you'll need to manually gather these logs. To do this, add the following lines to your `/config/configuration.yaml` and restart HA:
 
