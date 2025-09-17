@@ -1160,7 +1160,11 @@ def create_sun2000_entities(ucs: HuaweiSolarUpdateCoordinators) -> list[SensorEn
             for entity_description in THREE_PHASE_METER_ENTITY_DESCRIPTIONS
         )
 
-    if not ucs.bridge.connected_via_emma and ucs.bridge.has_write_permission and ucs.configuration_update_coordinator:
+    if (
+        not ucs.bridge.connected_via_emma
+        and ucs.bridge.has_write_permission
+        and ucs.configuration_update_coordinator
+    ):
         entities_to_add.append(
             HuaweiSolarActivePowerControlModeEntity(
                 ucs.configuration_update_coordinator,
@@ -1750,7 +1754,7 @@ def create_emma_entities(
     assert ucs.device_infos["emma"]
     assert isinstance(ucs.bridge, HuaweiEMMABridge)
 
-    return [
+    entities = [
         HuaweiSolarSensorEntity(
             ucs.inverter_update_coordinator,
             entity_description,
@@ -1758,6 +1762,18 @@ def create_emma_entities(
         )
         for entity_description in EMMA_SENSOR_DESCRIPTIONS
     ]
+
+    entities.append(
+        HuaweiSolarTOUPricePeriodsSensorEntity(
+            ucs.configuration_update_coordinator,
+            ucs.bridge,
+            ucs.device_infos["emma"],
+            register_name=rn.EMMA_TOU_PERIODS,
+            entity_registry_enabled_default=False,
+        )
+    )
+
+    return entities
 
 
 CHARGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
@@ -1965,21 +1981,20 @@ class HuaweiSolarTOUPricePeriodsSensorEntity(
         coordinator: HuaweiSolarUpdateCoordinator,
         bridge: HuaweiSolarBridge,
         device_info: DeviceInfo,
+        register_name: str = rn.STORAGE_HUAWEI_LUNA2000_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS,
+        entity_registry_enabled_default: bool = True,
     ) -> None:
         """Huawei Solar TOU Sensor Entity constructor."""
         super().__init__(
             coordinator,
-            {
-                "register_names": [
-                    rn.STORAGE_HUAWEI_LUNA2000_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS
-                ]
-            },
+            {"register_names": [register_name]},
         )
         self.coordinator = coordinator
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
-            key=rn.STORAGE_HUAWEI_LUNA2000_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS,
+            key=register_name,
             icon="mdi:calendar-text",
+            entity_registry_enabled_default=entity_registry_enabled_default,
         )
 
         self._bridge = bridge

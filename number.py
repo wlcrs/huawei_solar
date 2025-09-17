@@ -118,6 +118,14 @@ EMMA_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfPower.WATT,
         entity_category=EntityCategory.CONFIG,
     ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.EMMA_TOU_MAXIMUM_POWER_FOR_CHARGING_BATTERIES_FROM_GRID,
+        native_min_value=0,
+        native_max_value=50000,
+        icon="mdi:battery-positive",
+        native_unit_of_measurement=UnitOfPower.WATT,
+        entity_category=EntityCategory.CONFIG,
+    ),
 )
 
 ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (

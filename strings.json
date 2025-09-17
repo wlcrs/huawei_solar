@@ -90,6 +90,12 @@
             },
             "emma_maximum_feed_grid_power_watt": {
                 "name": "Maximum feed grid power"
+            },
+            "emma_tou_maximum_power_for_charging_batteries_from_grid": {
+                "name": "Maximum power for charging batteries from grid"
+            },
+            "emma_tou_periods": {
+                "name": "TOU price periods"
             }
         },
         "sensor": {

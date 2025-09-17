@@ -14,6 +14,7 @@ from homeassistant.core import HomeAssistant, ServiceCall, async_get_hass, callb
 from homeassistant.helpers import device_registry as dr
 import homeassistant.helpers.config_validation as cv
 from huawei_solar import (
+    HuaweiEMMABridge,
     HuaweiSolarBridge,
     HuaweiSUN2000Bridge,
     register_names as rn,
@@ -239,6 +240,64 @@ def get_battery_bridge(
 
     _LOGGER.info(
         "Got the following bridge and update_coordinators in get_battery_bridge: %r, %r",
+        bridge,
+        uc,
+    )
+
+    return bridge, uc
+
+
+@callback
+def _get_battery_or_emma_bridge(
+    hass: HomeAssistant, device_id: str
+) -> tuple[HuaweiSUN2000Bridge | HuaweiEMMABridge, HuaweiSolarUpdateCoordinator]:
+    dev_reg = dr.async_get(hass)
+    device_entry = dev_reg.async_get(device_id)
+
+    if not device_entry:
+        raise HuaweiSolarServiceException("No such device found")
+
+    for entry_data in hass.data[DOMAIN].values():
+        hsucs: list[HuaweiSolarUpdateCoordinators] = entry_data[
+            DATA_UPDATE_COORDINATORS
+        ]
+        for uc in hsucs:
+            if (
+                uc.device_infos["connected_energy_storage"] is None
+                and uc.device_infos["emma"] is None
+            ):
+                continue
+
+            assert isinstance(uc.bridge, HuaweiSUN2000Bridge | HuaweiEMMABridge)
+
+            device_info = None
+            if uc.device_infos["connected_energy_storage"]:
+                device_info = uc.device_infos["connected_energy_storage"]
+            elif uc.device_infos["emma"]:
+                device_info = uc.device_infos["emma"]
+
+            assert "identifiers" in device_info
+            for identifier in device_info["identifiers"]:
+                for device_identifier in device_entry.identifiers:
+                    if identifier == device_identifier:
+                        assert uc.configuration_update_coordinator
+                        return uc.bridge, uc.configuration_update_coordinator
+    _LOGGER.error("The provided device is not a Connected Energy Storage or EMMA")
+    raise HuaweiSolarServiceException(
+        "Not a valid 'Connected Energy Storage' or 'EMMA' device"
+    )
+
+
+@callback
+def get_battery_or_emma_bridge(
+    hass: HomeAssistant, service_call: ServiceCall
+) -> tuple[HuaweiSUN2000Bridge | HuaweiEMMABridge, HuaweiSolarUpdateCoordinator]:
+    """Return the HuaweiSolarBridge associated with the battery device_id in the service call."""
+    device_id = service_call.data[DATA_DEVICE_ID]
+    bridge, uc = _get_battery_bridge(hass, device_id)
+
+    _LOGGER.info(
+        "Got the following bridge and update_coordinators in get_battery_or_emma_bridge: %r, %r",
         bridge,
         uc,
     )
@@ -543,9 +602,20 @@ async def set_tou_periods(hass: HomeAssistant, service_call: ServiceCall) -> Non
 
         return result
 
-    bridge, uc = get_battery_bridge(hass, service_call)
+    bridge, uc = get_battery_or_emma_bridge(hass, service_call)
 
-    if bridge.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000:
+    if isinstance(bridge, HuaweiEMMABridge):
+        if not re.fullmatch(
+            HUAWEI_LUNA2000_TOU_PATTERN, service_call.data[DATA_PERIODS]
+        ):
+            raise ValueError(
+                f"Invalid periods: validation failed for '{service_call.data[DATA_PERIODS]}' as TOU periods"
+            )
+        await bridge.set(
+            rn.EMMA_TOU_PERIODS,
+            _parse_huawei_luna2000_periods(service_call.data[DATA_PERIODS]),
+        )
+    elif bridge.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000:
         if not re.fullmatch(
             HUAWEI_LUNA2000_TOU_PATTERN, service_call.data[DATA_PERIODS]
         ):
@@ -755,6 +825,14 @@ async def async_setup_services(
             SERVICE_SET_CAPACITY_CONTROL_PERIODS,
             partial(set_capacity_control_periods, hass),
             schema=CAPACITY_CONTROL_PERIODS_SCHEMA,
+        )
+
+    if any(isinstance(uc.bridge, HuaweiEMMABridge) for uc in hsucs):
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_SET_TOU_PERIODS,
+            partial(set_tou_periods, hass),
+            schema=TOU_PERIODS_SCHEMA,
         )
 
 
