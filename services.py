@@ -294,7 +294,7 @@ def get_battery_or_emma_bridge(
 ) -> tuple[HuaweiSUN2000Bridge | HuaweiEMMABridge, HuaweiSolarUpdateCoordinator]:
     """Return the HuaweiSolarBridge associated with the battery device_id in the service call."""
     device_id = service_call.data[DATA_DEVICE_ID]
-    bridge, uc = _get_battery_bridge(hass, device_id)
+    bridge, uc = _get_battery_or_emma_bridge(hass, device_id)
 
     _LOGGER.info(
         "Got the following bridge and update_coordinators in get_battery_or_emma_bridge: %r, %r",
