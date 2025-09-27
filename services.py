@@ -6,7 +6,7 @@ import functools
 from functools import partial
 import logging
 import re
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any, Literal, TypedDict, TypeVar
 
 import voluptuous as vol
 
@@ -242,19 +242,17 @@ SOC_SCHEMA = FORCIBLE_CHARGE_BASE_SCHEMA.extend(
     }
 )
 
-MAXIMUM_FEED_GRID_POWER_SCHEMA = INVERTER_DEVICE_SCHEMA.extend(
-    {
-        vol.Required(DATA_POWER): vol.All(vol.Coerce(int), vol.Range(min=-1000)),
-    }
-)
+MAXIMUM_FEED_GRID_POWER_SCHEMA = {
+    vol.Required(DATA_POWER): vol.All(vol.Coerce(int), vol.Range(min=-1000)),
+}
 
-MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA = INVERTER_DEVICE_SCHEMA.extend(
-    {
-        vol.Required(DATA_POWER_PERCENTAGE): vol.All(
-            vol.Coerce(int), vol.Range(min=0, max=100)
-        ),
-    }
-)
+
+MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA = {
+    vol.Required(DATA_POWER_PERCENTAGE): vol.All(
+        vol.Coerce(int), vol.Range(min=0, max=100)
+    ),
+}
+
 
 HUAWEI_LUNA2000_TOU_PATTERN = r"([0-2]\d:\d\d-[0-2]\d:\d\d/[1-7]{0,7}/[+-]\n?){0,14}"
 LG_RESU_TOU_PATTERN = r"([0-2]\d:\d\d-[0-2]\d:\d\d/\d+\.?\d*\n?){0,14}"
@@ -496,24 +494,60 @@ async def stop_forcible_charge(hass: HomeAssistant, service_call: ServiceCall) -
     await uc.async_refresh()
 
 
+class PowerControlRegisters(TypedDict):
+    MODE_REGISTER: str
+    POWER_WATT_REGISTER: str
+    POWER_PERCENT_REGISTER: str
+
+
+PowerControlManagerType = Literal["inverter", "emma"]
+
+POWER_CONTROL_REGISTERS: dict[PowerControlManagerType, PowerControlRegisters] = {
+    "inverter": {
+        "MODE_REGISTER": rn.ACTIVE_POWER_CONTROL_MODE,
+        "POWER_WATT_REGISTER": rn.MAXIMUM_FEED_GRID_POWER_WATT,
+        "POWER_PERCENT_REGISTER": rn.MAXIMUM_FEED_GRID_POWER_PERCENT,
+    },
+    "emma": {
+        "MODE_REGISTER": rn.EMMA_POWER_CONTROL_MODE_AT_GRID_CONNECTION_POINT,
+        "POWER_WATT_REGISTER": rn.EMMA_MAXIMUM_FEED_GRID_POWER_WATT,
+        "POWER_PERCENT_REGISTER": rn.EMMA_MAXIMUM_FEED_GRID_POWER_PERCENT,
+    },
+}
+
+
+def _get_power_control_bridge(
+    hass: HomeAssistant,
+    manager_type: PowerControlManagerType,
+    service_call: ServiceCall,
+) -> tuple[HuaweiSolarBridge, HuaweiSolarUpdateCoordinator]:
+    if manager_type == "emma":
+        return get_emma_bridge(hass, service_call)
+    return get_inverter_bridge(hass, service_call)
+
+
 async def reset_maximum_feed_grid_power(
-    hass: HomeAssistant, service_call: ServiceCall
+    hass: HomeAssistant,
+    manager_type: PowerControlManagerType,
+    service_call: ServiceCall,
 ) -> None:
     """Set Active Power Control to 'Unlimited'."""
-    bridge, uc = get_inverter_bridge(hass, service_call)
+    bridge, uc = _get_power_control_bridge(hass, manager_type, service_call)
+
     await bridge.set(
-        rn.ACTIVE_POWER_CONTROL_MODE,
+        POWER_CONTROL_REGISTERS[manager_type]["MODE_REGISTER"],
         rv.ActivePowerControlMode.UNLIMITED,
     )
-    await bridge.set(rn.MAXIMUM_FEED_GRID_POWER_WATT, 0)
+    await bridge.set(POWER_CONTROL_REGISTERS[manager_type]["POWER_WATT_REGISTER"], 0)
     await bridge.set(
-        rn.MAXIMUM_FEED_GRID_POWER_PERCENT,
+        POWER_CONTROL_REGISTERS[manager_type]["POWER_PERCENT_REGISTER"],
         0,
     )
 
     await uc.async_refresh()
 
 
+# only available for inverters
 async def set_di_active_power_scheduling(
     hass: HomeAssistant, service_call: ServiceCall
 ) -> None:
@@ -533,17 +567,19 @@ async def set_di_active_power_scheduling(
 
 
 async def set_zero_power_grid_connection(
-    hass: HomeAssistant, service_call: ServiceCall
+    hass: HomeAssistant,
+    manager_type: PowerControlManagerType,
+    service_call: ServiceCall,
 ) -> None:
     """Set Active Power Control to 'Zero-Power Grid Connection'."""
-    bridge, uc = get_inverter_bridge(hass, service_call)
+    bridge, uc = _get_power_control_bridge(hass, manager_type, service_call)
     await bridge.set(
-        rn.ACTIVE_POWER_CONTROL_MODE,
+        POWER_CONTROL_REGISTERS[manager_type]["MODE_REGISTER"],
         rv.ActivePowerControlMode.ZERO_POWER_GRID_CONNECTION,
     )
-    await bridge.set(rn.MAXIMUM_FEED_GRID_POWER_WATT, 0)
+    await bridge.set(POWER_CONTROL_REGISTERS[manager_type]["POWER_WATT_REGISTER"], 0)
     await bridge.set(
-        rn.MAXIMUM_FEED_GRID_POWER_PERCENT,
+        POWER_CONTROL_REGISTERS[manager_type]["POWER_PERCENT_REGISTER"],
         0,
     )
 
@@ -551,15 +587,19 @@ async def set_zero_power_grid_connection(
 
 
 async def set_maximum_feed_grid_power(
-    hass: HomeAssistant, service_call: ServiceCall
+    hass: HomeAssistant,
+    manager_type: PowerControlManagerType,
+    service_call: ServiceCall,
 ) -> None:
     """Set Active Power Control to 'Power-limited grid connection' with the given wattage."""
-    bridge, uc = get_inverter_bridge(hass, service_call)
+    bridge, uc = _get_power_control_bridge(hass, manager_type, service_call)
     power = await _validate_power_value(service_call.data[DATA_POWER], bridge, rn.P_MAX)
 
-    await bridge.set(rn.MAXIMUM_FEED_GRID_POWER_WATT, power)
     await bridge.set(
-        rn.ACTIVE_POWER_CONTROL_MODE,
+        POWER_CONTROL_REGISTERS[manager_type]["POWER_WATT_REGISTER"], power
+    )
+    await bridge.set(
+        POWER_CONTROL_REGISTERS[manager_type]["MODE_REGISTER"],
         rv.ActivePowerControlMode.POWER_LIMITED_GRID_CONNECTION_WATT,
     )
 
@@ -567,15 +607,20 @@ async def set_maximum_feed_grid_power(
 
 
 async def set_maximum_feed_grid_power_percentage(
-    hass: HomeAssistant, service_call: ServiceCall
+    hass: HomeAssistant,
+    manager_type: PowerControlManagerType,
+    service_call: ServiceCall,
 ) -> None:
     """Set Active Power Control to 'Power-limited grid connection' with the given percentage."""
-    bridge, uc = get_inverter_bridge(hass, service_call)
+    bridge, uc = _get_power_control_bridge(hass, manager_type, service_call)
     power_percentage = service_call.data[DATA_POWER_PERCENTAGE]
 
-    await bridge.set(rn.MAXIMUM_FEED_GRID_POWER_PERCENT, power_percentage)
     await bridge.set(
-        rn.ACTIVE_POWER_CONTROL_MODE,
+        POWER_CONTROL_REGISTERS[manager_type]["POWER_PERCENT_REGISTER"],
+        power_percentage,
+    )
+    await bridge.set(
+        POWER_CONTROL_REGISTERS[manager_type]["MODE_REGISTER"],
         rv.ActivePowerControlMode.POWER_LIMITED_GRID_CONNECTION_PERCENT,
     )
 
@@ -745,41 +790,73 @@ async def async_setup_services(
     has_emma = any(isinstance(uc.bridge, HuaweiEMMABridge) for uc in hsucs)
 
     # Register functions that are available on all inverters, no battery/emma required
+    if has_emma:
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
+            partial(reset_maximum_feed_grid_power, hass, "emma"),
+            schema=EMMA_DEVICE_SCHEMA,
+        )
 
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
-        partial(reset_maximum_feed_grid_power, hass),
-        schema=INVERTER_DEVICE_SCHEMA,
-    )
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
+            partial(set_zero_power_grid_connection, hass, "emma"),
+            schema=EMMA_DEVICE_SCHEMA,
+        )
 
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_SET_DI_ACTIVE_POWER_SCHEDULING,
-        partial(set_di_active_power_scheduling, hass),
-        schema=INVERTER_DEVICE_SCHEMA,
-    )
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
+            partial(set_maximum_feed_grid_power, hass, "emma"),
+            schema=EMMA_DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_SCHEMA),
+        )
 
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
-        partial(set_zero_power_grid_connection, hass),
-        schema=INVERTER_DEVICE_SCHEMA,
-    )
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
+            partial(set_maximum_feed_grid_power_percentage, hass, "emma"),
+            schema=EMMA_DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA),
+        )
 
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
-        partial(set_maximum_feed_grid_power, hass),
-        schema=MAXIMUM_FEED_GRID_POWER_SCHEMA,
-    )
+    else:
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
+            partial(reset_maximum_feed_grid_power, hass, "inverter"),
+            schema=INVERTER_DEVICE_SCHEMA,
+        )
 
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
-        partial(set_maximum_feed_grid_power_percentage, hass),
-        schema=MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA,
-    )
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
+            partial(set_zero_power_grid_connection, hass, "inverter"),
+            schema=INVERTER_DEVICE_SCHEMA,
+        )
+
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
+            partial(set_maximum_feed_grid_power, hass, "inverter"),
+            schema=INVERTER_DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_SCHEMA),
+        )
+
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
+            partial(set_maximum_feed_grid_power_percentage, hass, "inverter"),
+            schema=INVERTER_DEVICE_SCHEMA.extend(
+                MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA
+            ),
+        )
+
+        # this service is only available on inverters, not on EMMA
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_SET_DI_ACTIVE_POWER_SCHEDULING,
+            partial(set_di_active_power_scheduling, hass),
+            schema=INVERTER_DEVICE_SCHEMA,
+        )
 
     if has_battery:
         # When an EMMA is present, it is responsible for managing the battery.
@@ -799,7 +876,6 @@ async def async_setup_services(
                 schema=BATTERY_TOU_PERIODS_SCHEMA,
             )
 
-    if has_battery:
         hass.services.async_register(
             DOMAIN,
             SERVICE_FORCIBLE_CHARGE,
