@@ -5,12 +5,11 @@ from __future__ import annotations
 from importlib.metadata import version
 from typing import Any
 
-from huawei_solar import HuaweiEMMABridge, HuaweiSUN2000Bridge
-
 from homeassistant.components.diagnostics import async_redact_data
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_PASSWORD
 from homeassistant.core import HomeAssistant
+from huawei_solar import HuaweiChargerBridge, HuaweiEMMABridge, HuaweiSUN2000Bridge
 
 from . import HuaweiSolarUpdateCoordinators
 from .const import DATA_UPDATE_COORDINATORS, DOMAIN
@@ -39,6 +38,10 @@ async def async_get_config_entry_diagnostics(
             diagnostics_data[
                 f"slave_{ucs.bridge.slave_id}"
             ] = await _build_emma_bridge_diagnostics_info(ucs.bridge)
+        elif isinstance(ucs.bridge, HuaweiChargerBridge):
+            diagnostics_data[
+                f"slave_{ucs.bridge.slave_id}"
+            ] = await _build_charger_bridge_diagnostics_info(ucs.bridge)
         else:
             diagnostics_data[f"slave_{ucs.bridge.slave_id}"] = {
                 "_type": "Unknown",
@@ -98,6 +101,15 @@ async def _build_emma_bridge_diagnostics_info(
     return {
         "_type": "EMMA",
         "model_name": bridge.model_name,
-        "firmware_version": bridge.firmware_version,
+        "software_version": bridge.software_version,
+    }
+
+
+async def _build_charger_bridge_diagnostics_info(
+    bridge: HuaweiChargerBridge,
+) -> dict[str, Any]:
+    return {
+        "_type": "SCharger",
+        "model_name": bridge.model_name,
         "software_version": bridge.software_version,
     }

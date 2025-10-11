@@ -90,6 +90,12 @@
             },
             "emma_maximum_feed_grid_power_watt": {
                 "name": "Maximum feed grid power"
+            },
+            "emma_tou_maximum_power_for_charging_batteries_from_grid": {
+                "name": "Maximum power for charging batteries from grid"
+            },
+            "emma_tou_periods": {
+                "name": "TOU price periods"
             }
         },
         "sensor": {
@@ -818,6 +824,24 @@
             },
             "total_positive_active_energy_external_energy_sensor": {
                 "name": "Total positive active energy"
+            },
+            "charger_rated_power": {
+                "name": "Charger rated power"
+            },
+            "charger_phase_a_voltage_sensor": {
+                "name": "Charger Phase A voltage"
+            },
+            "charger_phase_b_voltage_sensor": {
+                "name": "Charger Phase B voltagey"
+            },
+            "charger_phase_c_voltage_sensor": {
+                "name": "Charger Phase C voltage"
+            },
+            "chager_total_energy_charged_sensor": {
+                "name": "Charger total charged energy"
+            },
+            "charger_temperature_sensor": {
+                "name": "Charger temperature"
             }
         },
         "select": {
@@ -885,7 +909,7 @@
             "fields": {
                 "device_id": {
                     "name": "Battery",
-                    "description": "Must be a 'Battery' device"
+                    "description": "Must be a 'Batteries' device"
                 },
                 "duration": {
                     "name": "Duration",
@@ -966,8 +990,8 @@
             "description": "Set Active Power Control to the default Unlimited mode",
             "fields": {
                 "device_id": {
-                    "name": "Inverter",
-                    "description": "Must be a 'Inverter' device"
+                    "name": "Device",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device"
                 }
             }
         },
@@ -976,8 +1000,8 @@
             "description": "Set Active Power Control to 'DI active scheduling'",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
-                    "description": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::description%]"
+                    "description": "Must be a 'Inverter' device",
+                    "name": "Inverter"
                 }
             }
         },
@@ -1024,8 +1048,8 @@
             "description": "Sets Time Of Use Periods",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]",
-                    "description": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::description%]"
+                    "name": "Device",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Batteries' device"
                 },
                 "periods": {
                     "name": "Periods",
@@ -1080,6 +1104,9 @@
         },
         "battery_2": {
             "name": "Battery 2"
+        },
+        "charger": {
+            "name": "Charger"
         }
     }
 }

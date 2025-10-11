@@ -8,14 +8,13 @@ from dataclasses import dataclass
 import logging
 from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
-from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
-
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
 
 from . import HuaweiSolarEntity
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN

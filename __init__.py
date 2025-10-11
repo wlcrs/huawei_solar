@@ -19,6 +19,7 @@ from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.entity import DeviceInfo, Entity
 from huawei_solar import (
+    HuaweiChargerBridge,
     HuaweiEMMABridge,
     HuaweiSolarBridge,
     HuaweiSolarException,
@@ -302,6 +303,7 @@ async def compute_and_register_device_infos(
     """Create the correct DeviceInfo-objects, which can be used to correctly assign to entities in this integration."""
 
     emma_device_info = None
+    charger_device_info = None
     inverter_device_info = None
     power_meter_device_info = None
     battery_device_info = None
@@ -329,6 +331,25 @@ async def compute_and_register_device_infos(
             model=bridge.model_name,
             sw_version=bridge.software_version,
         )
+    elif isinstance(bridge, HuaweiChargerBridge):
+        charger_device_info = DeviceInfo(
+            identifiers={(DOMAIN, bridge.serial_number)},
+            translation_key="charger",
+            manufacturer="Huawei",
+            model=bridge.model_name,
+            serial_number=bridge.serial_number,
+            sw_version=bridge.software_version,
+        )
+
+        # Add charger device to device registery
+        device_registry.async_get_or_create(
+            config_entry_id=entry.entry_id,
+            identifiers={(DOMAIN, bridge.serial_number)},
+            manufacturer="Huawei",
+            name=bridge.model_name,
+            model=bridge.model_name,
+            sw_version=bridge.software_version,
+        )
     else:
         assert isinstance(bridge, HuaweiSUN2000Bridge)
         inverter_device_info = DeviceInfo(
@@ -342,7 +363,7 @@ async def compute_and_register_device_infos(
         )
 
         # Add inverter device to device registery
-        de = device_registry.async_get_or_create(
+        device_registry.async_get_or_create(
             config_entry_id=entry.entry_id,
             identifiers={(DOMAIN, bridge.serial_number)},
             manufacturer="Huawei",
@@ -400,6 +421,7 @@ async def compute_and_register_device_infos(
 
     return HuaweiInverterBridgeDeviceInfos(
         emma=emma_device_info,
+        charger=charger_device_info,
         inverter=inverter_device_info,
         power_meter=power_meter_device_info,
         connected_energy_storage=battery_device_info,
@@ -416,7 +438,7 @@ class HuaweiSolarUpdateCoordinators:
     device_infos: HuaweiInverterBridgeDeviceInfos
 
     inverter_update_coordinator: HuaweiSolarUpdateCoordinator
-    """Also used for EMMA devices."""
+    """Also used for EMMA & Charger devices."""
     power_meter_update_coordinator: HuaweiSolarUpdateCoordinator | None
     energy_storage_update_coordinator: HuaweiSolarUpdateCoordinator | None
     optimizer_update_coordinator: HuaweiSolarOptimizerUpdateCoordinator | None

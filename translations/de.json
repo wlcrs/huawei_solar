@@ -1,9 +1,9 @@
 {
     "config": {
         "abort": {
-            "already_configured": "Das Gerät ist bereits konfiguriert",
-            "reauth_successful": "Re-Authentifikation erfolgreich",
-            "reconfigure_successful": "[%key:common::config_flow::abort::reconfigure_successful%]"
+          "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+          "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+          "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
         },
         "error": {
             "cannot_connect": "Verbindungsversuch fehlgeschlagen",
@@ -1080,6 +1080,9 @@
         },
         "battery_2": {
             "name": "Batterie 2"
+        },
+        "charger": {
+            "name": "Wallbox"
         }
     }
 }

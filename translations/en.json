@@ -775,7 +775,7 @@
             "description": "Forcible Charge of the battery for a certain time",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Battery' device",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Battery"
                 },
                 "duration": {
@@ -793,7 +793,7 @@
             "description": "Forcible Charge of the battery to a certain State of Charge level",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Battery' device",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Battery"
                 },
                 "power": {
@@ -811,7 +811,7 @@
             "description": "Forcible Discharge of the battery for a certain time",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Battery' device",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Battery"
                 },
                 "duration": {
@@ -829,7 +829,7 @@
             "description": "Forcible Discharge of the battery to a certain State of Charge level",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Battery' device",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Battery"
                 },
                 "power": {
@@ -847,8 +847,8 @@
             "description": "Set Active Power Control to the default Unlimited mode",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Inverter' device",
-                    "name": "Inverter"
+                    "name": "Device",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device"
                 }
             },
             "name": "Set Active Power Control to Maximum Feed Grid Power"
@@ -857,7 +857,7 @@
             "description": "Set Capacity Control Periods",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Battery' device",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Battery"
                 },
                 "periods": {
@@ -895,8 +895,8 @@
             "description": "Sets Active Power Control to 'Power-limited grid connection' with the given wattage",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Inverter' device",
-                    "name": "Inverter"
+                    "name": "Device",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device"
                 },
                 "power": {
                     "description": "Maximum Wattage",
@@ -909,8 +909,8 @@
             "description": "Sets Active Power Control to 'Power-limited grid connection (%)' with the given percentage",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Inverter' device",
-                    "name": "Inverter"
+                    "name": "Device",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device"
                 },
                 "power_percentage": {
                     "description": "Maximum Percentage",
@@ -923,8 +923,8 @@
             "description": "Sets Time Of Use Periods",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Battery' device",
-                    "name": "Battery"
+                    "name": "Device",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Batteries' device"
                 },
                 "periods": {
                     "description": "One period per line. For Huawei LUNA2000 batteries: '[start time]-[end time]/[days effective]/[charge]', with 1=Monday, 7=Sunday (example: '12:00-14:00/1234567/-'). For LG RESU batteries: '[start time]-[end time]/[electricity price]' (example: 13:00-14:00/0.50)",
@@ -937,8 +937,8 @@
             "description": "Set Active Power Control to 'Zero power grid connection'",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Inverter' device",
-                    "name": "Inverter"
+                    "name": "Device",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device"
                 }
             },
             "name": "Set Active Power Control to 'Zero power grid connection'"
@@ -947,7 +947,7 @@
             "description": "Cancel the running forcible charge command",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Battery' device",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Battery"
                 }
             },

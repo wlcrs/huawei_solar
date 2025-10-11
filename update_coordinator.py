@@ -7,12 +7,11 @@ from itertools import chain
 import logging
 from typing import Any
 
-from huawei_solar import HuaweiSolarBridge, HuaweiSolarException, HuaweiSUN2000Bridge
-
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.debounce import Debouncer
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from huawei_solar import HuaweiSolarBridge, HuaweiSolarException, HuaweiSUN2000Bridge
 
 from .const import OPTIMIZER_UPDATE_TIMEOUT, UPDATE_TIMEOUT
 

@@ -4,22 +4,6 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, cast
 
-from huawei_solar import (
-    HuaweiEMMABridge,
-    HuaweiSolarBridge,
-    HuaweiSUN2000Bridge,
-    register_names as rn,
-    register_values as rv,
-)
-from huawei_solar.files import OptimizerRunningStatus
-from huawei_solar.registers import (
-    ChargeDischargePeriod,
-    ChargeFlag,
-    HUAWEI_LUNA2000_TimeOfUsePeriod,
-    LG_RESU_TimeOfUsePeriod,
-    PeakSettingPeriod,
-)
-
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
@@ -43,6 +27,21 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from huawei_solar import (
+    HuaweiChargerBridge,
+    HuaweiEMMABridge,
+    HuaweiSolarBridge,
+    HuaweiSUN2000Bridge,
+    register_names as rn,
+    register_values as rv,
+)
+from huawei_solar.files import OptimizerRunningStatus
+from huawei_solar.registers import (
+    ChargeFlag,
+    HUAWEI_LUNA2000_TimeOfUsePeriod,
+    LG_RESU_TimeOfUsePeriod,
+    PeakSettingPeriod,
+)
 
 from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinators
 from .const import DATA_UPDATE_COORDINATORS, DOMAIN
@@ -1161,7 +1160,11 @@ def create_sun2000_entities(ucs: HuaweiSolarUpdateCoordinators) -> list[SensorEn
             for entity_description in THREE_PHASE_METER_ENTITY_DESCRIPTIONS
         )
 
-    if ucs.bridge.has_write_permission and ucs.configuration_update_coordinator:
+    if (
+        not ucs.bridge.connected_via_emma
+        and ucs.bridge.has_write_permission
+        and ucs.configuration_update_coordinator
+    ):
         entities_to_add.append(
             HuaweiSolarActivePowerControlModeEntity(
                 ucs.configuration_update_coordinator,
@@ -1699,6 +1702,48 @@ EMMA_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         state_class=SensorStateClass.TOTAL,
         entity_registry_enabled_default=False,
     ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_RATED_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_PHASE_A_VOLTAGE_SENSOR,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_PHASE_B_VOLTAGE_SENSOR,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_PHASE_C_VOLTAGE_SENSOR,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_TOTAL_ENERGY_CHARGED_SENSOR,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_TEMPERATURE_SENSOR,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
 )
 
 
@@ -1709,13 +1754,86 @@ def create_emma_entities(
     assert ucs.device_infos["emma"]
     assert isinstance(ucs.bridge, HuaweiEMMABridge)
 
-    return [
+    entities = [
         HuaweiSolarSensorEntity(
             ucs.inverter_update_coordinator,
             entity_description,
             ucs.device_infos["emma"],
         )
         for entity_description in EMMA_SENSOR_DESCRIPTIONS
+    ]
+
+    entities.append(
+        HuaweiSolarTOUPricePeriodsSensorEntity(
+            ucs.configuration_update_coordinator,
+            ucs.bridge,
+            ucs.device_infos["emma"],
+            register_name=rn.EMMA_TOU_PERIODS,
+            entity_registry_enabled_default=False,
+        )
+    )
+
+    return entities
+
+
+CHARGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_RATED_POWER,
+        native_unit_of_measurement=UnitOfPower.WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_PHASE_A_VOLTAGE_SENSOR,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_PHASE_B_VOLTAGE_SENSOR,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_PHASE_C_VOLTAGE_SENSOR,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_TOTAL_ENERGY_CHARGED_SENSOR,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_TEMPERATURE_SENSOR,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+)
+
+
+def create_charger_entities(
+    ucs: HuaweiSolarUpdateCoordinators,
+) -> list["HuaweiSolarSensorEntity"]:
+    """Create Charger sensor entities."""
+    assert ucs.device_infos["charger"]
+    assert isinstance(ucs.bridge, HuaweiChargerBridge)
+
+    return [
+        HuaweiSolarSensorEntity(
+            ucs.inverter_update_coordinator,
+            entity_description,
+            ucs.device_infos["charger"],
+        )
+        for entity_description in CHARGER_SENSOR_DESCRIPTIONS
     ]
 
 
@@ -1735,6 +1853,8 @@ async def async_setup_entry(
             entities_to_add.extend(create_sun2000_entities(ucs))
         elif isinstance(ucs.bridge, HuaweiEMMABridge):
             entities_to_add.extend(create_emma_entities(ucs))
+        elif isinstance(ucs.bridge, HuaweiChargerBridge):
+            entities_to_add.extend(create_charger_entities(ucs))
 
     async_add_entities(entities_to_add, True)
 
@@ -1861,21 +1981,20 @@ class HuaweiSolarTOUPricePeriodsSensorEntity(
         coordinator: HuaweiSolarUpdateCoordinator,
         bridge: HuaweiSolarBridge,
         device_info: DeviceInfo,
+        register_name: str = rn.STORAGE_HUAWEI_LUNA2000_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS,
+        entity_registry_enabled_default: bool = True,
     ) -> None:
         """Huawei Solar TOU Sensor Entity constructor."""
         super().__init__(
             coordinator,
-            {
-                "register_names": [
-                    rn.STORAGE_HUAWEI_LUNA2000_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS
-                ]
-            },
+            {"register_names": [register_name]},
         )
         self.coordinator = coordinator
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
-            key=rn.STORAGE_HUAWEI_LUNA2000_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS,
+            key=register_name,
             icon="mdi:calendar-text",
+            entity_registry_enabled_default=entity_registry_enabled_default,
         )
 
         self._bridge = bridge
