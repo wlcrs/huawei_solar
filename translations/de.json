@@ -1,9 +1,9 @@
 {
     "config": {
         "abort": {
-          "already_configured": "Ger\u00e4t ist bereits konfiguriert",
-          "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
-          "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+            "already_configured": "Das Gerät ist bereits konfiguriert",
+            "reauth_successful": "Re-Authentifikation erfolgreich",
+            "reconfigure_successful": "[%key:common::config_flow::abort::reconfigure_successful%]"
         },
         "error": {
             "cannot_connect": "Verbindungsversuch fehlgeschlagen",
@@ -90,6 +90,12 @@
             },
             "emma_maximum_feed_grid_power_watt": {
                 "name": "Maximale Netzeinspeiseleistung"
+            },
+            "emma_tou_maximum_power_for_charging_batteries_from_grid": {
+                "name": "Maximum power for charging batteries from grid"
+            },
+            "emma_tou_periods": {
+                "name": "TOU price periods"
             }
         },
         "sensor": {
@@ -818,6 +824,24 @@
             },
             "total_positive_active_energy_external_energy_sensor": {
                 "name": "Gesamte positive Wirkenergie"
+            },
+            "charger_rated_power": {
+                "name": "Charger rated power"
+            },
+            "charger_phase_a_voltage_sensor": {
+                "name": "Charger Phase A voltage"
+            },
+            "charger_phase_b_voltage_sensor": {
+                "name": "Charger Phase B voltagey"
+            },
+            "charger_phase_c_voltage_sensor": {
+                "name": "Charger Phase C voltage"
+            },
+            "chager_total_energy_charged_sensor": {
+                "name": "Charger total charged energy"
+            },
+            "charger_temperature_sensor": {
+                "name": "Charger temperature"
             }
         },
         "select": {
@@ -976,8 +1000,8 @@
             "description": "Wirkleistungssteuerung auf 'DI active scheduling' setzen",
             "fields": {
                 "device_id": {
-                    "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]",
-                    "description": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::description%]"
+                    "description": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::description%]",
+                    "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]"
                 }
             }
         },
