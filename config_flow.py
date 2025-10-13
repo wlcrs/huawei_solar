@@ -2,14 +2,29 @@
 
 from __future__ import annotations
 
+import contextlib
 import logging
 from typing import Any
 
+from huawei_solar import (
+    ConnectionException,
+    HuaweiSolarException,
+    InvalidCredentials,
+    ReadException,
+    create_device_instance,
+    create_rtu_client,
+    create_sub_device_instance,
+    create_tcp_client,
+    get_device_infos,
+)
+from huawei_solar.device.base import HuaweiSolarDeviceWithLogin
 import serial.tools.list_ports
+from tmodbus.exceptions import ModbusConnectionError
 import voluptuous as vol
 
 from homeassistant import config_entries
 from homeassistant.components import usb
+from homeassistant.config_entries import ConfigFlowResult
 from homeassistant.const import (
     CONF_HOST,
     CONF_PASSWORD,
@@ -17,17 +32,7 @@ from homeassistant.const import (
     CONF_TYPE,
     CONF_USERNAME,
 )
-from homeassistant.data_entry_flow import FlowResult
 import homeassistant.helpers.config_validation as cv
-from huawei_solar import (
-    ConnectionException,
-    HuaweiSolarException,
-    InvalidCredentials,
-    ReadException,
-    create_rtu_bridge,
-    create_sub_bridge,
-    create_tcp_bridge,
-)
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
@@ -43,48 +48,50 @@ _LOGGER = logging.getLogger(__name__)
 CONF_MANUAL_PATH = "Enter Manually"
 
 
-async def validate_serial_setup(port: str, slave_ids: list[int]) -> dict[str, Any]:
+async def validate_serial_setup(port: str, unit_ids: list[int]) -> dict[str, Any]:
     """Validate the serial device that was passed by the user."""
-    bridge = None
+    client = create_rtu_client(
+        port=port,
+        unit_id=unit_ids[0],
+    )
     try:
-        bridge = await create_rtu_bridge(
-            port=port,
-            slave_id=slave_ids[0],
-        )
+        await client.connect()
+        device = await create_device_instance(client)
 
         _LOGGER.info(
-            "Successfully connected to inverter %s with SN %s",
-            bridge.model_name,
-            bridge.serial_number,
+            "Successfully connected to device %s %s with SN %s",
+            type(device).__name__,
+            device.model_name,
+            device.serial_number,
         )
 
         result = {
-            "model_name": bridge.model_name,
-            "serial_number": bridge.serial_number,
+            "model_name": device.model_name,
+            "serial_number": device.serial_number,
         }
 
         # Also validate the other slave-ids
-        for slave_id in slave_ids[1:]:
+        for slave_id in unit_ids[1:]:
             try:
-                slave_bridge = await create_sub_bridge(bridge, slave_id)
+                slave_bridge = await create_sub_device_instance(device, slave_id)
 
                 _LOGGER.info(
-                    "Successfully connected to slave inverter %s: %s with SN %s",
+                    "Successfully connected to sub device %s with ID %s: %s with SN %s",
+                    type(slave_bridge).__name__,
                     slave_id,
                     slave_bridge.model_name,
                     slave_bridge.serial_number,
                 )
             except HuaweiSolarException as err:
                 _LOGGER.error("Could not connect to slave %s", slave_id)
-                raise SlaveException(f"Could not connect to slave {slave_id}") from err
+                raise DeviceException(f"Could not connect to slave {slave_id}") from err
 
         # Return info that you want to store in the config entry.
         return result
-
     finally:
-        if bridge is not None:
-            # Cleanup this inverter object explicitly to prevent it from trying to maintain a modbus connection
-            await bridge.stop()
+        # Cleanup this device object explicitly to prevent it from trying to maintain a modbus connection
+        with contextlib.suppress(Exception):
+            await client.disconnect()
 
 
 async def validate_network_setup_auto_slave_discovery(
@@ -94,177 +101,177 @@ async def validate_network_setup_auto_slave_discovery(
     elevated_permissions: bool,
 ) -> dict[str, Any]:
     """Validate that we can connect to the device via the provided host and port. Try to autodiscover the slave ids."""
-    bridge = None
+
+    client = create_tcp_client(
+        host=host,
+        port=port,
+        unit_id=0,
+    )
     try:
-        bridge = await create_tcp_bridge(
-            host=host,
-            port=port,
-            slave_id=0,
+        await client.connect()
+        device_infos = await get_device_infos(client)
+        _LOGGER.info("Received %d device infos", len(device_infos))
+
+        if not device_infos:
+            raise DeviceException("No devices found")
+
+        if not device_infos[0].device_id:
+            raise DeviceException("Primary device has no device_id")
+
+        # we assume the first device is the primary device
+        device = await create_device_instance(
+            client.for_unit_id(device_infos[0].device_id)
         )
 
         _LOGGER.info(
-            "Successfully connected to device %s with SN %s",
-            bridge.model_name,
-            bridge.serial_number,
+            "Successfully connected to device %s %s with SN %s",
+            type(device).__name__,
+            device.model_name,
+            device.serial_number,
         )
 
-        result: dict[str, Any] = {
-            "model_name": bridge.model_name,
-            "serial_number": bridge.serial_number,
-        }
-        if elevated_permissions:
-            # Check if we have write access. If this is not the case, we will
-            # need to login (and request the username/password from the user to be
-            # able to do this).
-            result["has_write_permission"] = await bridge.has_write_permission()
+        # Check if we have write access. If this is not the case, we will
+        # need to login (and request the username/password from the user to be
+        # able to do this).
 
-        device_infos = await bridge.client.get_device_infos()
+        has_write_permission = elevated_permissions and (
+            not isinstance(device, HuaweiSolarDeviceWithLogin)
+            or await device.has_write_permission()
+        )
 
-        _LOGGER.info("Received %d device infos", len(device_infos))
-
-        slave_ids = [0]
-
+        unit_ids = []
         for device_info in device_infos:
             if device_info.device_id is None:
                 _LOGGER.warning(
-                    "Slave with no device_id found. Skipping. Product type: %s, model: %s, software version: %s",
+                    "Device with no device_id found. Skipping. Product type: %s, model: %s, software version: %s",
                     device_info.product_type,
                     device_info.model,
                     device_info.software_version,
                 )
                 continue
 
-            if device_info.device_id == 0:
-                _LOGGER.info(
-                    "Skipping already processed slave 0. Product type: %s, model: %s, software version: %s",
-                    device_info.product_type,
-                    device_info.model,
-                    device_info.software_version,
-                )
-                continue
-
-            if device_info.model and device_info.model.startswith(
-                ("SUN2000", "EDF ESS", "Powershifter", "SWI300", "SCharger")
-            ):
-                _LOGGER.info(
-                    "Slave %s was auto-discovered of type %s with model %s and software version %s",
-                    device_info.device_id,
-                    device_info.product_type,
-                    device_info.model,
-                    device_info.software_version,
+            _LOGGER.info(
+                "Device %s was auto-discovered of type %s with model %s and software version %s",
+                device_info.device_id,
+                device_info.product_type,
+                device_info.model,
+                device_info.software_version,
+            )
+            try:
+                device = await create_device_instance(
+                    client.for_unit_id(device_info.device_id)
                 )
 
-                slave_id = device_info.device_id
-
-                try:
-                    slave_bridge = await create_sub_bridge(bridge, slave_id)
-
-                    _LOGGER.info(
-                        "Successfully connected to slave %s: %s with SN %s",
-                        slave_id,
-                        slave_bridge.model_name,
-                        slave_bridge.serial_number,
-                    )
-
-                    slave_ids.append(slave_id)
-                except HuaweiSolarException:
-                    _LOGGER.exception(
-                        "Could not connect to slave %s. Skipping", slave_id
-                    )
-            else:
-                _LOGGER.warning(
-                    "Skipping slave %s with model %s. Only SUN2000 inverters and SChargers are supported as secondary slaves",
+                _LOGGER.info(
+                    "Successfully connected to sub_device %s %s: %s with SN %s",
+                    type(device).__name__,
                     device_info.device_id,
-                    device_info.model,
+                    device.model_name,
+                    device.serial_number,
+                )
+
+                unit_ids.append(device_info.device_id)
+
+            except HuaweiSolarException:
+                _LOGGER.exception(
+                    "Device with ID %s did not respond. Skipping", device_info.device_id
                 )
 
         # Return info that you want to store in the config entry.
-
-        result["slave_ids"] = slave_ids
-        return result
-
+        return {
+            "slave_ids": unit_ids,
+            "model_name": device.model_name,
+            "serial_number": device.serial_number,
+            "has_write_permission": has_write_permission,
+        }
     finally:
-        if bridge:
-            # Cleanup this inverter object explicitly to prevent it from trying to maintain a modbus connection
-            await bridge.stop()
+        with contextlib.suppress(Exception):
+            await client.disconnect()
 
 
 async def validate_network_setup(
     *,
     host: str,
     port: int,
-    slave_ids: list[int],
+    unit_ids: list[int],
     elevated_permissions: bool,
 ) -> dict[str, Any]:
     """Validate the user input allows us to connect.
 
     Data has the keys from STEP_SETUP_NETWORK_DATA_SCHEMA with values provided by the user.
     """
-    bridge = None
+    client = create_tcp_client(
+        host=host,
+        port=port,
+        unit_id=unit_ids[0],
+    )
     try:
-        bridge = await create_tcp_bridge(
-            host=host,
-            port=port,
-            slave_id=slave_ids[0],
-        )
+        await client.connect()
+        device = await create_device_instance(client)
 
         _LOGGER.info(
-            "Successfully connected to inverter %s with SN %s",
-            bridge.model_name,
-            bridge.serial_number,
+            "Successfully connected to device %s %s with SN %s",
+            (type(device).__name__),
+            device.model_name,
+            device.serial_number,
         )
 
-        result: dict[str, Any] = {
-            "model_name": bridge.model_name,
-            "serial_number": bridge.serial_number,
-        }
-        if elevated_permissions:
-            # Check if we have write access. If this is not the case, we will
-            # need to login (and request the username/password from the user to be
-            # able to do this).
-            result["has_write_permission"] = await bridge.has_write_permission()
-
+        # Check if we have write access. If this is not the case, we will
+        # need to login (and request the username/password from the user to be
+        # able to do this).
+        has_write_permission = elevated_permissions and (
+            not isinstance(device, HuaweiSolarDeviceWithLogin)
+            or await device.has_write_permission()
+        )
         # Also validate the other slave-ids
-        for slave_id in slave_ids[1:]:
+        for unit_id in unit_ids[1:]:
             try:
-                slave_bridge = await create_sub_bridge(bridge, slave_id)
+                sub_device = await create_sub_device_instance(device, unit_id)
 
                 _LOGGER.info(
-                    "Successfully connected to slave inverter %s: %s with SN %s",
-                    slave_id,
-                    slave_bridge.model_name,
-                    slave_bridge.serial_number,
+                    "Successfully connected to sub device %s %s: %s with SN %s",
+                    type(sub_device).__name__,
+                    unit_id,
+                    sub_device.model_name,
+                    sub_device.serial_number,
                 )
             except HuaweiSolarException as err:
-                _LOGGER.error("Could not connect to slave %s", slave_id)
-                raise SlaveException(f"Could not connect to slave {slave_id}") from err
+                _LOGGER.error("Could not connect to sub device %s", unit_id)
+                raise DeviceException(
+                    f"Could not connect to sub device {unit_id}"
+                ) from err
 
-        # Return info that you want to store in the config entry.
-        return result
-
+        return {
+            "model_name": device.model_name,
+            "serial_number": device.serial_number,
+            "has_write_permission": has_write_permission,
+        }
     finally:
-        if bridge:
-            # Cleanup this inverter object explicitly to prevent it from trying to maintain a modbus connection
-            await bridge.stop()
+        # Cleanup this inverter object explicitly to prevent it from trying to maintain a modbus connection
+        with contextlib.suppress(Exception):
+            await client.disconnect()
 
 
 async def validate_network_setup_login(
     *,
     host: str,
     port: int,
-    slave_id: int,
+    unit_id: int,
     username: str,
     password: str,
 ) -> bool:
     """Verify the installer username/password and test if it can perform a write-operation."""
-    bridge = None
+    client = create_tcp_client(
+        host=host,
+        port=port,
+        unit_id=unit_id,
+    )
     try:
-        # these parameters have already been tested in validate_input, so they should work fine!
-        bridge = await create_tcp_bridge(
-            host=host,
-            port=port,
-            slave_id=slave_id,
-        )
+        # these parameters have already been tested in validate_input, so this should work fine!
+        await client.connect()
+        bridge = await create_device_instance(client)
+
+        assert isinstance(bridge, HuaweiSolarDeviceWithLogin)
 
         await bridge.login(username, password)
 
@@ -279,12 +286,12 @@ async def validate_network_setup_login(
             await bridge.stop()
 
 
-def parse_slave_ids(slave_ids: str):
-    """Parse slave ids string into list of ints."""
+def parse_unit_ids(unit_ids: str) -> list[int]:
+    """Parse unit ids string into list of ints."""
     try:
-        return list(map(int, slave_ids.split(",")))
+        return list(map(int, unit_ids.split(",")))
     except ValueError as err:
-        raise SlaveIdsParseException from err
+        raise UnitIdsParseException from err
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -292,7 +299,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     # Values entered by user in config flow
     _host: str | None = None
-    _port: int | str | None = None
+    _port: int | None = None
+
+    _serial_port: str | None = None
     _slave_ids: list[int] | None = None
 
     _username: str | None = None
@@ -309,20 +318,24 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     _inverter_info: dict[str, Any] | None = None
 
     VERSION = 1
+    MINOR_VERSION = 1
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Step when user initializes a integration."""
         return await self.async_step_setup_connection_type()
 
-    def _update_config_data_from_entry_data(self, entry_data: dict[str, Any]):
+    def _update_config_data_from_entry_data(self, entry_data: dict[str, Any]) -> None:
         self._host = entry_data.get(CONF_HOST)
-        self._port = entry_data.get(CONF_PORT)
+        if self._host is None:
+            self._serial_port = entry_data.get(CONF_PORT)
+        else:
+            self._port = entry_data.get(CONF_PORT)
 
         slave_ids = entry_data.get(CONF_SLAVE_IDS)
-        assert isinstance(slave_ids, list | int)
         if not isinstance(slave_ids, list):
+            assert isinstance(slave_ids, int)
             slave_ids = [slave_ids]
         self._slave_ids = slave_ids
 
@@ -333,21 +346,25 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_ENABLE_PARAMETER_CONFIGURATION, False
         )
 
-    async def async_step_reconfigure(self, user_input: dict[str, Any] | None = None):
+    async def async_step_reconfigure(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
         """Step when user reconfigures the integration."""
-        self._reconfigure_entry = self.hass.config_entries.async_get_entry(
+        assert "entry_id" in self.context
+        self._reconfigure_entry = self.hass.config_entries.async_get_known_entry(
             self.context["entry_id"]
         )
-        self._update_config_data_from_entry_data(self._reconfigure_entry.data)
+        self._update_config_data_from_entry_data(self._reconfigure_entry.data)  # type: ignore[arg-type]
         await self.hass.config_entries.async_unload(self.context["entry_id"])
         return await self.async_step_setup_connection_type()
 
     async def async_step_reauth(
         self, config: dict[str, Any] | None = None
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Perform reauth upon an login error."""
         assert config is not None
-        self._reauth_entry = self.hass.config_entries.async_get_entry(
+        assert "entry_id" in self.context
+        self._reauth_entry = self.hass.config_entries.async_get_known_entry(
             self.context["entry_id"]
         )
         self._update_config_data_from_entry_data(config)
@@ -355,7 +372,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_setup_connection_type(
         self, user_input: dict[str, Any] | None = None
-    ):
+    ) -> ConfigFlowResult:
         """Step to let the user choose the connection type."""
         if user_input is not None:
             user_selection = user_input[CONF_TYPE]
@@ -379,7 +396,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_setup_serial(
         self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Handle connection parameters when using ModbusRTU."""
         # You always have elevated permissions when connecting over serial
         self._elevated_permissions = True
@@ -389,28 +406,30 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             self._host = None
             try:
-                self._slave_ids = parse_slave_ids(user_input[CONF_SLAVE_IDS])
-            except SlaveIdsParseException:
+                self._slave_ids = parse_unit_ids(user_input[CONF_SLAVE_IDS])
+            except UnitIdsParseException:
                 errors["base"] = "invalid_slave_ids"
             else:
                 if user_input[CONF_PORT] == CONF_MANUAL_PATH:
                     return await self.async_step_setup_serial_manual_path()
 
-                self._port = await self.hass.async_add_executor_job(
+                self._serial_port = await self.hass.async_add_executor_job(
                     usb.get_serial_by_id, user_input[CONF_PORT]
                 )
 
                 try:
-                    assert isinstance(self._port, str)
-                    info = await validate_serial_setup(self._port, self._slave_ids)
+                    assert isinstance(self._serial_port, str)
+                    info = await validate_serial_setup(
+                        self._serial_port, self._slave_ids
+                    )
 
-                except ConnectionException:
+                except (ConnectionException, ModbusConnectionError):
                     errors["base"] = "cannot_connect"
-                except SlaveException:
+                except DeviceException:
                     errors["base"] = "slave_cannot_connect"
                 except ReadException:
                     errors["base"] = "read_error"
-                except Exception:  # pylint: disable=broad-except
+                except Exception:  # allowed in config flow
                     _LOGGER.exception(
                         "Unexpected exception while connecting over serial"
                     )
@@ -452,26 +471,26 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_setup_serial_manual_path(
         self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Select path manually."""
         errors = {}
 
         if user_input is not None:
-            self._host = None
-            self._port = user_input[CONF_PORT]
+            self._serial_port = user_input[CONF_PORT]
+            assert isinstance(self._serial_port, str)
 
             try:
                 self._slave_ids = list(map(int, user_input[CONF_SLAVE_IDS].split(",")))
-                info = await validate_serial_setup(self._port, self._slave_ids)
-            except SlaveIdsParseException:
+                info = await validate_serial_setup(self._serial_port, self._slave_ids)
+            except UnitIdsParseException:
                 errors["base"] = "invalid_slave_ids"
-            except ConnectionException:
+            except (ConnectionException, ModbusConnectionError):
                 errors["base"] = "cannot_connect"
-            except SlaveException:
+            except DeviceException:
                 errors["base"] = "slave_cannot_connect"
             except ReadException:
                 errors["base"] = "read_error"
-            except Exception:  # pylint: disable=broad-except
+            except Exception:  # allowed in config flow
                 _LOGGER.exception("Unexpected exception while connecting over serial")
                 errors["base"] = "unknown"
             else:
@@ -494,13 +513,15 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_setup_network(
         self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Handle connection parameters when using ModbusTCP."""
         errors = {}
 
         if user_input is not None:
             self._host = user_input[CONF_HOST]
+            assert self._host is not None
             self._port = user_input[CONF_PORT]
+            assert self._port is not None
             self._elevated_permissions = user_input[CONF_ENABLE_PARAMETER_CONFIGURATION]
 
             info = None
@@ -513,17 +534,15 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     )
                     self._slave_ids = info.pop("slave_ids")
 
-                except ConnectionException:
+                except (ConnectionException, ModbusConnectionError):
                     errors["base"] = "cannot_connect"
-                except SlaveException:
+                except DeviceException:
                     errors["base"] = "slave_cannot_connect"
                 except ReadException:
-                    _LOGGER.exception("Read exception while connecting via ModbusTCP")
+                    _LOGGER.exception("Read exception while connecting via TCP")
                     errors["base"] = "read_error"
-                except Exception:  # pylint: disable=broad-except
-                    _LOGGER.exception(
-                        "Unexpected exception while connecting via ModbusTCP"
-                    )
+                except Exception:  # allowed in config flow
+                    _LOGGER.exception("Unexpected exception while connecting via TCP")
                     errors["base"] = "unknown"
             else:
                 try:
@@ -537,22 +556,20 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         info = await validate_network_setup(
                             host=self._host,
                             port=self._port,
-                            slave_ids=self._slave_ids,
+                            unit_ids=self._slave_ids,
                             elevated_permissions=self._elevated_permissions,
                         )
 
-                    except ConnectionException:
+                    except (ConnectionException, ModbusConnectionError):
                         errors["base"] = "cannot_connect"
-                    except SlaveException:
+                    except DeviceException:
                         errors["base"] = "slave_cannot_connect"
                     except ReadException:
-                        _LOGGER.exception(
-                            "Read exception while connecting via ModbusTCP"
-                        )
+                        _LOGGER.exception("Read exception while connecting via TCP")
                         errors["base"] = "read_error"
-                    except Exception:  # pylint: disable=broad-except
+                    except Exception:  # allowed in config flow
                         _LOGGER.exception(
-                            "Unexpected exception while connecting via ModbusTCP"
+                            "Unexpected exception while connecting via TCP"
                         )
                         errors["base"] = "unknown"
 
@@ -596,7 +613,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_network_login(
         self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Handle username/password input."""
         assert self._host is not None
         assert self._port is not None
@@ -609,11 +626,14 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._username = user_input[CONF_USERNAME]
             self._password = user_input[CONF_PASSWORD]
 
+            assert self._username is not None
+            assert self._password is not None
+
             try:
                 login_success = await validate_network_setup_login(
                     host=self._host,
                     port=self._port,
-                    slave_id=self._slave_ids[0],
+                    unit_id=self._slave_ids[0],
                     username=self._username,
                     password=self._password,
                 )
@@ -621,18 +641,18 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     return await self._create_or_update_entry(self._inverter_info)
 
                 errors["base"] = "invalid_auth"
-            except ConnectionException:
+            except (ConnectionException, ModbusConnectionError):
                 errors["base"] = "cannot_connect"
-            except SlaveException:
+            except DeviceException:
                 errors["base"] = "slave_cannot_connect"
             except ReadException:
                 _LOGGER.exception(
-                    "Could not read from ModbusTCP while validating login parameter"
+                    "Could not read from device while validating login parameter"
                 )
                 errors["base"] = "read_error"
-            except Exception:  # pylint: disable=broad-except
+            except Exception:  # allowed in config flow
                 _LOGGER.exception(
-                    "Unexpected exception while validating login parameters via ModbusTCP"
+                    "Unexpected exception while validating login parameters"
                 )
                 errors["base"] = "unknown"
 
@@ -649,12 +669,16 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def _create_or_update_entry(self, inverter_info: dict[str, Any] | None):
+    async def _create_or_update_entry(
+        self, inverter_info: dict[str, Any] | None
+    ) -> ConfigFlowResult:
         """Create the entry, or update the existing one if present."""
 
         data = {
             CONF_HOST: self._host,
-            CONF_PORT: self._port,
+            CONF_PORT: self._serial_port
+            if self._serial_port is not None
+            else self._port,
             CONF_SLAVE_IDS: self._slave_ids,
             CONF_ENABLE_PARAMETER_CONFIGURATION: self._elevated_permissions,
             CONF_USERNAME: self._username,
@@ -683,9 +707,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_create_entry(title=inverter_info["model_name"], data=data)
 
 
-class SlaveIdsParseException(Exception):
-    """Error while parsing the slave id's."""
+class UnitIdsParseException(Exception):
+    """Error while parsing the unit id's."""
 
 
-class SlaveException(Exception):
-    """Error while testing communication with a slave."""
+class DeviceException(Exception):
+    """Error while testing communication with a device."""
