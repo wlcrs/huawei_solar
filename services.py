@@ -24,7 +24,10 @@ from huawei_solar.register_definitions.periods import (
 )
 import voluptuous as vol
 
-from homeassistant.core import HomeAssistant, ServiceCall, async_get_hass, callback
+from homeassistant.config_entries import ConfigEntryState
+from homeassistant.const import ATTR_DEVICE_ID
+from homeassistant.core import HomeAssistant, ServiceCall, callback
+from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import device_registry as dr
 import homeassistant.helpers.config_validation as cv
 
@@ -91,151 +94,132 @@ T = TypeVar("T", bound=HuaweiSolarDevice)
 
 
 @callback
+def async_get_entry_id_for_service_call(
+    call: ServiceCall,
+) -> tuple[dr.DeviceEntry, HuaweiSolarConfigEntry]:
+    """Get the entry ID related to a service call (by device ID)."""
+    device_registry = dr.async_get(call.hass)
+    device_id = call.data[ATTR_DEVICE_ID]
+    if (device_entry := device_registry.async_get(device_id)) is None:
+        raise ServiceValidationError(
+            translation_domain=DOMAIN,
+            translation_key="invalid_device_id",
+            translation_placeholders={"device_id": device_id},
+        )
+
+    for entry_id in device_entry.config_entries:
+        if (entry := call.hass.config_entries.async_get_entry(entry_id)) is None:
+            continue
+        if entry.domain == DOMAIN:
+            if entry.state is not ConfigEntryState.LOADED:
+                raise ServiceValidationError(
+                    translation_domain=DOMAIN,
+                    translation_key="entry_not_loaded",
+                    translation_placeholders={"entry": entry.title},
+                )
+            return (device_entry, entry)
+
+    raise ServiceValidationError(
+        translation_domain=DOMAIN,
+        translation_key="config_entry_not_found",
+        translation_placeholders={"device_id": device_id},
+    )
+
+
+@callback
 def _get_device_data(
-    hass: HomeAssistant,
-    device_id: str,
+    call: ServiceCall,
 ) -> HuaweiSolarDeviceData:
-    dev_reg = dr.async_get(hass)
-    device_entry = dev_reg.async_get(device_id)
+    """Return the HuaweiSolarDeviceData associated with the device_id in the service call."""
+    device_entry, entry = async_get_entry_id_for_service_call(call)
 
-    if not device_entry:
-        raise HuaweiSolarServiceException("No such device found")
-    for entry_data in hass.data[DOMAIN].values():
-        device_datas: list[HuaweiSolarDeviceData] = entry_data[DATA_DEVICE_DATAS]
-        for dd in device_datas:
-            assert "identifiers" in dd.device_info
-            for identifier in dd.device_info["identifiers"]:
-                for device_identifier in device_entry.identifiers:
-                    if identifier == device_identifier:
-                        return dd
+    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
+    for dd in device_datas:
+        assert "identifiers" in dd.device_info
+        for identifier in dd.device_info["identifiers"]:
+            for device_identifier in device_entry.identifiers:
+                if identifier == device_identifier:
+                    return dd
 
-    _LOGGER.error("No device found with device_id '%s'", device_id)
-    msg = f"No device found with device_id '{device_id}'"
-    raise HuaweiSolarServiceException(msg)
+    raise ServiceValidationError(
+        translation_domain=DOMAIN,
+        translation_key="ha_device_not_found",
+        translation_placeholders={"device_id": device_entry.id},
+    )
 
 
 @callback
 def _get_device_of_type_data[T](
-    hass: HomeAssistant, device_id: str, device_type: type[T]
+    call: ServiceCall, device_type: type[T]
 ) -> HuaweiSolarDeviceData:
-    dd = _get_device_data(hass, device_id)
-
-    if isinstance(dd.device, device_type):
-        return dd
-
-    _LOGGER.error("The provided device is not an %s", device_type.__name__)
-    error_msg = f"Not a valid '{device_type.__name__}' device"
-    raise HuaweiSolarServiceException(error_msg)
-
-
-@callback
-def get_emma_device(
-    hass: HomeAssistant, service_call: ServiceCall
-) -> HuaweiSolarDeviceData:
-    """Return the HuaweiEMMABridge associated with the emma device_id in the service call."""
-    device_id = service_call.data[DATA_DEVICE_ID]
-    return _get_device_of_type_data(hass, device_id, EMMADevice)
-
-
-def validate_emma_device_id(device_id: str) -> str:
-    """Validate whether the device_id refers to an 'EMMA' device."""
-    hass = async_get_hass()
-
-    try:
-        _get_device_of_type_data(hass, device_id, EMMADevice)
-    except HuaweiSolarServiceException as err:
-        raise vol.Invalid(str(err)) from err
-    else:
-        return device_id
-
-
-EMMA_DEVICE_SCHEMA = vol.Schema(
-    {DATA_DEVICE_ID: vol.All(cv.string, validate_emma_device_id)}
-)
-
-
-@callback
-def _get_battery_device_data(
-    hass: HomeAssistant,
-    device_id: str,
-) -> HuaweiSolarInverterData:
-    dev_reg = dr.async_get(hass)
-    device_entry = dev_reg.async_get(device_id)
-
-    if not device_entry:
-        raise HuaweiSolarServiceException("No such device found")
-    for entry_data in hass.data[DOMAIN].values():
-        device_datas: list[HuaweiSolarDeviceData] = entry_data[DATA_DEVICE_DATAS]
-        for dd in device_datas:
-            if not isinstance(dd, HuaweiSolarInverterData):
-                continue
-            if dd.connected_energy_storage is None:
-                continue
-            assert "identifiers" in dd.connected_energy_storage
-            for identifier in dd.connected_energy_storage["identifiers"]:
-                for device_identifier in device_entry.identifiers:
-                    if identifier == device_identifier:
-                        return dd
-
-    _LOGGER.error("No device found with device_id '%s'", device_id)
-    msg = f"No device found with device_id '{device_id}'"
-    raise HuaweiSolarServiceException(msg)
-
-
-@callback
-def get_battery_device_data(
-    hass: HomeAssistant, service_call: ServiceCall
-) -> HuaweiSolarInverterData:
-    """Return the HuaweiSolarInverterData associated with the battery device_id in the service call."""
-    device_id = service_call.data[DATA_DEVICE_ID]
-    return _get_battery_device_data(hass, device_id)
-
-
-def validate_battery_device_id(device_id: str) -> str:
-    """Validate whether the device_id refers to a 'Connected Energy Storage' device."""
-    hass = async_get_hass()
-    try:
-        _get_battery_device_data(hass, device_id)
-    except HuaweiSolarServiceException as err:
-        raise vol.Invalid(str(err)) from err
-    else:
-        return device_id
-
-
-BATTERY_DEVICE_SCHEMA = vol.Schema(
-    {DATA_DEVICE_ID: vol.All(cv.string, validate_battery_device_id)}
-)
-
-
-@callback
-def get_inverter_data(
-    hass: HomeAssistant, service_call: ServiceCall
-) -> HuaweiSolarInverterData:
-    """Return the HuaweiSolarBridge associated with the inverter device_id in the service call."""
-    device_id = service_call.data[DATA_DEVICE_ID]
-    dd = _get_device_of_type_data(hass, device_id, SUN2000Device)
-    assert isinstance(dd, HuaweiSolarInverterData)
+    dd = _get_device_data(call)
+    if not isinstance(dd.device, device_type):
+        raise ServiceValidationError(
+            translation_domain=DOMAIN,
+            translation_key="wrong_device_type",
+            translation_placeholders={
+                "expected_device_type": device_type.__name__,
+                "actual_device_type": type(dd.device).__name__,
+            },
+        )
     return dd
 
 
-def validate_inverter_device_id(device_id: str) -> str:
-    """Validate whether the device_id refers to an 'Inverter' device."""
-    hass = async_get_hass()
-    try:
-        _get_device_of_type_data(hass, device_id, SUN2000Device)
-    except HuaweiSolarServiceException as err:
-        raise vol.Invalid(str(err)) from err
-    else:
-        return device_id
+@callback
+def get_emma_device(call: ServiceCall) -> HuaweiSolarDeviceData:
+    """Return the HuaweiEMMABridge associated with the emma device_id in the service call."""
+    return _get_device_of_type_data(call, EMMADevice)
+
+
+EMMA_DEVICE_SCHEMA = vol.Schema({DATA_DEVICE_ID: vol.All(cv.string, str)})
+
+
+@callback
+def _get_battery_device_data(call: ServiceCall) -> HuaweiSolarInverterData:
+    """Return the HuaweiSolarDeviceData associated with the device_id in the service call."""
+    device_entry, entry = async_get_entry_id_for_service_call(call)
+
+    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
+    for dd in device_datas:
+        if not isinstance(dd, HuaweiSolarInverterData):
+            continue
+        if not dd.connected_energy_storage:
+            continue
+        assert "identifiers" in dd.connected_energy_storage
+        for identifier in dd.connected_energy_storage["identifiers"]:
+            for device_identifier in device_entry.identifiers:
+                if identifier == device_identifier:
+                    return dd
+
+    raise ServiceValidationError(
+        translation_domain=DOMAIN,
+        translation_key="ha_device_not_found",
+        translation_placeholders={"device_id": device_entry.id},
+    )
+
+
+@callback
+def get_battery_device_data(call: ServiceCall) -> HuaweiSolarInverterData:
+    """Return the HuaweiSolarInverterData associated with the battery device_id in the service call."""
+    return _get_battery_device_data(call)
+
+
+BATTERY_DEVICE_SCHEMA = vol.Schema({DATA_DEVICE_ID: vol.All(cv.string, str)})
+
+
+@callback
+def get_inverter_data(call: ServiceCall) -> HuaweiSolarInverterData:
+    """Return the HuaweiSolarBridge associated with the inverter device_id in the service call."""
+    dd = _get_device_of_type_data(call, SUN2000Device)
+    assert isinstance(dd, HuaweiSolarInverterData)
+    return dd
 
 
 ###################################################
 # Service schemas and schema validation functions #
 ###################################################
 
-INVERTER_DEVICE_SCHEMA = vol.Schema(
-    {DATA_DEVICE_ID: vol.All(cv.string, validate_inverter_device_id)}
-)
+INVERTER_DEVICE_SCHEMA = vol.Schema({DATA_DEVICE_ID: vol.All(cv.string, str)})
 
 
 FORCIBLE_CHARGE_BASE_SCHEMA = BATTERY_DEVICE_SCHEMA.extend(
@@ -388,9 +372,9 @@ def _parse_lg_resu_periods(text: str) -> list[LG_RESU_TimeOfUsePeriod]:
 ###################################
 
 
-async def forcible_charge(hass: HomeAssistant, service_call: ServiceCall) -> None:
+async def forcible_charge(service_call: ServiceCall) -> None:
     """Start a forcible charge on the battery."""
-    dd = get_battery_device_data(hass, service_call)
+    dd = get_battery_device_data(service_call)
     power = await _validate_power_value(
         service_call.data[DATA_POWER], dd, rn.STORAGE_MAXIMUM_CHARGE_POWER
     )
@@ -417,9 +401,9 @@ async def forcible_charge(hass: HomeAssistant, service_call: ServiceCall) -> Non
     await dd.configuration_update_coordinator.async_refresh()
 
 
-async def forcible_discharge(hass: HomeAssistant, service_call: ServiceCall) -> None:
+async def forcible_discharge(service_call: ServiceCall) -> None:
     """Start a forcible charge on the battery."""
-    dd = get_battery_device_data(hass, service_call)
+    dd = get_battery_device_data(service_call)
     power = await _validate_power_value(
         service_call.data[DATA_POWER], dd, rn.STORAGE_MAXIMUM_DISCHARGE_POWER
     )
@@ -445,9 +429,9 @@ async def forcible_discharge(hass: HomeAssistant, service_call: ServiceCall) -> 
     await dd.configuration_update_coordinator.async_refresh()
 
 
-async def forcible_charge_soc(hass: HomeAssistant, service_call: ServiceCall) -> None:
+async def forcible_charge_soc(service_call: ServiceCall) -> None:
     """Start a forcible charge on the battery until the target SOC is hit."""
-    dd = get_battery_device_data(hass, service_call)
+    dd = get_battery_device_data(service_call)
     target_soc = service_call.data[DATA_TARGET_SOC]
     power = await _validate_power_value(
         service_call.data[DATA_POWER], dd, rn.STORAGE_MAXIMUM_CHARGE_POWER
@@ -467,11 +451,9 @@ async def forcible_charge_soc(hass: HomeAssistant, service_call: ServiceCall) ->
     await dd.configuration_update_coordinator.async_refresh()
 
 
-async def forcible_discharge_soc(
-    hass: HomeAssistant, service_call: ServiceCall
-) -> None:
+async def forcible_discharge_soc(service_call: ServiceCall) -> None:
     """Start a forcible discharge on the battery until the target SOC is hit."""
-    dd = get_battery_device_data(hass, service_call)
+    dd = get_battery_device_data(service_call)
     target_soc = service_call.data[DATA_TARGET_SOC]
     power = await _validate_power_value(
         service_call.data[DATA_POWER], dd, rn.STORAGE_MAXIMUM_DISCHARGE_POWER
@@ -491,9 +473,9 @@ async def forcible_discharge_soc(
     await dd.configuration_update_coordinator.async_refresh()
 
 
-async def stop_forcible_charge(hass: HomeAssistant, service_call: ServiceCall) -> None:
+async def stop_forcible_charge(service_call: ServiceCall) -> None:
     """Stop a forcible charge or discharge."""
-    dd = get_battery_device_data(hass, service_call)
+    dd = get_battery_device_data(service_call)
     await dd.device.set(
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
         rv.StorageForcibleChargeDischarge.STOP,
@@ -535,22 +517,20 @@ POWER_CONTROL_REGISTERS: dict[PowerControlManagerType, _PowerControlRegisters] =
 
 
 def _get_power_control_device_data(
-    hass: HomeAssistant,
     manager_type: PowerControlManagerType,
     service_call: ServiceCall,
 ) -> HuaweiSolarDeviceData:
     if manager_type == "emma":
-        return get_emma_device(hass, service_call)
-    return get_inverter_data(hass, service_call)
+        return get_emma_device(service_call)
+    return get_inverter_data(service_call)
 
 
 async def reset_maximum_feed_grid_power(
-    hass: HomeAssistant,
     manager_type: PowerControlManagerType,
     service_call: ServiceCall,
 ) -> None:
     """Set Active Power Control to 'Unlimited'."""
-    dd = _get_power_control_device_data(hass, manager_type, service_call)
+    dd = _get_power_control_device_data(manager_type, service_call)
 
     await dd.device.set(
         POWER_CONTROL_REGISTERS[manager_type]["MODE_REGISTER"],
@@ -567,11 +547,9 @@ async def reset_maximum_feed_grid_power(
 
 
 # only available for inverters
-async def set_di_active_power_scheduling(
-    hass: HomeAssistant, service_call: ServiceCall
-) -> None:
+async def set_di_active_power_scheduling(service_call: ServiceCall) -> None:
     """Set Active Power Control to 'DI active scheduling'."""
-    dd = get_inverter_data(hass, service_call)
+    dd = get_inverter_data(service_call)
     await dd.device.set(
         rn.ACTIVE_POWER_CONTROL_MODE,
         rv.ActivePowerControlMode.DI_ACTIVE_SCHEDULING,
@@ -587,12 +565,11 @@ async def set_di_active_power_scheduling(
 
 
 async def set_zero_power_grid_connection(
-    hass: HomeAssistant,
     manager_type: PowerControlManagerType,
     service_call: ServiceCall,
 ) -> None:
     """Set Active Power Control to 'Zero-Power Grid Connection'."""
-    dd = _get_power_control_device_data(hass, manager_type, service_call)
+    dd = _get_power_control_device_data(manager_type, service_call)
     await dd.device.set(
         POWER_CONTROL_REGISTERS[manager_type]["MODE_REGISTER"],
         rv.ActivePowerControlMode.ZERO_POWER_GRID_CONNECTION,
@@ -608,12 +585,11 @@ async def set_zero_power_grid_connection(
 
 
 async def set_maximum_feed_grid_power(
-    hass: HomeAssistant,
     manager_type: PowerControlManagerType,
     service_call: ServiceCall,
 ) -> None:
     """Set Active Power Control to 'Power-limited grid connection' with the given wattage."""
-    dd = _get_power_control_device_data(hass, manager_type, service_call)
+    dd = _get_power_control_device_data(manager_type, service_call)
     power = await _validate_power_value(service_call.data[DATA_POWER], dd, rn.P_MAX)
 
     await dd.device.set(
@@ -629,12 +605,11 @@ async def set_maximum_feed_grid_power(
 
 
 async def set_maximum_feed_grid_power_percentage(
-    hass: HomeAssistant,
     manager_type: PowerControlManagerType,
     service_call: ServiceCall,
 ) -> None:
     """Set Active Power Control to 'Power-limited grid connection' with the given percentage."""
-    dd = _get_power_control_device_data(hass, manager_type, service_call)
+    dd = _get_power_control_device_data(manager_type, service_call)
     power_percentage = service_call.data[DATA_POWER_PERCENTAGE]
 
     await dd.device.set(
@@ -651,12 +626,11 @@ async def set_maximum_feed_grid_power_percentage(
 
 
 async def set_battery_tou_periods(
-    hass: HomeAssistant,
     service_call: ServiceCall,
 ) -> None:
     """Set the TOU periods of the battery."""
 
-    dd = get_battery_device_data(hass, service_call)
+    dd = get_battery_device_data(service_call)
 
     if dd.device.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000:
         if not re.fullmatch(
@@ -684,12 +658,11 @@ async def set_battery_tou_periods(
 
 
 async def set_emma_tou_periods(
-    hass: HomeAssistant,
     service_call: ServiceCall,
 ) -> None:
     """Set the TOU periods of a battery controlled by an EMMA."""
 
-    dd = get_emma_device(hass, service_call)
+    dd = get_emma_device(service_call)
 
     if not re.fullmatch(HUAWEI_LUNA2000_TOU_PATTERN, service_call.data[DATA_PERIODS]):
         raise ValueError(
@@ -721,12 +694,10 @@ def _parse_capacity_control_periods(text: str) -> list[PeakSettingPeriod]:
     return result
 
 
-async def set_capacity_control_periods(
-    hass: HomeAssistant, service_call: ServiceCall
-) -> None:
+async def set_capacity_control_periods(service_call: ServiceCall) -> None:
     """Set the Capacity Control Periods of the battery."""
 
-    dd = get_battery_device_data(hass, service_call)
+    dd = get_battery_device_data(service_call)
 
     if not re.fullmatch(
         CAPACITY_CONTROL_PERIODS_PATTERN, service_call.data[DATA_PERIODS]
@@ -760,11 +731,9 @@ def _parse_fixed_charge_periods(text: str) -> list[ChargeDischargePeriod]:
     return result
 
 
-async def set_fixed_charge_periods(
-    hass: HomeAssistant, service_call: ServiceCall
-) -> None:
+async def set_fixed_charge_periods(service_call: ServiceCall) -> None:
     """Set the fixed charging periods of the battery."""
-    dd = get_battery_device_data(hass, service_call)
+    dd = get_battery_device_data(service_call)
 
     if not re.fullmatch(FIXED_CHARGE_PERIODS_PATTERN, service_call.data[DATA_PERIODS]):
         raise ValueError(
@@ -813,28 +782,28 @@ async def async_setup_services(
         hass.services.async_register(
             DOMAIN,
             SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
-            partial(reset_maximum_feed_grid_power, hass, "emma"),
+            partial(reset_maximum_feed_grid_power, "emma"),
             schema=EMMA_DEVICE_SCHEMA,
         )
 
         hass.services.async_register(
             DOMAIN,
             SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
-            partial(set_zero_power_grid_connection, hass, "emma"),
+            partial(set_zero_power_grid_connection, "emma"),
             schema=EMMA_DEVICE_SCHEMA,
         )
 
         hass.services.async_register(
             DOMAIN,
             SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
-            partial(set_maximum_feed_grid_power, hass, "emma"),
+            partial(set_maximum_feed_grid_power, "emma"),
             schema=EMMA_DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_SCHEMA),
         )
 
         hass.services.async_register(
             DOMAIN,
             SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
-            partial(set_maximum_feed_grid_power_percentage, hass, "emma"),
+            partial(set_maximum_feed_grid_power_percentage, "emma"),
             schema=EMMA_DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA),
         )
 
@@ -842,28 +811,28 @@ async def async_setup_services(
         hass.services.async_register(
             DOMAIN,
             SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
-            partial(reset_maximum_feed_grid_power, hass, "inverter"),
+            partial(reset_maximum_feed_grid_power, "inverter"),
             schema=INVERTER_DEVICE_SCHEMA,
         )
 
         hass.services.async_register(
             DOMAIN,
             SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
-            partial(set_zero_power_grid_connection, hass, "inverter"),
+            partial(set_zero_power_grid_connection, "inverter"),
             schema=INVERTER_DEVICE_SCHEMA,
         )
 
         hass.services.async_register(
             DOMAIN,
             SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
-            partial(set_maximum_feed_grid_power, hass, "inverter"),
+            partial(set_maximum_feed_grid_power, "inverter"),
             schema=INVERTER_DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_SCHEMA),
         )
 
         hass.services.async_register(
             DOMAIN,
             SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
-            partial(set_maximum_feed_grid_power_percentage, hass, "inverter"),
+            partial(set_maximum_feed_grid_power_percentage, "inverter"),
             schema=INVERTER_DEVICE_SCHEMA.extend(
                 MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA
             ),
@@ -873,7 +842,7 @@ async def async_setup_services(
         hass.services.async_register(
             DOMAIN,
             SERVICE_SET_DI_ACTIVE_POWER_SCHEDULING,
-            partial(set_di_active_power_scheduling, hass),
+            set_di_active_power_scheduling,
             schema=INVERTER_DEVICE_SCHEMA,
         )
 
@@ -884,45 +853,45 @@ async def async_setup_services(
             hass.services.async_register(
                 DOMAIN,
                 SERVICE_SET_TOU_PERIODS,
-                partial(set_emma_tou_periods, hass),
+                set_emma_tou_periods,
                 schema=EMMA_TOU_PERIODS_SCHEMA,
             )
         else:
             hass.services.async_register(
                 DOMAIN,
                 SERVICE_SET_TOU_PERIODS,
-                partial(set_battery_tou_periods, hass),
+                set_battery_tou_periods,
                 schema=BATTERY_TOU_PERIODS_SCHEMA,
             )
 
         hass.services.async_register(
             DOMAIN,
             SERVICE_FORCIBLE_CHARGE,
-            partial(forcible_charge, hass),
+            forcible_charge,
             schema=DURATION_SCHEMA,
         )
         hass.services.async_register(
             DOMAIN,
             SERVICE_FORCIBLE_DISCHARGE,
-            partial(forcible_discharge, hass),
+            forcible_discharge,
             schema=DURATION_SCHEMA,
         )
         hass.services.async_register(
             DOMAIN,
             SERVICE_FORCIBLE_CHARGE_SOC,
-            partial(forcible_charge_soc, hass),
+            forcible_charge_soc,
             schema=SOC_SCHEMA,
         )
         hass.services.async_register(
             DOMAIN,
             SERVICE_FORCIBLE_DISCHARGE_SOC,
-            partial(forcible_discharge_soc, hass),
+            forcible_discharge_soc,
             schema=SOC_SCHEMA,
         )
         hass.services.async_register(
             DOMAIN,
             SERVICE_STOP_FORCIBLE_CHARGE,
-            partial(stop_forcible_charge, hass),
+            stop_forcible_charge,
             schema=BATTERY_DEVICE_SCHEMA,
         )
 
@@ -930,7 +899,7 @@ async def async_setup_services(
         hass.services.async_register(
             DOMAIN,
             SERVICE_SET_FIXED_CHARGE_PERIODS,
-            partial(set_fixed_charge_periods, hass),
+            set_fixed_charge_periods,
             schema=FIXED_CHARGE_PERIODS_SCHEMA,
         )
 
@@ -938,7 +907,7 @@ async def async_setup_services(
         hass.services.async_register(
             DOMAIN,
             SERVICE_SET_CAPACITY_CONTROL_PERIODS,
-            partial(set_capacity_control_periods, hass),
+            set_capacity_control_periods,
             schema=CAPACITY_CONTROL_PERIODS_SCHEMA,
         )
 
