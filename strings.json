@@ -93,9 +93,6 @@
             },
             "emma_tou_maximum_power_for_charging_batteries_from_grid": {
                 "name": "Maximum power for charging batteries from grid"
-            },
-            "emma_tou_periods": {
-                "name": "TOU price periods"
             }
         },
         "sensor": {
@@ -133,15 +130,6 @@
                 "name": "Phase B current"
             },
             "phase_c_current": {
-                "name": "Phase C current"
-            },
-            "active_grid_a_current": {
-                "name": "Phase A current"
-            },
-            "active_grid_b_current": {
-                "name": "Phase B current"
-            },
-            "active_grid_c_current": {
                 "name": "Phase C current"
             },
             "day_active_power_peak": {
@@ -237,6 +225,9 @@
             "running_status": {
                 "name": "Running status"
             },
+            "accumulated_energy_yield": {
+                "name": "Total energy"
+            },
             "alarm": {
                 "name": "Alarm"
             },
@@ -279,13 +270,13 @@
             "grid_c_voltage": {
                 "name": "Phase C voltage"
             },
-            "grid_a_current": {
+            "active_grid_a_current": {
                 "name": "Phase A current"
             },
-            "grid_b_current": {
+            "active_grid_b_current": {
                 "name": "Phase B current"
             },
-            "grid_c_current": {
+            "active_grid_c_current": {
                 "name": "Phase C current"
             },
             "active_grid_a_b_voltage": {
@@ -504,9 +495,6 @@
             "forcible_charge_summary": {
                 "name": "Forcible charge"
             },
-            "active_power_control": {
-                "name": "Active power control"
-            },
             "soh_calibration_status": {
                 "name": "SOH calibration status"
             },
@@ -624,17 +612,8 @@
             "storage_lg_resu_time_of_use_price_periods": {
                 "name": "TOU price periods"
             },
-            "storage_huawei_luna2000_time_of_use_price_periods": {
-                "name": "TOU price periods"
-            },
             "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
                 "name": "TOU charging and discharging periods"
-            },
-            "storage_lg_resu_time_of_use_charging_and_discharging_periods": {
-                "name": "TOU charging and discharging periods"
-            },
-            "storage_fixed_charging_and_discharging_periods": {
-                "name": "Fixed charging periods"
             },
             "inverter_total_absorbed_energy": {
                 "name": "Total absorbed energy"
@@ -845,9 +824,6 @@
             },
             "active_power_control_mode": {
                 "name": "Active power control mode"
-            },
-            "storage_forcible_charge_discharge_write": {
-                "name": "Forcible charge/discharge"
             },
             "total_feed_in_to_grid": {
                 "name": "Total feed in to grid"

@@ -283,7 +283,6 @@ class HuaweiSolarOnOffSwitchEntity(
             key=rn.STARTUP,
             icon="mdi:power-standby",
             entity_category=EntityCategory.CONFIG,
-            translation_key=rn.STARTUP,
         )
 
         self._attr_device_info = device_info

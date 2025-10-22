@@ -402,7 +402,7 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_A_VOLTAGE,
-        translation_key="single_phase_voltage",
+        translation_key="single_phase_meter_voltage",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
         state_class=SensorStateClass.MEASUREMENT,
@@ -410,6 +410,7 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.ACTIVE_GRID_A_CURRENT,
+        translation_key="single_phase_meter_current",
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
         device_class=SensorDeviceClass.CURRENT,
         state_class=SensorStateClass.MEASUREMENT,
@@ -2255,7 +2256,7 @@ class HuaweiSolarActivePowerControlModeEntity(
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
             key=rn.ACTIVE_POWER_CONTROL_MODE,
-            translation_key="active_power_control",
+            translation_key="active_power_control_mode",
             icon="mdi:transmission-tower",
             entity_category=EntityCategory.DIAGNOSTIC,
             entity_registry_enabled_default=False,

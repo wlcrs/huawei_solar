@@ -6,6 +6,7 @@ import ast
 from collections.abc import Iterator
 import json
 from pathlib import Path
+import re
 import sys
 
 
@@ -50,9 +51,7 @@ def dotted_path(node: ast.AST) -> list[str] | None:
     return parts
 
 
-def attribute_to_key(
-    node: ast.Attribute, register_aliases: set[str]
-) -> tuple[str, bool] | None:
+def attribute_to_key(node: ast.Attribute, register_aliases: set[str]) -> str | None:
     """Extract attribute name if it originates from register_names alias."""
 
     names = dotted_path(node)
@@ -65,19 +64,7 @@ def attribute_to_key(
 
     for attr in reversed(rest):
         if attr != "value":
-            return attr, True
-
-    return rest[-1], True
-
-
-def extract_key_string(
-    node: ast.AST, register_aliases: set[str]
-) -> tuple[str, bool] | None:
-    """Best effort extraction of the entity key from an AST node."""
-
-    if isinstance(node, ast.Attribute):
-        return attribute_to_key(node, register_aliases)
-
+            return attr
     return None
 
 
@@ -89,20 +76,112 @@ class EntityKeyCollector(ast.NodeVisitor):
 
         self.entity_keys: set[str] = set()
         self.register_aliases = register_aliases
+        self._binding_stack: list[dict[str, str]] = [{}]
+
+    def _push_scope(self) -> None:
+        self._binding_stack.append({})
+
+    def _pop_scope(self) -> None:
+        self._binding_stack.pop()
+
+    def _add_binding(self, name: str, raw_key: str) -> None:
+        self._binding_stack[-1][name] = raw_key
+
+    def _lookup_binding(self, name: str) -> str | None:
+        for scope in reversed(self._binding_stack):
+            if name in scope:
+                return scope[name]
+        return None
+
+    def _resolve_node(self, node: ast.AST) -> str | None:
+        if isinstance(node, ast.Attribute):
+            return attribute_to_key(node, self.register_aliases)
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            return node.value
+        if isinstance(node, ast.Name):
+            return self._lookup_binding(node.id)
+        return None
+
+    def _bind_function_defaults(
+        self, node: ast.FunctionDef | ast.AsyncFunctionDef
+    ) -> None:
+        positional_args = list(node.args.posonlyargs) + list(node.args.args)
+        defaults = node.args.defaults
+        if defaults:
+            for arg, default in zip(
+                positional_args[-len(defaults) :], defaults, strict=False
+            ):
+                if key := self._resolve_node(default):
+                    self._add_binding(arg.arg, key)
+
+        for kw_arg, default in zip(
+            node.args.kwonlyargs, node.args.kw_defaults, strict=False
+        ):
+            if default is None:
+                continue
+            if key := self._resolve_node(default):
+                self._add_binding(kw_arg.arg, key)
 
     def visit_Call(self, node: ast.Call) -> None:
         """Inspect call nodes for entity descriptions and record their keys."""
 
         call_name = get_call_name(node.func)
         if call_name and call_name.endswith("EntityDescription"):
+            # Skip 'key' if 'translation_key' is explicitly provided
+            has_translation_key = any(
+                kw.arg == "translation_key" for kw in node.keywords
+            )
             for keyword in node.keywords:
                 if keyword.arg == "key":
-                    result = extract_key_string(keyword.value, self.register_aliases)
-                    if result is None:
+                    if has_translation_key:
                         continue
-                    raw_key, _ = result
+                elif keyword.arg != "translation_key":
+                    continue
+
+                if raw_key := self._resolve_node(keyword.value):
                     self.entity_keys.add(normalize_translation_key(raw_key))
         # Continue traversal to handle nested calls
+        self.generic_visit(node)
+
+    def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+        """Track bindings within a synchronous function scope."""
+
+        self._push_scope()
+        self._bind_function_defaults(node)
+        self.generic_visit(node)
+        self._pop_scope()
+
+    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
+        """Track bindings within an asynchronous function scope."""
+
+        self._push_scope()
+        self._bind_function_defaults(node)
+        self.generic_visit(node)
+        self._pop_scope()
+
+    def visit_ClassDef(self, node: ast.ClassDef) -> None:
+        """Track bindings defined on a class body."""
+
+        self._push_scope()
+        self.generic_visit(node)
+        self._pop_scope()
+
+    def visit_Assign(self, node: ast.Assign) -> None:
+        """Capture bindings from simple assignments."""
+
+        raw_key = self._resolve_node(node.value)
+        if raw_key is not None:
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    self._add_binding(target.id, raw_key)
+        self.generic_visit(node)
+
+    def visit_AnnAssign(self, node: ast.AnnAssign) -> None:
+        """Capture bindings from annotated assignments."""
+
+        if node.value is not None and isinstance(node.target, ast.Name):
+            if raw_key := self._resolve_node(node.value):
+                self._add_binding(node.target.id, raw_key)
         self.generic_visit(node)
 
 
@@ -165,8 +244,20 @@ def get_translation_keys(strings_file: Path) -> dict[str, set[str]]:
     return translation_keys
 
 
+def collect_entity_keys(component_path: Path) -> dict[str, set[str]]:
+    """Collect entity keys defined in each platform module."""
+
+    entity_keys_by_platform: dict[str, set[str]] = {}
+
+    for platform_file in component_path.glob("*.py"):
+        platform = platform_file.stem
+        entity_keys_by_platform[platform] = set(iter_entity_keys(platform_file))
+
+    return entity_keys_by_platform
+
+
 def verify_translations(component_path: Path) -> int:
-    """Verify that all entity keys have translations."""
+    """Verify that all entity keys have translations and no orphan strings."""
 
     strings_file = component_path / "strings.json"
     if not strings_file.exists():
@@ -174,44 +265,59 @@ def verify_translations(component_path: Path) -> int:
         return 1
 
     translation_keys = get_translation_keys(strings_file)
+    entity_keys_by_platform = collect_entity_keys(component_path)
 
     missing_translations: dict[str, set[str]] = {}
+    orphan_translations: dict[str, set[str]] = {}
 
-    for platform, platform_keys in translation_keys.items():
-        platform_file = component_path / f"{platform}.py"
-        if not platform_file.exists():
-            continue
-
-        entity_keys = set(iter_entity_keys(platform_file))
+    for platform, entity_keys in entity_keys_by_platform.items():
         if not entity_keys:
             continue
 
-        missing = entity_keys - platform_keys
+        translations = translation_keys.get(platform, set())
+        missing = entity_keys - translations
         if missing:
             missing_translations[platform] = missing
 
-    # Also check for platforms with entity descriptions but no translation section yet
-    for platform_file in component_path.glob("*.py"):
-        platform = platform_file.stem
-        if platform in translation_keys:
-            continue
-        entity_keys = set(iter_entity_keys(platform_file))
-        if entity_keys:
-            missing_translations.setdefault(platform, set()).update(entity_keys)
+    for platform, translations in translation_keys.items():
+        entity_keys = entity_keys_by_platform.get(platform, set())
+        unused = translations - entity_keys
 
-    if missing_translations:
-        sys.stderr.write("❌ Missing translation keys found:\n\n")
-        for platform, keys in sorted(missing_translations.items()):
-            sys.stderr.write(f"  {platform}:\n")
-            for key in sorted(keys):
-                sys.stderr.write(f"    - {key}\n")
-        sys.stderr.write(
-            "\nPlease add the missing keys to strings.json under the "
-            'appropriate "entity" section.\n'
-        )
+        unused = {
+            key
+            for key in unused
+            if not (re.match(r"^pv_\d\d", key) or re.match(r"^state_\d_\d", key))
+        }
+        if unused:
+            orphan_translations[platform] = unused
+
+    if missing_translations or orphan_translations:
+        if missing_translations:
+            sys.stderr.write("❌ Missing translation keys found:\n\n")
+            for platform, keys in sorted(missing_translations.items()):
+                sys.stderr.write(f"  {platform}:\n")
+                for key in sorted(keys):
+                    sys.stderr.write(f"    - {key}\n")
+            sys.stderr.write(
+                "\nPlease add the missing keys to strings.json under the "
+                'appropriate "entity" section.\n\n'
+            )
+
+        if orphan_translations:
+            sys.stderr.write("❌ Unused translation keys found:\n\n")
+            for platform, keys in sorted(orphan_translations.items()):
+                sys.stderr.write(f"  {platform}:\n")
+                for key in sorted(keys):
+                    sys.stderr.write(f"    - {key}\n")
+            sys.stderr.write(
+                "\nPlease remove these keys or update the corresponding entity descriptions.\n"
+            )
+
         return 1
 
-    sys.stdout.write("✅ All entity keys have corresponding translation strings\n")
+    sys.stdout.write(
+        "✅ All entity keys have corresponding translation strings and no unused entries\n"
+    )
     return 0
 
 
