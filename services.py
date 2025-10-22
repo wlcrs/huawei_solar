@@ -28,7 +28,7 @@ from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import ATTR_DEVICE_ID
 from homeassistant.core import HomeAssistant, ServiceCall, callback
 from homeassistant.exceptions import ServiceValidationError
-from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import device_registry as dr, service
 import homeassistant.helpers.config_validation as cv
 
 from .const import (
@@ -780,70 +780,88 @@ async def async_setup_services(
 
     # Register functions that are available on all inverters, no battery/emma required
     if has_emma:
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
-            partial(reset_maximum_feed_grid_power, "emma"),
+            entity_domain=DOMAIN,
+            func=partial(reset_maximum_feed_grid_power, "emma"),
             schema=EMMA_DEVICE_SCHEMA,
         )
 
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
-            partial(set_zero_power_grid_connection, "emma"),
+            entity_domain=DOMAIN,
+            func=partial(set_zero_power_grid_connection, "emma"),
             schema=EMMA_DEVICE_SCHEMA,
         )
 
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
-            partial(set_maximum_feed_grid_power, "emma"),
+            entity_domain=DOMAIN,
+            func=partial(set_maximum_feed_grid_power, "emma"),
             schema=EMMA_DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_SCHEMA),
         )
 
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
-            partial(set_maximum_feed_grid_power_percentage, "emma"),
+            entity_domain=DOMAIN,
+            func=partial(set_maximum_feed_grid_power_percentage, "emma"),
             schema=EMMA_DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA),
         )
 
     else:
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
-            partial(reset_maximum_feed_grid_power, "inverter"),
+            entity_domain=DOMAIN,
+            func=partial(reset_maximum_feed_grid_power, "inverter"),
             schema=INVERTER_DEVICE_SCHEMA,
         )
 
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
-            partial(set_zero_power_grid_connection, "inverter"),
+            entity_domain=DOMAIN,
+            func=partial(set_zero_power_grid_connection, "inverter"),
             schema=INVERTER_DEVICE_SCHEMA,
         )
 
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
-            partial(set_maximum_feed_grid_power, "inverter"),
+            entity_domain=DOMAIN,
+            func=partial(set_maximum_feed_grid_power, "inverter"),
             schema=INVERTER_DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_SCHEMA),
         )
 
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
-            partial(set_maximum_feed_grid_power_percentage, "inverter"),
+            entity_domain=DOMAIN,
+            func=partial(set_maximum_feed_grid_power_percentage, "inverter"),
             schema=INVERTER_DEVICE_SCHEMA.extend(
                 MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA
             ),
         )
 
         # this service is only available on inverters, not on EMMA
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_SET_DI_ACTIVE_POWER_SCHEDULING,
-            set_di_active_power_scheduling,
+            entity_domain=DOMAIN,
+            func=set_di_active_power_scheduling,
             schema=INVERTER_DEVICE_SCHEMA,
         )
 
@@ -851,63 +869,81 @@ async def async_setup_services(
         # When an EMMA is present, it is responsible for managing the battery.
         # No direct control of the battery is possible.
         if has_emma:
-            hass.services.async_register(
+            service.async_register_platform_entity_service(
+                hass,
                 DOMAIN,
                 SERVICE_SET_TOU_PERIODS,
-                set_emma_tou_periods,
+                entity_domain=DOMAIN,
+                func=set_emma_tou_periods,
                 schema=EMMA_TOU_PERIODS_SCHEMA,
             )
         else:
-            hass.services.async_register(
+            service.async_register_platform_entity_service(
+                hass,
                 DOMAIN,
                 SERVICE_SET_TOU_PERIODS,
-                set_battery_tou_periods,
+                entity_domain=DOMAIN,
+                func=set_battery_tou_periods,
                 schema=BATTERY_TOU_PERIODS_SCHEMA,
             )
 
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_FORCIBLE_CHARGE,
-            forcible_charge,
+            entity_domain=DOMAIN,
+            func=forcible_charge,
             schema=DURATION_SCHEMA,
         )
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_FORCIBLE_DISCHARGE,
-            forcible_discharge,
+            entity_domain=DOMAIN,
+            func=forcible_discharge,
             schema=DURATION_SCHEMA,
         )
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_FORCIBLE_CHARGE_SOC,
-            forcible_charge_soc,
+            entity_domain=DOMAIN,
+            func=forcible_charge_soc,
             schema=SOC_SCHEMA,
         )
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_FORCIBLE_DISCHARGE_SOC,
-            forcible_discharge_soc,
+            entity_domain=DOMAIN,
+            func=forcible_discharge_soc,
             schema=SOC_SCHEMA,
         )
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_STOP_FORCIBLE_CHARGE,
-            stop_forcible_charge,
+            entity_domain=DOMAIN,
+            func=stop_forcible_charge,
             schema=BATTERY_DEVICE_SCHEMA,
         )
 
     if has_lg_battery:
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_SET_FIXED_CHARGE_PERIODS,
-            set_fixed_charge_periods,
+            entity_domain=DOMAIN,
+            func=set_fixed_charge_periods,
             schema=FIXED_CHARGE_PERIODS_SCHEMA,
         )
 
     if has_capacity_control:
-        hass.services.async_register(
+        service.async_register_platform_entity_service(
+            hass,
             DOMAIN,
             SERVICE_SET_CAPACITY_CONTROL_PERIODS,
-            set_capacity_control_periods,
+            entity_domain=DOMAIN,
+            func=set_capacity_control_periods,
             schema=CAPACITY_CONTROL_PERIODS_SCHEMA,
         )
