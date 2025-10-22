@@ -42,7 +42,7 @@ from .const import (
     OPTIMIZER_UPDATE_INTERVAL,
     POWER_METER_UPDATE_INTERVAL,
 )
-from .services import async_cleanup_services, async_setup_services
+from .services import async_setup_services
 from .types import (
     HuaweiSolarConfigEntry,
     HuaweiSolarDeviceData,
@@ -161,10 +161,6 @@ async def async_unload_entry(
         device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data["device_datas"]
         primary_device = device_datas[0].device
         await primary_device.client.disconnect()
-
-        await async_cleanup_services(hass)
-
-        hass.data[DOMAIN].pop(entry.entry_id)
 
     return unload_ok
 

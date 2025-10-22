@@ -911,11 +911,3 @@ async def async_setup_services(
             set_capacity_control_periods,
             schema=CAPACITY_CONTROL_PERIODS_SCHEMA,
         )
-
-
-async def async_cleanup_services(hass: HomeAssistant) -> None:
-    """Cleanup all Huawei Solar service (if all config entries unloaded)."""
-    if len(hass.data[DOMAIN]) == 1:
-        for service in ALL_SERVICES:
-            if hass.services.has_service(DOMAIN, service):
-                hass.services.async_remove(DOMAIN, service)
