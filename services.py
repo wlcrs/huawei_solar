@@ -158,8 +158,9 @@ def _get_device_of_type_data[T](
             translation_domain=DOMAIN,
             translation_key="wrong_device_type",
             translation_placeholders={
-                "expected_device_type": device_type.__name__,
-                "actual_device_type": type(dd.device).__name__,
+                "device_id": call.data[ATTR_DEVICE_ID],
+                "expected_type": device_type.__name__,
+                "actual_type": type(dd.device).__name__,
             },
         )
     return dd

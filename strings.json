@@ -717,131 +717,140 @@
             "backup_power_state_of_charge": {
                 "name": "Backup power state of charge"
             },
-            "phase_a_voltage_built_in_energy_sensor": {
+            "phase_a_voltage_built_in_energy": {
                 "name": "Phase A voltage"
             },
-            "phase_b_voltage_built_in_energy_sensor": {
+            "phase_b_voltage_built_in_energy": {
                 "name": "Phase B voltage"
             },
-            "phase_c_voltage_built_in_energy_sensor": {
+            "phase_c_voltage_built_in_energy": {
                 "name": "Phase C voltage"
             },
-            "line_voltage_a_b_built_in_energy_sensor": {
+            "line_voltage_a_b_built_in_energy": {
                 "name": "A-B line voltage"
             },
-            "line_voltage_b_c_built_in_energy_sensor": {
+            "line_voltage_b_c_built_in_energy": {
                 "name": "B-C line voltage"
             },
-            "line_voltage_c_a_built_in_energy_sensor": {
+            "line_voltage_c_a_built_in_energy": {
                 "name": "C-A line voltage"
             },
-            "phase_a_current_built_in_energy_sensor": {
+            "phase_a_current_built_in_energy": {
                 "name": "Phase A current"
             },
-            "phase_b_current_built_in_energy_sensor": {
+            "phase_b_current_built_in_energy": {
                 "name": "Phase B current"
             },
-            "phase_c_current_built_in_energy_sensor": {
+            "phase_c_current_built_in_energy": {
                 "name": "Phase C current"
             },
-            "active_power_built_in_energy_sensor": {
+            "active_power_built_in_energy": {
                 "name": "Active power"
             },
-            "power_factor_built_in_energy_sensor": {
+            "power_factor_built_in_energy": {
                 "name": "Power factor"
             },
-            "apparent_power_built_in_energy_sensor": {
+            "apparent_power_built_in_energy": {
                 "name": "Apparent power"
             },
-            "phase_a_active_power_built_in_energy_sensor": {
+            "phase_a_active_power_built_in_energy": {
                 "name": "Phase A active power"
             },
-            "phase_b_active_power_built_in_energy_sensor": {
+            "phase_b_active_power_built_in_energy": {
                 "name": "Phase B active power"
             },
-            "phase_c_active_power_built_in_energy_sensor": {
+            "phase_c_active_power_built_in_energy": {
                 "name": "Phase C active power"
             },
-            "total_active_energy_built_in_energy_sensor": {
+            "total_active_energy_built_in_energy": {
                 "name": "Total active energy"
             },
-            "total_negative_active_energy_built_in_energy_sensor": {
+            "total_negative_active_energy_built_in_energy": {
                 "name": "Total negative active energy"
             },
-            "total_positive_active_energy_built_in_energy_sensor": {
+            "total_positive_active_energy_built_in_energy": {
                 "name": "Total positive active energy"
             },
-            "phase_a_voltage_external_energy_sensor": {
+            "phase_a_voltage_external_energy": {
                 "name": "Phase A voltage"
             },
-            "phase_b_voltage_external_energy_sensor": {
+            "phase_b_voltage_external_energy": {
                 "name": "Phase B voltage"
             },
-            "phase_c_voltage_external_energy_sensor": {
+            "phase_c_voltage_external_energy": {
                 "name": "Phase C voltage"
             },
-            "line_voltage_a_b_external_energy_sensor": {
+            "line_voltage_a_b_external_energy": {
                 "name": "A-B line voltage"
             },
-            "line_voltage_b_c_external_energy_sensor": {
+            "line_voltage_b_c_external_energy": {
                 "name": "B-C line voltage"
             },
-            "line_voltage_c_a_external_energy_sensor": {
+            "line_voltage_c_a_external_energy": {
                 "name": "C-A line voltage"
             },
-            "phase_a_current_external_energy_sensor": {
+            "phase_a_current_external_energy": {
                 "name": "Phase A current"
             },
-            "phase_b_current_external_energy_sensor": {
+            "phase_b_current_external_energy": {
                 "name": "Phase B current"
             },
-            "phase_c_current_external_energy_sensor": {
+            "phase_c_current_external_energy": {
                 "name": "Phase C current"
             },
-            "active_power_external_energy_sensor": {
+            "active_power_external_energy": {
                 "name": "Active power"
             },
-            "power_factor_external_energy_sensor": {
+            "power_factor_external_energy": {
                 "name": "Power factor"
             },
-            "apparent_power_external_energy_sensor": {
+            "apparent_power_external_energy": {
                 "name": "Apparent power"
             },
-            "phase_a_active_power_external_energy_sensor": {
+            "phase_a_active_power_external_energy": {
                 "name": "Phase A active power"
             },
-            "phase_b_active_power_external_energy_sensor": {
+            "phase_b_active_power_external_energy": {
                 "name": "Phase B active power"
             },
-            "phase_c_active_power_external_energy_sensor": {
+            "phase_c_active_power_external_energy": {
                 "name": "Phase C active power"
             },
-            "total_active_energy_external_energy_sensor": {
+            "total_active_energy_external_energy": {
                 "name": "Total active energy"
             },
-            "total_negative_active_energy_external_energy_sensor": {
+            "total_negative_active_energy_external_energy": {
                 "name": "Total negative active energy"
             },
-            "total_positive_active_energy_external_energy_sensor": {
+            "total_positive_active_energy_external_energy": {
                 "name": "Total positive active energy"
             },
             "charger_rated_power": {
                 "name": "Charger rated power"
             },
-            "charger_phase_a_voltage_sensor": {
+            "charger_phase_a_voltage": {
                 "name": "Charger Phase A voltage"
             },
-            "charger_phase_b_voltage_sensor": {
+            "charger_phase_b_voltage": {
                 "name": "Charger Phase B voltagey"
             },
-            "charger_phase_c_voltage_sensor": {
+            "charger_phase_c_voltage": {
                 "name": "Charger Phase C voltage"
             },
-            "chager_total_energy_charged_sensor": {
+            "charger_total_energy_charged": {
                 "name": "Charger total charged energy"
             },
-            "charger_temperature_sensor": {
+            "charger_temperature": {
                 "name": "Charger temperature"
+            },
+            "active_power_control_mode": {
+                "name": "Active power control mode"
+            },
+            "storage_forcible_charge_discharge_write": {
+                "name": "Forcible charge/discharge"
+            },
+            "total_feed_in_to_grid": {
+                "name": "Total feed in to grid"
             }
         },
         "select": {
@@ -1107,6 +1116,23 @@
         },
         "charger": {
             "name": "Charger"
+        }
+    },
+    "exceptions": {
+        "invalid_device_id": {
+            "message": "Invalid device ID specified: {device_id}"
+        },
+        "entry_not_loaded": {
+            "message": "Entry not loaded: {entry}"
+        },
+        "config_entry_not_found": {
+            "message": "Entry not found for device: {device_id}"
+        },
+        "ha_device_not_found": {
+            "message": "Could not retrieve Huawei Solar device associated with ID {device_id}"
+        },
+        "wrong_device_type": {
+            "message": "Got wrong Huawei Solar device type for ID {device_id}: expected {expected_type}, got {actual_type}"
         }
     }
 }
