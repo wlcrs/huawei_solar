@@ -115,7 +115,7 @@ async def validate_network_setup_auto_slave_discovery(
         if not device_infos:
             raise DeviceException("No devices found")
 
-        if not device_infos[0].device_id:
+        if device_infos[0].device_id is None:
             raise DeviceException("Primary device has no device_id")
 
         # we assume the first device is the primary device
@@ -139,8 +139,8 @@ async def validate_network_setup_auto_slave_discovery(
             or await device.has_write_permission()
         )
 
-        unit_ids = []
-        for device_info in device_infos:
+        unit_ids = [device_infos[0].device_id]
+        for device_info in device_infos[1:]:
             if device_info.device_id is None:
                 _LOGGER.warning(
                     "Device with no device_id found. Skipping. Product type: %s, model: %s, software version: %s",
