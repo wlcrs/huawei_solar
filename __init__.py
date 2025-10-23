@@ -244,6 +244,7 @@ async def _setup_inverter_device_data(
                 (DOMAIN, f"{device.serial_number}/connected_energy_storage"),
             },
             translation_key="connected_energy_storage",
+            model="Batteries",
             manufacturer=inverter_device_info.get("manufacturer"),
             via_device=(DOMAIN, device.serial_number),
         )
