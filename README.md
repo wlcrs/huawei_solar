@@ -16,7 +16,7 @@ This integration exposes the information and functions made available by Huawei 
 - [FAQ - Troubleshooting](#faq---troubleshooting)
 
 Looking for more information? The [Wiki](https://github.com/wlcrs/huawei_solar/wiki) contains in-depth documentation and support materials.
- 
+
 ## Screenshots
 
 | **Inverter**                                                           | **Battery**                                                  |
@@ -62,7 +62,7 @@ This integration supports inverters running firmware versions released in 2023 a
 1. Install this integration with HACS, or copy the contents of this
 repository into the `custom_components/huawei_solar` directory
    [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=wlcrs&repository=huawei_solar&category=integration)
-   
+
 3. Restart HA
 4. Start the configuration flow:
    - [![Start Config Flow](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start?domain=huawei_solar)
@@ -142,7 +142,7 @@ The integration will poll the inverter for new values every 30 seconds. If you w
 
 **Q**: The Daily Yield/Total Yield is incorrect: it also goes up when the battery is discharging.
 
-**A**: Huawei does not provide a Modbus register that represents the *output* of the inverter produced by energy coming only from the solar panels. It does provide a register that represents the *input* of the solar panels, but that does not take into account the conversion losses of the inverter. cfr. the Wiki page '[Daily Solar Yield](https://github.com/wlcrs/huawei_solar/wiki/Daily-Solar-Yield)' for some possible workarounds. cfr. [#1](https://github.com/wlcrs/huawei_solar/issues/1) for more context. 
+**A**: Huawei does not provide a Modbus register that represents the *output* of the inverter produced by energy coming only from the solar panels. It does provide a register that represents the *input* of the solar panels, but that does not take into account the conversion losses of the inverter. cfr. the Wiki page '[Daily Solar Yield](https://github.com/wlcrs/huawei_solar/wiki/Daily-Solar-Yield)' for some possible workarounds. cfr. [#1](https://github.com/wlcrs/huawei_solar/issues/1) for more context.
 
 ---
 
@@ -186,7 +186,7 @@ The integration will poll the inverter for new values every 30 seconds. If you w
 ```yaml
 logger:
   logs:
-    pymodbus: debug # only include this if you're having connectivity issues
+    tmodbus: debug # only include this if you're having connectivity issues
     huawei_solar: debug
     homeassistant.components.huawei_solar: debug
 ```

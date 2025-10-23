@@ -4,30 +4,30 @@ title: "[Bug]: "
 labels: ["bug"]
 body:
 
-      
+
 - type: textarea
   attributes:
     label: "Describe the issue"
     description: "A clear and concise description of what the issue is."
   validations:
-    required: true      
+    required: true
 
 - type: textarea
   attributes:
     label: "Describe your Huawei Solar Setup"
     description: "Please be thorough when describing your setup"
     value: |
-      Inverter Type: 
-      Inverter Firmware version: 
+      Inverter Type:
+      Inverter Firmware version:
       sDongle present: Yes / No
       sDongle Type: sDongleA-05 (WiFi / Ethernet) / SDongleA-03 (4G)
       sDongle Connectivitiy: WiFi / Ethernet / 4G
-      sDongle Firmware: 
+      sDongle Firmware:
       Power meter present: three phase / single phase / no
       Optimizers Present: Yes / No
       Battery: LUNA2000-SO xxkWh / LUNA2000-S1 xxkWh (Released 2024) / LG RESU xxkWh / None
-      Battery Firmware version: 
-      Huawei Solar integration version: 
+      Battery Firmware version:
+      Huawei Solar integration version:
   validations:
     required: true
 
@@ -39,7 +39,7 @@ body:
       - Please select your connection method
       - Over serial, with a serial-to-USB stick
       - Over serial, with a serial-to-WiFi stick
-      - Via the `SUN2000-<serial_no>` WiFi 
+      - Via the `SUN2000-<serial_no>` WiFi
       - Via the SDongle, wireless connection
       - Via the SDongle, wired connection
   validations:
@@ -67,7 +67,7 @@ body:
       > Just copy&pasting the error from the HA `System → Logs` page is insufficient in 95% of the cases.
       >
       > **You MUST gather debugging logs.**
-      
+
       1. Enable debug logging
          ![Enable Debug Logging menu entry](https://raw.githubusercontent.com/wlcrs/huawei_solar/main/.github/ISSUE_TEMPLATE/images/enable-debug-logging.png)
       2. Reload the integration
@@ -84,11 +84,11 @@ body:
         logs:
           custom_components.huawei_solar: debug
           huawei_solar: debug
-          pymodbus: debug # only include this if you're having connectivity issues
+          tmodbus: debug # only include this if you're having connectivity issues
       ```
-      
+
       Make sure to check for relevant log lines in the **Full logs** on the Logs settings page [![Open your Home Assistant instance and show your Home Assistant logs.](https://my.home-assistant.io/badges/logs.svg)](https://my.home-assistant.io/redirect/logs/?)
-      
+
       > [!IMPORTANT]
       > Do NOT copy&paste info from the summary that you see when going to `System → Logs`, always use "Show raw logs" and look there.
       > ![Raw logs](https://raw.githubusercontent.com/wlcrs/huawei_solar/main/.github/ISSUE_TEMPLATE/images/raw-logs.png)
@@ -99,7 +99,7 @@ body:
     render: text
   validations:
     required: true
- 
+
 - type: checkboxes
   id: checks
   attributes:
@@ -110,6 +110,6 @@ body:
       - label: I did not find an existing issue describing this problem.
       - label: I did upload the diagnostics-file that I could retrieve from  the 'Devices & Services Page'
       - label: I did upload the relevant debug logs (via 'Enable Debug Logging'-feature or by manually configuring HA logging)
-    
-    
-    
+
+
+
