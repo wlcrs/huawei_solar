@@ -8,6 +8,8 @@ from huawei_solar import (
     EMMADevice,
     HuaweiSolarDevice,
     SChargerDevice,
+    SDongleDevice,
+    SmartLoggerDevice,
     register_names as rn,
     register_values as rv,
 )
@@ -1787,6 +1789,124 @@ CHARGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
 )
 
 
+SDONGLE_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SDONGLE_TOTAL_INPUT_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SDONGLE_LOAD_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SDONGLE_GRID_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SDONGLE_TOTAL_BATTERY_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SDONGLE_TOTAL_ACTIVE_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+)
+
+SMARTLOGGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_INPUT_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_ACTIVE_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_POWER_SUPPLY_FROM_GRID_TODAY,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_TOTAL_POWER_SUPPLY_FROM_GRID,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_ENERGY_CHARGED_TODAY,
+        icon="mdi:battery-plus-variant",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_ENERGY_DISCHARGED_TODAY,
+        icon="mdi:battery-minus-variant",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_TOTAL_ENERGY_CHARGED,
+        icon="mdi:battery-plus-variant",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_TOTAL_ENERGY_DISCHARGE_D,
+        icon="mdi:battery-minus-variant",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_SOC,
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_SOH,
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_SOE,
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_TOTAL_ENERGY_YIELD,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_YIELD_TODAY,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+    ),
+)
+
+
 def create_charger_entities(
     ucs: HuaweiSolarDeviceData,
 ) -> list["HuaweiSolarSensorEntity"]:
@@ -1798,6 +1918,34 @@ def create_charger_entities(
             ucs.update_coordinator, entity_description, ucs.device_info
         )
         for entity_description in CHARGER_SENSOR_DESCRIPTIONS
+    ]
+
+
+def create_sdongle_entities(
+    ucs: HuaweiSolarDeviceData,
+) -> list["HuaweiSolarSensorEntity"]:
+    """Create SDongle sensor entities."""
+    assert isinstance(ucs.device, SDongleDevice)
+
+    return [
+        HuaweiSolarSensorEntity(
+            ucs.update_coordinator, entity_description, ucs.device_info
+        )
+        for entity_description in SDONGLE_SENSOR_DESCRIPTIONS
+    ]
+
+
+def create_smartlogger_entities(
+    ucs: HuaweiSolarDeviceData,
+) -> list["HuaweiSolarSensorEntity"]:
+    """Create SmartLogger sensor entities."""
+    assert isinstance(ucs.device, SmartLoggerDevice)
+
+    return [
+        HuaweiSolarSensorEntity(
+            ucs.update_coordinator, entity_description, ucs.device_info
+        )
+        for entity_description in SMARTLOGGER_SENSOR_DESCRIPTIONS
     ]
 
 
@@ -1817,6 +1965,10 @@ async def async_setup_entry(
             entities_to_add.extend(create_emma_entities(ucs))
         elif isinstance(ucs.device, SChargerDevice):
             entities_to_add.extend(create_charger_entities(ucs))
+        elif isinstance(ucs.device, SDongleDevice):
+            entities_to_add.extend(create_sdongle_entities(ucs))
+        elif isinstance(ucs.device, SmartLoggerDevice):
+            entities_to_add.extend(create_smartlogger_entities(ucs))
 
     async_add_entities(entities_to_add, True)
 

@@ -827,6 +827,60 @@
             },
             "total_feed_in_to_grid": {
                 "name": "Total feed in to grid"
+            },
+            "sdongle_total_input_power": {
+                "name": "Total input power"
+            },
+            "sdongle_load_power": {
+                "name": "Load power"
+            },
+            "sdongle_grid_power": {
+                "name": "Grid power"
+            },
+            "sdongle_total_battery_power": {
+                "name": "Total battery power"
+            },
+            "sdongle_total_active_power": {
+                "name": "Total active power"
+            },
+            "smartlogger_input_power": {
+                "name": "Input power"
+            },
+            "smartlogger_active_power": {
+                "name": "Active power"
+            },
+            "smartlogger_power_supply_from_grid_today": {
+                "name": "Power supply from grid today"
+            },
+            "smartlogger_total_power_supply_from_grid": {
+                "name": "Total power supply from grid"
+            },
+            "smartlogger_energy_charged_today": {
+                "name": "Energy charged today"
+            },
+            "smartlogger_energy_discharged_today": {
+                "name": "Energy discharged today"
+            },
+            "smartlogger_total_energy_charged": {
+                "name": "Total charged energy"
+            },
+            "smartlogger_total_energy_discharge_d": {
+                "name": "Total discharged energy"
+            },
+            "smartlogger_soc": {
+                "name": "State of charge"
+            },
+            "smartlogger_soh": {
+                "name": "State of health"
+            },
+            "smartlogger_soe": {
+                "name": "State of energy"
+            },
+            "smartlogger_total_energy_yield": {
+                "name": "Total energy yield"
+            },
+            "smartlogger_yield_today": {
+                "name": "Daily yield"
             }
         },
         "select": {
