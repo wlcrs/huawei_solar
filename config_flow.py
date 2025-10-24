@@ -115,16 +115,24 @@ async def validate_network_setup_auto_slave_discovery(
         if not device_infos:
             raise DeviceException("No devices found")
 
-        if device_infos[0].device_id is None:
+        device_info = device_infos[0]
+        _LOGGER.info(
+            "Device %s was auto-discovered of type %s with model %s and software version %s",
+            device_info.device_id,
+            device_info.product_type,
+            device_info.model,
+            device_info.software_version,
+        )
+
+        if device_info.device_id is None:
             raise DeviceException("Primary device has no device_id")
 
         # we assume the first device is the primary device
-        device = await create_device_instance(
-            client.for_unit_id(device_infos[0].device_id)
-        )
+        device = await create_device_instance(client.for_unit_id(device_info.device_id))
 
         _LOGGER.info(
-            "Successfully connected to device %s %s with SN %s",
+            "Successfully connected to device with ID %s: %s %s with SN %s",
+            device_info.device_id,
             type(device).__name__,
             device.model_name,
             device.serial_number,
@@ -158,23 +166,24 @@ async def validate_network_setup_auto_slave_discovery(
                 device_info.software_version,
             )
             try:
-                device = await create_device_instance(
-                    client.for_unit_id(device_info.device_id)
+                sub_device = await create_sub_device_instance(
+                    device, device_info.device_id
                 )
 
                 _LOGGER.info(
-                    "Successfully connected to sub_device %s %s: %s with SN %s",
-                    type(device).__name__,
+                    "Successfully connected to sub device with ID %s. %s: %s with SN %s",
                     device_info.device_id,
-                    device.model_name,
-                    device.serial_number,
+                    type(sub_device).__name__,
+                    sub_device.model_name,
+                    sub_device.serial_number,
                 )
 
                 unit_ids.append(device_info.device_id)
 
             except HuaweiSolarException:
                 _LOGGER.exception(
-                    "Device with ID %s did not respond. Skipping", device_info.device_id
+                    "Error while processing sub device with ID %s. Skipping",
+                    device_info.device_id,
                 )
 
         # Return info that you want to store in the config entry.
