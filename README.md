@@ -47,11 +47,17 @@ To enable these advanced features, you need to select 'Elevate permissions' duri
 
 **Connection**
 
-This integration supports two connection modes to SUN2000 inverters:
-- direct serial connection to the RS485A1 and RS485B1 pins of the COM port
+This integration supports two connection modes to Huawei solar devices:
+- direct serial connection to the RS485A1 and RS485B1 pins of the COM port of SUN2000 inverters
 - network connection
 
 Detailed information can be found on the ['Connecting to the inverter' Wiki-page](https://github.com/wlcrs/huawei_solar/wiki/Connecting-to-the-inverter)
+
+> [!NOTE]
+> Modbus devices only support **one connection at a time**.
+> 
+> Make sure that nothing else is trying to connect to your Huawei solar installation.
+> Otherwise the connection from this integration to your installation will constantly be interrupted.
 
 **Firmware**
 
