@@ -1,0 +1,977 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Устройство уже настроено",
+            "reconfigure_successful": "Перенастройка прошла успешно",
+            "reauth_successful": "Повторная аутентификация прошла успешно"
+        },
+        "error": {
+            "cannot_connect": "Не удалось подключиться",
+            "invalid_auth": "Неверная аутентификация",
+            "invalid_slave_ids": "Slave ID должны быть списком целых чисел, разделенных запятыми",
+            "read_error": "Ошибка чтения данных с инвертора.",
+            "slave_cannot_connect": "Не удалось подключиться к дополнительному slave-устройству",
+            "unknown": "Непредвиденная ошибка"
+        },
+        "step": {
+            "network_login": {
+                "data": {
+                    "password": "Пароль",
+                    "username": "Имя пользователя"
+                },
+                "description": "Пожалуйста, введите учетные данные установщика"
+            },
+            "setup_network": {
+                "data": {
+                    "enable_parameter_configuration": "Дополнительно: повысить права доступа",
+                    "host": "Хост",
+                    "port": "Порт",
+                    "slave_ids": "Slave ID: AUTO для автообнаружения, иначе список, разделенный запятыми"
+                }
+            },
+            "setup_serial": {
+                "data": {
+                    "port": "Выберите устройство",
+                    "slave_ids": "Slave ID (через запятую)"
+                },
+                "title": "Устройство"
+            },
+            "setup_serial_manual_path": {
+                "data": {
+                    "port": "Путь к USB-устройству"
+                },
+                "title": "Путь"
+            },
+            "user": {
+                "data": {
+                    "type": "Тип подключения"
+                },
+                "title": "Выберите тип подключения"
+            }
+        }
+    },
+    "entity": {
+        "number": {
+            "active_power_percentage_derating": {
+                "name": "Снижение мощности (в процентах)"
+            },
+            "active_power_fixed_value_derating": {
+                "name": "Снижение мощности"
+            },
+            "storage_backup_power_state_of_charge": {
+                "name": "SOC резервного питания"
+            },
+            "storage_capacity_control_soc_peak_shaving": {
+                "name": "SOC сглаживания пиков"
+            },
+            "storage_charging_cutoff_capacity": {
+                "name": "SOC окончания заряда"
+            },
+            "storage_discharging_cutoff_capacity": {
+                "name": "SOC окончания разряда"
+            },
+            "storage_grid_charge_cutoff_state_of_charge": {
+                "name": "SOC окончания заряда от сети"
+            },
+            "storage_maximum_charging_power": {
+                "name": "Максимальная мощность заряда"
+            },
+            "storage_maximum_discharging_power": {
+                "name": "Максимальная мощность разряда"
+            },
+            "storage_power_of_charge_from_grid": {
+                "name": "Максимальная мощность заряда от сети"
+            },
+            "emma_maximum_feed_grid_power_percent": {
+                "name": "Максимальная мощность отдачи в сеть (%)"
+            },
+            "emma_maximum_feed_grid_power_watt": {
+                "name": "Максимальная мощность отдачи в сеть"
+            },
+            "mppt_scanning_interval": {
+                "name": "Интервал сканирования MPPT"
+            }
+        },
+        "select": {
+            "storage_capacity_control_mode": {
+                "name": "Режим управления емкостью",
+                "state": {
+                    "active_capacity_control": "Активное управление емкостью",
+                    "apparent_power_limit": "Ограничение полной мощности",
+                    "disable": "Отключено"
+                }
+            },
+            "storage_excess_pv_energy_use_in_tou": {
+                "name": "Использование избыточной PV энергии (TOU)",
+                "state": {
+                    "charge": "Зарядка",
+                    "fed_to_grid": "Отдача в сеть"
+                }
+            },
+            "storage_working_mode_settings": {
+                "name": "Рабочий режим",
+                "state": {
+                    "adaptive": "Адаптивный",
+                    "fixed_charge_discharge": "Фиксированный заряд/разряд",
+                    "fully_fed_to_grid": "Полная отдача в сеть",
+                    "maximise_self_consumption": "Максимизация собственного потребления",
+                    "time_of_use_lg": "По времени использования",
+                    "time_of_use_luna2000": "По времени использования"
+                }
+            },
+            "emma_ess_control_mode": {
+                "name": "Режим управления ESS",
+                "state": {
+                    "reserved_1": "Зарезервировано 1",
+                    "maximum_self_consumption": "Максимальное собственное потребление",
+                    "reserved_3": "Зарезервировано 3",
+                    "fully_fed_to_grid": "Полная отдача в сеть",
+                    "time_of_use": "По времени использования",
+                    "third_party_dispatch": "Управление третьей стороной"
+                }
+            },
+            "emma_tou_preferred_use_of_surplus_pv_power": {
+                "name": "Использование избыточной PV энергии (TOU)",
+                "state": {
+                    "fed_to_grid": "Отдача в сеть",
+                    "charge": "Зарядка"
+                }
+            }
+        },
+        "sensor": {
+            "accumulated_yield_energy": {
+                "name": "Общая выработка"
+            },
+            "rated_power": {
+                "name": "Номинальная мощность"
+            },
+            "p_max": {
+                "name": "Макс. активная мощность"
+            },
+            "total_dc_input_power": {
+                "name": "Общая входная энергия DC"
+            },
+            "active_grid_a_b_voltage": {
+                "name": "Линейное напряжение A-B"
+            },
+            "active_grid_a_power": {
+                "name": "Активная мощность фазы A"
+            },
+            "active_grid_b_c_voltage": {
+                "name": "Линейное напряжение B-C"
+            },
+            "active_grid_b_power": {
+                "name": "Активная мощность фазы B"
+            },
+            "active_grid_c_a_voltage": {
+                "name": "Линейное напряжение C-A"
+            },
+            "active_grid_c_power": {
+                "name": "Активная мощность фазы C"
+            },
+            "active_grid_frequency": {
+                "name": "Частота"
+            },
+            "active_grid_power_factor": {
+                "name": "Коэффициент мощности"
+            },
+            "active_power": {
+                "name": "Активная мощность"
+            },
+            "active_power_control": {
+                "name": "Управление активной мощностью"
+            },
+            "alarm": {
+                "name": "Тревога"
+            },
+            "alarms": {
+                "name": "Тревоги"
+            },
+            "current_electricity_generation_statistics_time": {
+                "name": "Время текущей статистики генерации"
+            },
+            "hourly_yield_energy": {
+                "name": "Часовая выработка"
+            },
+            "daily_yield_energy": {
+                "name": "Дневная выработка"
+            },
+            "monthly_yield_energy": {
+                "name": "Месячная выработка"
+            },
+            "yearly_yield_energy": {
+                "name": "Годовая выработка"
+            },
+            "day_active_power_peak": {
+                "name": "Пик активной мощности за день"
+            },
+            "device_status": {
+                "name": "Статус устройства"
+            },
+            "efficiency": {
+                "name": "Эффективность"
+            },
+            "grid_a_current": {
+                "name": "Ток фазы A"
+            },
+            "grid_a_voltage": {
+                "name": "Напряжение фазы A"
+            },
+            "grid_accumulated_energy": {
+                "name": "Потребление"
+            },
+            "grid_accumulated_reactive_power": {
+                "name": "Реактивная энергия"
+            },
+            "grid_b_current": {
+                "name": "Ток фазы B"
+            },
+            "grid_b_voltage": {
+                "name": "Напряжение фазы B"
+            },
+            "grid_c_current": {
+                "name": "Ток фазы C"
+            },
+            "grid_c_voltage": {
+                "name": "Напряжение фазы C"
+            },
+            "grid_exported_energy": {
+                "name": "Экспортировано"
+            },
+            "input_current": {
+                "name": "Входной ток"
+            },
+            "input_power": {
+                "name": "Входная мощность"
+            },
+            "input_voltage": {
+                "name": "Входное напряжение"
+            },
+            "internal_temperature": {
+                "name": "Внутренняя температура"
+            },
+            "insulation_resistance": {
+                "name": "Сопротивление изоляции"
+            },
+            "forcible_charge_summary": {
+                "name": "Принудительный заряд"
+            },
+            "line_voltage_a_b": {
+                "name": "Линейное напряжение A-B"
+            },
+            "line_voltage_b_c": {
+                "name": "Линейное напряжение B-C"
+            },
+            "line_voltage_c_a": {
+                "name": "Линейное напряжение C-A"
+            },
+            "meter_status": {
+                "name": "Статус счетчика"
+            },
+            "nb_online_optimizers": {
+                "name": "Оптимизаторов в сети"
+            },
+            "output_current": {
+                "name": "Выходной ток"
+            },
+            "output_power": {
+                "name": "Выходная мощность"
+            },
+            "output_voltage": {
+                "name": "Выходное напряжение"
+            },
+            "phase_a_current": {
+                "name": "Ток фазы A"
+            },
+            "phase_a_voltage": {
+                "name": "Напряжение фазы A"
+            },
+            "phase_b_current": {
+                "name": "Ток фазы B"
+            },
+            "phase_b_voltage": {
+                "name": "Напряжение фазы B"
+            },
+            "phase_c_current": {
+                "name": "Ток фазы C"
+            },
+            "phase_c_voltage": {
+                "name": "Напряжение фазы C"
+            },
+            "power_factor": {
+                "name": "Коэффициент мощности"
+            },
+            "power_meter_active_power": {
+                "name": "Активная мощность"
+            },
+            "power_meter_reactive_power": {
+                "name": "Реактивная мощность"
+            },
+            "pv_01_current": {
+                "name": "Ток PV 1"
+            },
+            "pv_01_voltage": {
+                "name": "Напряжение PV 1"
+            },
+            "pv_02_current": {
+                "name": "Ток PV 2"
+            },
+            "pv_02_voltage": {
+                "name": "Напряжение PV 2"
+            },
+            "pv_03_current": {
+                "name": "Ток PV 3"
+            },
+            "pv_03_voltage": {
+                "name": "Напряжение PV 3"
+            },
+            "pv_04_current": {
+                "name": "Ток PV 4"
+            },
+            "pv_04_voltage": {
+                "name": "Напряжение PV 4"
+            },
+            "pv_05_current": {
+                "name": "Ток PV 5"
+            },
+            "pv_05_voltage": {
+                "name": "Напряжение PV 5"
+            },
+            "pv_06_current": {
+                "name": "Ток PV 6"
+            },
+            "pv_06_voltage": {
+                "name": "Напряжение PV 6"
+            },
+            "pv_07_current": {
+                "name": "Ток PV 7"
+            },
+            "pv_07_voltage": {
+                "name": "Напряжение PV 7"
+            },
+            "pv_08_current": {
+                "name": "Ток PV 8"
+            },
+            "pv_08_voltage": {
+                "name": "Напряжение PV 8"
+            },
+            "pv_09_current": {
+                "name": "Ток PV 9"
+            },
+            "pv_09_voltage": {
+                "name": "Напряжение PV 9"
+            },
+            "pv_10_current": {
+                "name": "Ток PV 10"
+            },
+            "pv_10_voltage": {
+                "name": "Напряжение PV 10"
+            },
+            "pv_11_current": {
+                "name": "Ток PV 11"
+            },
+            "pv_11_voltage": {
+                "name": "Напряжение PV 11"
+            },
+            "pv_12_current": {
+                "name": "Ток PV 12"
+            },
+            "pv_12_voltage": {
+                "name": "Напряжение PV 12"
+            },
+            "pv_13_current": {
+                "name": "Ток PV 13"
+            },
+            "pv_13_voltage": {
+                "name": "Напряжение PV 13"
+            },
+            "pv_14_current": {
+                "name": "Ток PV 14"
+            },
+            "pv_14_voltage": {
+                "name": "Напряжение PV 14"
+            },
+            "pv_15_current": {
+                "name": "Ток PV 15"
+            },
+            "pv_15_voltage": {
+                "name": "Напряжение PV 15"
+            },
+            "pv_16_current": {
+                "name": "Ток PV 16"
+            },
+            "pv_16_voltage": {
+                "name": "Напряжение PV 16"
+            },
+            "pv_17_current": {
+                "name": "Ток PV 17"
+            },
+            "pv_17_voltage": {
+                "name": "Напряжение PV 17"
+            },
+            "pv_18_current": {
+                "name": "Ток PV 18"
+            },
+            "pv_18_voltage": {
+                "name": "Напряжение PV 18"
+            },
+            "pv_19_current": {
+                "name": "Ток PV 19"
+            },
+            "pv_19_voltage": {
+                "name": "Напряжение PV 19"
+            },
+            "pv_20_current": {
+                "name": "Ток PV 20"
+            },
+            "pv_20_voltage": {
+                "name": "Напряжение PV 20"
+            },
+            "pv_21_current": {
+                "name": "Ток PV 21"
+            },
+            "pv_21_voltage": {
+                "name": "Напряжение PV 21"
+            },
+            "pv_22_current": {
+                "name": "Ток PV 22"
+            },
+            "pv_22_voltage": {
+                "name": "Напряжение PV 22"
+            },
+            "pv_23_current": {
+                "name": "Ток PV 23"
+            },
+            "pv_23_voltage": {
+                "name": "Напряжение PV 23"
+            },
+            "pv_24_current": {
+                "name": "Ток PV 24"
+            },
+            "pv_24_voltage": {
+                "name": "Напряжение PV 24"
+            },
+            "battery_working_mode": {
+                "name": "Рабочий режим"
+            },
+            "battery_remaining_charge_discharge_time": {
+                "name": "Оставшееся время заряда/разряда"
+            },
+            "reactive_power": {
+                "name": "Реактивная мощность"
+            },
+            "running_status": {
+                "name": "Рабочий статус"
+            },
+            "shutdown_time": {
+                "name": "Время выключения"
+            },
+            "single_phase_meter_current": {
+                "name": "Ток"
+            },
+            "single_phase_meter_voltage": {
+                "name": "Напряжение"
+            },
+            "startup_time": {
+                "name": "Время запуска"
+            },
+            "state_1": {
+                "name": "Состояние инвертора"
+            },
+            "state_2_0": {
+                "name": "Статус блокировки"
+            },
+            "state_2_1": {
+                "name": "Статус подключения PV"
+            },
+            "state_2_2": {
+                "name": "Сбор данных DSP"
+            },
+            "state_3_0": {
+                "name": "Статус вне сети (off-grid)"
+            },
+            "state_3_1": {
+                "name": "Переключатель вне сети (off-grid)"
+            },
+            "storage_bus_current": {
+                "name": "Ток шины"
+            },
+            "storage_bus_voltage": {
+                "name": "Напряжение шины"
+            },
+            "storage_capacity_control_periods": {
+                "name": "Периоды управления емкостью"
+            },
+            "storage_charge_discharge_power": {
+                "name": "Мощность заряда/разряда"
+            },
+            "storage_current_day_charge_capacity": {
+                "name": "Заряд за день"
+            },
+            "storage_current_day_discharge_capacity": {
+                "name": "Разряд за день"
+            },
+            "storage_fixed_charging_and_discharging_periods": {
+                "name": "Периоды фиксированного заряда"
+            },
+            "storage_running_status": {
+                "name": "Статус"
+            },
+            "storage_maximum_charge_power": {
+                "name": "Максимальная мощность заряда"
+            },
+            "storage_maximum_discharge_power": {
+                "name": "Максимальная мощность разряда"
+            },
+            "storage_rated_capacity": {
+                "name": "Номинальная емкость"
+            },
+            "storage_state_of_capacity": {
+                "name": "Уровень заряда (SOC)"
+            },
+            "storage_lg_resu_time_of_use_price_periods": {
+                "name": "Периоды тарифов TOU"
+            },
+            "storage_huawei_luna2000_time_of_use_price_periods": {
+                "name": "Периоды тарифов TOU"
+            },
+            "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
+                "name": "Периоды заряда и разряда TOU"
+            },
+            "storage_lg_resu_time_of_use_charging_and_discharging_periods": {
+                "name": "Периоды заряда и разряда TOU"
+            },
+            "storage_total_charge": {
+                "name": "Общий заряд"
+            },
+            "storage_total_discharge": {
+                "name": "Общий разряд"
+            },
+            "temperature": {
+                "name": "Температура"
+            },
+            "voltage_to_ground": {
+                "name": "Напряжение относительно земли"
+            },
+            "inverter_total_absorbed_energy": {
+                "name": "Общая поглощенная энергия"
+            },
+            "energy_charged_today": {
+                "name": "Заряжено энергии сегодня"
+            },
+            "total_charged_energy": {
+                "name": "Всего заряжено энергии"
+            },
+            "energy_discharged_today": {
+                "name": "Разряжено энергии сегодня"
+            },
+            "total_discharged_energy": {
+                "name": "Всего разряжено энергии"
+            },
+            "ess_chargeable_energy": {
+                "name": "Доступная энергия для заряда ESS"
+            },
+            "ess_dischargeable_energy": {
+                "name": "Доступная энергия для разряда ESS"
+            },
+            "rated_ess_capacity": {
+                "name": "Номинальная емкость ESS"
+            },
+            "consumption_today": {
+                "name": "Потребление сегодня"
+            },
+            "total_energy_consumption": {
+                "name": "Общее потребление энергии"
+            },
+            "feed_in_to_grid_today": {
+                "name": "Отдача в сеть сегодня"
+            },
+            "supply_from_grid_today": {
+                "name": "Получено из сети сегодня"
+            },
+            "total_supply_from_grid": {
+                "name": "Всего получено из сети"
+            },
+            "inverter_energy_yield_today": {
+                "name": "Выработка инвертора сегодня"
+            },
+            "inverter_total_energy_yield": {
+                "name": "Общая выработка инвертора"
+            },
+            "pv_yield_today": {
+                "name": "Выработка PV сегодня"
+            },
+            "total_pv_energy_yield": {
+                "name": "Общая выработка PV"
+            },
+            "pv_output_power": {
+                "name": "Выходная мощность PV"
+            },
+            "load_power": {
+                "name": "Мощность нагрузки"
+            },
+            "feed_in_power": {
+                "name": "Мощность отдачи в сеть"
+            },
+            "battery_charge_discharge_power": {
+                "name": "Мощность заряда/разряда батареи"
+            },
+            "inverter_rated_power": {
+                "name": "Номинальная мощность инвертора"
+            },
+            "inverter_active_power": {
+                "name": "Активная мощность инвертора"
+            },
+            "state_of_capacity": {
+                "name": "Уровень заряда (SOC)"
+            },
+            "ess_chargeable_capacity": {
+                "name": "Доступная емкость для заряда ESS"
+            },
+            "ess_dischargeable_capacity": {
+                "name": "Доступная емкость для разряда ESS"
+            },
+            "backup_power_state_of_charge": {
+                "name": "SOC резервного питания"
+            },
+            "soh_calibration_status": {
+                "name": "Статус калибровки SOH"
+            },
+            "pack_1_max_temperature": {
+                "name": "Макс. температура блока 1"
+            },
+            "pack_1_min_temperature": {
+                "name": "Мин. температура блока 1"
+            },
+            "pack_2_max_temperature": {
+                "name": "Макс. температура блока 2"
+            },
+            "pack_2_min_temperature": {
+                "name": "Мин. температура блока 2"
+            },
+            "pack_3_max_temperature": {
+                "name": "Макс. температура блока 3"
+            },
+            "pack_3_min_temperature": {
+                "name": "Мин. температура блока 3"
+            },
+            "pack_1_working_status": {
+                "name": "Рабочий статус блока 1"
+            },
+            "pack_2_working_status": {
+                "name": "Рабочий статус блока 2"
+            },
+            "pack_3_working_status": {
+                "name": "Рабочий статус блока 3"
+            },
+            "pack_1_firmware_version": {
+                "name": "Версия прошивки блока 1"
+            },
+            "pack_1_serial_number": {
+                "name": "Серийный номер блока 1"
+            },
+            "pack_1_state_of_capacity": {
+                "name": "Уровень заряда (SOC) блока 1"
+            },
+            "pack_1_charge_discharge_power": {
+                "name": "Мощность заряда/разряда блока 1"
+            },
+            "pack_1_voltage": {
+                "name": "Напряжение блока 1"
+            },
+            "pack_1_current": {
+                "name": "Ток блока 1"
+            },
+            "pack_1_soh_calibration_status": {
+                "name": "Статус калибровки SOH блока 1"
+            },
+            "pack_1_total_charge": {
+                "name": "Общий заряд блока 1"
+            },
+            "pack_1_total_discharge": {
+                "name": "Общий разряд блока 1"
+            },
+            "pack_2_firmware_version": {
+                "name": "Версия прошивки блока 2"
+            },
+            "pack_2_serial_number": {
+                "name": "Серийный номер блока 2"
+            },
+            "pack_2_state_of_capacity": {
+                "name": "Уровень заряда (SOC) блока 2"
+            },
+            "pack_2_charge_discharge_power": {
+                "name": "Мощность заряда/разряда блока 2"
+            },
+            "pack_2_voltage": {
+                "name": "Напряжение блока 2"
+            },
+            "pack_2_current": {
+                "name": "Ток блока 2"
+            },
+            "pack_2_soh_calibration_status": {
+                "name": "Статус калибровки SOH блока 2"
+            },
+            "pack_2_total_charge": {
+                "name": "Общий заряд блока 2"
+            },
+            "pack_2_total_discharge": {
+                "name": "Общий разряд блока 2"
+            },
+            "pack_3_firmware_version": {
+                "name": "Версия прошивки блока 3"
+            },
+            "pack_3_serial_number": {
+                "name": "Серийный номер блока 3"
+            },
+            "pack_3_state_of_capacity": {
+                "name": "Уровень заряда (SOC) блока 3"
+            },
+            "pack_3_charge_discharge_power": {
+                "name": "Мощность заряда/разряда блока 3"
+            },
+            "pack_3_voltage": {
+                "name": "Напряжение блока 3"
+            },
+            "pack_3_current": {
+                "name": "Ток блока 3"
+            },
+            "pack_3_soh_calibration_status": {
+                "name": "Статус калибровки SOH блока 3"
+            },
+            "pack_3_total_charge": {
+                "name": "Общий заряд блока 3"
+            },
+            "pack_3_total_discharge": {
+                "name": "Общий разряд блока 3"
+            },
+            "bms_temperature": {
+                "name": "Температура BMS"
+            },
+            "active_grid_a_current": {
+                "name": "Ток фазы A"
+            },
+            "active_grid_b_current": {
+                "name": "Ток фазы B"
+            },
+            "active_grid_c_current": {
+                "name": "Ток фазы C"
+            }
+        },
+        "switch": {
+            "startup": {
+                "name": "Инвертор ВКЛ/ВЫКЛ"
+            },
+            "storage_charge_from_grid_function": {
+                "name": "Зарядка от сети"
+            },
+            "mppt_multimodal_scanning": {
+                "name": "Сканирование MPPT"
+            }
+        }
+    },
+    "services": {
+        "forcible_charge": {
+            "description": "Принудительный заряд батареи в течение определенного времени",
+            "fields": {
+                "device_id": {
+                    "description": "Должно быть устройством 'Батареи'",
+                    "name": "Батарея"
+                },
+                "duration": {
+                    "description": "Длительность заряда",
+                    "name": "Длительность"
+                },
+                "power": {
+                    "description": "Мощность, используемая для заряда",
+                    "name": "Мощность"
+                }
+            },
+            "name": "Принудительный заряд"
+        },
+        "forcible_charge_soc": {
+            "description": "Принудительный заряд батареи до определенного уровня заряда (SOC)",
+            "fields": {
+                "device_id": {
+                    "description": "Должно быть устройством 'Батареи'",
+                    "name": "Батарея"
+                },
+                "power": {
+                    "description": "Мощность, используемая для заряда",
+                    "name": "Мощность"
+                },
+                "target_soc": {
+                    "description": "Уровень заряда (SOC), который должен быть достигнут",
+                    "name": "Целевой SOC"
+                }
+            },
+            "name": "Принудительный заряд до уровня SOC"
+        },
+        "forcible_discharge": {
+            "description": "Принудительный разряд батареи в течение определенного времени",
+            "fields": {
+                "device_id": {
+                    "description": "Должно быть устройством 'Батареи'",
+                    "name": "Батарея"
+                },
+                "duration": {
+                    "description": "Длительность разряда",
+                    "name": "Длительность"
+                },
+                "power": {
+                    "description": "Мощность, используемая для разряда",
+                    "name": "Мощность"
+                }
+            },
+            "name": "Принудительный разряд"
+        },
+        "forcible_discharge_soc": {
+            "description": "Принудительный разряд батареи до определенного уровня заряда (SOC)",
+            "fields": {
+                "device_id": {
+                    "description": "Должно быть устройством 'Батареи'",
+                    "name": "Батарея"
+                },
+                "power": {
+                    "description": "Мощность, используемая для разряда",
+                    "name": "Мощность"
+                },
+                "target_soc": {
+                    "description": "Уровень заряда (SOC), который должен быть достигнут",
+                    "name": "Целевой SOC"
+                }
+            },
+            "name": "Принудительный разряд до уровня SOC"
+        },
+        "reset_maximum_feed_grid_power": {
+            "description": "Установить управление активной мощностью в режим 'Без ограничений' (по умолчанию)",
+            "fields": {
+                "device_id": {
+                    "name": "Устройство",
+                    "description": "При наличии EMMA, это должно быть устройство 'EMMA'. В противном случае: это должно быть устройство 'Инвертор'"
+                }
+            },
+            "name": "Установить управление активной мощностью на максимальную отдачу в сеть"
+        },
+        "set_capacity_control_periods": {
+            "description": "Установить периоды управления емкостью",
+            "fields": {
+                "device_id": {
+                    "description": "Должно быть устройством 'Батареи'",
+                    "name": "Батарея"
+                },
+                "periods": {
+                    "description": "Один период на строку. Формат: '[время начала]-[время окончания]/[активные дни]/[мощность]Вт', где 1=Понедельник, 7=Воскресенье. Пример: '00:00-23:59/1234567/2500W'.",
+                    "name": "Периоды"
+                }
+            },
+            "name": "Установить периоды управления емкостью"
+        },
+        "set_di_active_power_scheduling": {
+            "description": "Установить управление активной мощностью на 'Активное DI-планирование'",
+            "fields": {
+                "device_id": {
+                    "description": "Должно быть устройством 'Инвертор'",
+                    "name": "Инвертор"
+                }
+            },
+            "name": "Установить управление активной мощностью на 'Активное DI-планирование'"
+        },
+        "set_fixed_charge_periods": {
+            "description": "Устанавливает периоды фиксированного заряда и разряда",
+            "fields": {
+                "device_id": {
+                    "description": "Должно быть устройством 'Батарея'",
+                    "name": "Батарея"
+                },
+                "periods": {
+                    "description": "Один период на строку. Формат: '[время начала]-[время окончания]/[мощность]Вт'. Пример: '12:00-15:59/-1000W'.",
+                    "name": "Периоды"
+                }
+            },
+            "name": "Установить периоды фиксированного заряда"
+        },
+        "set_maximum_feed_grid_power": {
+            "description": "Устанавливает управление активной мощностью на 'Подключение к сети с ограничением мощности' с заданной мощностью (в Вт)",
+            "fields": {
+                "device_id": {
+                    "name": "Устройство",
+                    "description": "При наличии EMMA, это должно быть устройство 'EMMA'. В противном случае: это должно быть устройство 'Инвертор'"
+                },
+                "power": {
+                    "description": "Максимальная мощность (Ватт)",
+                    "name": "Мощность"
+                }
+            },
+            "name": "Ограничить мощность, отдаваемую в сеть"
+        },
+        "set_maximum_feed_grid_power_percent": {
+            "description": "Устанавливает управление активной мощностью на 'Подключение к сети с ограничением мощности (%)' с заданным процентом",
+            "fields": {
+                "device_id": {
+                    "name": "Устройство",
+                    "description": "При наличии EMMA, это должно быть устройство 'EMMA'. В противном случае: это должно быть устройство 'Инвертор'"
+                },
+                "power_percentage": {
+                    "description": "Максимальный процент",
+                    "name": "Процент мощности"
+                }
+            },
+            "name": "Ограничить мощность, отдаваемую в сеть, в процентах"
+        },
+        "set_tou_periods": {
+            "description": "Устанавливает периоды по времени использования (TOU)",
+            "fields": {
+                "device_id": {
+                    "name": "Устройство",
+                    "description": "При наличии EMMA, это должно быть устройство 'EMMA'. В противном случае: это должно быть устройство 'Батареи'"
+                },
+                "periods": {
+                    "description": "Один период на строку. Для батарей Huawei LUNA2000: '[время начала]-[время окончания]/[активные дни]/[заряд]', где 1=Понедельник, 7=Воскресенье (пример: '12:00-14:00/1234567/-'). Для батарей LG RESU: '[время начала]-[время окончания]/[цена электричества]' (пример: 13:00-14:00/0.50)",
+                    "name": "Периоды"
+                }
+            },
+            "name": "Установить периоды TOU"
+        },
+        "set_zero_power_grid_connection": {
+            "description": "Установить управление активной мощностью на 'Нулевая отдача в сеть'",
+            "fields": {
+                "device_id": {
+                    "name": "Устройство",
+                    "description": "При наличии EMMA, это должно быть устройство 'EMMA'. В противном случае: это должно быть устройство 'Инвертор'"
+                }
+            },
+            "name": "Установить управление активной мощностью на 'Нулевая отдача в сеть'"
+        },
+        "stop_forcible_charge": {
+            "description": "Отменить выполняемую команду принудительного заряда",
+            "fields": {
+                "device_id": {
+                    "description": "Должно быть устройством 'Батареи'",
+                    "name": "Батарея"
+                }
+            },
+            "name": "Остановить принудительный заряд или разряд"
+        }
+    },
+    "device": {
+        "emma": {
+            "name": "EMMA"
+        },
+        "inverter": {
+            "name": "Инвертор"
+        },
+        "connected_energy_storage": {
+            "name": "Батареи"
+        },
+        "power_meter": {
+            "name": "Счетчик электроэнергии"
+        },
+        "battery_1": {
+            "name": "Батарея 1"
+        },
+        "battery_2": {
+            "name": "Батарея 2"
+        }
+    }
+}
