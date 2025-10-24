@@ -5,6 +5,7 @@ forcible_charge:
       selector:
         device:
           integration: huawei_solar
+          model: "Batteries"
     duration:
       required: true
       default: 60
@@ -27,6 +28,7 @@ forcible_discharge:
       selector:
         device:
           integration: huawei_solar
+          model: "Batteries"
     duration:
       required: true
       default: 60
@@ -49,6 +51,7 @@ forcible_charge_soc:
       selector:
         device:
           integration: huawei_solar
+          model: "Batteries"
     target_soc:
       required: true
       default: 50
@@ -70,6 +73,7 @@ forcible_discharge_soc:
       selector:
         device:
           integration: huawei_solar
+          model: "Batteries"
     target_soc:
       required: true
       default: 15
@@ -91,6 +95,7 @@ stop_forcible_charge:
       selector:
         device:
           integration: huawei_solar
+          model: "Batteries"
 
 reset_maximum_feed_grid_power:
   fields:

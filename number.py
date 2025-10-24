@@ -1,9 +1,14 @@
 """Number entities for Huawei Solar."""
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 import logging
+
+from huawei_solar import (
+    EMMADevice,
+    HuaweiSolarDevice,
+    RegisterName,
+    register_names as rn,
+)
 
 from homeassistant.components.number import (
     NumberEntity,
@@ -11,39 +16,41 @@ from homeassistant.components.number import (
     NumberMode,
 )
 from homeassistant.components.number.const import DEFAULT_MAX_VALUE, DEFAULT_MIN_VALUE
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import PERCENTAGE, UnitOfPower
+from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfPower
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.entity import DeviceInfo, EntityCategory
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from huawei_solar import (
-    HuaweiEMMABridge,
-    HuaweiSolarBridge,
-    HuaweiSUN2000Bridge,
-    register_names as rn,
-)
 
-from . import HuaweiSolarEntity, HuaweiSolarUpdateCoordinators
-from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
+from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_DEVICE_DATAS
+from .types import (
+    HuaweiSolarConfigEntry,
+    HuaweiSolarDeviceData,
+    HuaweiSolarEntity,
+    HuaweiSolarEntityContext,
+    HuaweiSolarEntityDescription,
+    HuaweiSolarInverterData,
+)
 from .update_coordinator import HuaweiSolarUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
-class HuaweiSolarNumberEntityDescription(NumberEntityDescription):
+class HuaweiSolarNumberEntityDescription(
+    HuaweiSolarEntityDescription, NumberEntityDescription
+):
     """Huawei Solar Number Entity Description."""
 
     # Used when the min/max cannot dynamically change
-    static_minimum_key: str | None = None
-    static_maximum_key: str | None = None
+    static_minimum_key: RegisterName | None = None
+    static_maximum_key: RegisterName | None = None
 
     # Used when the min/max is influenced by other parameters
-    dynamic_minimum_key: str | None = None
-    dynamic_maximum_key: str | None = None
+    dynamic_minimum_key: RegisterName | None = None
+    dynamic_maximum_key: RegisterName | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Defaults the translation_key to the number key."""
         # We use this special setter to be able to set/update the translation_key
         # in this frozen dataclass.
@@ -55,15 +62,15 @@ class HuaweiSolarNumberEntityDescription(NumberEntityDescription):
         )
 
     @property
-    def context(self):
+    def context(self) -> HuaweiSolarEntityContext:
         """Context used by DataUpdateCoordinator."""
 
-        registers = [self.key]
+        registers = [self.register_name]
         if self.dynamic_minimum_key:
             registers.append(self.dynamic_minimum_key)
         if self.dynamic_maximum_key:
             registers.append(self.dynamic_maximum_key)
-        return {"register_names": registers}
+        return HuaweiSolarEntityContext(register_names=registers)
 
 
 INVERTER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
@@ -225,7 +232,7 @@ NON_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[
 
 async def async_setup_entry(
     hass: HomeAssistant,
-    entry: ConfigEntry,
+    entry: HuaweiSolarConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Huawei Solar Number entities Setup."""
@@ -233,85 +240,80 @@ async def async_setup_entry(
         _LOGGER.info("Skipping number setup, as parameter configuration is not enabled")
         return
 
-    update_coordinators: list[HuaweiSolarUpdateCoordinators] = hass.data[DOMAIN][
-        entry.entry_id
-    ][DATA_UPDATE_COORDINATORS]
+    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
 
     entities_to_add: list[NumberEntity] = []
-    for ucs in update_coordinators:
+    for ucs in device_datas:
         if not ucs.configuration_update_coordinator:
             continue
         slave_entities: list[HuaweiSolarNumberEntity] = []
-        if ucs.device_infos["emma"]:
-            assert isinstance(ucs.bridge, HuaweiEMMABridge)
+        if isinstance(ucs.device, EMMADevice):
             for entity_description in EMMA_NUMBER_DESCRIPTIONS:
                 slave_entities.append(  # noqa: PERF401
                     await HuaweiSolarNumberEntity.create(
                         ucs.configuration_update_coordinator,
-                        ucs.bridge,
+                        ucs.device,
                         entity_description,
-                        ucs.device_infos["emma"],
+                        ucs.device_info,
                     )
                 )
 
-        if ucs.device_infos["inverter"]:
-            assert isinstance(ucs.bridge, HuaweiSUN2000Bridge)
+        if isinstance(ucs, HuaweiSolarInverterData):
             for entity_description in INVERTER_NUMBER_DESCRIPTIONS:
                 slave_entities.append(  # noqa: PERF401
                     await HuaweiSolarNumberEntity.create(
                         ucs.configuration_update_coordinator,
-                        ucs.bridge,
+                        ucs.device,
                         entity_description,
-                        ucs.device_infos["inverter"],
+                        ucs.device_info,
                     )
                 )
 
-        if ucs.device_infos["connected_energy_storage"]:
-            assert isinstance(ucs.bridge, HuaweiSUN2000Bridge)
-            for entity_description in ENERGY_STORAGE_NUMBER_DESCRIPTIONS:
-                slave_entities.append(  # noqa: PERF401
-                    await HuaweiSolarNumberEntity.create(
-                        ucs.configuration_update_coordinator,
-                        ucs.bridge,
-                        entity_description,
-                        ucs.device_infos["connected_energy_storage"],
-                    )
-                )
-
-            if ucs.bridge.supports_capacity_control:
-                _LOGGER.debug(
-                    "Adding capacity control number entities on slave %s",
-                    ucs.bridge.serial_number,
-                )
-                for entity_description in CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
+            if ucs.connected_energy_storage:
+                for entity_description in ENERGY_STORAGE_NUMBER_DESCRIPTIONS:
                     slave_entities.append(  # noqa: PERF401
                         await HuaweiSolarNumberEntity.create(
                             ucs.configuration_update_coordinator,
-                            ucs.bridge,
+                            ucs.device,
                             entity_description,
-                            ucs.device_infos["connected_energy_storage"],
+                            ucs.device_info,
                         )
                     )
 
-            else:
-                _LOGGER.debug(
-                    "Capacity control not supported on slave %s. Skipping capacity control number entities",
-                    ucs.bridge.serial_number,
-                )
-                for entity_description in NON_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
-                    slave_entities.append(  # noqa: PERF401
-                        await HuaweiSolarNumberEntity.create(
-                            ucs.configuration_update_coordinator,
-                            ucs.bridge,
-                            entity_description,
-                            ucs.device_infos["connected_energy_storage"],
-                        )
+                if ucs.device.supports_capacity_control:
+                    _LOGGER.debug(
+                        "Adding capacity control number entities on device %s",
+                        ucs.device.serial_number,
                     )
+                    for entity_description in CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
+                        slave_entities.append(  # noqa: PERF401
+                            await HuaweiSolarNumberEntity.create(
+                                ucs.configuration_update_coordinator,
+                                ucs.device,
+                                entity_description,
+                                ucs.connected_energy_storage,
+                            )
+                        )
+
+                else:
+                    _LOGGER.debug(
+                        "Capacity control not supported on slave %s. Skipping capacity control number entities",
+                        ucs.device.serial_number,
+                    )
+                    for entity_description in NON_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
+                        slave_entities.append(  # noqa: PERF401
+                            await HuaweiSolarNumberEntity.create(
+                                ucs.configuration_update_coordinator,
+                                ucs.device,
+                                entity_description,
+                                ucs.connected_energy_storage,
+                            )
+                        )
 
         else:
             _LOGGER.debug(
                 "No battery detected on slave %s. Skipping energy storage number entities",
-                ucs.bridge.slave_id,
+                ucs.device.client.unit_id,
             )
 
         entities_to_add.extend(slave_entities)
@@ -319,7 +321,9 @@ async def async_setup_entry(
     async_add_entities(entities_to_add)
 
 
-class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity):
+class HuaweiSolarNumberEntity(
+    CoordinatorEntity[HuaweiSolarUpdateCoordinator], HuaweiSolarEntity, NumberEntity
+):
     """Huawei Solar Number Entity."""
 
     entity_description: HuaweiSolarNumberEntityDescription
@@ -334,7 +338,7 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
     def __init__(
         self,
         coordinator: HuaweiSolarUpdateCoordinator,
-        bridge: HuaweiSolarBridge,
+        device: HuaweiSolarDevice,
         description: HuaweiSolarNumberEntityDescription,
         device_info: DeviceInfo,
         static_max_value: float | None = None,
@@ -347,11 +351,11 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
         super().__init__(coordinator, description.context)
         self.coordinator = coordinator
 
-        self.bridge = bridge
+        self.device = device
         self.entity_description = description
 
         self._attr_device_info = device_info
-        self._attr_unique_id = f"{bridge.serial_number}_{description.key}"
+        self._attr_unique_id = f"{device.serial_number}_{description.key}"
 
         self._static_max_value = static_max_value
         self._static_min_value = static_min_value
@@ -360,10 +364,10 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
     async def create(
         cls,
         coordinator: HuaweiSolarUpdateCoordinator,
-        bridge: HuaweiSolarBridge,
+        device: HuaweiSolarDevice,
         description: HuaweiSolarNumberEntityDescription,
         device_info: DeviceInfo,
-    ) -> HuaweiSolarNumberEntity:
+    ) -> "HuaweiSolarNumberEntity":
         """Huawei Solar Number Entity constructor.
 
         This async constructor fills in the necessary min/max values
@@ -372,18 +376,18 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
         static_max_value = None
         if description.static_maximum_key:
             static_max_value = (
-                await bridge.client.get(description.static_maximum_key, bridge.slave_id)
+                await device.client.get(description.static_maximum_key)
             ).value
 
         static_min_value = None
         if description.static_minimum_key:
             static_min_value = (
-                await bridge.client.get(description.static_minimum_key, bridge.slave_id)
+                await device.client.get(description.static_minimum_key)
             ).value
 
         return cls(
             coordinator,
-            bridge,
+            device,
             description,
             device_info,
             static_max_value,
@@ -398,7 +402,7 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
             and self.entity_description.key in self.coordinator.data
         ):
             self._attr_native_value = self.coordinator.data[
-                self.entity_description.key
+                self.entity_description.register_name
             ].value
 
             if self.entity_description.dynamic_minimum_key:
@@ -424,7 +428,7 @@ class HuaweiSolarNumberEntity(CoordinatorEntity, HuaweiSolarEntity, NumberEntity
 
     async def async_set_native_value(self, value: float) -> None:
         """Set a new value."""
-        if await self.bridge.set(self.entity_description.key, float(value)):
+        if await self.device.set(self.entity_description.register_name, float(value)):
             self._attr_native_value = float(value)
 
         await self.coordinator.async_request_refresh()

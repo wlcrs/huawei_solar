@@ -1,0 +1,43 @@
+{
+    "services": {
+        "forcible_charge": {
+            "service": "mdi:battery-arrow-up"
+        },
+        "forcible_discharge": {
+            "service": "mdi:battery-arrow-down"
+        },
+        "forcible_charge_soc": {
+            "service": "mdi:battery-arrow-up"
+        },
+        "forcible_discharge_soc": {
+            "service": "mdi:battery-arrow-down"
+        },
+        "stop_forcible_charge": {
+            "service": "mdi:battery-off"
+        },
+        "reset_maximum_feed_grid_power": {
+            "service": "mdi:transmission-tower"
+        },
+        "set_di_active_power_scheduling": {
+            "service": "mdi:calendar-clock"
+        },
+        "set_zero_power_grid_connection": {
+            "service": "mdi:transmission-tower"
+        },
+        "set_maximum_feed_grid_power": {
+            "service": "mdi:transmission-tower-export"
+        },
+        "set_maximum_feed_grid_power_percent": {
+            "service": "mdi:transmission-tower-export"
+        },
+        "set_tou_periods": {
+            "service": "mdi:battery-clock"
+        },
+        "set_capacity_control_periods": {
+            "service": "mdi:battery-clock"
+        },
+        "set_fixed_charge_periods": {
+            "service": "mdi:battery-clock"
+        }
+    }
+}

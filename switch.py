@@ -6,22 +6,27 @@ import asyncio
 from collections.abc import Callable
 from dataclasses import dataclass
 import logging
-from typing import TYPE_CHECKING, Any, Generic, TypeVar
+from typing import Any, TypeVar
+
+from huawei_solar import HuaweiSolarDevice, register_names as rn, register_values as rv
 
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
-from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.entity import DeviceInfo, EntityCategory
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from huawei_solar import HuaweiSolarBridge, register_names as rn, register_values as rv
 
-from . import HuaweiSolarEntity
-from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_UPDATE_COORDINATORS, DOMAIN
+from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_DEVICE_DATAS
+from .types import (
+    HuaweiSolarConfigEntry,
+    HuaweiSolarDeviceData,
+    HuaweiSolarEntity,
+    HuaweiSolarEntityContext,
+    HuaweiSolarEntityDescription,
+    HuaweiSolarInverterData,
+)
 from .update_coordinator import HuaweiSolarUpdateCoordinator
-
-if TYPE_CHECKING:
-    from . import HuaweiSolarUpdateCoordinators
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -30,13 +35,15 @@ T = TypeVar("T")
 
 
 @dataclass(frozen=True)
-class HuaweiSolarSwitchEntityDescription(Generic[T], SwitchEntityDescription):
+class HuaweiSolarSwitchEntityDescription[T](
+    HuaweiSolarEntityDescription, SwitchEntityDescription
+):
     """Huawei Solar Switch Entity Description."""
 
-    is_available_key: str | None = None
+    is_available_key: rn.RegisterName | None = None
     check_is_available_func: Callable[[Any], bool] | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Defaults the translation_key to the switch key."""
 
         # We use this special setter to be able to set/update the translation_key
@@ -49,9 +56,9 @@ class HuaweiSolarSwitchEntityDescription(Generic[T], SwitchEntityDescription):
         )
 
     @property
-    def context(self):
+    def context(self) -> HuaweiSolarEntityContext:
         """Context used by DataUpdateCoordinator."""
-        registers = [self.key]
+        registers = [self.register_name]
         if self.is_available_key:
             registers.append(self.is_available_key)
 
@@ -95,7 +102,7 @@ INVERTER_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
 
 async def async_setup_entry(
     hass: HomeAssistant,
-    entry: ConfigEntry,
+    entry: HuaweiSolarConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Huawei Solar Switch Entities Setup."""
@@ -103,12 +110,10 @@ async def async_setup_entry(
         _LOGGER.info("Skipping switch setup, as parameter configuration is not enabled")
         return
 
-    update_coordinators: list[HuaweiSolarUpdateCoordinators] = hass.data[DOMAIN][
-        entry.entry_id
-    ][DATA_UPDATE_COORDINATORS]
+    device_data: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
 
     entities_to_add: list[SwitchEntity] = []
-    for ucs in update_coordinators:
+    for ucs in device_data:
         if not ucs.configuration_update_coordinator:
             continue
 
@@ -116,49 +121,47 @@ async def async_setup_entry(
             HuaweiSolarSwitchEntity | HuaweiSolarOnOffSwitchEntity
         ] = []
 
-        if ucs.device_infos["inverter"]:
+        if isinstance(ucs, HuaweiSolarInverterData):
+            # This entity dependens on DEVICE_STATUS which is already read by the inverter_update_coordinator
             slave_entities.append(
                 HuaweiSolarOnOffSwitchEntity(
-                    # This entity dependens on DEVICE_STATUS which is already read by the inverter_update_coordinator
-                    ucs.inverter_update_coordinator,
-                    ucs.bridge,
-                    ucs.device_infos["inverter"],
+                    ucs.update_coordinator, ucs.device, ucs.device_info
                 )
             )
 
             slave_entities.extend(
                 [
                     HuaweiSolarSwitchEntity(
-                        ucs.inverter_update_coordinator,
-                        ucs.bridge,
+                        ucs.update_coordinator,
+                        ucs.device,
                         entity_description,
-                        ucs.device_infos["inverter"],
+                        ucs.device_info,
                     )
                     for entity_description in INVERTER_SWITCH_DESCRIPTIONS
                 ]
             )
 
-        if ucs.device_infos["connected_energy_storage"]:
-            if ucs.bridge.supports_capacity_control:
-                slave_entities.extend(
-                    HuaweiSolarSwitchEntity(
-                        ucs.configuration_update_coordinator,
-                        ucs.bridge,
-                        entity_description,
-                        ucs.device_infos["connected_energy_storage"],
+            if ucs.connected_energy_storage:
+                if ucs.device.supports_capacity_control:
+                    slave_entities.extend(
+                        HuaweiSolarSwitchEntity(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            entity_description,
+                            ucs.connected_energy_storage,
+                        )
+                        for entity_description in ENERGY_STORAGE_WITH_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS
                     )
-                    for entity_description in ENERGY_STORAGE_WITH_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS
-                )
-            else:
-                slave_entities.extend(
-                    HuaweiSolarSwitchEntity(
-                        ucs.configuration_update_coordinator,
-                        ucs.bridge,
-                        entity_description,
-                        ucs.device_infos["connected_energy_storage"],
+                else:
+                    slave_entities.extend(
+                        HuaweiSolarSwitchEntity(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            entity_description,
+                            ucs.connected_energy_storage,
+                        )
+                        for entity_description in ENERGY_STORAGE_WITHOUT_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS
                     )
-                    for entity_description in ENERGY_STORAGE_WITHOUT_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS
-                )
 
         entities_to_add.extend(slave_entities)
 
@@ -169,7 +172,9 @@ DEVICE_STATUS_OFF_RANGE_START = 0x3000
 DEVICE_STATUS_OFF_RANGE_END = 0x3FFF
 
 
-class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity):
+class HuaweiSolarSwitchEntity(
+    CoordinatorEntity[HuaweiSolarUpdateCoordinator], HuaweiSolarEntity, SwitchEntity
+):
     """Huawei Solar Switch Entity."""
 
     entity_description: HuaweiSolarSwitchEntityDescription
@@ -177,7 +182,7 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
     def __init__(
         self,
         coordinator: HuaweiSolarUpdateCoordinator,
-        bridge: HuaweiSolarBridge,
+        device: HuaweiSolarDevice,
         description: HuaweiSolarSwitchEntityDescription,
         device_info: DeviceInfo,
     ) -> None:
@@ -188,11 +193,11 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
         super().__init__(coordinator, description.context)
         self.coordinator = coordinator
 
-        self.bridge = bridge
+        self.device = device
         self.entity_description = description
 
         self._attr_device_info = device_info
-        self._attr_unique_id = f"{bridge.serial_number}_{description.key}"
+        self._attr_unique_id = f"{device.serial_number}_{description.key}"
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -201,7 +206,9 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
             self.coordinator.data
             and self.entity_description.key in self.coordinator.data
         ):
-            self._attr_is_on = self.coordinator.data[self.entity_description.key].value
+            self._attr_is_on = self.coordinator.data[
+                self.entity_description.register_name
+            ].value
 
             if self.entity_description.check_is_available_func:
                 assert self.entity_description.is_available_key
@@ -219,16 +226,16 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
 
         self.async_write_ha_state()
 
-    async def async_turn_on(self, **kwargs) -> None:
+    async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the setting on."""
-        if await self.bridge.set(self.entity_description.key, True):
+        if await self.device.client.set(self.entity_description.register_name, True):
             self._attr_is_on = True
 
         await self.coordinator.async_request_refresh()
 
-    async def async_turn_off(self, **kwargs) -> None:
+    async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the setting off."""
-        if await self.bridge.set(self.entity_description.key, False):
+        if await self.device.client.set(self.entity_description.register_name, False):
             self._attr_is_on = False
 
         await self.coordinator.async_request_refresh()
@@ -248,7 +255,9 @@ class HuaweiSolarSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity
         return available
 
 
-class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchEntity):
+class HuaweiSolarOnOffSwitchEntity(
+    CoordinatorEntity[HuaweiSolarUpdateCoordinator], HuaweiSolarEntity, SwitchEntity
+):
     """Huawei Solar Switch Entity."""
 
     POLL_FREQUENCY_SECONDS = 15
@@ -259,7 +268,7 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
         # not the HuaweiSolarConfigurationUpdateCoordinator as
         # this entity depends on the 'Device Status' register
         coordinator: HuaweiSolarUpdateCoordinator,
-        bridge: HuaweiSolarBridge,
+        device: HuaweiSolarDevice,
         device_info: DeviceInfo,
     ) -> None:
         """Huawei Solar Switch Entity constructor.
@@ -269,21 +278,20 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
         super().__init__(coordinator, {"register_names": [rn.DEVICE_STATUS]})
         self.coordinator = coordinator
 
-        self.bridge = bridge
+        self.device = device
         self.entity_description = SwitchEntityDescription(
             key=rn.STARTUP,
             icon="mdi:power-standby",
             entity_category=EntityCategory.CONFIG,
-            translation_key=rn.STARTUP,
         )
 
         self._attr_device_info = device_info
-        self._attr_unique_id = f"{bridge.serial_number}_{self.entity_description.key}"
+        self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
 
         self._change_lock = asyncio.Lock()
 
     @staticmethod
-    def _is_off(device_status: str):
+    def _is_off(device_status: str) -> bool:
         return device_status.startswith("Shutdown")
 
     @callback
@@ -302,38 +310,34 @@ class HuaweiSolarOnOffSwitchEntity(CoordinatorEntity, HuaweiSolarEntity, SwitchE
 
         self.async_write_ha_state()
 
-    async def async_turn_on(self, **kwargs) -> None:
+    async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the setting on."""
         async with self._change_lock:
-            await self.bridge.set(rn.STARTUP, 0)
+            await self.device.set(rn.STARTUP, 0)
 
             # Turning on can take up to 5 minutes... We'll poll every 15 seconds
             for _ in range(
                 self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
             ):
                 await asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
-                device_status = (
-                    await self.bridge.client.get(rn.DEVICE_STATUS, self.bridge.slave_id)
-                ).value
+                device_status = (await self.device.client.get(rn.DEVICE_STATUS)).value
                 if not self._is_off(device_status):
                     self._attr_is_on = True
                     break
 
         await self.coordinator.async_request_refresh()
 
-    async def async_turn_off(self, **kwargs) -> None:
+    async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the setting off."""
         async with self._change_lock:
-            await self.bridge.set(rn.SHUTDOWN, 0)
+            await self.device.set(rn.SHUTDOWN, 0)
 
             # Turning on can take up to 5 minutes... We'll poll every 15 seconds
             for _ in range(
                 self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
             ):
                 await asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
-                device_status = (
-                    await self.bridge.client.get(rn.DEVICE_STATUS, self.bridge.slave_id)
-                ).value
+                device_status = (await self.device.client.get(rn.DEVICE_STATUS)).value
                 if self._is_off(device_status):
                     self._attr_is_on = False
                     break
