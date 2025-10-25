@@ -316,12 +316,14 @@ async def _setup_inverter_device_data(
                 exc_info=exception,
             )
             optimizers_device_infos = {}
+            optimizer_update_coordinator = None
         except Exception as exc:  # pylint: disable=broad-except
             _LOGGER.exception(
                 "Cannot create optimizer sensor entities due to an unexpected error",
                 exc_info=exc,
             )
             optimizers_device_infos = {}
+            optimizer_update_coordinator = None
     else:
         optimizers_device_infos = {}
         optimizer_update_coordinator = None
