@@ -17,6 +17,7 @@ from huawei_solar import (
     register_values as rv,
 )
 from huawei_solar.device.base import HuaweiSolarDevice, HuaweiSolarDeviceWithLogin
+from huawei_solar.modbus_pdu import PermissionDeniedError
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
@@ -286,15 +287,21 @@ async def _setup_inverter_device_data(
     else:
         battery_2_device_info = None
 
+    optimizers_device_infos = {}
+    optimizer_update_coordinator = None
+
     # Add optimizer devices if optimizers are detected
-    if device.has_optimizers:
-        optimizers_device_infos = {}
+    if device.has_optimizers and (
+        # Optimizers are not accessible when connected through a SmartLogger
+        not isinstance(device.primary_device, SmartLoggerDevice)
+    ):
         try:
             optimizer_system_infos = (
                 await device.get_optimizer_system_information_data()
             )
-            for optimizer_id, optimizer in optimizer_system_infos.items():
-                optimizers_device_infos[optimizer_id] = DeviceInfo(
+
+            optimizers_device_infos = {
+                optimizer_id: DeviceInfo(
                     identifiers={(DOMAIN, optimizer.sn)},
                     name=optimizer.sn,
                     manufacturer="Huawei",
@@ -302,6 +309,8 @@ async def _setup_inverter_device_data(
                     sw_version=optimizer.software_version,
                     via_device=(DOMAIN, device.serial_number),
                 )
+                for optimizer_id, optimizer in optimizer_system_infos.items()
+            }
 
             optimizer_update_coordinator = await create_optimizer_update_coordinator(
                 hass,
@@ -309,24 +318,17 @@ async def _setup_inverter_device_data(
                 optimizers_device_infos,
                 OPTIMIZER_UPDATE_INTERVAL,
             )
-        except HuaweiSolarException as exception:
+        except PermissionDeniedError as exception:
             _LOGGER.info(
                 "Cannot create optimizer sensor entities as the integration has insufficient permissions. "
                 "Consider enabling elevated permissions to get more optimizer data",
                 exc_info=exception,
             )
-            optimizers_device_infos = {}
-            optimizer_update_coordinator = None
         except Exception as exc:  # pylint: disable=broad-except
             _LOGGER.exception(
                 "Cannot create optimizer sensor entities due to an unexpected error",
                 exc_info=exc,
             )
-            optimizers_device_infos = {}
-            optimizer_update_coordinator = None
-    else:
-        optimizers_device_infos = {}
-        optimizer_update_coordinator = None
 
     if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
         configuration_update_coordinator = HuaweiSolarUpdateCoordinator(
