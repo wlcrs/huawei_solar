@@ -42,6 +42,9 @@ body:
       - Via the `SUN2000-<serial_no>` WiFi
       - Via the SDongle, wireless connection
       - Via the SDongle, wired connection
+      - Via EMMA, wireless connection 
+      - Via EMMA, wired connection 
+      - Via SmartLogger 
   validations:
     required: true
 
