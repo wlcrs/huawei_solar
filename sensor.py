@@ -1731,16 +1731,16 @@ def create_emma_entities(
         for entity_description in EMMA_SENSOR_DESCRIPTIONS
     ]
 
-    assert ucs.configuration_update_coordinator
-    entities.append(
-        HuaweiSolarTOUSensorEntity(
-            ucs.configuration_update_coordinator,
-            ucs.device,
-            ucs.device_info,
-            register_name=rn.EMMA_TOU_PERIODS,
-            entity_registry_enabled_default=False,
+    if ucs.configuration_update_coordinator:
+        entities.append(
+            HuaweiSolarTOUSensorEntity(
+                ucs.configuration_update_coordinator,
+                ucs.device,
+                ucs.device_info,
+                register_name=rn.EMMA_TOU_PERIODS,
+                entity_registry_enabled_default=False,
+            )
         )
-    )
 
     return entities
 
