@@ -4,6 +4,15 @@ title: "[Bug]: "
 labels: ["bug"]
 body:
 
+- type: markdown
+  attributes:
+    value: |
+
+      > [!CAUTION]
+      > Provide **all** the requested information. 
+      >
+      > Failing to do so will result in your bug report being closed as incomplete.
+
 
 - type: textarea
   attributes:
@@ -113,6 +122,7 @@ body:
       - label: I did not find an existing issue describing this problem.
       - label: I did upload the diagnostics-file that I could retrieve from  the 'Devices & Services Page'
       - label: I did upload the relevant debug logs (via 'Enable Debug Logging'-feature or by manually configuring HA logging)
+      - label: I understand that skipping any of the above fields can result in my issue being closed as incomplete
 
 
 
