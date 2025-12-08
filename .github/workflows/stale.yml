@@ -34,3 +34,28 @@ jobs:
         delete-branch: true
         close-issue-message: This issue was automatically closed because of stale in 10 days
         close-pr-message: This PR was automatically closed because of stale in 10 days
+    - name: "Manage 'incomplete' issues"
+      uses: actions/stale@1160a2240286f5da8ec72b1c0816ce2481aabf84 # v8.0.0
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        
+        # Configuration for 'incomplete' issues
+        days-before-stale: 4
+        days-before-close: 3
+        
+        # KEY SETTING: Limit this step ONLY to issues with this label
+        only-labels: incomplete
+        
+        # Reuse the existing stale label or use a unique one
+        stale-issue-label: stale
+        
+        # Disable PR processing for this step (since you only mentioned Issues)
+        days-before-pr-stale: -1
+        days-before-pr-close: -1
+        
+        # Custom messages for this specific rule
+        stale-issue-message: |
+          This issue is marked 'incomplete' and has been inactive for 4 days. 
+          Please provide the missing information or this will be closed in 3 days.
+        close-issue-message: |
+          This incomplete issue was closed due to lack of activity.
