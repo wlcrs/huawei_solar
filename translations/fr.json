@@ -826,7 +826,7 @@
                 "name": "Active power control mode"
             },
             "total_feed_in_to_grid": {
-                "name": "Total feed in to grid"
+                "name": "Total soutiré du réseau"
             },
             "sdongle_total_input_power": {
                 "name": "Total input power"
