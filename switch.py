@@ -27,6 +27,7 @@ from .types import (
     HuaweiSolarInverterData,
 )
 from .update_coordinator import HuaweiSolarUpdateCoordinator
+from .helpers import get_mdb_number
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -71,7 +72,7 @@ ENERGY_STORAGE_WITH_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[
     HuaweiSolarSwitchEntityDescription(
         key=rn.STORAGE_CHARGE_FROM_GRID_FUNCTION,
         icon="mdi:battery-charging-50",
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
         is_available_key=rn.STORAGE_CAPACITY_CONTROL_MODE,
         check_is_available_func=(
             lambda ccm: ccm != rv.StorageCapacityControlMode.ACTIVE_CAPACITY_CONTROL
@@ -85,7 +86,7 @@ ENERGY_STORAGE_WITHOUT_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[
     HuaweiSolarSwitchEntityDescription(
         key=rn.STORAGE_CHARGE_FROM_GRID_FUNCTION,
         icon="mdi:battery-charging-50",
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
     ),
 )
 
@@ -94,7 +95,7 @@ INVERTER_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     HuaweiSolarSwitchEntityDescription(
         key=rn.MPPT_MULTIMODAL_SCANNING,
         icon="mdi:magnify-scan",
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
         entity_registry_enabled_default=False,
     ),
 )
@@ -177,6 +178,10 @@ class HuaweiSolarSwitchEntity(
 ):
     """Huawei Solar Switch Entity."""
 
+    @property
+    def extra_state_attributes(self):
+        return dict(self._attributes)
+    
     entity_description: HuaweiSolarSwitchEntityDescription
 
     def __init__(
@@ -198,6 +203,10 @@ class HuaweiSolarSwitchEntity(
 
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{description.key}"
+
+        self._attributes = dict()
+        self._attributes['Modbus'] = get_mdb_number(description.key)
+        self._attributes['key'] = description.key
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -260,6 +269,10 @@ class HuaweiSolarOnOffSwitchEntity(
 ):
     """Huawei Solar Switch Entity."""
 
+    @property
+    def extra_state_attributes(self):
+        return dict(self._attributes)
+
     POLL_FREQUENCY_SECONDS = 15
     MAX_STATUS_CHANGE_TIME_SECONDS = 3000  # Maximum status change time is 5 minutes
 
@@ -282,13 +295,17 @@ class HuaweiSolarOnOffSwitchEntity(
         self.entity_description = SwitchEntityDescription(
             key=rn.STARTUP,
             icon="mdi:power-standby",
-            entity_category=EntityCategory.CONFIG,
+            #entity_category=EntityCategory.CONFIG,
         )
 
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
 
         self._change_lock = asyncio.Lock()
+
+        self._attributes = dict()
+        self._attributes['Modbus'] = get_mdb_number(self.entity_description.key)
+        self._attributes['key'] = self.entity_description.key
 
     @staticmethod
     def _is_off(device_status: str) -> bool:
