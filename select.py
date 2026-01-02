@@ -33,6 +33,7 @@ from .types import (
     HuaweiSolarInverterData,
 )
 from .update_coordinator import HuaweiSolarUpdateCoordinator
+from .helpers import get_mdb_number
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -75,7 +76,7 @@ ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ..
     HuaweiSolarSelectEntityDescription(
         key=rn.STORAGE_EXCESS_PV_ENERGY_USE_IN_TOU,
         icon="mdi:battery-charging-medium",
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
     ),
 )
 
@@ -83,7 +84,7 @@ CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, 
     HuaweiSolarSelectEntityDescription(
         key=rn.STORAGE_CAPACITY_CONTROL_MODE,
         icon="mdi:battery-arrow-up",
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
         # Active capacity control is only available is 'Charge from grid' is enabled
         is_available_key=rn.STORAGE_CHARGE_FROM_GRID_FUNCTION,
         check_is_available_func=lambda charge_from_grid: charge_from_grid,
@@ -93,11 +94,11 @@ CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, 
 EMMA_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     HuaweiSolarSelectEntityDescription(
         key=rn.EMMA_ESS_CONTROL_MODE,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarSelectEntityDescription(
         key=rn.EMMA_TOU_PREFERRED_USE_OF_SURPLUS_PV_POWER,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
     ),
 )
 
@@ -178,6 +179,10 @@ class HuaweiSolarSelectEntity(
 ):
     """Huawei Solar Select Entity."""
 
+    @property
+    def extra_state_attributes(self):
+        return dict(self._attributes)
+
     entity_description: HuaweiSolarSelectEntityDescription
 
     def _friendly_format(self, value: IntEnum) -> str:
@@ -214,6 +219,10 @@ class HuaweiSolarSelectEntity(
         self._attr_options = [
             self._friendly_format(value) for value in self._register_unit
         ]
+
+        self._attributes = dict()
+        self._attributes['Modbus'] = get_mdb_number(description.key)
+        self._attributes['key'] = description.key
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -275,6 +284,10 @@ class StorageModeSelectEntity(
     separate logic.
     """
 
+    @property
+    def extra_state_attributes(self):
+        return dict(self._attributes)
+
     entity_description: HuaweiSolarSelectEntityDescription
 
     def __init__(
@@ -295,7 +308,7 @@ class StorageModeSelectEntity(
         self.device = device
         self.entity_description = HuaweiSolarSelectEntityDescription(
             key=rn.STORAGE_WORKING_MODE_SETTINGS,
-            entity_category=EntityCategory.CONFIG,
+            #entity_category=EntityCategory.CONFIG,
         )
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
@@ -308,6 +321,10 @@ class StorageModeSelectEntity(
         elif device.battery_type == rv.StorageProductModel.LG_RESU:
             available_options.remove(rv.StorageWorkingModesC.TIME_OF_USE_LUNA2000.name)
         self._attr_options = [option.lower() for option in available_options]
+
+        self._attributes = dict()
+        self._attributes['Modbus'] = get_mdb_number(self.entity_description.key)
+        self._attributes['key'] = self.entity_description.key
 
     @callback
     def _handle_coordinator_update(self) -> None:
