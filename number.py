@@ -32,6 +32,7 @@ from .types import (
     HuaweiSolarInverterData,
 )
 from .update_coordinator import HuaweiSolarUpdateCoordinator
+from .helpers import get_mdb_number
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -81,7 +82,7 @@ INVERTER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
         native_min_value=-100,
         icon="mdi:transmission-tower-off",
         native_unit_of_measurement=PERCENTAGE,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
         entity_registry_enabled_default=False,
     ),
     HuaweiSolarNumberEntityDescription(
@@ -91,7 +92,7 @@ INVERTER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
         native_min_value=0,
         icon="mdi:transmission-tower-off",
         native_unit_of_measurement=UnitOfPower.WATT,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.MPPT_SCANNING_INTERVAL,
@@ -100,7 +101,7 @@ INVERTER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
         native_min_value=5,
         icon="mdi:sun-clock",
         native_unit_of_measurement="minutes",
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
         entity_registry_enabled_default=False,
     ),
 )
@@ -113,7 +114,7 @@ EMMA_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
         native_min_value=-100,
         icon="mdi:transmission-tower-off",
         native_unit_of_measurement=PERCENTAGE,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
         entity_registry_enabled_default=False,
     ),
     HuaweiSolarNumberEntityDescription(
@@ -123,7 +124,7 @@ EMMA_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
         native_min_value=-1000,
         icon="mdi:transmission-tower-off",
         native_unit_of_measurement=UnitOfPower.WATT,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.EMMA_TOU_MAXIMUM_POWER_FOR_CHARGING_BATTERIES_FROM_GRID,
@@ -131,7 +132,7 @@ EMMA_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
         native_max_value=50000,
         icon="mdi:battery-positive",
         native_unit_of_measurement=UnitOfPower.WATT,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
     ),
 )
 
@@ -142,7 +143,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         static_maximum_key=rn.STORAGE_MAXIMUM_CHARGE_POWER,
         icon="mdi:battery-positive",
         native_unit_of_measurement=UnitOfPower.WATT,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_MAXIMUM_DISCHARGING_POWER,
@@ -150,7 +151,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         static_maximum_key=rn.STORAGE_MAXIMUM_DISCHARGE_POWER,
         icon="mdi:battery-negative",
         native_unit_of_measurement=UnitOfPower.WATT,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_CHARGING_CUTOFF_CAPACITY,
@@ -159,7 +160,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         native_step=0.1,
         icon="mdi:battery-positive",
         native_unit_of_measurement=PERCENTAGE,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_BACKUP_POWER_STATE_OF_CHARGE,
@@ -168,7 +169,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         native_step=0.1,
         icon="mdi:battery-negative",
         native_unit_of_measurement=PERCENTAGE,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
         entity_registry_enabled_default=False,
     ),
     HuaweiSolarNumberEntityDescription(
@@ -178,7 +179,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         native_step=0.1,
         icon="mdi:battery-charging-50",
         native_unit_of_measurement=PERCENTAGE,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_POWER_OF_CHARGE_FROM_GRID,
@@ -186,7 +187,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         dynamic_maximum_key=rn.STORAGE_MAXIMUM_POWER_OF_CHARGE_FROM_GRID,
         icon="mdi:battery-negative",
         native_unit_of_measurement=UnitOfPower.WATT,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
     ),
 )
 
@@ -198,7 +199,7 @@ CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, 
         native_step=0.1,
         icon="mdi:battery-arrow-up",
         native_unit_of_measurement=PERCENTAGE,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
     ),
     # this entity has a dynamic maximum value which is only available when capacity control is supported
     HuaweiSolarNumberEntityDescription(
@@ -209,7 +210,7 @@ CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, 
         native_step=0.1,
         icon="mdi:battery-negative",
         native_unit_of_measurement=PERCENTAGE,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
     ),
 )
 
@@ -225,7 +226,7 @@ NON_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[
         native_step=0.1,
         icon="mdi:battery-negative",
         native_unit_of_measurement=PERCENTAGE,
-        entity_category=EntityCategory.CONFIG,
+        #entity_category=EntityCategory.CONFIG,
     ),
 )
 
@@ -326,6 +327,10 @@ class HuaweiSolarNumberEntity(
 ):
     """Huawei Solar Number Entity."""
 
+    @property
+    def extra_state_attributes(self):
+        return dict(self._attributes)
+
     entity_description: HuaweiSolarNumberEntityDescription
     _attr_mode = NumberMode.BOX  # Always allow a precise number
 
@@ -359,6 +364,9 @@ class HuaweiSolarNumberEntity(
 
         self._static_max_value = static_max_value
         self._static_min_value = static_min_value
+        self._attributes = dict()
+        self._attributes['Modbus'] = get_mdb_number(description.key)
+        self._attributes['key'] = description.key
 
     @classmethod
     async def create(
