@@ -58,6 +58,7 @@ from .update_coordinator import (
     HuaweiSolarOptimizerUpdateCoordinator,
     HuaweiSolarUpdateCoordinator,
 )
+from .helpers import get_mdb_number
 
 PARALLEL_UPDATES = 1
 
@@ -1738,7 +1739,8 @@ def create_emma_entities(
                 ucs.device,
                 ucs.device_info,
                 register_name=rn.EMMA_TOU_PERIODS,
-                entity_registry_enabled_default=False,
+                entity_registry_enabled_default=True,
+                id_fix = True
             )
         )
 
@@ -1787,7 +1789,6 @@ CHARGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
     ),
 )
-
 
 SDONGLE_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
@@ -1980,6 +1981,10 @@ class HuaweiSolarSensorEntity(
 
     entity_description: HuaweiSolarSensorEntityDescription
 
+    @property
+    def extra_state_attributes(self):
+        return self._attributes
+
     def __init__(
         self,
         coordinator: HuaweiSolarUpdateCoordinator,
@@ -1989,7 +1994,8 @@ class HuaweiSolarSensorEntity(
     ) -> None:
         """Batched Huawei Solar Sensor Entity constructor."""
         super().__init__(coordinator, context or description.context)
-
+   
+        self._attributes = dict()
         self.coordinator = coordinator
         self.entity_description = description
 
@@ -2001,6 +2007,8 @@ class HuaweiSolarSensorEntity(
             register_key = register_key[0 : register_key.find("#")]
 
         self._register_key = rn.RegisterName(register_key)
+        self._attributes['Modbus'] = get_mdb_number(self._register_key)
+        self._attributes['key'] = self._register_key
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -2096,6 +2104,12 @@ class HuaweiSolarTOUSensorEntity(
     contents of them as extended attributes
     """
 
+    @property
+    def extra_state_attributes(self):
+        atr = self._period_attributes
+        atr.update(self._attributes)
+        return atr
+
     entity_description: HuaweiSolarSensorEntityDescription
 
     def __init__(
@@ -2105,12 +2119,15 @@ class HuaweiSolarTOUSensorEntity(
         device_info: DeviceInfo,
         register_name: str = rn.STORAGE_HUAWEI_LUNA2000_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS,
         entity_registry_enabled_default: bool = True,
+        id_fix = False
     ) -> None:
         """Huawei Solar TOU Sensor Entity constructor."""
         super().__init__(
             coordinator,
             {"register_names": [register_name]},
         )
+        self._attributes = dict()
+        self._period_attributes = dict()
         self.coordinator = coordinator
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
@@ -2121,7 +2138,13 @@ class HuaweiSolarTOUSensorEntity(
 
         self._bridge = device
         self._attr_device_info = device_info
-        self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
+        if id_fix:
+            self._attr_unique_id = f"{device.serial_number}_2_{self.entity_description.key}"
+        else:
+            self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
+
+        self._attributes['Modbus'] = get_mdb_number(register_name)
+        self._attributes['key'] = register_name
 
     def _huawei_luna2000_period_to_text(
         self, period: HUAWEI_LUNA2000_TimeOfUsePeriod
@@ -2146,7 +2169,7 @@ class HuaweiSolarTOUSensorEntity(
             ].value
 
             self._attr_native_value = len(data)
-            self._attr_extra_state_attributes = {
+            self._period_attributes = {
                 f"Period {idx + 1}": self._huawei_luna2000_period_to_text(period)
                 for idx, period in enumerate(data)
             }
@@ -2172,6 +2195,11 @@ class HuaweiSolarPricePeriodsSensorEntity(
     It shows the number of configured TOU periods, and has the
     contents of them as extended attributes
     """
+
+    @property
+    def extra_state_attributes(self):
+        atr = self._attributes
+        return atr
 
     entity_description: HuaweiSolarSensorEntityDescription
 
@@ -2199,6 +2227,9 @@ class HuaweiSolarPricePeriodsSensorEntity(
         self._bridge = device
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
+
+        self._attributes['Modbus'] = get_mdb_number(register_name)
+        self._attributes['key'] = register_name
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -2234,6 +2265,11 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
     contents of them as extended attributes
     """
 
+    @property
+    def extra_state_attributes(self):
+        atr = self._attributes
+        return atr
+
     entity_description: HuaweiSolarSensorEntityDescription
 
     def __init__(
@@ -2246,6 +2282,7 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
         super().__init__(
             coordinator, {"register_names": [rn.STORAGE_CAPACITY_CONTROL_PERIODS]}
         )
+        self._attributes = dict()
         self.coordinator = coordinator
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
@@ -2256,6 +2293,9 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
         self._device = device
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
+
+        self._attributes['Modbus'] = get_mdb_number(self.entity_description.key)
+        self._attributes['key'] = self.entity_description.key
 
     def _period_to_text(self, psp: PeakSettingPeriod) -> str:
         return (
@@ -2295,6 +2335,11 @@ class HuaweiSolarForcibleChargeEntity(
 ):
     """Huawei Solar Sensor for the current forcible charge status."""
 
+    @property
+    def extra_state_attributes(self):
+        atr = self._attributes
+        return atr
+
     REGISTER_NAMES = [
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,  # is SoC or time the target?
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,  # stop/charging/discharging
@@ -2315,6 +2360,7 @@ class HuaweiSolarForcibleChargeEntity(
             coordinator,
             {"register_names": self.REGISTER_NAMES},
         )
+        self._attributes = dict()
         self.coordinator = coordinator
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
@@ -2326,6 +2372,9 @@ class HuaweiSolarForcibleChargeEntity(
         self._device = device
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
+
+        self._attributes['Modbus'] = get_mdb_number(self.entity_description.key)
+        self._attributes['key'] = self.entity_description.key
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -2393,6 +2442,11 @@ class HuaweiSolarActivePowerControlModeEntity(
         rn.MAXIMUM_FEED_GRID_POWER_PERCENT,
     ]
 
+    @property
+    def extra_state_attributes(self):
+        atr = self._attributes
+        return atr
+
     def __init__(
         self,
         coordinator: HuaweiSolarUpdateCoordinator,
@@ -2404,6 +2458,7 @@ class HuaweiSolarActivePowerControlModeEntity(
             coordinator,
             {"register_names": self.REGISTER_NAMES},
         )
+        self._attributes = dict()
         self.coordinator = coordinator
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
@@ -2417,6 +2472,9 @@ class HuaweiSolarActivePowerControlModeEntity(
         self._device = device
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
+
+        self._attributes['Modbus'] = get_mdb_number(self.entity_description.key)
+        self._attributes['key'] = self.entity_description.key
 
     @callback
     def _handle_coordinator_update(self) -> None:
