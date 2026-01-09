@@ -925,7 +925,7 @@
                 "name": "Cumul de la consommation d'énergie"
             },
             "total_feed_in_to_grid": {
-                "name": "Total feed in to grid"
+                "name": "Total soutiré du réseau"
             },
             "total_negative_active_energy_built_in_energy": {
                 "name": "Total negative active energy"
@@ -1004,7 +1004,7 @@
             "description": "Charge forcée de la batterie jusqu'à un certain niveau de charge",
             "fields": {
                 "device_id": {
-                    "description": "Doit être un périphérique 'Batterie'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batterie"
                 },
                 "power": {
@@ -1022,7 +1022,7 @@
             "description": "Décharge forcée de la batterie pendant un certain temps",
             "fields": {
                 "device_id": {
-                    "description": "Doit être un périphérique 'Batterie'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batterie"
                 },
                 "duration": {
@@ -1040,7 +1040,7 @@
             "description": "Décharge forcée de la batterie jusqu'à un certain niveau de charge",
             "fields": {
                 "device_id": {
-                    "description": "Doit être un périphérique 'Batterie'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batterie"
                 },
                 "power": {
@@ -1068,7 +1068,7 @@
             "description": "Définir les périodes de contrôle de capacité",
             "fields": {
                 "device_id": {
-                    "description": "Doit être un périphérique 'Batterie'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batterie"
                 },
                 "periods": {
@@ -1092,7 +1092,7 @@
             "description": "Définir les périodes de charge et de décharge fixes",
             "fields": {
                 "device_id": {
-                    "description": "Doit être un périphérique 'Batterie'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batterie"
                 },
                 "periods": {
@@ -1106,8 +1106,8 @@
             "description": "Définit le contrôle de puissance active sur 'Connexion au réseau limitée en puissance' avec la puissance donnée",
             "fields": {
                 "device_id": {
-                    "description": "Doit être un périphérique 'Onduleur'",
-                    "name": "Onduleur"
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "name": "Périphérique"
                 },
                 "power": {
                     "description": "Puissance maximale",
@@ -1120,8 +1120,8 @@
             "description": "Définit le contrôle de puissance active sur 'Connexion au réseau limitée en puissance (%)' avec le pourcentage donné",
             "fields": {
                 "device_id": {
-                    "description": "Doit être un périphérique 'Onduleur'",
-                    "name": "Onduleur"
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "name": "Périphérique"
                 },
                 "power_percentage": {
                     "description": "Pourcentage maximal",
@@ -1148,8 +1148,8 @@
             "description": "Définir le contrôle de puissance active sur 'Connexion au réseau à zéro puissance'",
             "fields": {
                 "device_id": {
-                    "description": "Doit être un périphérique 'Onduleur'",
-                    "name": "Onduleur"
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "name": "Périphérique"
                 }
             },
             "name": "Définir le contrôle de puissance active sur 'Connexion au réseau à zéro puissance'"
@@ -1158,7 +1158,7 @@
             "description": "Annuler la commande de charge forcée en cours",
             "fields": {
                 "device_id": {
-                    "description": "Doit être un périphérique 'Batterie'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batterie"
                 }
             },
