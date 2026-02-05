@@ -58,7 +58,7 @@
             "name": "Batteria 2"
         },
         "charger": {
-            "name": "Charger"
+            "name": "Caricabatterie"
         },
         "connected_energy_storage": {
             "name": "Batterie"
@@ -986,7 +986,7 @@
             "description": "Forza carica della batteria per un certo periodo di tempo",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Deve essere un dispositivo 'Batterie'",
                     "name": "Batteria"
                 },
                 "duration": {
@@ -1004,7 +1004,7 @@
             "description": "Forza carica della batteria fino ad un certo livello di carica SoC",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Deve essere un dispositivo 'Batterie'",
                     "name": "Batteria"
                 },
                 "power": {
@@ -1022,7 +1022,7 @@
             "description": "Scaricamento forzato della batterial per un certo periodo di tempo",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Deve essere un dispositivo 'Batterie'",
                     "name": "Batteria"
                 },
                 "duration": {
@@ -1040,7 +1040,7 @@
             "description": "Scaricamento forzato della batteria fino ad un certo livello di carica (SoC)",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Deve essere un dispositivo 'Batterie'",
                     "name": "Batteria"
                 },
                 "power": {
@@ -1068,7 +1068,7 @@
             "description": "Impostare orari del Controllo Capacità",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Deve essere un dispositivo 'Batterie'",
                     "name": "Batteria"
                 },
                 "periods": {
@@ -1092,7 +1092,7 @@
             "description": "Impostare periodi di tempo di Carica e Scarica fissa",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Deve essere un dispositivo 'Batterie'",
                     "name": "Batteria"
                 },
                 "periods": {
@@ -1158,11 +1158,11 @@
             "description": "Annullamento del comando di carica forzata",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Deve essere un dispositivo 'Batterie'",
                     "name": "Batteria"
                 }
             },
-            "name": "Annullmaneto carica e scarica forzata"
+            "name": "Ferma la carica e scarica forzata"
         }
     }
 }
