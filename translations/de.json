@@ -3,7 +3,7 @@
         "abort": {
             "already_configured": "Das Gerät ist bereits konfiguriert",
             "reauth_successful": "Re-Authentifikation erfolgreich",
-            "reconfigure_successful": "Re-configuration was successful"
+            "reconfigure_successful": "Neukonfiguration war erfolgreich"
         },
         "error": {
             "cannot_connect": "Verbindungsversuch fehlgeschlagen",
@@ -76,10 +76,10 @@
     "entity": {
         "number": {
             "active_power_fixed_value_derating": {
-                "name": "Wechselrichter-Wirkleistung"
+                "name": "Leistungsbegrenzung"
             },
             "active_power_percentage_derating": {
-                "name": "Wirkleistung beschränken (in %)"
+                "name": "Eingangsleistung Wechselrichter in %"
             },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximale Netzeinspeiseleistung (%)"
@@ -88,7 +88,7 @@
                 "name": "Maximale Netzeinspeiseleistung"
             },
             "emma_tou_maximum_power_for_charging_batteries_from_grid": {
-                "name": "Maximum power for charging batteries from grid"
+                "name": "Maximale Netzleistung zum Laden der Batterie"
             },
             "mppt_scanning_interval": {
                 "name": "MPPT-Scan Intervall"
@@ -100,13 +100,13 @@
                 "name": "Peak-Shaving Ladestand"
             },
             "storage_charging_cutoff_capacity": {
-                "name": "Ladeende-Ladestand"
+                "name": "Maximaler Ladestand"
             },
             "storage_discharging_cutoff_capacity": {
-                "name": "Entlade-Ende Ladestand"
+                "name": "minimaler Ladestand"
             },
             "storage_grid_charge_cutoff_state_of_charge": {
-                "name": "Netz-Ladeabschalt-Ladestand"
+                "name": "Netz Ladeabschaltung"
             },
             "storage_maximum_charging_power": {
                 "name": "Maximale Ladeleistung"
@@ -166,7 +166,7 @@
         },
         "sensor": {
             "accumulated_energy_yield": {
-                "name": "Total energy"
+                "name": "Gesamte Energie"
             },
             "accumulated_yield_energy": {
                 "name": "Gesamtenergieertrag"
@@ -211,7 +211,7 @@
                 "name": "Wirkleistung"
             },
             "active_power_control_mode": {
-                "name": "Active power control mode"
+                "name": "Wirkleistungssteuerung Modus"
             },
             "active_power_external_energy": {
                 "name": "Wirkleistung"
@@ -223,10 +223,10 @@
                 "name": "Alarme"
             },
             "apparent_power_built_in_energy": {
-                "name": "Apparent power"
+                "name": "Scheinleistung"
             },
             "apparent_power_external_energy": {
-                "name": "Apparent power"
+                "name": "Scheinleistung"
             },
             "backup_power_state_of_charge": {
                 "name": "Backup power Ladezustand"
@@ -244,22 +244,22 @@
                 "name": "BMS Temperatur"
             },
             "charger_phase_a_voltage": {
-                "name": "Charger Phase A voltage"
+                "name": "Phase A Spannung"
             },
             "charger_phase_b_voltage": {
-                "name": "Charger Phase B voltagey"
+                "name": "Phase B Spannung"
             },
             "charger_phase_c_voltage": {
-                "name": "Charger Phase C voltage"
+                "name": "Phase C Spannung"
             },
             "charger_rated_power": {
-                "name": "Charger rated power"
+                "name": "Nennleistung"
             },
             "charger_temperature": {
-                "name": "Charger temperature"
+                "name": "Temperatur"
             },
             "charger_total_energy_charged": {
-                "name": "Charger total charged energy"
+                "name": "Gesamte Ladeenergie"
             },
             "consumption_today": {
                 "name": "Verbrauch heute"
@@ -283,7 +283,7 @@
                 "name": "Heute geladene Energie"
             },
             "energy_discharged_today": {
-                "name": "Heutige Entladung"
+                "name": "Heutige entladene Energie"
             },
             "ess_chargeable_capacity": {
                 "name": "ESS aufladbare Kapazität"
@@ -301,7 +301,7 @@
                 "name": "Einspeiseleistung"
             },
             "feed_in_to_grid_today": {
-                "name": "Heute ins Stromnetz geliefert"
+                "name": "Einspeisung heute"
             },
             "forcible_charge_summary": {
                 "name": "Erzwungene Ladung"
@@ -325,7 +325,7 @@
                 "name": "Exportierte Energie"
             },
             "hourly_yield_energy": {
-                "name": "Stündliche Erträge"
+                "name": "Stündlicher Ertrag"
             },
             "input_current": {
                 "name": "Eingangsstrom"
@@ -343,19 +343,19 @@
                 "name": "Interne Temperatur"
             },
             "inverter_active_power": {
-                "name": "Aktive Wechselrichterleistung"
+                "name": "Wechselrichter Wirkleistung"
             },
             "inverter_energy_yield_today": {
                 "name": "Heutiger Wechselrichterertrag"
             },
             "inverter_rated_power": {
-                "name": "Maximale Wechselrichterleistung"
+                "name": "Nennleistung Wechselrichter"
             },
             "inverter_total_absorbed_energy": {
                 "name": "Gesamt entladen"
             },
             "inverter_total_energy_yield": {
-                "name": "Gesamtertrag des Wechselrichters"
+                "name": "Gesamtertrag Wechselrichters"
             },
             "line_voltage_a_b": {
                 "name": "A-B-Netzspannung"
@@ -748,13 +748,13 @@
                 "name": "PV 24 Spannung"
             },
             "pv_output_power": {
-                "name": "PV-Ausgangsleistung"
+                "name": "PV Ausgangsleistung"
             },
             "pv_yield_today": {
-                "name": "PV-Ertrag heute"
+                "name": "PV Ertrag heute"
             },
             "rated_ess_capacity": {
-                "name": "Bewertete ESS-Kapazität"
+                "name": "Nennkapazität ESS"
             },
             "rated_power": {
                 "name": "Nennleistung"
@@ -766,19 +766,19 @@
                 "name": "Betriebsstatus"
             },
             "sdongle_grid_power": {
-                "name": "Grid power"
+                "name": "Netzleistung"
             },
             "sdongle_load_power": {
                 "name": "Ladestrom"
             },
             "sdongle_total_active_power": {
-                "name": "Total active power"
+                "name": "Gesamte Wirkleistung"
             },
             "sdongle_total_battery_power": {
-                "name": "Total battery power"
+                "name": "Gesamte Batterieleistung"
             },
             "sdongle_total_input_power": {
-                "name": "Total input power"
+                "name": "Gesamte Eingangsleistung"
             },
             "shutdown_time": {
                 "name": "Ausschaltzeit"
@@ -796,34 +796,34 @@
                 "name": "Heute geladene Energie"
             },
             "smartlogger_energy_discharged_today": {
-                "name": "Heutige Entladung"
+                "name": "Heutige entladene Energie"
             },
             "smartlogger_input_power": {
                 "name": "Eingangsleistung"
             },
             "smartlogger_power_supply_from_grid_today": {
-                "name": "Power supply from grid today"
+                "name": "Netzbezug heute"
             },
             "smartlogger_soc": {
-                "name": "State of charge"
+                "name": "Ladestatus"
             },
             "smartlogger_soe": {
-                "name": "State of energy"
+                "name": "Energiezustand"
             },
             "smartlogger_soh": {
-                "name": "State of health"
+                "name": "Gesundheitszustand"
             },
             "smartlogger_total_energy_charged": {
-                "name": "Gesamtladung"
+                "name": "Gesamt geladen"
             },
             "smartlogger_total_energy_discharge_d": {
                 "name": "Gesamt entladen"
             },
             "smartlogger_total_energy_yield": {
-                "name": "Total energy yield"
+                "name": "Gesamter PV Ertrag"
             },
             "smartlogger_total_power_supply_from_grid": {
-                "name": "Total power supply from grid"
+                "name": "Gesamter Netzbezug"
             },
             "smartlogger_yield_today": {
                 "name": "Tagesertrag"
@@ -841,16 +841,16 @@
                 "name": "Sperrstatus"
             },
             "state_2_1": {
-                "name": "PV-Verbindungsstatus"
+                "name": "PV Verbindungsstatus"
             },
             "state_2_2": {
                 "name": "DSP-Datenerfassung"
             },
             "state_3_0": {
-                "name": "Netzunabhängigkeitsstatus"
+                "name": "Netztrennung Status"
             },
             "state_3_1": {
-                "name": "Netzunabhängigkeitsschalter"
+                "name": "Netztrennung Schalter"
             },
             "state_of_capacity": {
                 "name": "Batterieladung"
@@ -901,19 +901,19 @@
                 "name": "Gesamtentladung"
             },
             "supply_from_grid_today": {
-                "name": "Heute vom Stromnetz bezogen"
+                "name": "Netzbezug heute"
             },
             "temperature": {
                 "name": "Temperatur"
             },
             "total_active_energy_built_in_energy": {
-                "name": "Total active energy"
+                "name": "Gesamte Wirkenergie"
             },
             "total_active_energy_external_energy": {
-                "name": "Total active energy"
+                "name": "Gesamte Wirkenergie"
             },
             "total_charged_energy": {
-                "name": "Gesamtladung"
+                "name": "Gesamt geladen"
             },
             "total_dc_input_power": {
                 "name": "Gesamte DC Eingangsenergie"
@@ -925,25 +925,25 @@
                 "name": "Gesamter Energieverbrauch"
             },
             "total_feed_in_to_grid": {
-                "name": "Total feed in to grid"
+                "name": "Gesamte Einspeisung ins Netz"
             },
             "total_negative_active_energy_built_in_energy": {
-                "name": "Total negative active energy"
+                "name": "Gesamte negative Wirkenergie"
             },
             "total_negative_active_energy_external_energy": {
-                "name": "Total negative active energy"
+                "name": "Gesamte negative Wirkenergie"
             },
             "total_positive_active_energy_built_in_energy": {
-                "name": "Total positive active energy"
+                "name": "Gesamte positive Wirkenergie"
             },
             "total_positive_active_energy_external_energy": {
-                "name": "Total positive active energy"
+                "name": "Gesamte positive Wirkenergie"
             },
             "total_pv_energy_yield": {
-                "name": "Gesamte PV-Ertragsleistung"
+                "name": "Gesamte PV Ertragsleistung"
             },
             "total_supply_from_grid": {
-                "name": "Insgesamt aus dem Stromnetz bezogen"
+                "name": "Gesamter Netzbezug"
             },
             "voltage_to_ground": {
                 "name": "Spannung zu Erde"
@@ -966,19 +966,19 @@
     },
     "exceptions": {
         "config_entry_not_found": {
-            "message": "Entry not found for device: {device_id}"
+            "message": "Eintrag für Gerät nicht gefunden: {device_id}"
         },
         "entry_not_loaded": {
-            "message": "Entry not loaded: {entry}"
+            "message": "Eintrag nicht geladen: {entry}"
         },
         "ha_device_not_found": {
-            "message": "Could not retrieve Huawei Solar device associated with ID {device_id}"
+            "message": "Huawei Solar-Gerät konnte nicht abgerufen werden, das mit ID {device_id} verknüpft ist"
         },
         "invalid_device_id": {
-            "message": "Invalid device ID specified: {device_id}"
+            "message": "Ungültige Geräte-ID angegeben: {device_id}"
         },
         "wrong_device_type": {
-            "message": "Got wrong Huawei Solar device type for ID {device_id}: expected {expected_type}, got {actual_type}"
+            "message": "Fehler beim Huawei Solargerät Typ für ID- {device_id}: erwarteter {expected_type}, {actual_type} erhalten"
         }
     },
     "services": {
@@ -1083,7 +1083,7 @@
             "fields": {
                 "device_id": {
                     "description": "Muss ein \"Wechselrichter\"sein",
-                    "name": "Wechselrichter"
+                    "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]"
                 }
             },
             "name": "Wirkleistungssteuerung auf 'DI active scheduling' setzen"
@@ -1107,7 +1107,7 @@
             "fields": {
                 "device_id": {
                     "description": "Muss ein \"Wechselrichter\"sein",
-                    "name": "Wechselrichter"
+                    "name": "Gerät"
                 },
                 "power": {
                     "description": "Maximale Leistung",
@@ -1121,7 +1121,7 @@
             "fields": {
                 "device_id": {
                     "description": "Muss ein \"Wechselrichter\"sein",
-                    "name": "Wechselrichter"
+                    "name": "Gerät"
                 },
                 "power_percentage": {
                     "description": "Maximaler Prozentsatz",
@@ -1135,7 +1135,7 @@
             "fields": {
                 "device_id": {
                     "description": "Muss ein \"Wechselrichter\"sein",
-                    "name": "Wechselrichter"
+                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]"
                 },
                 "periods": {
                     "description": "Ein Zeitraum pro Zeile. Für Huawei LUNA2000 Batterien: '[Startzeit]-[Endzeit]/[Wochentage]/[Ladung]', mit 1=Montag, 7=Sonntag (Beispiel: '12:00-14:00/1234567/-'). Für LG RESU Batterien: '[Startzeit]-[Endzeit]/[Strompreis]' (Beispiel: 13:00-14:00/0.50)",
@@ -1149,7 +1149,7 @@
             "fields": {
                 "device_id": {
                     "description": "Muss ein \"Wechselrichter\"sein",
-                    "name": "Wechselrichter"
+                    "name": "Gerät"
                 }
             },
             "name": "Wirkleistungssteuerung auf 'Zero power grid connection' setzen"

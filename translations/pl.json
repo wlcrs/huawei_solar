@@ -1004,7 +1004,7 @@
             "description": "Wymuszenie ładowania akumulatorów do określonego poziomu naładowania (SOC)",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Akumulator'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Akumulator"
                 },
                 "power": {
@@ -1022,7 +1022,7 @@
             "description": "Wymuszenie rozładowania akumulatorów przez określony czas",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Akumulator'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Akumulator"
                 },
                 "duration": {
@@ -1040,7 +1040,7 @@
             "description": "Wymuszenie rozładowania akumulatoró do określonego poziomu naładowania (SOC)",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Akumulator'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Akumulator"
                 },
                 "power": {
@@ -1068,7 +1068,7 @@
             "description": "Ustawia okresy sterowania pojemnością",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Akumulator'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Akumulator"
                 },
                 "periods": {
@@ -1092,7 +1092,7 @@
             "description": "Ustawia stałe okresy ładowania i rozładowania",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Akumulator'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Akumulator"
                 },
                 "periods": {
@@ -1106,8 +1106,8 @@
             "description": "Ustawia Aktywne Sterowanie Mocą na 'Ograniczone mocą połączenie z siecią' z określoną mocą",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Inwerter'",
-                    "name": "Inwerter"
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "name": "Urządzenie"
                 },
                 "power": {
                     "description": "Maksymalna moc",
@@ -1120,8 +1120,8 @@
             "description": "Ustawia Aktywne Sterowanie Mocą na 'Ograniczone mocą połączenie z siecię (%)' z określoną wartością procentową",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Inwerter'",
-                    "name": "Inwerter"
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "name": "Urządzenie"
                 },
                 "power_percentage": {
                     "description": "Procentowy ułamek mocy",
@@ -1148,8 +1148,8 @@
             "description": "Ustawia Aktywne Sterowanie Mocą na 'Połączenie z siecią bez transferu energii'",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Inwerter'",
-                    "name": "Inwerter"
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "name": "Urządzenie"
                 }
             },
             "name": "Ustawia Aktywne Sterowanie Mocą na 'Połączenie z siecią bez transferu energii'"
@@ -1158,7 +1158,7 @@
             "description": "Anuluje komendę wymuszenia ładowania",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Akumulator'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Akumulator"
                 }
             },
