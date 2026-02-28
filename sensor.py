@@ -644,9 +644,9 @@ BATTERIES_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = 
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_STATE_OF_CAPACITY,
-        icon="mdi:home-battery",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.BATTERY,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_RUNNING_STATUS,
