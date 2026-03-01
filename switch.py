@@ -186,10 +186,7 @@ class HuaweiSolarSwitchEntity(
         description: HuaweiSolarSwitchEntityDescription,
         device_info: DeviceInfo,
     ) -> None:
-        """Huawei Solar Switch Entity constructor.
-
-        Do not use directly. Use `.create` instead!
-        """
+        """Huawei Solar Switch Entity constructor."""
         super().__init__(coordinator, description.context)
         self.coordinator = coordinator
 
