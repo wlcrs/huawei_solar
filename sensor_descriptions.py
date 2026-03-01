@@ -1626,7 +1626,8 @@ SMARTLOGGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] 
 
 def get_pv_entity_descriptions(count: int) -> list[HuaweiSolarSensorEntityDescription]:
     """Create the entity descriptions for a PV string."""
-    assert 1 <= count <= 24
+    if not 1 <= count <= 24:
+        raise ValueError(f"PV string count must be between 1 and 24, got {count}")
     result = []
 
     for idx in range(1, count + 1):

@@ -96,9 +96,11 @@ async def create_sun2000_entities(ucs: HuaweiSolarInverterData) -> list[SensorEn
             for entity_description in OPTIMIZER_SENSOR_DESCRIPTIONS
         )
 
-    if ucs.device.power_meter_type == rv.MeterType.SINGLE_PHASE:
-        assert ucs.power_meter_update_coordinator
-        assert ucs.power_meter
+    if (
+        ucs.device.power_meter_type == rv.MeterType.SINGLE_PHASE
+        and ucs.power_meter_update_coordinator
+        and ucs.power_meter
+    ):
         entities_to_add.extend(
             HuaweiSolarSensorEntity(
                 ucs.power_meter_update_coordinator, entity_description, ucs.power_meter
@@ -106,9 +108,11 @@ async def create_sun2000_entities(ucs: HuaweiSolarInverterData) -> list[SensorEn
             for entity_description in SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS
         )
 
-    elif ucs.device.power_meter_type == rv.MeterType.THREE_PHASE:
-        assert ucs.power_meter_update_coordinator
-        assert ucs.power_meter
+    elif (
+        ucs.device.power_meter_type == rv.MeterType.THREE_PHASE
+        and ucs.power_meter_update_coordinator
+        and ucs.power_meter
+    ):
         entities_to_add.extend(
             HuaweiSolarSensorEntity(
                 ucs.power_meter_update_coordinator, entity_description, ucs.power_meter
@@ -129,10 +133,11 @@ async def create_sun2000_entities(ucs: HuaweiSolarInverterData) -> list[SensorEn
             )
         )
 
-    if ucs.device.battery_type != rv.StorageProductModel.NONE:
-        assert ucs.energy_storage_update_coordinator
-        assert ucs.connected_energy_storage
-
+    if (
+        ucs.device.battery_type != rv.StorageProductModel.NONE
+        and ucs.energy_storage_update_coordinator
+        and ucs.connected_energy_storage
+    ):
         entities_to_add.extend(
             HuaweiSolarSensorEntity(
                 ucs.energy_storage_update_coordinator,
@@ -236,7 +241,8 @@ def create_emma_entities(
     ucs: HuaweiSolarDeviceData,
 ) -> list["SensorEntity"]:
     """Create EMMA sensor entities."""
-    assert isinstance(ucs.device, EMMADevice)
+    if not isinstance(ucs.device, EMMADevice):
+        return []
 
     entities: list[SensorEntity] = [
         HuaweiSolarSensorEntity(
@@ -263,7 +269,8 @@ def create_charger_entities(
     ucs: HuaweiSolarDeviceData,
 ) -> list["HuaweiSolarSensorEntity"]:
     """Create Charger sensor entities."""
-    assert isinstance(ucs.device, SChargerDevice)
+    if not isinstance(ucs.device, SChargerDevice):
+        return []
 
     return [
         HuaweiSolarSensorEntity(
@@ -277,7 +284,8 @@ def create_sdongle_entities(
     ucs: HuaweiSolarDeviceData,
 ) -> list["HuaweiSolarSensorEntity"]:
     """Create SDongle sensor entities."""
-    assert isinstance(ucs.device, SDongleDevice)
+    if not isinstance(ucs.device, SDongleDevice):
+        return []
 
     return [
         HuaweiSolarSensorEntity(
@@ -291,7 +299,8 @@ def create_smartlogger_entities(
     ucs: HuaweiSolarDeviceData,
 ) -> list["HuaweiSolarSensorEntity"]:
     """Create SmartLogger sensor entities."""
-    assert isinstance(ucs.device, SmartLoggerDevice)
+    if not isinstance(ucs.device, SmartLoggerDevice):
+        return []
 
     return [
         HuaweiSolarSensorEntity(
@@ -706,8 +715,7 @@ class HuaweiSolarForcibleChargeEntity(
                     value = f"Charging at {charge_power}W until {target_soc}%"
                 else:
                     value = f"Charging at {charge_power}W for {duration} minutes"
-            else:
-                assert mode == rv.StorageForcibleChargeDischarge.DISCHARGE
+            elif mode == rv.StorageForcibleChargeDischarge.DISCHARGE:
                 if setting == rv.StorageForcibleChargeDischargeTargetMode.SOC:
                     value = f"Discharging at {discharge_power}W until {target_soc}%"
                 else:

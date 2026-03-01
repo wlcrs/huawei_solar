@@ -210,8 +210,7 @@ class HuaweiSolarSwitchEntity(
                 self.entity_description.register_name
             ].value
 
-            if self.entity_description.check_is_available_func:
-                assert self.entity_description.is_available_key
+            if self.entity_description.check_is_available_func and self.entity_description.is_available_key:
                 is_available_register = self.coordinator.data.get(
                     self.entity_description.is_available_key
                 )

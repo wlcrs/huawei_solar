@@ -205,8 +205,10 @@ class HuaweiSolarSelectEntity(
 
         register = REGISTERS[description.register_name]
 
-        assert isinstance(register, NumberRegister)
-        assert isinstance(register.unit, type) and issubclass(register.unit, IntEnum)
+        if not isinstance(register, NumberRegister):
+            raise TypeError(f"Expected NumberRegister for {description.register_name}, got {type(register)}")
+        if not (isinstance(register.unit, type) and issubclass(register.unit, IntEnum)):
+            raise TypeError(f"Expected IntEnum unit for {description.register_name}, got {register.unit}")
 
         self._register_unit: type[IntEnum] = register.unit
 
@@ -226,8 +228,7 @@ class HuaweiSolarSelectEntity(
                 self.coordinator.data[self.entity_description.register_name].value
             )
 
-            if self.entity_description.check_is_available_func:
-                assert self.entity_description.is_available_key
+            if self.entity_description.check_is_available_func and self.entity_description.is_available_key:
                 is_available_register = self.coordinator.data[
                     self.entity_description.is_available_key
                 ]
