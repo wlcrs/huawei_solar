@@ -135,7 +135,8 @@ def _get_device_data(
 
     device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
     for dd in device_datas:
-        assert "identifiers" in dd.device_info
+        if "identifiers" not in dd.device_info:
+            continue
         for identifier in dd.device_info["identifiers"]:
             for device_identifier in device_entry.identifiers:
                 if identifier == device_identifier:
@@ -186,7 +187,8 @@ def _get_battery_device_data(call: ServiceCall) -> HuaweiSolarInverterData:
             continue
         if not dd.connected_energy_storage:
             continue
-        assert "identifiers" in dd.connected_energy_storage
+        if "identifiers" not in dd.connected_energy_storage:
+            continue
         for identifier in dd.connected_energy_storage["identifiers"]:
             for device_identifier in device_entry.identifiers:
                 if identifier == device_identifier:
@@ -212,7 +214,16 @@ BATTERY_DEVICE_SCHEMA = vol.Schema({DATA_DEVICE_ID: vol.All(cv.string, str)})
 def get_inverter_data(call: ServiceCall) -> HuaweiSolarInverterData:
     """Return the HuaweiSolarBridge associated with the inverter device_id in the service call."""
     dd = _get_device_of_type_data(call, SUN2000Device)
-    assert isinstance(dd, HuaweiSolarInverterData)
+    if not isinstance(dd, HuaweiSolarInverterData):
+        raise ServiceValidationError(
+            translation_domain=DOMAIN,
+            translation_key="wrong_device_type",
+            translation_placeholders={
+                "device_id": call.data[ATTR_DEVICE_ID],
+                "expected_type": "SUN2000",
+                "actual_type": type(dd.device).__name__,
+            },
+        )
     return dd
 
 
@@ -322,9 +333,6 @@ def _parse_time(value: str) -> int:
 async def _validate_power_value(
     power: Any, dd: HuaweiSolarDeviceData, max_value_key: rn.RegisterName
 ) -> int:
-    # this already checked by voluptuous:
-    assert isinstance(power, int)
-
     maximum_active_power = (await dd.device.get(max_value_key)).value
 
     if not power <= maximum_active_power:
@@ -398,8 +406,8 @@ async def forcible_charge(service_call: ServiceCall) -> None:
         rv.StorageForcibleChargeDischarge.CHARGE,
     )
 
-    assert dd.configuration_update_coordinator
-    await dd.configuration_update_coordinator.async_refresh()
+    if dd.configuration_update_coordinator:
+        await dd.configuration_update_coordinator.async_refresh()
 
 
 async def forcible_discharge(service_call: ServiceCall) -> None:
@@ -426,8 +434,8 @@ async def forcible_discharge(service_call: ServiceCall) -> None:
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
         rv.StorageForcibleChargeDischarge.DISCHARGE,
     )
-    assert dd.configuration_update_coordinator
-    await dd.configuration_update_coordinator.async_refresh()
+    if dd.configuration_update_coordinator:
+        await dd.configuration_update_coordinator.async_refresh()
 
 
 async def forcible_charge_soc(service_call: ServiceCall) -> None:
@@ -448,8 +456,8 @@ async def forcible_charge_soc(service_call: ServiceCall) -> None:
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
         rv.StorageForcibleChargeDischarge.CHARGE,
     )
-    assert dd.configuration_update_coordinator
-    await dd.configuration_update_coordinator.async_refresh()
+    if dd.configuration_update_coordinator:
+        await dd.configuration_update_coordinator.async_refresh()
 
 
 async def forcible_discharge_soc(service_call: ServiceCall) -> None:
@@ -470,8 +478,8 @@ async def forcible_discharge_soc(service_call: ServiceCall) -> None:
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
         rv.StorageForcibleChargeDischarge.DISCHARGE,
     )
-    assert dd.configuration_update_coordinator
-    await dd.configuration_update_coordinator.async_refresh()
+    if dd.configuration_update_coordinator:
+        await dd.configuration_update_coordinator.async_refresh()
 
 
 async def stop_forcible_charge(service_call: ServiceCall) -> None:
@@ -491,8 +499,8 @@ async def stop_forcible_charge(service_call: ServiceCall) -> None:
         rv.StorageForcibleChargeDischargeTargetMode.TIME,
     )
 
-    assert dd.configuration_update_coordinator
-    await dd.configuration_update_coordinator.async_refresh()
+    if dd.configuration_update_coordinator:
+        await dd.configuration_update_coordinator.async_refresh()
 
 
 class _PowerControlRegisters(TypedDict):
@@ -543,8 +551,8 @@ async def reset_maximum_feed_grid_power(
         0,
     )
 
-    assert dd.configuration_update_coordinator
-    await dd.configuration_update_coordinator.async_refresh()
+    if dd.configuration_update_coordinator:
+        await dd.configuration_update_coordinator.async_refresh()
 
 
 # only available for inverters
@@ -561,8 +569,8 @@ async def set_di_active_power_scheduling(service_call: ServiceCall) -> None:
         0,
     )
 
-    assert dd.configuration_update_coordinator
-    await dd.configuration_update_coordinator.async_refresh()
+    if dd.configuration_update_coordinator:
+        await dd.configuration_update_coordinator.async_refresh()
 
 
 async def set_zero_power_grid_connection(
@@ -581,8 +589,8 @@ async def set_zero_power_grid_connection(
         0,
     )
 
-    assert dd.configuration_update_coordinator
-    await dd.configuration_update_coordinator.async_refresh()
+    if dd.configuration_update_coordinator:
+        await dd.configuration_update_coordinator.async_refresh()
 
 
 async def set_maximum_feed_grid_power(
@@ -601,8 +609,8 @@ async def set_maximum_feed_grid_power(
         rv.ActivePowerControlMode.POWER_LIMITED_GRID_CONNECTION_WATT,
     )
 
-    assert dd.configuration_update_coordinator
-    await dd.configuration_update_coordinator.async_refresh()
+    if dd.configuration_update_coordinator:
+        await dd.configuration_update_coordinator.async_refresh()
 
 
 async def set_maximum_feed_grid_power_percentage(
@@ -622,8 +630,8 @@ async def set_maximum_feed_grid_power_percentage(
         rv.ActivePowerControlMode.POWER_LIMITED_GRID_CONNECTION_PERCENT,
     )
 
-    assert dd.configuration_update_coordinator
-    await dd.configuration_update_coordinator.async_refresh()
+    if dd.configuration_update_coordinator:
+        await dd.configuration_update_coordinator.async_refresh()
 
 
 async def set_battery_tou_periods(
@@ -654,8 +662,8 @@ async def set_battery_tou_periods(
             _parse_lg_resu_periods(service_call.data[DATA_PERIODS]),
         )
 
-    assert dd.configuration_update_coordinator
-    await dd.configuration_update_coordinator.async_refresh()
+    if dd.configuration_update_coordinator:
+        await dd.configuration_update_coordinator.async_refresh()
 
 
 async def set_emma_tou_periods(
@@ -674,8 +682,8 @@ async def set_emma_tou_periods(
         _parse_huawei_luna2000_periods(service_call.data[DATA_PERIODS]),
     )
 
-    assert dd.configuration_update_coordinator
-    await dd.configuration_update_coordinator.async_refresh()
+    if dd.configuration_update_coordinator:
+        await dd.configuration_update_coordinator.async_refresh()
 
 
 def _parse_capacity_control_periods(text: str) -> list[PeakSettingPeriod]:
@@ -712,8 +720,8 @@ async def set_capacity_control_periods(service_call: ServiceCall) -> None:
         _parse_capacity_control_periods(service_call.data[DATA_PERIODS]),
     )
 
-    assert dd.configuration_update_coordinator
-    await dd.configuration_update_coordinator.async_refresh()
+    if dd.configuration_update_coordinator:
+        await dd.configuration_update_coordinator.async_refresh()
 
 
 def _parse_fixed_charge_periods(text: str) -> list[ChargeDischargePeriod]:
@@ -746,8 +754,8 @@ async def set_fixed_charge_periods(service_call: ServiceCall) -> None:
         _parse_fixed_charge_periods(service_call.data[DATA_PERIODS]),
     )
 
-    assert dd.configuration_update_coordinator
-    await dd.configuration_update_coordinator.async_refresh()
+    if dd.configuration_update_coordinator:
+        await dd.configuration_update_coordinator.async_refresh()
 
 
 async def async_setup_services(
