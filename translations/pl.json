@@ -74,6 +74,11 @@
         }
     },
     "entity": {
+        "button": {
+            "stop_forcible_charge": {
+                "name": "Zatrzymaj wymuszenie ładowania"
+            }
+        },
         "number": {
             "active_power_fixed_value_derating": {
                 "name": "Power derating"
