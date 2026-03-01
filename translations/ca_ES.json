@@ -84,6 +84,26 @@
             }
         },
         "select": {
+            "active_power_control_mode": {
+                "name": "Mode de control de potència activa",
+                "state": {
+                    "unlimited": "Il·limitat",
+                    "di_active_scheduling": "Programació activa DI",
+                    "zero_power_grid_connection": "Connexió a xarxa sense potència",
+                    "power_limited_grid_connection_watt": "Potència limitada (watts)",
+                    "power_limited_grid_connection_percent": "Potència limitada (percentatge)"
+                }
+            },
+            "emma_power_control_mode_at_grid_connection_point": {
+                "name": "Mode de control de potència",
+                "state": {
+                    "unlimited": "Il·limitat",
+                    "di_active_scheduling": "Programació activa DI",
+                    "zero_power_grid_connection": "Connexió a xarxa sense potència",
+                    "power_limited_grid_connection_watt": "Potència limitada (watts)",
+                    "power_limited_grid_connection_percent": "Potència limitada (percentatge)"
+                }
+            },
             "storage_capacity_control_mode": {
                 "name": "Mode de control de capacitat",
                 "state": {

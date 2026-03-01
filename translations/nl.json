@@ -124,6 +124,16 @@
             }
         },
         "select": {
+            "active_power_control_mode": {
+                "name": "Actief vermogen regelmodus",
+                "state": {
+                    "unlimited": "Onbeperkt",
+                    "di_active_scheduling": "DI actieve planning",
+                    "zero_power_grid_connection": "Nul-vermogen netaansluiting",
+                    "power_limited_grid_connection_watt": "Vermogensbegrensd (watt)",
+                    "power_limited_grid_connection_percent": "Vermogensbegrensd (procent)"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS regelmodus",
                 "state": {
@@ -133,6 +143,16 @@
                     "reserved_3": "Gereserveerd 3",
                     "third_party_dispatch": "Controle door derde partij",
                     "time_of_use": "Tijdstip van gebruik"
+                }
+            },
+            "emma_power_control_mode_at_grid_connection_point": {
+                "name": "Vermogen regelmodus",
+                "state": {
+                    "unlimited": "Onbeperkt",
+                    "di_active_scheduling": "DI actieve planning",
+                    "zero_power_grid_connection": "Nul-vermogen netaansluiting",
+                    "power_limited_grid_connection_watt": "Vermogensbegrensd (watt)",
+                    "power_limited_grid_connection_percent": "Vermogensbegrensd (procent)"
                 }
             },
             "emma_tou_preferred_use_of_surplus_pv_power": {

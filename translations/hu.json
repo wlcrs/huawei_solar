@@ -124,6 +124,16 @@
             }
         },
         "select": {
+            "active_power_control_mode": {
+                "name": "Active power control mode",
+                "state": {
+                    "unlimited": "Unlimited",
+                    "di_active_scheduling": "DI active scheduling",
+                    "zero_power_grid_connection": "Zero power grid connection",
+                    "power_limited_grid_connection_watt": "Power limited (watt)",
+                    "power_limited_grid_connection_percent": "Power limited (percent)"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS Control Mode",
                 "state": {
@@ -133,6 +143,16 @@
                     "reserved_3": "Reserved 3",
                     "third_party_dispatch": "Third party dispatch",
                     "time_of_use": "Time of use"
+                }
+            },
+            "emma_power_control_mode_at_grid_connection_point": {
+                "name": "Power control mode",
+                "state": {
+                    "unlimited": "Unlimited",
+                    "di_active_scheduling": "DI active scheduling",
+                    "zero_power_grid_connection": "Zero power grid connection",
+                    "power_limited_grid_connection_watt": "Power limited (watt)",
+                    "power_limited_grid_connection_percent": "Power limited (percent)"
                 }
             },
             "emma_tou_preferred_use_of_surplus_pv_power": {

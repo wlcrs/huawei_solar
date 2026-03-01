@@ -95,6 +95,26 @@
             }
         },
         "select": {
+            "active_power_control_mode": {
+                "name": "Active power control mode",
+                "state": {
+                    "unlimited": "Unlimited",
+                    "di_active_scheduling": "DI active scheduling",
+                    "zero_power_grid_connection": "Zero power grid connection",
+                    "power_limited_grid_connection_watt": "Power limited (watt)",
+                    "power_limited_grid_connection_percent": "Power limited (percent)"
+                }
+            },
+            "emma_power_control_mode_at_grid_connection_point": {
+                "name": "Power control mode",
+                "state": {
+                    "unlimited": "Unlimited",
+                    "di_active_scheduling": "DI active scheduling",
+                    "zero_power_grid_connection": "Zero power grid connection",
+                    "power_limited_grid_connection_watt": "Power limited (watt)",
+                    "power_limited_grid_connection_percent": "Power limited (percent)"
+                }
+            },
             "storage_capacity_control_mode": {
                 "name": "Режим на управление на капацитета",
                 "state": {

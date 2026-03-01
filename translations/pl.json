@@ -124,6 +124,16 @@
             }
         },
         "select": {
+            "active_power_control_mode": {
+                "name": "Tryb sterowania mocą czynną",
+                "state": {
+                    "unlimited": "Bez ograniczeń",
+                    "di_active_scheduling": "Planowanie aktywne DI",
+                    "zero_power_grid_connection": "Zerowe zasilanie do sieci",
+                    "power_limited_grid_connection_watt": "Ograniczenie mocy (watt)",
+                    "power_limited_grid_connection_percent": "Ograniczenie mocy (procent)"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS Control Mode",
                 "state": {
@@ -133,6 +143,16 @@
                     "reserved_3": "Reserved 3",
                     "third_party_dispatch": "Third party dispatch",
                     "time_of_use": "Taryfa LG"
+                }
+            },
+            "emma_power_control_mode_at_grid_connection_point": {
+                "name": "Tryb sterowania mocą",
+                "state": {
+                    "unlimited": "Bez ograniczeń",
+                    "di_active_scheduling": "Planowanie aktywne DI",
+                    "zero_power_grid_connection": "Zerowe zasilanie do sieci",
+                    "power_limited_grid_connection_watt": "Ograniczenie mocy (watt)",
+                    "power_limited_grid_connection_percent": "Ograniczenie mocy (procent)"
                 }
             },
             "emma_tou_preferred_use_of_surplus_pv_power": {
