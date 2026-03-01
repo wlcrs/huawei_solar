@@ -18,7 +18,6 @@ from huawei_solar import (
     get_device_infos,
 )
 from huawei_solar.device.base import HuaweiSolarDeviceWithLogin
-import serial.tools.list_ports
 from tmodbus.exceptions import ModbusConnectionError
 import voluptuous as vol
 
@@ -445,6 +444,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     errors["base"] = "unknown"
                 else:
                     return await self._create_or_update_entry(info)
+
+        import serial.tools.list_ports  # pylint: disable=import-outside-toplevel
 
         ports = await self.hass.async_add_executor_job(serial.tools.list_ports.comports)
         list_of_ports = {
