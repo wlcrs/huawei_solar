@@ -49,6 +49,11 @@
         }
     },
     "entity": {
+        "button": {
+            "stop_forcible_charge": {
+                "name": "Detener carga forzada"
+            }
+        },
         "number": {
             "storage_backup_power_state_of_charge": {
                 "name": "Carga de reserva SoC"
@@ -79,6 +84,26 @@
             }
         },
         "select": {
+            "active_power_control_mode": {
+                "name": "Modo de control de potencia activa",
+                "state": {
+                    "unlimited": "Ilimitado",
+                    "di_active_scheduling": "Programación activa DI",
+                    "zero_power_grid_connection": "Conexión a red sin potencia",
+                    "power_limited_grid_connection_watt": "Potencia limitada (vatios)",
+                    "power_limited_grid_connection_percent": "Potencia limitada (porcentaje)"
+                }
+            },
+            "emma_power_control_mode_at_grid_connection_point": {
+                "name": "Modo de control de potencia",
+                "state": {
+                    "unlimited": "Ilimitado",
+                    "di_active_scheduling": "Programación activa DI",
+                    "zero_power_grid_connection": "Conexión a red sin potencia",
+                    "power_limited_grid_connection_watt": "Potencia limitada (vatios)",
+                    "power_limited_grid_connection_percent": "Potencia limitada (porcentaje)"
+                }
+            },
             "storage_capacity_control_mode": {
                 "name": "Modo de control de capacidad",
                 "state": {

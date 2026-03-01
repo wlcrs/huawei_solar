@@ -74,6 +74,11 @@
         }
     },
     "entity": {
+        "button": {
+            "stop_forcible_charge": {
+                "name": "Zwangsladung stoppen"
+            }
+        },
         "number": {
             "active_power_fixed_value_derating": {
                 "name": "Wechselrichter-Wirkleistung"
@@ -119,6 +124,16 @@
             }
         },
         "select": {
+            "active_power_control_mode": {
+                "name": "Wirkleistungsregelung",
+                "state": {
+                    "unlimited": "Unbegrenzt",
+                    "di_active_scheduling": "DI-Wirkleistungsplanung",
+                    "zero_power_grid_connection": "Nulleinspeisung",
+                    "power_limited_grid_connection_watt": "Leistungsbegrenzt (Watt)",
+                    "power_limited_grid_connection_percent": "Leistungsbegrenzt (Prozent)"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS-Kontroll-Modus",
                 "state": {
@@ -128,6 +143,16 @@
                     "reserved_3": "Reserviert 3",
                     "third_party_dispatch": "Drittanbieter-System im Energiespeichersystem wurde eingerichtet",
                     "time_of_use": "Zeitbasierte Nutzung"
+                }
+            },
+            "emma_power_control_mode_at_grid_connection_point": {
+                "name": "Leistungsregelung",
+                "state": {
+                    "unlimited": "Unbegrenzt",
+                    "di_active_scheduling": "DI-Wirkleistungsplanung",
+                    "zero_power_grid_connection": "Nulleinspeisung",
+                    "power_limited_grid_connection_watt": "Leistungsbegrenzt (Watt)",
+                    "power_limited_grid_connection_percent": "Leistungsbegrenzt (Prozent)"
                 }
             },
             "emma_tou_preferred_use_of_surplus_pv_power": {

@@ -51,6 +51,11 @@
         }
     },
     "entity": {
+        "button": {
+            "stop_forcible_charge": {
+                "name": "Stop forcible charge"
+            }
+        },
         "number": {
             "mppt_scanning_interval": {
                 "name": "MPPT-Scan Interval"
@@ -884,6 +889,26 @@
             }
         },
         "select": {
+            "active_power_control_mode": {
+                "name": "Aktiv effektstyrningsläge",
+                "state": {
+                    "unlimited": "Obegränsad",
+                    "di_active_scheduling": "DI aktiv schemaläggning",
+                    "zero_power_grid_connection": "Noll effekt nätanslutning",
+                    "power_limited_grid_connection_watt": "Effektbegränsad (watt)",
+                    "power_limited_grid_connection_percent": "Effektbegränsad (procent)"
+                }
+            },
+            "emma_power_control_mode_at_grid_connection_point": {
+                "name": "Effektstyrningsläge",
+                "state": {
+                    "unlimited": "Obegränsad",
+                    "di_active_scheduling": "DI aktiv schemaläggning",
+                    "zero_power_grid_connection": "Noll effekt nätanslutning",
+                    "power_limited_grid_connection_watt": "Effektbegränsad (watt)",
+                    "power_limited_grid_connection_percent": "Effektbegränsad (procent)"
+                }
+            },
             "storage_excess_pv_energy_use_in_tou": {
                 "name": "Excess PV energy use in TOU",
                 "state": {

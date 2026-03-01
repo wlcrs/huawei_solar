@@ -1,4 +1,4 @@
-"""Switch entities for Huawei Solar."""
+"""Select entities for Huawei Solar."""
 
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -71,6 +71,14 @@ class HuaweiSolarSelectEntityDescription[T](
         return {"register_names": registers}
 
 
+INVERTER_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
+    HuaweiSolarSelectEntityDescription(
+        key=rn.ACTIVE_POWER_CONTROL_MODE,
+        icon="mdi:transmission-tower",
+        entity_category=EntityCategory.CONFIG,
+    ),
+)
+
 ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     HuaweiSolarSelectEntityDescription(
         key=rn.STORAGE_EXCESS_PV_ENERGY_USE_IN_TOU,
@@ -97,6 +105,11 @@ EMMA_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     ),
     HuaweiSolarSelectEntityDescription(
         key=rn.EMMA_TOU_PREFERRED_USE_OF_SURPLUS_PV_POWER,
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarSelectEntityDescription(
+        key=rn.EMMA_POWER_CONTROL_MODE_AT_GRID_CONNECTION_POINT,
+        icon="mdi:transmission-tower",
         entity_category=EntityCategory.CONFIG,
     ),
 )
@@ -130,6 +143,17 @@ async def async_setup_entry(
                         ucs.device_info,
                     )
                 )
+
+        if isinstance(ucs, HuaweiSolarInverterData):
+            slave_entities.extend(
+                HuaweiSolarSelectEntity(
+                    ucs.configuration_update_coordinator,
+                    ucs.device,
+                    entity_description,
+                    ucs.device_info,
+                )
+                for entity_description in INVERTER_SELECT_DESCRIPTIONS
+            )
 
         if isinstance(ucs, HuaweiSolarInverterData) and ucs.connected_energy_storage:
             slave_entities.extend(
@@ -205,8 +229,10 @@ class HuaweiSolarSelectEntity(
 
         register = REGISTERS[description.register_name]
 
-        assert isinstance(register, NumberRegister)
-        assert isinstance(register.unit, type) and issubclass(register.unit, IntEnum)
+        if not isinstance(register, NumberRegister):
+            raise TypeError(f"Expected NumberRegister for {description.register_name}, got {type(register)}")
+        if not (isinstance(register.unit, type) and issubclass(register.unit, IntEnum)):
+            raise TypeError(f"Expected IntEnum unit for {description.register_name}, got {register.unit}")
 
         self._register_unit: type[IntEnum] = register.unit
 
@@ -226,8 +252,7 @@ class HuaweiSolarSelectEntity(
                 self.coordinator.data[self.entity_description.register_name].value
             )
 
-            if self.entity_description.check_is_available_func:
-                assert self.entity_description.is_available_key
+            if self.entity_description.check_is_available_func and self.entity_description.is_available_key:
                 is_available_register = self.coordinator.data[
                     self.entity_description.is_available_key
                 ]
@@ -283,10 +308,7 @@ class StorageModeSelectEntity(
         device: SUN2000Device,
         device_info: DeviceInfo,
     ) -> None:
-        """Huawei Solar Storage Mode Select Entity constructor.
-
-        Do not use directly. Use `.create` instead!
-        """
+        """Huawei Solar Storage Mode Select Entity constructor."""
         super().__init__(
             coordinator, {"register_names": [rn.STORAGE_WORKING_MODE_SETTINGS]}
         )

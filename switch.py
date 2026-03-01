@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-import asyncio
 from collections.abc import Callable
 from dataclasses import dataclass
 import logging
+import time
 from typing import Any, TypeVar
 
 from huawei_solar import HuaweiSolarDevice, register_names as rn, register_values as rv
@@ -186,10 +186,7 @@ class HuaweiSolarSwitchEntity(
         description: HuaweiSolarSwitchEntityDescription,
         device_info: DeviceInfo,
     ) -> None:
-        """Huawei Solar Switch Entity constructor.
-
-        Do not use directly. Use `.create` instead!
-        """
+        """Huawei Solar Switch Entity constructor."""
         super().__init__(coordinator, description.context)
         self.coordinator = coordinator
 
@@ -210,8 +207,7 @@ class HuaweiSolarSwitchEntity(
                 self.entity_description.register_name
             ].value
 
-            if self.entity_description.check_is_available_func:
-                assert self.entity_description.is_available_key
+            if self.entity_description.check_is_available_func and self.entity_description.is_available_key:
                 is_available_register = self.coordinator.data.get(
                     self.entity_description.is_available_key
                 )
@@ -258,10 +254,15 @@ class HuaweiSolarSwitchEntity(
 class HuaweiSolarOnOffSwitchEntity(
     CoordinatorEntity[HuaweiSolarUpdateCoordinator], HuaweiSolarEntity, SwitchEntity
 ):
-    """Huawei Solar Switch Entity."""
+    """Huawei Solar Switch Entity for device startup/shutdown.
 
-    POLL_FREQUENCY_SECONDS = 15
-    MAX_STATUS_CHANGE_TIME_SECONDS = 3000  # Maximum status change time is 5 minutes
+    Startup/shutdown can take up to 5 minutes. Instead of blocking the
+    turn_on/turn_off call with a polling loop, we set the state
+    optimistically and suppress coordinator overwrites until the
+    transition completes or times out.
+    """
+
+    MAX_STATUS_CHANGE_TIME_SECONDS = 300  # 5 minutes
 
     def __init__(
         self,
@@ -271,10 +272,7 @@ class HuaweiSolarOnOffSwitchEntity(
         device: HuaweiSolarDevice,
         device_info: DeviceInfo,
     ) -> None:
-        """Huawei Solar Switch Entity constructor.
-
-        Do not use directly. Use `.create` instead!
-        """
+        """Huawei Solar Switch Entity constructor."""
         super().__init__(coordinator, {"register_names": [rn.DEVICE_STATUS]})
         self.coordinator = coordinator
 
@@ -288,22 +286,41 @@ class HuaweiSolarOnOffSwitchEntity(
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
 
-        self._change_lock = asyncio.Lock()
+        self._transition_start: float | None = None
 
     @staticmethod
     def _is_off(device_status: str) -> bool:
         return device_status.startswith("Shutdown")
 
+    def _clear_transition_if_expired(self) -> None:
+        """Clear the transition guard if the timeout has elapsed."""
+        if self._transition_start is None:
+            return
+        if time.monotonic() - self._transition_start > self.MAX_STATUS_CHANGE_TIME_SECONDS:
+            _LOGGER.warning(
+                "Startup/shutdown transition timed out after %d seconds",
+                self.MAX_STATUS_CHANGE_TIME_SECONDS,
+            )
+            self._transition_start = None
+
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        if self._change_lock.locked():
-            return  # Don't do status updates if async_turn_on or async_turn_off is running
-
         if self.coordinator.data and rn.DEVICE_STATUS in self.coordinator.data:
             device_status = self.coordinator.data[rn.DEVICE_STATUS].value
+            actual_is_on = not self._is_off(device_status)
 
-            self._attr_is_on = not self._is_off(device_status)
+            self._clear_transition_if_expired()
+
+            if self._transition_start is not None:
+                if actual_is_on == self._attr_is_on:
+                    # Transition completed successfully
+                    self._transition_start = None
+                else:
+                    # Still transitioning, keep optimistic state
+                    return
+
+            self._attr_is_on = actual_is_on
             self._attr_available = True
         else:
             self._attr_available = False
@@ -312,34 +329,16 @@ class HuaweiSolarOnOffSwitchEntity(
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the setting on."""
-        async with self._change_lock:
-            await self.device.set(rn.STARTUP, 0)
-
-            # Turning on can take up to 5 minutes... We'll poll every 15 seconds
-            for _ in range(
-                self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
-            ):
-                await asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
-                device_status = (await self.device.client.get(rn.DEVICE_STATUS)).value
-                if not self._is_off(device_status):
-                    self._attr_is_on = True
-                    break
-
+        await self.device.set(rn.STARTUP, 0)
+        self._attr_is_on = True
+        self._transition_start = time.monotonic()
+        self.async_write_ha_state()
         await self.coordinator.async_request_refresh()
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the setting off."""
-        async with self._change_lock:
-            await self.device.set(rn.SHUTDOWN, 0)
-
-            # Turning on can take up to 5 minutes... We'll poll every 15 seconds
-            for _ in range(
-                self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
-            ):
-                await asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
-                device_status = (await self.device.client.get(rn.DEVICE_STATUS)).value
-                if self._is_off(device_status):
-                    self._attr_is_on = False
-                    break
-
+        await self.device.set(rn.SHUTDOWN, 0)
+        self._attr_is_on = False
+        self._transition_start = time.monotonic()
+        self.async_write_ha_state()
         await self.coordinator.async_request_refresh()

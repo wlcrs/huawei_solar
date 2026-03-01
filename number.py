@@ -230,6 +230,35 @@ NON_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[
 )
 
 
+async def _create_number_entity(
+    coordinator: HuaweiSolarUpdateCoordinator,
+    device: HuaweiSolarDevice,
+    description: HuaweiSolarNumberEntityDescription,
+    device_info: DeviceInfo,
+) -> "HuaweiSolarNumberEntity":
+    """Create a number entity, reading static min/max limits from the device."""
+    static_max_value = None
+    if description.static_maximum_key:
+        static_max_value = (
+            await device.client.get(description.static_maximum_key)
+        ).value
+
+    static_min_value = None
+    if description.static_minimum_key:
+        static_min_value = (
+            await device.client.get(description.static_minimum_key)
+        ).value
+
+    return HuaweiSolarNumberEntity(
+        coordinator,
+        device,
+        description,
+        device_info,
+        static_max_value,
+        static_min_value,
+    )
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: HuaweiSolarConfigEntry,
@@ -250,7 +279,7 @@ async def async_setup_entry(
         if isinstance(ucs.device, EMMADevice):
             for entity_description in EMMA_NUMBER_DESCRIPTIONS:
                 slave_entities.append(  # noqa: PERF401
-                    await HuaweiSolarNumberEntity.create(
+                    await _create_number_entity(
                         ucs.configuration_update_coordinator,
                         ucs.device,
                         entity_description,
@@ -261,7 +290,7 @@ async def async_setup_entry(
         if isinstance(ucs, HuaweiSolarInverterData):
             for entity_description in INVERTER_NUMBER_DESCRIPTIONS:
                 slave_entities.append(  # noqa: PERF401
-                    await HuaweiSolarNumberEntity.create(
+                    await _create_number_entity(
                         ucs.configuration_update_coordinator,
                         ucs.device,
                         entity_description,
@@ -272,7 +301,7 @@ async def async_setup_entry(
             if ucs.connected_energy_storage:
                 for entity_description in ENERGY_STORAGE_NUMBER_DESCRIPTIONS:
                     slave_entities.append(  # noqa: PERF401
-                        await HuaweiSolarNumberEntity.create(
+                        await _create_number_entity(
                             ucs.configuration_update_coordinator,
                             ucs.device,
                             entity_description,
@@ -287,7 +316,7 @@ async def async_setup_entry(
                     )
                     for entity_description in CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
                         slave_entities.append(  # noqa: PERF401
-                            await HuaweiSolarNumberEntity.create(
+                            await _create_number_entity(
                                 ucs.configuration_update_coordinator,
                                 ucs.device,
                                 entity_description,
@@ -302,7 +331,7 @@ async def async_setup_entry(
                     )
                     for entity_description in NON_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
                         slave_entities.append(  # noqa: PERF401
-                            await HuaweiSolarNumberEntity.create(
+                            await _create_number_entity(
                                 ucs.configuration_update_coordinator,
                                 ucs.device,
                                 entity_description,
@@ -344,10 +373,7 @@ class HuaweiSolarNumberEntity(
         static_max_value: float | None = None,
         static_min_value: float | None = None,
     ) -> None:
-        """Huawei Solar Number Entity constructor.
-
-        Do not use directly. Use `.create` instead!
-        """
+        """Huawei Solar Number Entity constructor."""
         super().__init__(coordinator, description.context)
         self.coordinator = coordinator
 
@@ -359,40 +385,6 @@ class HuaweiSolarNumberEntity(
 
         self._static_max_value = static_max_value
         self._static_min_value = static_min_value
-
-    @classmethod
-    async def create(
-        cls,
-        coordinator: HuaweiSolarUpdateCoordinator,
-        device: HuaweiSolarDevice,
-        description: HuaweiSolarNumberEntityDescription,
-        device_info: DeviceInfo,
-    ) -> "HuaweiSolarNumberEntity":
-        """Huawei Solar Number Entity constructor.
-
-        This async constructor fills in the necessary min/max values
-        """
-
-        static_max_value = None
-        if description.static_maximum_key:
-            static_max_value = (
-                await device.client.get(description.static_maximum_key)
-            ).value
-
-        static_min_value = None
-        if description.static_minimum_key:
-            static_min_value = (
-                await device.client.get(description.static_minimum_key)
-            ).value
-
-        return cls(
-            coordinator,
-            device,
-            description,
-            device_info,
-            static_max_value,
-            static_min_value,
-        )
 
     @callback
     def _handle_coordinator_update(self) -> None:

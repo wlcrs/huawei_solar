@@ -74,6 +74,11 @@
         }
     },
     "entity": {
+        "button": {
+            "stop_forcible_charge": {
+                "name": "Detener carga forzada"
+            }
+        },
         "number": {
             "active_power_fixed_value_derating": {
                 "name": "Reducción de potencia"
@@ -119,6 +124,16 @@
             }
         },
         "select": {
+            "active_power_control_mode": {
+                "name": "Modo de control de potencia activa",
+                "state": {
+                    "unlimited": "Ilimitado",
+                    "di_active_scheduling": "Programación activa DI",
+                    "zero_power_grid_connection": "Conexión a red sin potencia",
+                    "power_limited_grid_connection_watt": "Potencia limitada (vatios)",
+                    "power_limited_grid_connection_percent": "Potencia limitada (porcentaje)"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS Control Mode",
                 "state": {
@@ -128,6 +143,16 @@
                     "reserved_3": "Reservado 3",
                     "third_party_dispatch": "Third party dispatch",
                     "time_of_use": "Tiempo de uso"
+                }
+            },
+            "emma_power_control_mode_at_grid_connection_point": {
+                "name": "Modo de control de potencia",
+                "state": {
+                    "unlimited": "Ilimitado",
+                    "di_active_scheduling": "Programación activa DI",
+                    "zero_power_grid_connection": "Conexión a red sin potencia",
+                    "power_limited_grid_connection_watt": "Potencia limitada (vatios)",
+                    "power_limited_grid_connection_percent": "Potencia limitada (porcentaje)"
                 }
             },
             "emma_tou_preferred_use_of_surplus_pv_power": {
