@@ -51,6 +51,11 @@
         }
     },
     "entity": {
+        "button": {
+            "stop_forcible_charge": {
+                "name": "Stop forcible charge"
+            }
+        },
         "number": {
             "mppt_scanning_interval": {
                 "name": "MPPT-Scan Interval"

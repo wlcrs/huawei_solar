@@ -49,6 +49,11 @@
         }
     },
     "entity": {
+        "button": {
+            "stop_forcible_charge": {
+                "name": "Detener carga forzada"
+            }
+        },
         "number": {
             "storage_backup_power_state_of_charge": {
                 "name": "Carga de reserva SoC"

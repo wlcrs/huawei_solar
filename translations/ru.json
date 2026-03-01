@@ -74,6 +74,11 @@
         }
     },
     "entity": {
+        "button": {
+            "stop_forcible_charge": {
+                "name": "Остановить принудительный заряд"
+            }
+        },
         "number": {
             "active_power_fixed_value_derating": {
                 "name": "Снижение мощности"

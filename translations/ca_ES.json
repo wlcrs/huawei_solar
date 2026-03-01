@@ -49,6 +49,11 @@
         }
     },
     "entity": {
+        "button": {
+            "stop_forcible_charge": {
+                "name": "Atura la càrrega forçada"
+            }
+        },
         "number": {
             "storage_backup_power_state_of_charge": {
                 "name": "Càrrega de reserva SoC"
@@ -453,7 +458,7 @@
                 "name": "Descàrrega diària"
             },
             "storage_fixed_charging_and_discharging_periods": {
-                "name": "Períodes de càrrega i descàrrega fixa"
+                "name": "Fixed charging periods"
             },
             "storage_running_status": {
                 "name": "Estat"
@@ -496,9 +501,6 @@
             },
             "storage_lg_resu_time_of_use_charging_and_discharging_periods": {
                 "name": "TOU charging and discharging periods"
-            },
-            "storage_fixed_charging_and_discharging_periods": {
-                "name": "Fixed charging periods"
             },
             "inverter_total_absorbed_energy": {
                 "name": "Total absorbed energy"

@@ -74,6 +74,11 @@
         }
     },
     "entity": {
+        "button": {
+            "stop_forcible_charge": {
+                "name": "Detener carga forzada"
+            }
+        },
         "number": {
             "active_power_fixed_value_derating": {
                 "name": "Reducción de potencia"
