@@ -376,8 +376,7 @@ async def _setup_device_data(
 
     device_registry = dr.async_get(hass)
 
-    if hasattr(device, "software_version"):
-        sw_version = device.software_version
+    sw_version = getattr(device, "software_version", None)
 
     device_info = DeviceInfo(
         identifiers={(DOMAIN, device.serial_number)},
