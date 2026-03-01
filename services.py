@@ -766,6 +766,12 @@ async def async_setup_services(
     if not entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
         return
 
+    # Guard: only register services once across all config entries.
+    # Handlers resolve the correct device at call time via device_id,
+    # so the services work regardless of which entry registered them.
+    if hass.services.has_service(DOMAIN, SERVICE_RESET_MAXIMUM_FEED_GRID_POWER):
+        return
+
     hsucs: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
 
     has_battery = any(
