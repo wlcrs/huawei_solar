@@ -4,11 +4,10 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import Any, Literal, TypedDict, TypeVar
+from typing import Any, Literal, TypedDict
 
 from huawei_solar import (
     EMMADevice,
-    HuaweiSolarDevice,
     RegisterName,
     SUN2000Device,
     register_names as rn,
@@ -54,22 +53,6 @@ from .types import (
     HuaweiSolarInverterData,
 )
 
-ALL_SERVICES = [
-    SERVICE_FORCIBLE_CHARGE,
-    SERVICE_FORCIBLE_CHARGE_SOC,
-    SERVICE_FORCIBLE_DISCHARGE,
-    SERVICE_FORCIBLE_DISCHARGE_SOC,
-    SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
-    SERVICE_SET_CAPACITY_CONTROL_PERIODS,
-    SERVICE_SET_DI_ACTIVE_POWER_SCHEDULING,
-    SERVICE_SET_FIXED_CHARGE_PERIODS,
-    SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
-    SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
-    SERVICE_SET_TOU_PERIODS,
-    SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
-    SERVICE_STOP_FORCIBLE_CHARGE,
-]
-
 DATA_DEVICE_ID = "device_id"
 DATA_POWER = "power"
 DATA_POWER_PERCENTAGE = "power_percentage"
@@ -81,15 +64,9 @@ DATA_PERIODS = "periods"
 _LOGGER = logging.getLogger(__name__)
 
 
-class HuaweiSolarServiceException(Exception):
-    """Exception while executing Huawei Solar Service Call."""
-
-
 #############################################
 # Device validation and retrieval functions #
 #############################################
-
-T = TypeVar("T", bound=HuaweiSolarDevice)
 
 
 @callback
@@ -170,9 +147,6 @@ def _get_device_of_type_data[T](
 def get_emma_device(call: ServiceCall) -> HuaweiSolarDeviceData:
     """Return the HuaweiEMMABridge associated with the emma device_id in the service call."""
     return _get_device_of_type_data(call, EMMADevice)
-
-
-EMMA_DEVICE_SCHEMA = vol.Schema({DATA_DEVICE_ID: vol.All(cv.string, str)})
 
 
 @callback
@@ -271,15 +245,6 @@ BATTERY_TOU_PERIODS_SCHEMA = BATTERY_DEVICE_SCHEMA.extend(
         vol.Required(DATA_PERIODS): vol.All(
             cv.string,
             vol.Match(HUAWEI_LUNA2000_TOU_PATTERN + r"|" + LG_RESU_TOU_PATTERN),
-        )
-    }
-)
-
-EMMA_TOU_PERIODS_SCHEMA = EMMA_DEVICE_SCHEMA.extend(
-    {
-        vol.Required(DATA_PERIODS): vol.All(
-            cv.string,
-            vol.Match(HUAWEI_LUNA2000_TOU_PATTERN),
         )
     }
 )
