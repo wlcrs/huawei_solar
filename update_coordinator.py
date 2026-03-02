@@ -92,11 +92,25 @@ class HuaweiSolarOptimizerUpdateCoordinator(
         self.optimizer_device_infos = optimizer_device_infos
 
     async def _async_update_data(self) -> dict[int, OptimizerRealTimeData]:
-        """Retrieve the latest values from the optimizers."""
+        """Retrieve the latest values from the optimizers.
+
+        On transient failures (device busy, timeouts), return previously fetched
+        data instead of raising UpdateFailed. This prevents all optimizer entities
+        from becoming unavailable for the entire 5-minute update interval when a
+        single update fails — e.g. due to concurrent file uploads on a shared
+        Modbus connection.
+        """
         try:
             async with asyncio.timeout(OPTIMIZER_UPDATE_TIMEOUT.total_seconds()):
                 return await self.device.get_latest_optimizer_history_data()
-        except HuaweiSolarException as err:
+        except (HuaweiSolarException, TimeoutError) as err:
+            if self.data is not None:
+                _LOGGER.warning(
+                    "Could not update %s optimizer values: %s. Keeping previous data",
+                    self.device.serial_number,
+                    err,
+                )
+                return self.data
             raise UpdateFailed(
                 f"Could not update {self.device.serial_number} optimizer values: {err}"
             ) from err
