@@ -57,7 +57,7 @@ forcible_charge_soc:
       default: 50
       selector:
         number:
-          min: 12
+          min: 0
           max: 100
           unit_of_measurement: "%"
     power:
@@ -79,7 +79,7 @@ forcible_discharge_soc:
       default: 15
       selector:
         number:
-          min: 12
+          min: 0
           max: 100
           unit_of_measurement: "%"
     power:
