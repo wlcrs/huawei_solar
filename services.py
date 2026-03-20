@@ -237,7 +237,7 @@ DURATION_SCHEMA = FORCIBLE_CHARGE_BASE_SCHEMA.extend(
 SOC_SCHEMA = FORCIBLE_CHARGE_BASE_SCHEMA.extend(
     {
         vol.Required(DATA_TARGET_SOC): vol.All(
-            vol.Coerce(float), vol.Range(min=12, max=100)
+            vol.Coerce(float), vol.Range(min=0, max=100)
         )
     }
 )
