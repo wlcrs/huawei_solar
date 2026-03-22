@@ -64,6 +64,38 @@ PLATFORMS: list[Platform] = [
     Platform.SWITCH,
 ]
 
+# Register address for the custom device name set in SmartLogger WebUI
+SMARTLOGGER_DEVICE_NAME_REGISTER = 65524
+SMARTLOGGER_DEVICE_NAME_LENGTH = 15
+
+
+async def _read_smartlogger_device_name(
+    primary_device: SmartLoggerDevice,
+    unit_id: int,
+) -> str | None:
+    """Read the custom device name from register 65524 at the given unit_id.
+
+    The SmartLogger stores custom device names (set via WebUI) at
+    register 65524 for each connected sub-device. We create a temporary
+    client for the target unit_id to read this register.
+    """
+    try:
+        sub_client = primary_device.client.for_unit_id(unit_id)
+        name = await sub_client.read_string(
+            SMARTLOGGER_DEVICE_NAME_REGISTER,
+            number_of_registers=SMARTLOGGER_DEVICE_NAME_LENGTH,
+        )
+        name = name.strip().rstrip("\x00")
+        if name:
+            return name
+    except Exception:  # pylint: disable=broad-except
+        _LOGGER.debug(
+            "Could not read custom device name from SmartLogger for unit_id %d",
+            unit_id,
+            exc_info=True,
+        )
+    return None
+
 
 async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) -> bool:
     """Set up Huawei Solar from a config entry."""
@@ -129,7 +161,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
 
         for extra_unit_id in entry.data[CONF_SLAVE_IDS][1:]:
             sub_device = await create_sub_device_instance(primary_device, extra_unit_id)
-            sub_device_data = await _setup_device_data(hass, entry, sub_device)
+
+            # When connected through a SmartLogger, read the custom device
+            # name from register 65524 at the sub-device's unit_id
+            custom_name: str | None = None
+            if isinstance(primary_device, SmartLoggerDevice):
+                custom_name = await _read_smartlogger_device_name(
+                    primary_device, extra_unit_id
+                )
+
+            sub_device_data = await _setup_device_data(
+                hass, entry, sub_device, custom_name=custom_name
+            )
 
             device_datas.append(sub_device_data)
 
@@ -188,8 +231,11 @@ async def _setup_inverter_device_data(
     entry: ConfigEntry,
     device: SUN2000Device,
     connecting_inverter_device_id: tuple[str, str] | None,
+    custom_name: str | None = None,
 ) -> HuaweiSolarInverterData:
     device_registry = dr.async_get(hass)
+
+    device_name = custom_name or device.model_name
 
     inverter_device_info = DeviceInfo(
         identifiers={(DOMAIN, device.serial_number)},
@@ -206,7 +252,7 @@ async def _setup_inverter_device_data(
         config_entry_id=entry.entry_id,
         identifiers={(DOMAIN, device.serial_number)},
         manufacturer="Huawei",
-        name=device.model_name,
+        name=device_name,
         model=device.model_name,
         sw_version=device.software_version,
     )
@@ -370,14 +416,18 @@ async def _setup_device_data(
     hass: HomeAssistant,
     entry: ConfigEntry,
     device: HuaweiSolarDevice,
+    custom_name: str | None = None,
 ) -> HuaweiSolarDeviceData:
     """Create the correct DeviceInfo-objects, which can be used to correctly assign to entities in this integration."""
     if isinstance(device, SUN2000Device):
-        return await _setup_inverter_device_data(hass, entry, device, None)
+        return await _setup_inverter_device_data(
+            hass, entry, device, None, custom_name=custom_name
+        )
 
     device_registry = dr.async_get(hass)
 
     sw_version = getattr(device, "software_version", None)
+    device_name = custom_name or device.model_name
 
     device_info = DeviceInfo(
         identifiers={(DOMAIN, device.serial_number)},
@@ -393,7 +443,7 @@ async def _setup_device_data(
         config_entry_id=entry.entry_id,
         identifiers={(DOMAIN, device.serial_number)},
         manufacturer="Huawei",
-        name=device.model_name,
+        name=device_name,
         model=device.model_name,
         sw_version=sw_version,
     )
