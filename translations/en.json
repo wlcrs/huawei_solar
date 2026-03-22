@@ -71,6 +71,9 @@
         },
         "power_meter": {
             "name": "Power meter"
+        },
+        "smartlogger": {
+            "name": "SmartLogger"
         }
     },
     "entity": {
