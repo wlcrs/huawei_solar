@@ -800,6 +800,9 @@
             "smartlogger_active_power": {
                 "name": "Active power"
             },
+            "smartlogger_alarms": {
+                "name": "Alarms"
+            },
             "smartlogger_energy_charged_today": {
                 "name": "Energy charged today"
             },

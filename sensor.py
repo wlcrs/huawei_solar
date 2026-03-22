@@ -1941,12 +1941,16 @@ def create_smartlogger_entities(
     """Create SmartLogger sensor entities."""
     assert isinstance(ucs.device, SmartLoggerDevice)
 
-    return [
+    entities: list[HuaweiSolarSensorEntity] = [
         HuaweiSolarSensorEntity(
             ucs.update_coordinator, entity_description, ucs.device_info
         )
         for entity_description in SMARTLOGGER_SENSOR_DESCRIPTIONS
     ]
+    entities.append(
+        SmartLoggerAlarmSensorEntity(ucs.update_coordinator, ucs.device_info)
+    )
+    return entities
 
 
 async def async_setup_entry(
@@ -2059,6 +2063,77 @@ class HuaweiSolarAlarmSensorEntity(HuaweiSolarSensorEntity):
                 if alarm_result:
                     available = True
                     alarms.extend(alarm_result.value)
+            if len(alarms) == 0:
+                self._attr_native_value = "None"
+            else:
+                self._attr_native_value = ", ".join(
+                    [f"[{alarm.level}] {alarm.id}: {alarm.name}" for alarm in alarms]
+                )
+        else:
+            self._attr_native_value = None
+
+        self._attr_available = available
+        self.async_write_ha_state()
+
+
+class SmartLoggerAlarmSensorEntity(HuaweiSolarSensorEntity):
+    """SmartLogger Sensor for Alarm values.
+
+    These are spread over six registers that are received by the DataUpdateCoordinator.
+    """
+
+    ALARM_REGISTERS: list[rn.RegisterName] = [
+        rn.SMARTLOGGER_ALARM_1,
+        rn.SMARTLOGGER_ALARM_2,
+        rn.SMARTLOGGER_ALARM_3,
+        rn.SMARTLOGGER_ALARM_4,
+        rn.SMARTLOGGER_ALARM_5,
+        rn.SMARTLOGGER_ALARM_6,
+    ]
+
+    DESCRIPTION = HuaweiSolarSensorEntityDescription(
+        key="SMARTLOGGER_ALARMS",
+        translation_key="smartlogger_alarms",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    )
+
+    def __init__(
+        self,
+        coordinator: HuaweiSolarUpdateCoordinator,
+        device_info: DeviceInfo,
+    ):
+        """SmartLogger Alarm Sensor Entity constructor."""
+        super().__init__(
+            coordinator,
+            SmartLoggerAlarmSensorEntity.DESCRIPTION,
+            device_info,
+            {"register_names": SmartLoggerAlarmSensorEntity.ALARM_REGISTERS},
+        )
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        available = False
+
+        if self.coordinator.data:
+            alarms: list[rv.Alarm] = []
+            for alarm_register in SmartLoggerAlarmSensorEntity.ALARM_REGISTERS:
+                alarm_result = self.coordinator.data.get(alarm_register)
+                if alarm_result:
+                    available = True
+                    value = alarm_result.value
+                    if value is not None and value != 0:
+                        alarm = rv.SMARTLOGGER_ALARM_CODES_1.get(value)
+                        if alarm:
+                            alarms.append(alarm)
+                        else:
+                            alarms.append(
+                                rv.Alarm(
+                                    name=f"Unknown alarm",
+                                    id=value,
+                                    level="Unknown",
+                                )
+                            )
             if len(alarms) == 0:
                 self._attr_native_value = "None"
             else:
