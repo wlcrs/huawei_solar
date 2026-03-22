@@ -2205,19 +2205,7 @@ class SmartLoggerAlarmSensorEntity(HuaweiSolarSensorEntity):
                 alarm_result = self.coordinator.data.get(alarm_register)
                 if alarm_result:
                     available = True
-                    value = alarm_result.value
-                    if value is not None and value != 0:
-                        alarm = rv.SMARTLOGGER_ALARM_CODES_1.get(value)
-                        if alarm:
-                            alarms.append(alarm)
-                        else:
-                            alarms.append(
-                                rv.Alarm(
-                                    name=f"Unknown alarm",
-                                    id=value,
-                                    level="Unknown",
-                                )
-                            )
+                    alarms.extend(alarm_result.value)
             if len(alarms) == 0:
                 self._attr_native_value = "None"
             else:
