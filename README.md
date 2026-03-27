@@ -172,7 +172,7 @@ The integration will poll the inverter for new values every 30 seconds. If you w
 
 **Q**: How do I change the connection parameters (IP, port, USB device, installer password) of this integration?
 
-**A**: Changing connection parameters is not supported. You need to delete the integration and install it again. You typically do not lose any history attached to your entities in Home Assistant.
+**A**: 'Reconfigure' the integration. This action is available from the dropdown menu on the [integration settings page](https://my.home-assistant.io/redirect/integration/?domain=huawei_solar).
 
 ---
 <a name="daily-yield"></a>
