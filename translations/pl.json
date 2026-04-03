@@ -1000,6 +1000,9 @@
             },
             "yearly_yield_energy": {
                 "name": "Roczny uzysk"
+            },
+            "storage_forcible_charge_discharge_write": {
+                "name": "Forcible charge/discharge"
             }
         },
         "switch": {
