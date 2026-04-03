@@ -428,8 +428,8 @@
             "pack_1_max_temperature": {
                 "name": "Макс. температура на модул 1"
             },
-            "pack_1_min_temperature": {
-                "name": "Мин. температура на модул 1"
+            "power_factor": {
+                "name": "Фактор на мощността"
             },
             "pack_1_serial_number": {
                 "name": "Сериен номер на модул 1"
@@ -986,8 +986,20 @@
             "total_positive_active_energy_built_in_energy": {
                 "name": "Total positive active energy"
             },
-            "total_positive_active_energy_external_energy": {
-                "name": "Total positive active energy"
+            "supply_from_grid_today": {
+                "name": "Енергия получена от мрежата днес"
+            },
+            "total_supply_from_grid": {
+                "name": "Общо получена енергия от мрежата"
+            },
+            "inverter_energy_yield_today": {
+                "name": "Производство от инвертора днес"
+            },
+            "inverter_total_energy_yield": {
+                "name": "Общо производство от инвертора"
+            },
+            "pv_yield_today": {
+                "name": "PV производство днес"
             },
             "total_pv_energy_yield": {
                 "name": "Общо PV производство"
@@ -1018,201 +1030,209 @@
         "config_entry_not_found": {
             "message": "Entry not found for device: {device_id}"
         },
-        "entry_not_loaded": {
-            "message": "Entry not loaded: {entry}"
-        },
-        "ha_device_not_found": {
-            "message": "Could not retrieve Huawei Solar device associated with ID {device_id}"
-        },
-        "invalid_device_id": {
-            "message": "Invalid device ID specified: {device_id}"
-        },
-        "wrong_device_type": {
-            "message": "Got wrong Huawei Solar device type for ID {device_id}: expected {expected_type}, got {actual_type}"
-        }
-    },
-    "services": {
-        "forcible_charge": {
-            "description": "Forcible Charge of the battery for a certain time",
-            "fields": {
-                "device_id": {
-                    "description": "Must be a 'Batteries' device",
-                    "name": "Battery"
+        "services": {
+            "forcible_charge": {
+                "description": "Принудително зареждане на батерията за определен период от време",
+                "fields": {
+                    "device_id": {
+                        "description": "Трябва да е устройство от тип 'Батерия'",
+                        "name": "Батерия"
+                    },
+                    "duration": {
+                        "description": "Продължителност на зареждането",
+                        "name": "Продължителност"
+                    },
+                    "power": {
+                        "description": "Мощност, използвана за зареждането",
+                        "name": "Мощност"
+                    }
                 },
-                "duration": {
-                    "description": "Duration of the charge",
-                    "name": "Duration"
-                },
-                "power": {
-                    "description": "Wattage used for the charge",
-                    "name": "Power"
-                }
-            },
-            "name": "Forcible Charge"
+                "name": "Принудително зареждане"
+            }
         },
         "forcible_charge_soc": {
-            "description": "Forcible Charge of the battery to a certain State of Charge level",
+            "description": "Принудително зареждане на батерията до определено ниво на заряд (SoC)",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
-                    "name": "Battery"
+                    "description": "Трябва да е устройство от тип 'Батерия'",
+                    "name": "Батерия"
                 },
                 "power": {
-                    "description": "Wattage used for the charge",
-                    "name": "Power"
+                    "description": "Мощност, използвана за зареждането",
+                    "name": "Мощност"
                 },
                 "target_soc": {
-                    "description": "State of Charge that must be reached",
-                    "name": "Target SoC"
+                    "description": "Ниво на заряд (SoC), което трябва да бъде достигнато",
+                    "name": "Целеви SoC"
                 }
             },
-            "name": "Forcible Charge to a SoC level"
+            "name": "Принудително зареждане до SoC ниво"
         },
         "forcible_discharge": {
-            "description": "Forcible Discharge of the battery for a certain time",
+            "description": "Принудително разреждане на батерията за определен период от време",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
-                    "name": "Battery"
+                    "description": "Трябва да е устройство от тип 'Батерия'",
+                    "name": "Батерия"
                 },
                 "duration": {
-                    "description": "Duration of the discharge",
-                    "name": "Duration"
+                    "description": "Продължителност на разреждането",
+                    "name": "Продължителност"
                 },
                 "power": {
-                    "description": "Wattage used for the discharge",
-                    "name": "Power"
+                    "description": "Мощност, използвана за разреждането",
+                    "name": "Мощност"
                 }
             },
-            "name": "Forcible Discharge"
+            "name": "Принудително разреждане"
         },
         "forcible_discharge_soc": {
-            "description": "Forcible Discharge of the battery to a certain State of Charge level",
+            "description": "Принудително разреждане на батерията до определено ниво на заряд (SoC)",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
-                    "name": "Battery"
+                    "description": "Трябва да е устройство от тип 'Батерия'",
+                    "name": "Батерия"
                 },
                 "power": {
-                    "description": "Wattage used for the discharge",
-                    "name": "Power"
+                    "description": "Мощност, използвана за разреждането",
+                    "name": "Мощност"
                 },
                 "target_soc": {
-                    "description": "State of Charge that must be reached",
-                    "name": "Target SoC"
+                    "description": "Ниво на заряд (SoC), което трябва да бъде достигнато",
+                    "name": "Целеви SoC"
                 }
             },
-            "name": "Forcible Discharge to a SoC level"
+            "name": "Принудително разреждане до SoC ниво"
         },
         "reset_maximum_feed_grid_power": {
-            "description": "Set Active Power Control to the default Unlimited mode",
+            "description": "Задаване на управление на активната мощност в режим без ограничение (по подразбиране)",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
-                    "name": "Устройство"
+                    "description": "Трябва да е устройство от тип 'Инвертор'",
+                    "name": "Инвертор"
                 }
             },
-            "name": "Set Active Power Control to Maximum Feed Grid Power"
+            "name": "Задаване на максимална мощност към мрежата"
         },
         "set_capacity_control_periods": {
-            "description": "Set Capacity Control Periods",
+            "description": "Задаване на периоди за управление на капацитета",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
-                    "name": "Battery"
+                    "description": "Трябва да е устройство от тип 'Батерия'",
+                    "name": "Батерия"
                 },
                 "periods": {
-                    "description": "One period per line. Format: '[start time]-[end time]/[days effective]/[power]W', with 1=Monday, 7=Sunday. Example: '00:00-23:59/1234567/2500W'.",
-                    "name": "Periods"
+                    "description": "Един период на ред. Формат: '[начален час]-[краен час]/[дни на действие]/[мощност]W', като 1=Понеделник, 7=Неделя. Пример: '00:00-23:59/1234567/2500W'.",
+                    "name": "Периоди"
                 }
             },
-            "name": "Set Capacity Control Periods"
+            "name": "Задаване на периоди за управление на капацитета"
         },
         "set_di_active_power_scheduling": {
-            "description": "Set Active Power Control to 'DI active scheduling'",
+            "description": "Задаване на управление на активната мощност в режим 'DI активно планиране'",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Inverter' device",
-                    "name": "Inverter"
+                    "description": "Трябва да е устройство от тип 'Инвертор'",
+                    "name": "Инвертор"
                 }
             },
-            "name": "Set Active Power Control to 'DI active scheduling'"
+            "name": "Задаване на 'DI активно планиране' за активна мощност"
         },
         "set_fixed_charge_periods": {
-            "description": "Sets Fixed Charge and Discharge Periods",
+            "description": "Задава фиксирани периоди за зареждане и разреждане",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
-                    "name": "Battery"
+                    "description": "Трябва да е устройство от тип 'Батерия'",
+                    "name": "Батерия"
                 },
                 "periods": {
-                    "description": "One period per line. Format: '[start time]-[end time]/[power]W'. Example: '12:00-15:59/-1000W'.",
-                    "name": "Periods"
+                    "description": "Един период на ред. Формат: '[начален час]-[краен час]/[мощност]W'. Пример: '12:00-15:59/-1000W'.",
+                    "name": "Периоди"
                 }
             },
-            "name": "Set Fixed Charge Periods"
+            "name": "Задаване на фиксирани периоди за зареждане"
         },
         "set_maximum_feed_grid_power": {
-            "description": "Sets Active Power Control to 'Power-limited grid connection' with the given wattage",
+            "description": "Задава управление на активната мощност в режим 'Ограничено подаване към мрежата' с дадена мощност",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
-                    "name": "Устройство"
+                    "description": "Трябва да е устройство от тип 'Инвертор'",
+                    "name": "Инвертор"
                 },
                 "power": {
-                    "description": "Maximum Wattage",
-                    "name": "Power"
+                    "description": "Максимална мощност (Watt)",
+                    "name": "Мощност"
                 }
             },
-            "name": "Limit the power fed to the grid"
+            "name": "Ограничаване на подаваната мощност към мрежата"
         },
         "set_maximum_feed_grid_power_percent": {
-            "description": "Sets Active Power Control to 'Power-limited grid connection (%)' with the given percentage",
+            "description": "Задава управление на активната мощност в режим 'Ограничено подаване към мрежата (%)' с даден процент",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
-                    "name": "Устройство"
+                    "description": "Трябва да е устройство от тип 'Инвертор'",
+                    "name": "Инвертор"
                 },
                 "power_percentage": {
-                    "description": "Maximum Percentage",
-                    "name": "Power Percentage"
+                    "description": "Максимален процент",
+                    "name": "Процент на мощността"
                 }
             },
-            "name": "Limit the power fed to the grid to percentage"
+            "name": "Ограничаване на подаваната мощност към мрежата по процент"
         },
         "set_tou_periods": {
-            "description": "Sets Time Of Use Periods",
+            "description": "Задава TOU (време на използване) периоди",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Batteries' device",
-                    "name": "Устройство"
+                    "description": "Трябва да е устройство от тип 'Батерия'",
+                    "name": "Батерия"
                 },
                 "periods": {
-                    "description": "One period per line. For Huawei LUNA2000 batteries: '[start time]-[end time]/[days effective]/[charge]', with 1=Monday, 7=Sunday (example: '12:00-14:00/1234567/-'). For LG RESU batteries: '[start time]-[end time]/[electricity price]' (example: 13:00-14:00/0.50)",
-                    "name": "Periods"
+                    "description": "Един период на ред. За батерии Huawei LUNA2000: '[начален час]-[краен час]/[дни]/[зареждане]', като 1=Понеделник, 7=Неделя (напр. '12:00-14:00/1234567/-'). За LG RESU: '[начален час]-[краен час]/[цена на ел. енергия]' (напр. '13:00-14:00/0.50')",
+                    "name": "Периоди"
                 }
             },
-            "name": "Set TOU Periods"
+            "name": "Задаване на TOU периоди"
         },
         "set_zero_power_grid_connection": {
-            "description": "Set Active Power Control to 'Zero power grid connection'",
+            "description": "Задава управление на активната мощност в режим 'Нулево подаване към мрежата'",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
-                    "name": "Устройство"
+                    "description": "Трябва да е устройство от тип 'Инвертор'",
+                    "name": "Инвертор"
                 }
             },
-            "name": "Set Active Power Control to 'Zero power grid connection'"
+            "name": "Задаване на режим 'Нулево подаване към мрежата'"
         },
         "stop_forcible_charge": {
-            "description": "Cancel the running forcible charge command",
+            "description": "Отмяна на текущата команда за принудително зареждане",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
-                    "name": "Battery"
+                    "description": "Трябва да е устройство от тип 'Батерия'",
+                    "name": "Батерия"
                 }
             },
-            "name": "Stop the forcible charge or discharge"
+            "name": "Спиране на принудителното зареждане или разреждане"
+        },
+        "device": {
+            "emma": {
+                "name": "EMMA"
+            },
+            "inverter": {
+                "name": "Инвертор"
+            },
+            "connected_energy_storage": {
+                "name": "Батерии"
+            },
+            "power_meter": {
+                "name": "Електромер"
+            },
+            "battery_1": {
+                "name": "Батерия 1"
+            },
+            "battery_2": {
+                "name": "Батерия 2"
+            }
         }
     }
 }

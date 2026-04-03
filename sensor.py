@@ -644,9 +644,9 @@ BATTERIES_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = 
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_STATE_OF_CAPACITY,
-        icon="mdi:home-battery",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.BATTERY,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_RUNNING_STATUS,
@@ -1824,16 +1824,32 @@ SDONGLE_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
 
 SMARTLOGGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
-        key=rn.SMARTLOGGER_INPUT_POWER,
+        key=rn.SMARTLOGGER_ACTIVE_PV_POWER,
         native_unit_of_measurement=UnitOfPower.KILO_WATT,
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
-        key=rn.SMARTLOGGER_ACTIVE_POWER,
+        key=rn.SMARTLOGGER_ACTIVE_ESS_POWER,
         native_unit_of_measurement=UnitOfPower.KILO_WATT,
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_RATED_PV_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_RATED_ESS_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.SMARTLOGGER_POWER_SUPPLY_FROM_GRID_TODAY,
@@ -1893,6 +1909,28 @@ SMARTLOGGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] 
         entity_registry_enabled_default=False,
     ),
     HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_INPUT_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_ACTIVE_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_POWER_FACTOR,
+        device_class=SensorDeviceClass.POWER_FACTOR,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_ARRAY_IN_OPERATION,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
         key=rn.SMARTLOGGER_TOTAL_ENERGY_YIELD,
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
@@ -1903,6 +1941,52 @@ SMARTLOGGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] 
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_PLANT_STATUS,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_PHASE_A_CURRENT_OF_GRID,
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        device_class=SensorDeviceClass.CURRENT,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_PHASE_B_CURRENT_OF_GRID,
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        device_class=SensorDeviceClass.CURRENT,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_PHASE_C_CURRENT_OF_GRID,
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        device_class=SensorDeviceClass.CURRENT,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_A_B_LINE_VOLTAGE_OF_GRID,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_B_C_LINE_VOLTAGE_OF_GRID,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_C_A_LINE_VOLTAGE_OF_GRID,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
     ),
 )
 
@@ -1941,12 +2025,16 @@ def create_smartlogger_entities(
     """Create SmartLogger sensor entities."""
     assert isinstance(ucs.device, SmartLoggerDevice)
 
-    return [
+    entities: list[HuaweiSolarSensorEntity] = [
         HuaweiSolarSensorEntity(
             ucs.update_coordinator, entity_description, ucs.device_info
         )
         for entity_description in SMARTLOGGER_SENSOR_DESCRIPTIONS
     ]
+    entities.append(
+        SmartLoggerAlarmSensorEntity(ucs.update_coordinator, ucs.device_info)
+    )
+    return entities
 
 
 async def async_setup_entry(
@@ -2055,6 +2143,65 @@ class HuaweiSolarAlarmSensorEntity(HuaweiSolarSensorEntity):
         if self.coordinator.data:
             alarms: list[rv.Alarm] = []
             for alarm_register in HuaweiSolarAlarmSensorEntity.ALARM_REGISTERS:
+                alarm_result = self.coordinator.data.get(alarm_register)
+                if alarm_result:
+                    available = True
+                    alarms.extend(alarm_result.value)
+            if len(alarms) == 0:
+                self._attr_native_value = "None"
+            else:
+                self._attr_native_value = ", ".join(
+                    [f"[{alarm.level}] {alarm.id}: {alarm.name}" for alarm in alarms]
+                )
+        else:
+            self._attr_native_value = None
+
+        self._attr_available = available
+        self.async_write_ha_state()
+
+
+class SmartLoggerAlarmSensorEntity(HuaweiSolarSensorEntity):
+    """SmartLogger Sensor for Alarm values.
+
+    These are spread over six registers that are received by the DataUpdateCoordinator.
+    """
+
+    ALARM_REGISTERS: list[rn.RegisterName] = [
+        rn.SMARTLOGGER_ALARM_1,
+        rn.SMARTLOGGER_ALARM_2,
+        rn.SMARTLOGGER_ALARM_3,
+        rn.SMARTLOGGER_ALARM_4,
+        rn.SMARTLOGGER_ALARM_5,
+        rn.SMARTLOGGER_ALARM_6,
+    ]
+
+    DESCRIPTION = HuaweiSolarSensorEntityDescription(
+        key="SMARTLOGGER_ALARMS",
+        translation_key="smartlogger_alarms",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    )
+
+    def __init__(
+        self,
+        coordinator: HuaweiSolarUpdateCoordinator,
+        device_info: DeviceInfo,
+    ):
+        """SmartLogger Alarm Sensor Entity constructor."""
+        super().__init__(
+            coordinator,
+            SmartLoggerAlarmSensorEntity.DESCRIPTION,
+            device_info,
+            {"register_names": SmartLoggerAlarmSensorEntity.ALARM_REGISTERS},
+        )
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        available = False
+
+        if self.coordinator.data:
+            alarms: list[rv.Alarm] = []
+            for alarm_register in SmartLoggerAlarmSensorEntity.ALARM_REGISTERS:
                 alarm_result = self.coordinator.data.get(alarm_register)
                 if alarm_result:
                     available = True

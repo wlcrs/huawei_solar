@@ -170,7 +170,8 @@ def _get_device_of_type_data[T](
 def get_emma_device(call: ServiceCall) -> HuaweiSolarDeviceData:
     """Return the HuaweiEMMABridge associated with the emma device_id in the service call."""
     return _get_device_of_type_data(call, EMMADevice)
-
+    
+EMMA_DEVICE_SCHEMA = vol.Schema({DATA_DEVICE_ID: vol.All(cv.string, str)})
 
 EMMA_DEVICE_SCHEMA = vol.Schema({DATA_DEVICE_ID: vol.All(cv.string, str)})
 
@@ -236,7 +237,7 @@ DURATION_SCHEMA = FORCIBLE_CHARGE_BASE_SCHEMA.extend(
 SOC_SCHEMA = FORCIBLE_CHARGE_BASE_SCHEMA.extend(
     {
         vol.Required(DATA_TARGET_SOC): vol.All(
-            vol.Coerce(float), vol.Range(min=12, max=100)
+            vol.Coerce(float), vol.Range(min=0, max=100)
         )
     }
 )
