@@ -71,6 +71,9 @@
         },
         "power_meter": {
             "name": "Stromzähler"
+        },
+        "smartlogger": {
+            "name": "SmartLogger"
         }
     },
     "entity": {
@@ -794,8 +797,29 @@
             "single_phase_meter_voltage": {
                 "name": "Spannung"
             },
+            "smartlogger_a_b_line_voltage_of_grid": {
+                "name": "Grid A-B line voltage"
+            },
+            "smartlogger_active_ess_power": {
+                "name": "Active ESS power"
+            },
             "smartlogger_active_power": {
                 "name": "Wirkleistung"
+            },
+            "smartlogger_active_pv_power": {
+                "name": "Active PV power"
+            },
+            "smartlogger_alarms": {
+                "name": "Alarme"
+            },
+            "smartlogger_array_in_operation": {
+                "name": "Array in operation"
+            },
+            "smartlogger_b_c_line_voltage_of_grid": {
+                "name": "Grid B-C line voltage"
+            },
+            "smartlogger_c_a_line_voltage_of_grid": {
+                "name": "Grid C-A line voltage"
             },
             "smartlogger_energy_charged_today": {
                 "name": "Heute geladene Energie"
@@ -806,8 +830,29 @@
             "smartlogger_input_power": {
                 "name": "Eingangsleistung"
             },
+            "smartlogger_phase_a_current_of_grid": {
+                "name": "Grid phase A current"
+            },
+            "smartlogger_phase_b_current_of_grid": {
+                "name": "Grid phase B current"
+            },
+            "smartlogger_phase_c_current_of_grid": {
+                "name": "Grid phase C current"
+            },
+            "smartlogger_plant_status": {
+                "name": "Plant status"
+            },
+            "smartlogger_power_factor": {
+                "name": "Leistungsfaktor"
+            },
             "smartlogger_power_supply_from_grid_today": {
                 "name": "Netzbezug heute"
+            },
+            "smartlogger_rated_ess_power": {
+                "name": "Rated ESS power"
+            },
+            "smartlogger_rated_pv_power": {
+                "name": "Rated PV power"
             },
             "smartlogger_soc": {
                 "name": "Ladestatus"
