@@ -923,6 +923,9 @@
             "storage_current_day_discharge_capacity": {
                 "name": "Rozładowanie dzienne"
             },
+            "storage_forcible_charge_discharge_write": {
+                "name": "Forcible charge/discharge"
+            },
             "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
                 "name": "TOU charging and discharging periods"
             },
@@ -1000,9 +1003,6 @@
             },
             "yearly_yield_energy": {
                 "name": "Roczny uzysk"
-            },
-            "storage_forcible_charge_discharge_write": {
-                "name": "Forcible charge/discharge"
             }
         },
         "switch": {
@@ -1057,7 +1057,7 @@
             "description": "Wymuszenie ładowania akumulatorów do określonego poziomu naładowania (SOC)",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Akumulator'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Akumulator"
                 },
                 "power": {
@@ -1075,7 +1075,7 @@
             "description": "Wymuszenie rozładowania akumulatorów przez określony czas",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Akumulator'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Akumulator"
                 },
                 "duration": {
@@ -1093,7 +1093,7 @@
             "description": "Wymuszenie rozładowania akumulatoró do określonego poziomu naładowania (SOC)",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Akumulator'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Akumulator"
                 },
                 "power": {
@@ -1121,7 +1121,7 @@
             "description": "Ustawia okresy sterowania pojemnością",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Akumulator'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Akumulator"
                 },
                 "periods": {
@@ -1145,7 +1145,7 @@
             "description": "Ustawia stałe okresy ładowania i rozładowania",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Akumulator'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Akumulator"
                 },
                 "periods": {
@@ -1159,7 +1159,7 @@
             "description": "Ustawia Aktywne Sterowanie Mocą na 'Ograniczone mocą połączenie z siecią' z określoną mocą",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Inwerter'",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
                     "name": "Urządzenie"
                 },
                 "power": {
@@ -1173,7 +1173,7 @@
             "description": "Ustawia Aktywne Sterowanie Mocą na 'Ograniczone mocą połączenie z siecię (%)' z określoną wartością procentową",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Inwerter'",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
                     "name": "Urządzenie"
                 },
                 "power_percentage": {
@@ -1201,7 +1201,7 @@
             "description": "Ustawia Aktywne Sterowanie Mocą na 'Połączenie z siecią bez transferu energii'",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Inwerter'",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
                     "name": "Urządzenie"
                 }
             },
@@ -1211,7 +1211,7 @@
             "description": "Anuluje komendę wymuszenia ładowania",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Akumulator'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Akumulator"
                 }
             },

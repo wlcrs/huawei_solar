@@ -923,6 +923,9 @@
             "storage_current_day_discharge_capacity": {
                 "name": "Day discharge"
             },
+            "storage_forcible_charge_discharge_write": {
+                "name": "Forcible charge/discharge"
+            },
             "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
                 "name": "TOU charging and discharging periods"
             },
@@ -1000,9 +1003,6 @@
             },
             "yearly_yield_energy": {
                 "name": "Yearly yield"
-            },
-            "storage_forcible_charge_discharge_write": {
-                "name": "Forcible charge/discharge"
             }
         },
         "switch": {

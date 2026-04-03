@@ -923,6 +923,9 @@
             "storage_current_day_discharge_capacity": {
                 "name": "Descarga diaria"
             },
+            "storage_forcible_charge_discharge_write": {
+                "name": "Forcible charge/discharge"
+            },
             "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
                 "name": "Períodos de carga y descarga de TOU"
             },
@@ -1000,9 +1003,6 @@
             },
             "yearly_yield_energy": {
                 "name": "Yearly yield"
-            },
-            "storage_forcible_charge_discharge_write": {
-                "name": "Forcible charge/discharge"
             }
         },
         "switch": {
@@ -1057,7 +1057,7 @@
             "description": "Carga forzada de la batería hasta cierto nivel de SoC",
             "fields": {
                 "device_id": {
-                    "description": "Debe ser un dispositivo 'Batería'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batería"
                 },
                 "power": {
@@ -1075,7 +1075,7 @@
             "description": "Descarga forzada de la batería durante un cierto tiempo",
             "fields": {
                 "device_id": {
-                    "description": "Debe ser un dispositivo 'Batería'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batería"
                 },
                 "duration": {
@@ -1093,7 +1093,7 @@
             "description": "Descarga forzada de la batería hasta cierto nivel de SoC",
             "fields": {
                 "device_id": {
-                    "description": "Debe ser un dispositivo 'Batería'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batería"
                 },
                 "power": {
@@ -1121,7 +1121,7 @@
             "description": "Establece los períodos de control de capacidad",
             "fields": {
                 "device_id": {
-                    "description": "Debe ser un dispositivo 'Batería'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batería"
                 },
                 "periods": {
@@ -1145,7 +1145,7 @@
             "description": "Establece los períodos de carga y descarga fija",
             "fields": {
                 "device_id": {
-                    "description": "Debe ser un dispositivo 'Batería'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batería"
                 },
                 "periods": {
@@ -1159,7 +1159,7 @@
             "description": "Establece el Control de Potencia Activa a 'Conexión a la red Limitada por Potencia' a la potencia en vatios especificada",
             "fields": {
                 "device_id": {
-                    "description": "Debe ser un dispositivo 'Inversor'",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
                     "name": "Dispositivo"
                 },
                 "power": {
@@ -1173,7 +1173,7 @@
             "description": "Establece el Control de Potencia Activa a 'Conexión a la red limitada por Potencia (%)' al porcentaje especificado",
             "fields": {
                 "device_id": {
-                    "description": "Debe ser un dispositivo 'Inversor'",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
                     "name": "Dispositivo"
                 },
                 "power_percentage": {
@@ -1201,7 +1201,7 @@
             "description": "Establece el Control de Potencia Activa a 'Conexión a la red con inyección cero'",
             "fields": {
                 "device_id": {
-                    "description": "Debe ser un dispositivo 'Inversor'",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
                     "name": "Dispositivo"
                 }
             },
@@ -1211,7 +1211,7 @@
             "description": "Cancelar el comando de carga forzada en ejecución",
             "fields": {
                 "device_id": {
-                    "description": "Debe ser un dispositivo 'Batería'",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batería"
                 }
             },
