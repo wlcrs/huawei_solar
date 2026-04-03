@@ -1,7 +1,7 @@
 {
     "config": {
         "abort": {
-            "already_configured": "Device is already configured",
+            "already_configured": "Dispositiu ja configurat",
             "reauth_successful": "Re-authentication was successful",
             "reconfigure_successful": "Re-configuration was successful"
         },
@@ -26,7 +26,7 @@
                     "enable_parameter_configuration": "Avançat: elevar permisos",
                     "host": "Host",
                     "port": "Port",
-                    "slave_ids": "Slave IDs: AUTO for auto-discovery, otherwise a comma separated list"
+                    "slave_ids": "IDs d'esclaus (separats per comes)"
                 }
             },
             "setup_serial": {
@@ -71,6 +71,9 @@
         },
         "power_meter": {
             "name": "Power meter"
+        },
+        "smartlogger": {
+            "name": "SmartLogger"
         }
     },
     "entity": {
@@ -171,7 +174,7 @@
         },
         "sensor": {
             "accumulated_energy_yield": {
-                "name": "Total energy"
+                "name": "Rendiment acumulat d'energia"
             },
             "accumulated_yield_energy": {
                 "name": "Rendiment total"
@@ -411,7 +414,7 @@
                 "name": "Tensió de sortida"
             },
             "p_max": {
-                "name": "Max active power"
+                "name": "Potència activa màxima"
             },
             "pack_1_charge_discharge_power": {
                 "name": "Pack 1 charge discharge power"
@@ -762,7 +765,7 @@
                 "name": "Rated ESS capacity"
             },
             "rated_power": {
-                "name": "Rated power"
+                "name": "Potència nominal"
             },
             "reactive_power": {
                 "name": "Potència reactiva"
@@ -794,8 +797,29 @@
             "single_phase_meter_voltage": {
                 "name": "Tensió"
             },
+            "smartlogger_a_b_line_voltage_of_grid": {
+                "name": "Grid A-B line voltage"
+            },
+            "smartlogger_active_ess_power": {
+                "name": "Active ESS power"
+            },
             "smartlogger_active_power": {
                 "name": "Potència activa"
+            },
+            "smartlogger_active_pv_power": {
+                "name": "Active PV power"
+            },
+            "smartlogger_alarms": {
+                "name": "Alarmes"
+            },
+            "smartlogger_array_in_operation": {
+                "name": "Array in operation"
+            },
+            "smartlogger_b_c_line_voltage_of_grid": {
+                "name": "Grid B-C line voltage"
+            },
+            "smartlogger_c_a_line_voltage_of_grid": {
+                "name": "Grid C-A line voltage"
             },
             "smartlogger_energy_charged_today": {
                 "name": "Energy charged today"
@@ -806,8 +830,29 @@
             "smartlogger_input_power": {
                 "name": "Potència d'entrada"
             },
+            "smartlogger_phase_a_current_of_grid": {
+                "name": "Grid phase A current"
+            },
+            "smartlogger_phase_b_current_of_grid": {
+                "name": "Grid phase B current"
+            },
+            "smartlogger_phase_c_current_of_grid": {
+                "name": "Grid phase C current"
+            },
+            "smartlogger_plant_status": {
+                "name": "Plant status"
+            },
+            "smartlogger_power_factor": {
+                "name": "Factor de potència"
+            },
             "smartlogger_power_supply_from_grid_today": {
                 "name": "Power supply from grid today"
+            },
+            "smartlogger_rated_ess_power": {
+                "name": "Rated ESS power"
+            },
+            "smartlogger_rated_pv_power": {
+                "name": "Rated PV power"
             },
             "smartlogger_soc": {
                 "name": "State of charge"
@@ -885,13 +930,13 @@
                 "name": "TOU price periods"
             },
             "storage_maximum_charge_power": {
-                "name": "Maximum charge power"
+                "name": "Potència de càrrega màxima"
             },
             "storage_maximum_discharge_power": {
-                "name": "Maximum discharge power"
+                "name": "Potència de descàrrega màxima"
             },
             "storage_rated_capacity": {
-                "name": "Rated Capacity"
+                "name": "Capacitat nominal"
             },
             "storage_running_status": {
                 "name": "Estat"
@@ -991,7 +1036,7 @@
             "description": "Càrrega forçada de la bateria durant un cert temps",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Ha de ser un dispositiu 'Bateria'",
                     "name": "Bateria"
                 },
                 "duration": {
@@ -1009,7 +1054,7 @@
             "description": "Càrrega forçada de la bateria fins a un cert nivell de SoC",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Ha de ser un dispositiu 'Bateria'",
                     "name": "Bateria"
                 },
                 "power": {
@@ -1027,7 +1072,7 @@
             "description": "Descàrrega forçada de la bateria durant un cert temps",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Ha de ser un dispositiu 'Bateria'",
                     "name": "Bateria"
                 },
                 "duration": {
@@ -1045,7 +1090,7 @@
             "description": "Descàrrega forçada de la bateria fins a un cert nivell de SoC",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Ha de ser un dispositiu 'Bateria'",
                     "name": "Bateria"
                 },
                 "power": {
@@ -1063,7 +1108,7 @@
             "description": "Restableix el control de potència activa al mode il·limitat per defecte",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "Ha de ser un dispositiu 'Inversor'",
                     "name": "Dispositiu"
                 }
             },
@@ -1073,7 +1118,7 @@
             "description": "Estableix els períodes de control de capacitat",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Ha de ser un dispositiu 'Bateria'",
                     "name": "Bateria"
                 },
                 "periods": {
@@ -1087,7 +1132,7 @@
             "description": "Estableix el control de potència activa a 'Programació Activa DI'",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Inverter' device",
+                    "description": "Ha de ser un dispositiu 'Inversor'",
                     "name": "Inverter"
                 }
             },
@@ -1097,7 +1142,7 @@
             "description": "Estableix els períodes de càrrega i descàrrega fixa",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Ha de ser un dispositiu 'Bateria'",
                     "name": "Bateria"
                 },
                 "periods": {
@@ -1111,7 +1156,7 @@
             "description": "Estableix el Control de Potència Activa a 'Connexió a la xarxa Limitada per Potència' a la potència en watts especificada",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "Ha de ser un dispositiu 'Inversor'",
                     "name": "Dispositiu"
                 },
                 "power": {
@@ -1125,7 +1170,7 @@
             "description": "Estableix el Control de Potència Activa a 'Connexió a la xarxa limitada per Potència (%)' al percentatge especificat",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "Ha de ser un dispositiu 'Inversor'",
                     "name": "Dispositiu"
                 },
                 "power_percentage": {
@@ -1139,7 +1184,7 @@
             "description": "Estableix els períodes d'ús",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Batteries' device",
+                    "description": "Ha de ser un dispositiu 'Bateria'",
                     "name": "Dispositiu"
                 },
                 "periods": {
@@ -1153,7 +1198,7 @@
             "description": "Estableix el Control de Potència Activa a 'Connexió a la xarxa amb injecció zero'",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "Ha de ser un dispositiu 'Inversor'",
                     "name": "Dispositiu"
                 }
             },
@@ -1163,7 +1208,7 @@
             "description": "Cancelar el comandament de càrrega forçada en execució",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Ha de ser un dispositiu 'Bateria'",
                     "name": "Bateria"
                 }
             },
