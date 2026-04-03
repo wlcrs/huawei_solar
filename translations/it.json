@@ -923,6 +923,9 @@
             "storage_current_day_discharge_capacity": {
                 "name": "Scarica giornaliera"
             },
+            "storage_forcible_charge_discharge_write": {
+                "name": "Forcible charge/discharge"
+            },
             "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
                 "name": "Periodi di carica e di scarico TOU"
             },
@@ -1000,9 +1003,6 @@
             },
             "yearly_yield_energy": {
                 "name": "Rendimento annuale"
-            },
-            "storage_forcible_charge_discharge_write": {
-                "name": "Forcible charge/discharge"
             }
         },
         "switch": {
@@ -1159,7 +1159,7 @@
             "description": "Impostare Controllo Potenza Attiva su 'Limitazione-Potenza connessione alla rete' ad una determinata potenza",
             "fields": {
                 "device_id": {
-                    "description": "Deve essere un dispositivo 'Inverter'",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
                     "name": "Dispositivo"
                 },
                 "power": {
@@ -1173,7 +1173,7 @@
             "description": "Impostare Controllo Potenza Attiva su 'Limitazione-Potenza connessione alla rete (%)' ad una determinata percentuale",
             "fields": {
                 "device_id": {
-                    "description": "Deve essere un dispositivo 'Inverter'",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
                     "name": "Dispositivo"
                 },
                 "power_percentage": {
@@ -1201,7 +1201,7 @@
             "description": "Impostare Controllo Potenza Attivo su 'Zero potenza connessione alla rete'",
             "fields": {
                 "device_id": {
-                    "description": "Deve essere un dispositivo 'Inverter'",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
                     "name": "Dispositivo"
                 }
             },
