@@ -1054,7 +1054,7 @@
             "description": "Carga forzada de la batería hasta cierto nivel de SoC",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Debe ser un dispositivo 'Batería'",
                     "name": "Batería"
                 },
                 "power": {
@@ -1072,7 +1072,7 @@
             "description": "Descarga forzada de la batería durante un cierto tiempo",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Debe ser un dispositivo 'Batería'",
                     "name": "Batería"
                 },
                 "duration": {
@@ -1090,7 +1090,7 @@
             "description": "Descarga forzada de la batería hasta cierto nivel de SoC",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Debe ser un dispositivo 'Batería'",
                     "name": "Batería"
                 },
                 "power": {
@@ -1118,7 +1118,7 @@
             "description": "Establece los períodos de control de capacidad",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Debe ser un dispositivo 'Batería'",
                     "name": "Batería"
                 },
                 "periods": {
@@ -1142,7 +1142,7 @@
             "description": "Establece los períodos de carga y descarga fija",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Debe ser un dispositivo 'Batería'",
                     "name": "Batería"
                 },
                 "periods": {
@@ -1156,7 +1156,7 @@
             "description": "Establece el Control de Potencia Activa a 'Conexión a la red Limitada por Potencia' a la potencia en vatios especificada",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "Debe ser un dispositivo 'Inversor'",
                     "name": "Dispositivo"
                 },
                 "power": {
@@ -1170,7 +1170,7 @@
             "description": "Establece el Control de Potencia Activa a 'Conexión a la red limitada por Potencia (%)' al porcentaje especificado",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "Debe ser un dispositivo 'Inversor'",
                     "name": "Dispositivo"
                 },
                 "power_percentage": {
@@ -1198,7 +1198,7 @@
             "description": "Establece el Control de Potencia Activa a 'Conexión a la red con inyección cero'",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "Debe ser un dispositivo 'Inversor'",
                     "name": "Dispositivo"
                 }
             },
@@ -1208,7 +1208,7 @@
             "description": "Cancelar el comando de carga forzada en ejecución",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Debe ser un dispositivo 'Batería'",
                     "name": "Batería"
                 }
             },

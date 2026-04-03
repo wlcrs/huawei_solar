@@ -1054,7 +1054,7 @@
             "description": "بیٹری کو ایک خاص حالت میں چارج کی سطح تک زبردستی چارج کرنا",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
                     "name": "بیٹری"
                 },
                 "power": {
@@ -1072,7 +1072,7 @@
             "description": "ایک خاص وقت کے لیے بیٹری کا زبردستی خارج ہونا",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
                     "name": "بیٹری"
                 },
                 "duration": {
@@ -1090,7 +1090,7 @@
             "description": "چارج کی ایک خاص حالت پر بیٹری کا زبردستی خارج ہونا",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
                     "name": "بیٹری"
                 },
                 "power": {
@@ -1118,7 +1118,7 @@
             "description": "صلاحیت کنٹرول کی مدت مقرر کریں",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
                     "name": "بیٹری"
                 },
                 "periods": {
@@ -1142,7 +1142,7 @@
             "description": "فکسڈ چارج اور ڈسچارج کی مدت مقرر کرتا ہے۔",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
                     "name": "بیٹری"
                 },
                 "periods": {
@@ -1156,7 +1156,7 @@
             "description": "دی گئی واٹج کے ساتھ ایکٹو پاور کنٹرول کو 'پاور لمیٹڈ گرڈ کنکشن' پر سیٹ کرتا ہے۔",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
                     "name": "آلہ"
                 },
                 "power": {
@@ -1170,7 +1170,7 @@
             "description": "ایکٹو پاور کنٹرول کو دی گئی فیصد کے ساتھ 'پاور لمیٹڈ گرڈ کنکشن (%)' پر سیٹ کرتا ہے۔",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
                     "name": "آلہ"
                 },
                 "power_percentage": {
@@ -1198,7 +1198,7 @@
             "description": "ایکٹو پاور کنٹرول کو 'زیرو پاور گرڈ کنکشن' پر سیٹ کریں۔'",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
                     "name": "آلہ"
                 }
             },
@@ -1208,7 +1208,7 @@
             "description": "چل رہی زبردستی چارج کمانڈ کو منسوخ کریں۔",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
                     "name": "بیٹری"
                 }
             },

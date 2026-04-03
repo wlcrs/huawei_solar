@@ -1156,7 +1156,7 @@
             "description": "Impostare Controllo Potenza Attiva su 'Limitazione-Potenza connessione alla rete' ad una determinata potenza",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "Deve essere un dispositivo 'Inverter'",
                     "name": "Dispositivo"
                 },
                 "power": {
@@ -1170,7 +1170,7 @@
             "description": "Impostare Controllo Potenza Attiva su 'Limitazione-Potenza connessione alla rete (%)' ad una determinata percentuale",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "Deve essere un dispositivo 'Inverter'",
                     "name": "Dispositivo"
                 },
                 "power_percentage": {
@@ -1198,7 +1198,7 @@
             "description": "Impostare Controllo Potenza Attivo su 'Zero potenza connessione alla rete'",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "Deve essere un dispositivo 'Inverter'",
                     "name": "Dispositivo"
                 }
             },

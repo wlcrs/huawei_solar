@@ -1054,7 +1054,7 @@
             "description": "Charge forcée de la batterie jusqu'à un certain niveau de charge",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Doit être un périphérique 'Batterie'",
                     "name": "Batterie"
                 },
                 "power": {
@@ -1072,7 +1072,7 @@
             "description": "Décharge forcée de la batterie pendant un certain temps",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Doit être un périphérique 'Batterie'",
                     "name": "Batterie"
                 },
                 "duration": {
@@ -1090,7 +1090,7 @@
             "description": "Décharge forcée de la batterie jusqu'à un certain niveau de charge",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Doit être un périphérique 'Batterie'",
                     "name": "Batterie"
                 },
                 "power": {
@@ -1118,7 +1118,7 @@
             "description": "Définir les périodes de contrôle de capacité",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Doit être un périphérique 'Batterie'",
                     "name": "Batterie"
                 },
                 "periods": {
@@ -1142,7 +1142,7 @@
             "description": "Définir les périodes de charge et de décharge fixes",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Doit être un périphérique 'Batterie'",
                     "name": "Batterie"
                 },
                 "periods": {
@@ -1156,7 +1156,7 @@
             "description": "Définit le contrôle de puissance active sur 'Connexion au réseau limitée en puissance' avec la puissance donnée",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "Doit être un périphérique 'Onduleur'",
                     "name": "Périphérique"
                 },
                 "power": {
@@ -1170,7 +1170,7 @@
             "description": "Définit le contrôle de puissance active sur 'Connexion au réseau limitée en puissance (%)' avec le pourcentage donné",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "Doit être un périphérique 'Onduleur'",
                     "name": "Périphérique"
                 },
                 "power_percentage": {
@@ -1198,7 +1198,7 @@
             "description": "Définir le contrôle de puissance active sur 'Connexion au réseau à zéro puissance'",
             "fields": {
                 "device_id": {
-                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "description": "Doit être un périphérique 'Onduleur'",
                     "name": "Périphérique"
                 }
             },
@@ -1208,7 +1208,7 @@
             "description": "Annuler la commande de charge forcée en cours",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Doit être un périphérique 'Batterie'",
                     "name": "Batterie"
                 }
             },
