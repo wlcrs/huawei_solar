@@ -923,6 +923,9 @@
             "storage_current_day_discharge_capacity": {
                 "name": "دن کا اخراج"
             },
+            "storage_forcible_charge_discharge_write": {
+                "name": "Forcible charge/discharge"
+            },
             "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
                 "name": "TOU charging and discharging periods"
             },
@@ -1000,9 +1003,6 @@
             },
             "yearly_yield_energy": {
                 "name": "Yearly yield"
-            },
-            "storage_forcible_charge_discharge_write": {
-                "name": "Forcible charge/discharge"
             }
         },
         "switch": {
@@ -1057,7 +1057,7 @@
             "description": "بیٹری کو ایک خاص حالت میں چارج کی سطح تک زبردستی چارج کرنا",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "description": "Must be a 'Batteries' device",
                     "name": "بیٹری"
                 },
                 "power": {
@@ -1075,7 +1075,7 @@
             "description": "ایک خاص وقت کے لیے بیٹری کا زبردستی خارج ہونا",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "description": "Must be a 'Batteries' device",
                     "name": "بیٹری"
                 },
                 "duration": {
@@ -1093,7 +1093,7 @@
             "description": "چارج کی ایک خاص حالت پر بیٹری کا زبردستی خارج ہونا",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "description": "Must be a 'Batteries' device",
                     "name": "بیٹری"
                 },
                 "power": {
@@ -1121,7 +1121,7 @@
             "description": "صلاحیت کنٹرول کی مدت مقرر کریں",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "description": "Must be a 'Batteries' device",
                     "name": "بیٹری"
                 },
                 "periods": {
@@ -1145,7 +1145,7 @@
             "description": "فکسڈ چارج اور ڈسچارج کی مدت مقرر کرتا ہے۔",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "description": "Must be a 'Batteries' device",
                     "name": "بیٹری"
                 },
                 "periods": {
@@ -1159,7 +1159,7 @@
             "description": "دی گئی واٹج کے ساتھ ایکٹو پاور کنٹرول کو 'پاور لمیٹڈ گرڈ کنکشن' پر سیٹ کرتا ہے۔",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
                     "name": "آلہ"
                 },
                 "power": {
@@ -1173,7 +1173,7 @@
             "description": "ایکٹو پاور کنٹرول کو دی گئی فیصد کے ساتھ 'پاور لمیٹڈ گرڈ کنکشن (%)' پر سیٹ کرتا ہے۔",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
                     "name": "آلہ"
                 },
                 "power_percentage": {
@@ -1201,7 +1201,7 @@
             "description": "ایکٹو پاور کنٹرول کو 'زیرو پاور گرڈ کنکشن' پر سیٹ کریں۔'",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
                     "name": "آلہ"
                 }
             },
@@ -1211,7 +1211,7 @@
             "description": "چل رہی زبردستی چارج کمانڈ کو منسوخ کریں۔",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "description": "Must be a 'Batteries' device",
                     "name": "بیٹری"
                 }
             },
