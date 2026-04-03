@@ -2,13 +2,16 @@
     "config": {
         "abort": {
             "already_configured": "Устройството вече е конфигурирано",
-            "reconfigure_successful": "Повторната конфигурация беше успешна",
-            "reauth_successful": "Повторното удостоверяване беше успешно"
+            "reauth_successful": "Повторното удостоверяване беше успешно",
+            "reconfigure_successful": "Повторната конфигурация беше успешна"
         },
         "error": {
             "cannot_connect": "Неуспешно свързване",
             "invalid_auth": "Невалидно удостоверяване",
-            "read_error": "Неуспешно четене от инвертора."
+            "invalid_slave_ids": "Slave IDs must be comma-separated list of ints",
+            "read_error": "Неуспешно четене от инвертора.",
+            "slave_cannot_connect": "Failed to connect to additional slave",
+            "unknown": "Unexpected error"
         },
         "step": {
             "network_login": {
@@ -47,6 +50,32 @@
             }
         }
     },
+    "device": {
+        "battery_1": {
+            "name": "Battery 1"
+        },
+        "battery_2": {
+            "name": "Battery 2"
+        },
+        "charger": {
+            "name": "Charger"
+        },
+        "connected_energy_storage": {
+            "name": "Batteries"
+        },
+        "emma": {
+            "name": "EMMA"
+        },
+        "inverter": {
+            "name": "Inverter"
+        },
+        "power_meter": {
+            "name": "Power meter"
+        },
+        "smartlogger": {
+            "name": "SmartLogger"
+        }
+    },
     "entity": {
         "button": {
             "stop_forcible_charge": {
@@ -54,11 +83,23 @@
             }
         },
         "number": {
+            "active_power_fixed_value_derating": {
+                "name": "Ограничаване на мощността"
+            },
             "active_power_percentage_derating": {
                 "name": "Ограничаване на мощността (в проценти)"
             },
-            "active_power_fixed_value_derating": {
-                "name": "Ограничаване на мощността"
+            "emma_maximum_feed_grid_power_percent": {
+                "name": "Максимална мощност към мрежата (%)"
+            },
+            "emma_maximum_feed_grid_power_watt": {
+                "name": "Максимална мощност към мрежата"
+            },
+            "emma_tou_maximum_power_for_charging_batteries_from_grid": {
+                "name": "Maximum power for charging batteries from grid"
+            },
+            "mppt_scanning_interval": {
+                "name": "Интервал на MPPT сканиране"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "SOC за резервна мощност"
@@ -83,18 +124,27 @@
             },
             "storage_power_of_charge_from_grid": {
                 "name": "Максимална мощност за зареждане от мрежата"
-            },
-            "emma_maximum_feed_grid_power_percent": {
-                "name": "Максимална мощност към мрежата (%)"
-            },
-            "emma_maximum_feed_grid_power_watt": {
-                "name": "Максимална мощност към мрежата"
-            },
-            "mppt_scanning_interval": {
-                "name": "Интервал на MPPT сканиране"
             }
         },
         "select": {
+            "emma_ess_control_mode": {
+                "name": "Режим на управление на ESS",
+                "state": {
+                    "fully_fed_to_grid": "Изцяло подаване към мрежата",
+                    "maximum_self_consumption": "Максимално самопотребление",
+                    "reserved_1": "Резервиран 1",
+                    "reserved_3": "Резервиран 3",
+                    "third_party_dispatch": "Управление от трета страна",
+                    "time_of_use": "По часови тарифи"
+                }
+            },
+            "emma_tou_preferred_use_of_surplus_pv_power": {
+                "name": "Използване на излишната PV енергия  по часови тарифи",
+                "state": {
+                    "charge": "Зареждане",
+                    "fed_to_grid": "Подаване към мрежата"
+                }
+            },
             "storage_capacity_control_mode": {
                 "name": "Режим на управление на капацитета",
                 "state": {
@@ -120,41 +170,20 @@
                     "time_of_use_lg": "По часови тарифи",
                     "time_of_use_luna2000": "По часови тарифи"
                 }
-            },
-            "emma_ess_control_mode": {
-                "name": "Режим на управление на ESS",
-                "state": {
-                    "reserved_1": "Резервиран 1",
-                    "maximum_self_consumption": "Максимално самопотребление",
-                    "reserved_3": "Резервиран 3",
-                    "fully_fed_to_grid": "Изцяло подаване към мрежата",
-                    "time_of_use": "По часови тарифи",
-                    "third_party_dispatch": "Управление от трета страна"
-                }
-            },
-            "emma_tou_preferred_use_of_surplus_pv_power": {
-                "name": "Използване на излишната PV енергия  по часови тарифи",
-                "state": {
-                    "fed_to_grid": "Подаване към мрежата",
-                    "charge": "Зареждане"
-                }
             }
         },
         "sensor": {
+            "accumulated_energy_yield": {
+                "name": "Total energy"
+            },
             "accumulated_yield_energy": {
                 "name": "Общо производство"
             },
-            "rated_power": {
-                "name": "Номинална мощност"
-            },
-            "p_max": {
-                "name": "Максимална активна мощност"
-            },
-            "total_dc_input_power": {
-                "name": "Обща DC входна енергия"
-            },
             "active_grid_a_b_voltage": {
                 "name": "Линейно напрежение A-B"
+            },
+            "active_grid_a_current": {
+                "name": "Ток фаза A"
             },
             "active_grid_a_power": {
                 "name": "Активна мощност фаза A"
@@ -162,17 +191,23 @@
             "active_grid_b_c_voltage": {
                 "name": "Линейно напрежение B-C"
             },
+            "active_grid_b_current": {
+                "name": "Ток фаза B"
+            },
             "active_grid_b_power": {
                 "name": "Активна мощност фаза B"
             },
             "active_grid_c_a_voltage": {
                 "name": "Линейно напрежение C-A"
             },
+            "active_grid_c_current": {
+                "name": "Ток фаза C"
+            },
             "active_grid_c_power": {
                 "name": "Активна мощност фаза C"
             },
             "active_grid_frequency": {
-                "name": "Честота"
+                "name": "[%key:component::sensor::entity_component::frequency::name%]"
             },
             "active_grid_power_factor": {
                 "name": "Фактор на мощността"
@@ -180,8 +215,14 @@
             "active_power": {
                 "name": "Активна мощност"
             },
-            "active_power_control": {
-                "name": "Управление на активната мощност"
+            "active_power_built_in_energy": {
+                "name": "Активна мощност"
+            },
+            "active_power_control_mode": {
+                "name": "Active power control mode"
+            },
+            "active_power_external_energy": {
+                "name": "Активна мощност"
             },
             "alarm": {
                 "name": "Аларма"
@@ -189,20 +230,53 @@
             "alarms": {
                 "name": "Аларми"
             },
+            "apparent_power_built_in_energy": {
+                "name": "Apparent power"
+            },
+            "apparent_power_external_energy": {
+                "name": "Apparent power"
+            },
+            "backup_power_state_of_charge": {
+                "name": "Състояние на заряда на резервната мощност"
+            },
+            "battery_charge_discharge_power": {
+                "name": "Мощност на зареждане/разреждане на батерията"
+            },
+            "battery_remaining_charge_discharge_time": {
+                "name": "Оставащо време за зареждане/разреждане"
+            },
+            "battery_working_mode": {
+                "name": "Работен режим на батерията"
+            },
+            "bms_temperature": {
+                "name": "Температура на BMS"
+            },
+            "charger_phase_a_voltage": {
+                "name": "Charger Phase A voltage"
+            },
+            "charger_phase_b_voltage": {
+                "name": "Charger Phase B voltagey"
+            },
+            "charger_phase_c_voltage": {
+                "name": "Charger Phase C voltage"
+            },
+            "charger_rated_power": {
+                "name": "Charger rated power"
+            },
+            "charger_temperature": {
+                "name": "Charger temperature"
+            },
+            "charger_total_energy_charged": {
+                "name": "Charger total charged energy"
+            },
+            "consumption_today": {
+                "name": "Консумация днес"
+            },
             "current_electricity_generation_statistics_time": {
                 "name": "Време на текущата статистика за производство на електроенергия"
             },
-            "hourly_yield_energy": {
-                "name": "Часово производство"
-            },
             "daily_yield_energy": {
                 "name": "Дневно производство"
-            },
-            "monthly_yield_energy": {
-                "name": "Месечно производство"
-            },
-            "yearly_yield_energy": {
-                "name": "Годишно производство"
             },
             "day_active_power_peak": {
                 "name": "Дневен пик на активната мощност"
@@ -213,8 +287,32 @@
             "efficiency": {
                 "name": "Ефективност"
             },
-            "grid_a_current": {
-                "name": "Ток фаза A"
+            "energy_charged_today": {
+                "name": "Енергия заредена днес"
+            },
+            "energy_discharged_today": {
+                "name": "Енергия разредена днес"
+            },
+            "ess_chargeable_capacity": {
+                "name": "Зареждаем капацитет (ESS)"
+            },
+            "ess_chargeable_energy": {
+                "name": "Зареждаема енергия (ESS)"
+            },
+            "ess_dischargeable_capacity": {
+                "name": "Разреждаем капацитет (ESS)"
+            },
+            "ess_dischargeable_energy": {
+                "name": "Разреждаема енергия (ESS)"
+            },
+            "feed_in_power": {
+                "name": "Мощност подадена към мрежата"
+            },
+            "feed_in_to_grid_today": {
+                "name": "Подадена енергия към мрежата днес"
+            },
+            "forcible_charge_summary": {
+                "name": "Обобщение на принудителното зареждане"
             },
             "grid_a_voltage": {
                 "name": "Напрежение фаза A"
@@ -225,20 +323,17 @@
             "grid_accumulated_reactive_power": {
                 "name": "Реактивна енергия"
             },
-            "grid_b_current": {
-                "name": "Ток фаза B"
-            },
             "grid_b_voltage": {
                 "name": "Напрежение фаза B"
-            },
-            "grid_c_current": {
-                "name": "Ток фаза C"
             },
             "grid_c_voltage": {
                 "name": "Напрежение фаза C"
             },
             "grid_exported_energy": {
                 "name": "Енергия, подадена към мрежата"
+            },
+            "hourly_yield_energy": {
+                "name": "Часово производство"
             },
             "input_current": {
                 "name": "Входен ток"
@@ -249,26 +344,62 @@
             "input_voltage": {
                 "name": "Входно напрежение"
             },
-            "internal_temperature": {
-                "name": "Вътрешна температура"
-            },
             "insulation_resistance": {
                 "name": "Съпротивление на изолацията"
             },
-            "forcible_charge_summary": {
-                "name": "Обобщение на принудителното зареждане"
+            "internal_temperature": {
+                "name": "Вътрешна температура"
+            },
+            "inverter_active_power": {
+                "name": "Активна мощност на инвертора"
+            },
+            "inverter_energy_yield_today": {
+                "name": "Производство от инвертора днес"
+            },
+            "inverter_rated_power": {
+                "name": "Номинална мощност на инвертора"
+            },
+            "inverter_total_absorbed_energy": {
+                "name": "Общо абсорбирана енергия (инвертор)"
+            },
+            "inverter_total_energy_yield": {
+                "name": "Общо производство от инвертора"
             },
             "line_voltage_a_b": {
+                "name": "Линейно напрежение A-B"
+            },
+            "line_voltage_a_b_built_in_energy": {
+                "name": "Линейно напрежение A-B"
+            },
+            "line_voltage_a_b_external_energy": {
                 "name": "Линейно напрежение A-B"
             },
             "line_voltage_b_c": {
                 "name": "Линейно напрежение B-C"
             },
+            "line_voltage_b_c_built_in_energy": {
+                "name": "Линейно напрежение B-C"
+            },
+            "line_voltage_b_c_external_energy": {
+                "name": "Линейно напрежение B-C"
+            },
             "line_voltage_c_a": {
                 "name": "Линейно напрежение C-A"
             },
+            "line_voltage_c_a_built_in_energy": {
+                "name": "Линейно напрежение C-A"
+            },
+            "line_voltage_c_a_external_energy": {
+                "name": "Линейно напрежение C-A"
+            },
+            "load_power": {
+                "name": "Консумирана мощност"
+            },
             "meter_status": {
                 "name": "Състояние на електромера"
+            },
+            "monthly_yield_energy": {
+                "name": "Месечно производство"
             },
             "nb_online_optimizers": {
                 "name": "Онлайн оптимизатори"
@@ -282,32 +413,203 @@
             "output_voltage": {
                 "name": "Изходно напрежение"
             },
+            "p_max": {
+                "name": "Максимална активна мощност"
+            },
+            "pack_1_charge_discharge_power": {
+                "name": "Мощност на зареждане/разреждане на модул 1"
+            },
+            "pack_1_current": {
+                "name": "Ток на модул 1"
+            },
+            "pack_1_firmware_version": {
+                "name": "Фърмуер версия на модул 1"
+            },
+            "pack_1_max_temperature": {
+                "name": "Макс. температура на модул 1"
+            },
+            "power_factor": {
+                "name": "Фактор на мощността"
+            },
+            "pack_1_serial_number": {
+                "name": "Сериен номер на модул 1"
+            },
+            "pack_1_soh_calibration_status": {
+                "name": "Калибрация на SOH за модул 1"
+            },
+            "pack_1_state_of_capacity": {
+                "name": "Състояние на капацитета на модул 1"
+            },
+            "pack_1_total_charge": {
+                "name": "Общо зареждане на модул 1"
+            },
+            "pack_1_total_discharge": {
+                "name": "Общо разреждане на модул 1"
+            },
+            "pack_1_voltage": {
+                "name": "Напрежение на модул 1"
+            },
+            "pack_1_working_status": {
+                "name": "Работно състояние на модул 1"
+            },
+            "pack_2_charge_discharge_power": {
+                "name": "Мощност на зареждане/разреждане на модул 2"
+            },
+            "pack_2_current": {
+                "name": "Ток на модул 2"
+            },
+            "pack_2_firmware_version": {
+                "name": "Фърмуер версия на модул 2"
+            },
+            "pack_2_max_temperature": {
+                "name": "Макс. температура на модул 2"
+            },
+            "pack_2_min_temperature": {
+                "name": "Мин. температура на модул 2"
+            },
+            "pack_2_serial_number": {
+                "name": "Сериен номер на модул 2"
+            },
+            "pack_2_soh_calibration_status": {
+                "name": "Калибрация на SOH за модул 2"
+            },
+            "pack_2_state_of_capacity": {
+                "name": "Състояние на капацитета на модул 2"
+            },
+            "pack_2_total_charge": {
+                "name": "Общо зареждане на модул 2"
+            },
+            "pack_2_total_discharge": {
+                "name": "Общо разреждане на модул 2"
+            },
+            "pack_2_voltage": {
+                "name": "Напрежение на модул 2"
+            },
+            "pack_2_working_status": {
+                "name": "Работно състояние на модул 2"
+            },
+            "pack_3_charge_discharge_power": {
+                "name": "Мощност на зареждане/разреждане на модул 3"
+            },
+            "pack_3_current": {
+                "name": "Ток на модул 3"
+            },
+            "pack_3_firmware_version": {
+                "name": "Фърмуер версия на модул 3"
+            },
+            "pack_3_max_temperature": {
+                "name": "Макс. температура на модул 3"
+            },
+            "pack_3_min_temperature": {
+                "name": "Мин. температура на модул 3"
+            },
+            "pack_3_serial_number": {
+                "name": "Сериен номер на модул 3"
+            },
+            "pack_3_soh_calibration_status": {
+                "name": "Калибрация на SOH за модул 3"
+            },
+            "pack_3_state_of_capacity": {
+                "name": "Състояние на капацитета на модул 3"
+            },
+            "pack_3_total_charge": {
+                "name": "Общо зареждане на модул 3"
+            },
+            "pack_3_total_discharge": {
+                "name": "Общо разреждане на модул 3"
+            },
+            "pack_3_voltage": {
+                "name": "Напрежение на модул 3"
+            },
+            "pack_3_working_status": {
+                "name": "Работно състояние на модул 3"
+            },
+            "phase_a_active_power_built_in_energy": {
+                "name": "Активна мощност фаза A"
+            },
+            "phase_a_active_power_external_energy": {
+                "name": "Активна мощност фаза A"
+            },
             "phase_a_current": {
+                "name": "Ток фаза A"
+            },
+            "phase_a_current_built_in_energy": {
+                "name": "Ток фаза A"
+            },
+            "phase_a_current_external_energy": {
                 "name": "Ток фаза A"
             },
             "phase_a_voltage": {
                 "name": "Напрежение фаза A"
             },
+            "phase_a_voltage_built_in_energy": {
+                "name": "Напрежение фаза A"
+            },
+            "phase_a_voltage_external_energy": {
+                "name": "Напрежение фаза A"
+            },
+            "phase_b_active_power_built_in_energy": {
+                "name": "Активна мощност фаза B"
+            },
+            "phase_b_active_power_external_energy": {
+                "name": "Активна мощност фаза B"
+            },
             "phase_b_current": {
+                "name": "Ток фаза B"
+            },
+            "phase_b_current_built_in_energy": {
+                "name": "Ток фаза B"
+            },
+            "phase_b_current_external_energy": {
                 "name": "Ток фаза B"
             },
             "phase_b_voltage": {
                 "name": "Напрежение фаза B"
             },
+            "phase_b_voltage_built_in_energy": {
+                "name": "Напрежение фаза B"
+            },
+            "phase_b_voltage_external_energy": {
+                "name": "Напрежение фаза B"
+            },
+            "phase_c_active_power_built_in_energy": {
+                "name": "Активна мощност фаза C"
+            },
+            "phase_c_active_power_external_energy": {
+                "name": "Активна мощност фаза C"
+            },
             "phase_c_current": {
+                "name": "Ток фаза C"
+            },
+            "phase_c_current_built_in_energy": {
+                "name": "Ток фаза C"
+            },
+            "phase_c_current_external_energy": {
                 "name": "Ток фаза C"
             },
             "phase_c_voltage": {
                 "name": "Напрежение фаза C"
             },
+            "phase_c_voltage_built_in_energy": {
+                "name": "Напрежение фаза C"
+            },
+            "phase_c_voltage_external_energy": {
+                "name": "Напрежение фаза C"
+            },
             "power_factor": {
+                "name": "Фактор на мощността"
+            },
+            "power_factor_built_in_energy": {
+                "name": "Фактор на мощността"
+            },
+            "power_factor_external_energy": {
                 "name": "Фактор на мощността"
             },
             "power_meter_active_power": {
                 "name": "Активна мощност"
             },
             "power_meter_reactive_power": {
-                "name": "Реактивна мощност"
+                "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
             },
             "pv_01_current": {
                 "name": "Ток PV 1"
@@ -453,26 +755,131 @@
             "pv_24_voltage": {
                 "name": "Напрежение PV 24"
             },
-            "battery_working_mode": {
-                "name": "Работен режим на батерията"
+            "pv_output_power": {
+                "name": "PV изходна мощност"
             },
-            "battery_remaining_charge_discharge_time": {
-                "name": "Оставащо време за зареждане/разреждане"
+            "pv_yield_today": {
+                "name": "PV производство днес"
+            },
+            "rated_ess_capacity": {
+                "name": "Номинален капацитет (ESS)"
+            },
+            "rated_power": {
+                "name": "Номинална мощност"
             },
             "reactive_power": {
-                "name": "Реактивна мощност"
+                "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
             },
             "running_status": {
                 "name": "Статус на работа"
+            },
+            "sdongle_grid_power": {
+                "name": "Grid power"
+            },
+            "sdongle_load_power": {
+                "name": "Консумирана мощност"
+            },
+            "sdongle_total_active_power": {
+                "name": "Total active power"
+            },
+            "sdongle_total_battery_power": {
+                "name": "Total battery power"
+            },
+            "sdongle_total_input_power": {
+                "name": "Total input power"
             },
             "shutdown_time": {
                 "name": "Време на изключване"
             },
             "single_phase_meter_current": {
-                "name": "Ток (еднофазен електромер)"
+                "name": "[%key:component::sensor::entity_component::current::name%]"
             },
             "single_phase_meter_voltage": {
-                "name": "Напрежение (еднофазен електромер)"
+                "name": "[%key:component::sensor::entity_component::voltage::name%]"
+            },
+            "smartlogger_a_b_line_voltage_of_grid": {
+                "name": "Grid A-B line voltage"
+            },
+            "smartlogger_active_ess_power": {
+                "name": "Active ESS power"
+            },
+            "smartlogger_active_power": {
+                "name": "Активна мощност"
+            },
+            "smartlogger_active_pv_power": {
+                "name": "Active PV power"
+            },
+            "smartlogger_alarms": {
+                "name": "Аларми"
+            },
+            "smartlogger_array_in_operation": {
+                "name": "Array in operation"
+            },
+            "smartlogger_b_c_line_voltage_of_grid": {
+                "name": "Grid B-C line voltage"
+            },
+            "smartlogger_c_a_line_voltage_of_grid": {
+                "name": "Grid C-A line voltage"
+            },
+            "smartlogger_energy_charged_today": {
+                "name": "Енергия заредена днес"
+            },
+            "smartlogger_energy_discharged_today": {
+                "name": "Енергия разредена днес"
+            },
+            "smartlogger_input_power": {
+                "name": "Входна мощност"
+            },
+            "smartlogger_phase_a_current_of_grid": {
+                "name": "Grid phase A current"
+            },
+            "smartlogger_phase_b_current_of_grid": {
+                "name": "Grid phase B current"
+            },
+            "smartlogger_phase_c_current_of_grid": {
+                "name": "Grid phase C current"
+            },
+            "smartlogger_plant_status": {
+                "name": "Plant status"
+            },
+            "smartlogger_power_factor": {
+                "name": "Фактор на мощността"
+            },
+            "smartlogger_power_supply_from_grid_today": {
+                "name": "Power supply from grid today"
+            },
+            "smartlogger_rated_ess_power": {
+                "name": "Rated ESS power"
+            },
+            "smartlogger_rated_pv_power": {
+                "name": "Rated PV power"
+            },
+            "smartlogger_soc": {
+                "name": "State of charge"
+            },
+            "smartlogger_soe": {
+                "name": "State of energy"
+            },
+            "smartlogger_soh": {
+                "name": "State of health"
+            },
+            "smartlogger_total_energy_charged": {
+                "name": "Общо заредена енергия"
+            },
+            "smartlogger_total_energy_discharge_d": {
+                "name": "Общо разредена енергия"
+            },
+            "smartlogger_total_energy_yield": {
+                "name": "Total energy yield"
+            },
+            "smartlogger_total_power_supply_from_grid": {
+                "name": "Total power supply from grid"
+            },
+            "smartlogger_yield_today": {
+                "name": "Дневно производство"
+            },
+            "soh_calibration_status": {
+                "name": "Състояние на калибрация на SOH"
             },
             "startup_time": {
                 "name": "Време на включване"
@@ -495,6 +902,9 @@
             "state_3_1": {
                 "name": "Превключвател извън мрежата"
             },
+            "state_of_capacity": {
+                "name": "Състояние на капацитета"
+            },
             "storage_bus_current": {
                 "name": "Шинен ток"
             },
@@ -513,11 +923,11 @@
             "storage_current_day_discharge_capacity": {
                 "name": "Разряд за текущия ден"
             },
-            "storage_fixed_charging_and_discharging_periods": {
-                "name": "Фиксирани периоди за зареждане/разреждане"
+            "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
+                "name": "TOU периоди за зареждане и разреждане (Huawei LUNA2000)"
             },
-            "storage_running_status": {
-                "name": "Състояние"
+            "storage_lg_resu_time_of_use_price_periods": {
+                "name": "TOU периоди с цена (LG RESU)"
             },
             "storage_maximum_charge_power": {
                 "name": "Максимална мощност на зареждане"
@@ -528,20 +938,11 @@
             "storage_rated_capacity": {
                 "name": "Номинален капацитет на батерията"
             },
+            "storage_running_status": {
+                "name": "Състояние"
+            },
             "storage_state_of_capacity": {
                 "name": "Състояние на капацитета"
-            },
-            "storage_lg_resu_time_of_use_price_periods": {
-                "name": "TOU периоди с цена (LG RESU)"
-            },
-            "storage_huawei_luna2000_time_of_use_price_periods": {
-                "name": "TOU периоди с цена (Huawei LUNA2000)"
-            },
-            "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
-                "name": "TOU периоди за зареждане и разреждане (Huawei LUNA2000)"
-            },
-            "storage_lg_resu_time_of_use_charging_and_discharging_periods": {
-                "name": "TOU периоди за зареждане и разреждане (LG RESU)"
             },
             "storage_total_charge": {
                 "name": "Общо зареждане"
@@ -549,44 +950,41 @@
             "storage_total_discharge": {
                 "name": "Общо разреждане"
             },
+            "supply_from_grid_today": {
+                "name": "Енергия получена от мрежата днес"
+            },
             "temperature": {
-                "name": "Температура"
+                "name": "[%key:component::sensor::entity_component::temperature::name%]"
             },
-            "voltage_to_ground": {
-                "name": "Напрежение към земя"
+            "total_active_energy_built_in_energy": {
+                "name": "Total active energy"
             },
-            "inverter_total_absorbed_energy": {
-                "name": "Общо абсорбирана енергия (инвертор)"
-            },
-            "energy_charged_today": {
-                "name": "Енергия заредена днес"
+            "total_active_energy_external_energy": {
+                "name": "Total active energy"
             },
             "total_charged_energy": {
                 "name": "Общо заредена енергия"
             },
-            "energy_discharged_today": {
-                "name": "Енергия разредена днес"
+            "total_dc_input_power": {
+                "name": "Обща DC входна енергия"
             },
             "total_discharged_energy": {
                 "name": "Общо разредена енергия"
             },
-            "ess_chargeable_energy": {
-                "name": "Зареждаема енергия (ESS)"
-            },
-            "ess_dischargeable_energy": {
-                "name": "Разреждаема енергия (ESS)"
-            },
-            "rated_ess_capacity": {
-                "name": "Номинален капацитет (ESS)"
-            },
-            "consumption_today": {
-                "name": "Консумация днес"
-            },
             "total_energy_consumption": {
                 "name": "Обща консумация на енергия"
             },
-            "feed_in_to_grid_today": {
-                "name": "Подадена енергия към мрежата днес"
+            "total_feed_in_to_grid": {
+                "name": "Total feed in to grid"
+            },
+            "total_negative_active_energy_built_in_energy": {
+                "name": "Total negative active energy"
+            },
+            "total_negative_active_energy_external_energy": {
+                "name": "Total negative active energy"
+            },
+            "total_positive_active_energy_built_in_energy": {
+                "name": "Total positive active energy"
             },
             "supply_from_grid_today": {
                 "name": "Енергия получена от мрежата днес"
@@ -606,170 +1004,31 @@
             "total_pv_energy_yield": {
                 "name": "Общо PV производство"
             },
-            "pv_output_power": {
-                "name": "PV изходна мощност"
+            "total_supply_from_grid": {
+                "name": "Общо получена енергия от мрежата"
             },
-            "load_power": {
-                "name": "Консумирана мощност"
+            "voltage_to_ground": {
+                "name": "Напрежение към земя"
             },
-            "feed_in_power": {
-                "name": "Мощност подадена към мрежата"
-            },
-            "battery_charge_discharge_power": {
-                "name": "Мощност на зареждане/разреждане на батерията"
-            },
-            "inverter_rated_power": {
-                "name": "Номинална мощност на инвертора"
-            },
-            "inverter_active_power": {
-                "name": "Активна мощност на инвертора"
-            },
-            "state_of_capacity": {
-                "name": "Състояние на капацитета"
-            },
-            "ess_chargeable_capacity": {
-                "name": "Зареждаем капацитет (ESS)"
-            },
-            "ess_dischargeable_capacity": {
-                "name": "Разреждаем капацитет (ESS)"
-            },
-            "backup_power_state_of_charge": {
-                "name": "Състояние на заряда на резервната мощност"
-            },
-            "soh_calibration_status": {
-                "name": "Състояние на калибрация на SOH"
-            },
-            "pack_1_max_temperature": {
-                "name": "Макс. температура на модул 1"
-            },
-            "pack_1_min_temperature": {
-                "name": "Мин. температура на модул 1"
-            },
-            "pack_2_max_temperature": {
-                "name": "Макс. температура на модул 2"
-            },
-            "pack_2_min_temperature": {
-                "name": "Мин. температура на модул 2"
-            },
-            "pack_3_max_temperature": {
-                "name": "Макс. температура на модул 3"
-            },
-            "pack_3_min_temperature": {
-                "name": "Мин. температура на модул 3"
-            },
-            "pack_1_working_status": {
-                "name": "Работно състояние на модул 1"
-            },
-            "pack_2_working_status": {
-                "name": "Работно състояние на модул 2"
-            },
-            "pack_3_working_status": {
-                "name": "Работно състояние на модул 3"
-            },
-            "pack_1_firmware_version": {
-                "name": "Фърмуер версия на модул 1"
-            },
-            "pack_1_serial_number": {
-                "name": "Сериен номер на модул 1"
-            },
-            "pack_1_state_of_capacity": {
-                "name": "Състояние на капацитета на модул 1"
-            },
-            "pack_1_charge_discharge_power": {
-                "name": "Мощност на зареждане/разреждане на модул 1"
-            },
-            "pack_1_voltage": {
-                "name": "Напрежение на модул 1"
-            },
-            "pack_1_current": {
-                "name": "Ток на модул 1"
-            },
-            "pack_1_soh_calibration_status": {
-                "name": "Калибрация на SOH за модул 1"
-            },
-            "pack_1_total_charge": {
-                "name": "Общо зареждане на модул 1"
-            },
-            "pack_1_total_discharge": {
-                "name": "Общо разреждане на модул 1"
-            },
-            "pack_2_firmware_version": {
-                "name": "Фърмуер версия на модул 2"
-            },
-            "pack_2_serial_number": {
-                "name": "Сериен номер на модул 2"
-            },
-            "pack_2_state_of_capacity": {
-                "name": "Състояние на капацитета на модул 2"
-            },
-            "pack_2_charge_discharge_power": {
-                "name": "Мощност на зареждане/разреждане на модул 2"
-            },
-            "pack_2_voltage": {
-                "name": "Напрежение на модул 2"
-            },
-            "pack_2_current": {
-                "name": "Ток на модул 2"
-            },
-            "pack_2_soh_calibration_status": {
-                "name": "Калибрация на SOH за модул 2"
-            },
-            "pack_2_total_charge": {
-                "name": "Общо зареждане на модул 2"
-            },
-            "pack_2_total_discharge": {
-                "name": "Общо разреждане на модул 2"
-            },
-            "pack_3_firmware_version": {
-                "name": "Фърмуер версия на модул 3"
-            },
-            "pack_3_serial_number": {
-                "name": "Сериен номер на модул 3"
-            },
-            "pack_3_state_of_capacity": {
-                "name": "Състояние на капацитета на модул 3"
-            },
-            "pack_3_charge_discharge_power": {
-                "name": "Мощност на зареждане/разреждане на модул 3"
-            },
-            "pack_3_voltage": {
-                "name": "Напрежение на модул 3"
-            },
-            "pack_3_current": {
-                "name": "Ток на модул 3"
-            },
-            "pack_3_soh_calibration_status": {
-                "name": "Калибрация на SOH за модул 3"
-            },
-            "pack_3_total_charge": {
-                "name": "Общо зареждане на модул 3"
-            },
-            "pack_3_total_discharge": {
-                "name": "Общо разреждане на модул 3"
-            },
-            "bms_temperature": {
-                "name": "Температура на BMS"
-            },
-            "active_grid_a_current": {
-                "name": "Ток фаза A"
-            },
-            "active_grid_b_current": {
-                "name": "Ток фаза B"
-            },
-            "active_grid_c_current": {
-                "name": "Ток фаза C"
+            "yearly_yield_energy": {
+                "name": "Годишно производство"
             }
         },
         "switch": {
+            "mppt_multimodal_scanning": {
+                "name": "MPPT сканиране"
+            },
             "startup": {
                 "name": "Инвертор ВКЛ./ИЗКЛ."
             },
             "storage_charge_from_grid_function": {
                 "name": "Зареждане от мрежата"
-            },
-            "mppt_multimodal_scanning": {
-                "name": "MPPT сканиране"
             }
+        }
+    },
+    "exceptions": {
+        "config_entry_not_found": {
+            "message": "Entry not found for device: {device_id}"
         },
         "services": {
             "forcible_charge": {

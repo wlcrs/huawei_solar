@@ -58,7 +58,7 @@
             "name": "Batteria 2"
         },
         "charger": {
-            "name": "Charger"
+            "name": "Caricabatterie"
         },
         "connected_energy_storage": {
             "name": "Batterie"
@@ -71,6 +71,9 @@
         },
         "power_meter": {
             "name": "Contatore di energia"
+        },
+        "smartlogger": {
+            "name": "SmartLogger"
         }
     },
     "entity": {
@@ -794,8 +797,29 @@
             "single_phase_meter_voltage": {
                 "name": "Tensione"
             },
+            "smartlogger_a_b_line_voltage_of_grid": {
+                "name": "Grid A-B line voltage"
+            },
+            "smartlogger_active_ess_power": {
+                "name": "Active ESS power"
+            },
             "smartlogger_active_power": {
                 "name": "Potenza attiva"
+            },
+            "smartlogger_active_pv_power": {
+                "name": "Active PV power"
+            },
+            "smartlogger_alarms": {
+                "name": "Allarmi"
+            },
+            "smartlogger_array_in_operation": {
+                "name": "Array in operation"
+            },
+            "smartlogger_b_c_line_voltage_of_grid": {
+                "name": "Grid B-C line voltage"
+            },
+            "smartlogger_c_a_line_voltage_of_grid": {
+                "name": "Grid C-A line voltage"
             },
             "smartlogger_energy_charged_today": {
                 "name": "Energia caricata oggi"
@@ -806,8 +830,29 @@
             "smartlogger_input_power": {
                 "name": "Potenza in ingresso"
             },
+            "smartlogger_phase_a_current_of_grid": {
+                "name": "Grid phase A current"
+            },
+            "smartlogger_phase_b_current_of_grid": {
+                "name": "Grid phase B current"
+            },
+            "smartlogger_phase_c_current_of_grid": {
+                "name": "Grid phase C current"
+            },
+            "smartlogger_plant_status": {
+                "name": "Plant status"
+            },
+            "smartlogger_power_factor": {
+                "name": "Fattore di potenza"
+            },
             "smartlogger_power_supply_from_grid_today": {
                 "name": "Power supply from grid today"
+            },
+            "smartlogger_rated_ess_power": {
+                "name": "Rated ESS power"
+            },
+            "smartlogger_rated_pv_power": {
+                "name": "Rated PV power"
             },
             "smartlogger_soc": {
                 "name": "State of charge"
@@ -991,7 +1036,7 @@
             "description": "Forza carica della batteria per un certo periodo di tempo",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
+                    "description": "Deve essere un dispositivo 'Batterie'",
                     "name": "Batteria"
                 },
                 "duration": {
@@ -1009,7 +1054,7 @@
             "description": "Forza carica della batteria fino ad un certo livello di carica SoC",
             "fields": {
                 "device_id": {
-                    "description": "Deve essere un dispositivo 'Batteria'",
+                    "description": "Deve essere un dispositivo 'Batterie'",
                     "name": "Batteria"
                 },
                 "power": {
@@ -1027,7 +1072,7 @@
             "description": "Scaricamento forzato della batterial per un certo periodo di tempo",
             "fields": {
                 "device_id": {
-                    "description": "Deve essere un dispositivo 'Batteria'",
+                    "description": "Deve essere un dispositivo 'Batterie'",
                     "name": "Batteria"
                 },
                 "duration": {
@@ -1045,7 +1090,7 @@
             "description": "Scaricamento forzato della batteria fino ad un certo livello di carica (SoC)",
             "fields": {
                 "device_id": {
-                    "description": "Deve essere un dispositivo 'Batteria'",
+                    "description": "Deve essere un dispositivo 'Batterie'",
                     "name": "Batteria"
                 },
                 "power": {
@@ -1053,7 +1098,7 @@
                     "name": "Potenza"
                 },
                 "target_soc": {
-                    "description": "Stato di carica che deve essere raggiunto",
+                    "description": "Livello carica batteria (SoC) da raggiungere",
                     "name": "Livello SoC"
                 }
             },
@@ -1073,7 +1118,7 @@
             "description": "Impostare orari del Controllo Capacità",
             "fields": {
                 "device_id": {
-                    "description": "Deve essere un dispositivo 'Batteria'",
+                    "description": "Deve essere un dispositivo 'Batterie'",
                     "name": "Batteria"
                 },
                 "periods": {
@@ -1097,7 +1142,7 @@
             "description": "Impostare periodi di tempo di Carica e Scarica fissa",
             "fields": {
                 "device_id": {
-                    "description": "Deve essere un dispositivo 'Batteria'",
+                    "description": "Deve essere un dispositivo 'Batterie'",
                     "name": "Batteria"
                 },
                 "periods": {
@@ -1111,8 +1156,8 @@
             "description": "Impostare Controllo Potenza Attiva su 'Limitazione-Potenza connessione alla rete' ad una determinata potenza",
             "fields": {
                 "device_id": {
-                    "description": "Deve essere un dispositivo 'Inverter'",
-                    "name": "Inverter"
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "name": "Dispositivo"
                 },
                 "power": {
                     "description": "Potenza massima",
@@ -1125,8 +1170,8 @@
             "description": "Impostare Controllo Potenza Attiva su 'Limitazione-Potenza connessione alla rete (%)' ad una determinata percentuale",
             "fields": {
                 "device_id": {
-                    "description": "Deve essere un dispositivo 'Inverter'",
-                    "name": "Inverter"
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "name": "Dispositivo"
                 },
                 "power_percentage": {
                     "description": "Percentuale massima",
@@ -1153,8 +1198,8 @@
             "description": "Impostare Controllo Potenza Attivo su 'Zero potenza connessione alla rete'",
             "fields": {
                 "device_id": {
-                    "description": "Deve essere un dispositivo 'Inverter'",
-                    "name": "Inverter"
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "name": "Dispositivo"
                 }
             },
             "name": "Impostazione Controllo Potenza Attiva 'Zero potenza connessione alla rete'"
@@ -1163,11 +1208,11 @@
             "description": "Annullamento del comando di carica forzata",
             "fields": {
                 "device_id": {
-                    "description": "Deve essere un dispositivo 'Batteria'",
+                    "description": "Deve essere un dispositivo 'Batterie'",
                     "name": "Batteria"
                 }
             },
-            "name": "Annullmaneto carica e scarica forzata"
+            "name": "Ferma la carica e scarica forzata"
         }
     }
 }

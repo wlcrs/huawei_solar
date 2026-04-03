@@ -71,6 +71,9 @@
         },
         "power_meter": {
             "name": "Power meter"
+        },
+        "smartlogger": {
+            "name": "SmartLogger"
         }
     },
     "entity": {
@@ -794,8 +797,29 @@
             "single_phase_meter_voltage": {
                 "name": "وولٹیج"
             },
+            "smartlogger_a_b_line_voltage_of_grid": {
+                "name": "Grid A-B line voltage"
+            },
+            "smartlogger_active_ess_power": {
+                "name": "Active ESS power"
+            },
             "smartlogger_active_power": {
                 "name": "فعال طاقت"
+            },
+            "smartlogger_active_pv_power": {
+                "name": "Active PV power"
+            },
+            "smartlogger_alarms": {
+                "name": "الارم"
+            },
+            "smartlogger_array_in_operation": {
+                "name": "Array in operation"
+            },
+            "smartlogger_b_c_line_voltage_of_grid": {
+                "name": "Grid B-C line voltage"
+            },
+            "smartlogger_c_a_line_voltage_of_grid": {
+                "name": "Grid C-A line voltage"
             },
             "smartlogger_energy_charged_today": {
                 "name": "Energy charged today"
@@ -806,8 +830,29 @@
             "smartlogger_input_power": {
                 "name": "ان پٹ پاورr"
             },
+            "smartlogger_phase_a_current_of_grid": {
+                "name": "Grid phase A current"
+            },
+            "smartlogger_phase_b_current_of_grid": {
+                "name": "Grid phase B current"
+            },
+            "smartlogger_phase_c_current_of_grid": {
+                "name": "Grid phase C current"
+            },
+            "smartlogger_plant_status": {
+                "name": "Plant status"
+            },
+            "smartlogger_power_factor": {
+                "name": "طاقت کا عنصر"
+            },
             "smartlogger_power_supply_from_grid_today": {
                 "name": "Power supply from grid today"
+            },
+            "smartlogger_rated_ess_power": {
+                "name": "Rated ESS power"
+            },
+            "smartlogger_rated_pv_power": {
+                "name": "Rated PV power"
             },
             "smartlogger_soc": {
                 "name": "State of charge"
@@ -1009,7 +1054,7 @@
             "description": "بیٹری کو ایک خاص حالت میں چارج کی سطح تک زبردستی چارج کرنا",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "description": "Must be a 'Batteries' device",
                     "name": "بیٹری"
                 },
                 "power": {
@@ -1027,7 +1072,7 @@
             "description": "ایک خاص وقت کے لیے بیٹری کا زبردستی خارج ہونا",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "description": "Must be a 'Batteries' device",
                     "name": "بیٹری"
                 },
                 "duration": {
@@ -1045,7 +1090,7 @@
             "description": "چارج کی ایک خاص حالت پر بیٹری کا زبردستی خارج ہونا",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "description": "Must be a 'Batteries' device",
                     "name": "بیٹری"
                 },
                 "power": {
@@ -1073,7 +1118,7 @@
             "description": "صلاحیت کنٹرول کی مدت مقرر کریں",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "description": "Must be a 'Batteries' device",
                     "name": "بیٹری"
                 },
                 "periods": {
@@ -1097,7 +1142,7 @@
             "description": "فکسڈ چارج اور ڈسچارج کی مدت مقرر کرتا ہے۔",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "description": "Must be a 'Batteries' device",
                     "name": "بیٹری"
                 },
                 "periods": {
@@ -1111,8 +1156,8 @@
             "description": "دی گئی واٹج کے ساتھ ایکٹو پاور کنٹرول کو 'پاور لمیٹڈ گرڈ کنکشن' پر سیٹ کرتا ہے۔",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
-                    "name": "انورٹر"
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "name": "آلہ"
                 },
                 "power": {
                     "description": "زیادہ سے زیادہ واٹج",
@@ -1125,8 +1170,8 @@
             "description": "ایکٹو پاور کنٹرول کو دی گئی فیصد کے ساتھ 'پاور لمیٹڈ گرڈ کنکشن (%)' پر سیٹ کرتا ہے۔",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
-                    "name": "انورٹر"
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "name": "آلہ"
                 },
                 "power_percentage": {
                     "description": "زیادہ سے زیادہ فیصد",
@@ -1153,8 +1198,8 @@
             "description": "ایکٹو پاور کنٹرول کو 'زیرو پاور گرڈ کنکشن' پر سیٹ کریں۔'",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
-                    "name": "انورٹر"
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
+                    "name": "آلہ"
                 }
             },
             "name": "ایکٹو پاور کنٹرول کو 'زیرو پاور گرڈ کنکشن' پر سیٹ کریں۔'"
@@ -1163,7 +1208,7 @@
             "description": "چل رہی زبردستی چارج کمانڈ کو منسوخ کریں۔",
             "fields": {
                 "device_id": {
-                    "description": "ایک 'بیٹری' آلہ ہونا چاہیے۔",
+                    "description": "Must be a 'Batteries' device",
                     "name": "بیٹری"
                 }
             },
