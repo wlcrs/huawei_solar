@@ -385,9 +385,9 @@ OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, 
     HuaweiSolarSensorEntityDescription(
         key="alarm",
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_conversion_function=lambda alarms: ", ".join(alarms)
-        if len(alarms)
-        else "None",
+        value_conversion_function=lambda alarms: (
+            ", ".join(alarms) if len(alarms) else "None"
+        ),
         icon="mdi:alarm-light",
     ),
 )
@@ -1040,12 +1040,6 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_3_SERIAL_NUMBER,
         battery_2_key=rn.STORAGE_UNIT_2_BATTERY_PACK_3_SERIAL_NUMBER,
         translation_key="pack_3_serial_number",
-        entity_category=EntityCategory.DIAGNOSTIC,
-    ),
-    BatteryTemplateEntityDescription(
-        battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_3_WORKING_STATUS,
-        battery_2_key=rn.STORAGE_UNIT_2_BATTERY_PACK_3_WORKING_STATUS,
-        translation_key="pack_3_working_status",
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     BatteryTemplateEntityDescription(
