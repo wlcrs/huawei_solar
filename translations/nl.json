@@ -923,6 +923,9 @@
             "storage_current_day_discharge_capacity": {
                 "name": "Dag Ontlading"
             },
+            "storage_forcible_charge_discharge_write": {
+                "name": "Forcible charge/discharge"
+            },
             "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
                 "name": "TOU charging and discharging periods"
             },
@@ -1000,9 +1003,6 @@
             },
             "yearly_yield_energy": {
                 "name": "Yearly yield"
-            },
-            "storage_forcible_charge_discharge_write": {
-                "name": "Forcible charge/discharge"
             }
         },
         "switch": {
@@ -1057,7 +1057,7 @@
             "description": "Batterij geforceerd laden tot een bepaald ladingsniveau",
             "fields": {
                 "device_id": {
-                    "description": "Toestel type moet 'Batterij' zijn",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batterij"
                 },
                 "power": {
@@ -1075,7 +1075,7 @@
             "description": "Batterij geforceerd ontladen voor een bepaalde tijdsduur",
             "fields": {
                 "device_id": {
-                    "description": "Toestel type moet 'Batterij' zijn",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batterij"
                 },
                 "duration": {
@@ -1093,7 +1093,7 @@
             "description": "Forcible Discharge of the battery to a certain State of Charge level",
             "fields": {
                 "device_id": {
-                    "description": "Toestel type moet 'Batterij' zijn",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batterij"
                 },
                 "power": {
@@ -1121,7 +1121,7 @@
             "description": "Capaciteitscontroleperiodes instellen",
             "fields": {
                 "device_id": {
-                    "description": "Toestel type moet 'Batterij' zijn",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batterij"
                 },
                 "periods": {
@@ -1145,7 +1145,7 @@
             "description": "Vaste laad/ontlaad periodes instellen",
             "fields": {
                 "device_id": {
-                    "description": "Toestel type moet 'Batterij' zijn",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batterij"
                 },
                 "periods": {
@@ -1159,7 +1159,7 @@
             "description": "De regeling 'werkelijk vermogen' instellen op 'Vermogensbeperkte netvoeding' met het opgegeven vermogen",
             "fields": {
                 "device_id": {
-                    "description": "Toestel type moet 'Omvormer' zijn",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
                     "name": "Toestel"
                 },
                 "power": {
@@ -1173,7 +1173,7 @@
             "description": "De regeling 'werkelijk vermogen' instellen op 'Vermogensbeperkte netvoeding (%)' met het opgegeven percentage",
             "fields": {
                 "device_id": {
-                    "description": "Toestel type moet 'Omvormer' zijn",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
                     "name": "Toestel"
                 },
                 "power_percentage": {
@@ -1201,7 +1201,7 @@
             "description": "De regeling 'werkelijk vermogen' instellen op 'Netvoeding zonder stroom'",
             "fields": {
                 "device_id": {
-                    "description": "Toestel type moet 'Omvormer' zijn",
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be an 'Inverter' device",
                     "name": "Toestel"
                 }
             },
@@ -1211,7 +1211,7 @@
             "description": "Annuleer het lopende commando om geforceerd te laden",
             "fields": {
                 "device_id": {
-                    "description": "Toestel type moet 'Batterij' zijn",
+                    "description": "Must be a 'Batteries' device",
                     "name": "Batterij"
                 }
             },
