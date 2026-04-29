@@ -265,7 +265,7 @@
                 "name": "Активна мощност фаза C"
             },
             "active_grid_frequency": {
-                "name": "[%key:component::sensor::entity_component::frequency::name%]"
+                "name": "Честота"
             },
             "active_grid_power_factor": {
                 "name": "Фактор на мощността"
@@ -667,7 +667,7 @@
                 "name": "Активна мощност"
             },
             "power_meter_reactive_power": {
-                "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
+                "name": "Реактивна мощност"
             },
             "pv_01_current": {
                 "name": "Ток PV 1"
@@ -826,7 +826,7 @@
                 "name": "Номинална мощност"
             },
             "reactive_power": {
-                "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
+                "name": "Реактивна мощност"
             },
             "running_status": {
                 "name": "Статус на работа"
@@ -850,10 +850,10 @@
                 "name": "Време на изключване"
             },
             "single_phase_meter_current": {
-                "name": "[%key:component::sensor::entity_component::current::name%]"
+                "name": "Ток"
             },
             "single_phase_meter_voltage": {
-                "name": "[%key:component::sensor::entity_component::voltage::name%]"
+                "name": "Напрежение"
             },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "Grid A-B line voltage"
@@ -1015,7 +1015,7 @@
                 "name": "Енергия получена от мрежата днес"
             },
             "temperature": {
-                "name": "[%key:component::sensor::entity_component::temperature::name%]"
+                "name": "Температура"
             },
             "total_active_energy_built_in_energy": {
                 "name": "Total active energy"

@@ -265,7 +265,7 @@
                 "name": "Phase C active power"
             },
             "active_grid_frequency": {
-                "name": "[%key:component::sensor::entity_component::frequency::name%]"
+                "name": "Frequency"
             },
             "active_grid_power_factor": {
                 "name": "Power factor"
@@ -667,7 +667,7 @@
                 "name": "Active power"
             },
             "power_meter_reactive_power": {
-                "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
+                "name": "Reactive power"
             },
             "pv_01_current": {
                 "name": "PV 1 current"
@@ -826,7 +826,7 @@
                 "name": "Rated power"
             },
             "reactive_power": {
-                "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
+                "name": "Reactive power"
             },
             "running_status": {
                 "name": "Running status"
@@ -850,10 +850,10 @@
                 "name": "Shutdown time"
             },
             "single_phase_meter_current": {
-                "name": "[%key:component::sensor::entity_component::current::name%]"
+                "name": "Current"
             },
             "single_phase_meter_voltage": {
-                "name": "[%key:component::sensor::entity_component::voltage::name%]"
+                "name": "Voltage"
             },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "Grid A-B line voltage"
@@ -1015,7 +1015,7 @@
                 "name": "Supply from grid today"
             },
             "temperature": {
-                "name": "[%key:component::sensor::entity_component::temperature::name%]"
+                "name": "Temperature"
             },
             "total_active_energy_built_in_energy": {
                 "name": "Total active energy"
