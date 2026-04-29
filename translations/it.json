@@ -7,6 +7,7 @@
         },
         "error": {
             "cannot_connect": "Connessione fallita",
+            "connection_interrupted": "Connection interrupted — the inverter only supports one Modbus connection at a time. Check whether another app or device (SCharger, EMS, ...) is connected and close it, then try again.",
             "invalid_auth": "Autenticazione non valida",
             "invalid_slave_ids": "Gli slave ID devono essere numeri interi separati dalla virgola",
             "read_error": "Lettura dall'inverter fallita.",
@@ -14,6 +15,62 @@
             "unknown": "Errore inaspettato"
         },
         "step": {
+            "auto_discovery": {
+                "title": "Auto-discovering devices",
+                "description": "Scanning {host}:{port} for Huawei Solar devices using the Huawei discovery protocol. This may take up to a minute."
+            },
+            "scan_discovery": {
+                "title": "Scanning for devices",
+                "description": "Auto-discovery found no devices on {host}:{port}. Scanning frequently used slave IDs individually. This may take up to a minute."
+            },
+            "serial_auto_discovery": {
+                "title": "Auto-discovering devices",
+                "description": "Scanning {serial_port} for Huawei Solar devices using the Huawei discovery protocol. This may take up to a minute."
+            },
+            "serial_scan_discovery": {
+                "title": "Scanning for devices",
+                "description": "Auto-discovery found no devices on {serial_port}. Scanning frequently used slave IDs individually. This may take up to a minute."
+            },
+            "serial_finish_setup": {
+                "title": "Connecting",
+                "description": "Connecting to the devices discovered on {serial_port} and reading their configuration."
+            },
+            "cannot_connect_serial": {
+                "title": "Could not connect",
+                "description": "Could not open serial port {serial_port}. Please verify that:\n- The device is connected and the port is correct\n- No other application is using the port\n\nPress Submit to go back and try again."
+            },
+            "connection_interrupted_serial": {
+                "title": "Connection interrupted",
+                "description": "The connection to the inverter on {serial_port} was interrupted. The inverter only supports **one Modbus connection at a time**.\n\nCheck whether another application or device is currently connected to the inverter, such as:\n- The Huawei SCharger\n- The Huawei FusionSolar Android/iPhone App (device commissioning via dongle or direct connection)\n- SolarmanPV or another monitoring tool\n\nClose the other connection and press Submit to try again."
+            },
+            "no_device_found_serial": {
+                "title": "No device found",
+                "description": "Connected to {serial_port} but no Huawei Solar device responded on slave ID {slave_id}. Please verify that:\n- The slave ID is correct\n- The inverter is powered on and its RS485 interface is enabled\n\nPress Submit to go back and try again."
+            },
+            "manual_connect": {
+                "title": "Connecting",
+                "description": "Connecting to {host}:{port} on slave ID(s): {slave_ids}."
+            },
+            "finish_network_setup": {
+                "title": "Connecting",
+                "description": "Connecting to the devices discovered at {host}:{port} and reading their configuration."
+            },
+            "confirm_setup": {
+                "title": "Device found",
+                "description": "Successfully connected to **{model_name}** (serial number: {serial_number}) on slave ID(s): {slave_ids}.\n\nPress Submit to add this device to Home Assistant."
+            },
+            "cannot_connect": {
+                "title": "Could not connect",
+                "description": "Could not connect to {host}:{port}. Please verify that:\n- The IP address and port are correct\n- The device is powered on and reachable on your network\n- No firewall is blocking the connection\n\nPress Submit to go back and try again."
+            },
+            "connection_interrupted": {
+                "title": "Connection interrupted",
+                "description": "The connection to {host}:{port} was interrupted. The inverter only supports **one Modbus connection at a time**.\n\nCheck whether another application or device is currently connected to the inverter, such as:\n- The Huawei SCharger\n- The Huawei FusionSolar Android/iPhone App (device commissioning via dongle or direct connection)\n- SolarmanPV or another monitoring tool\n\nClose the other connection and press Submit to try again."
+            },
+            "no_device_found": {
+                "title": "No device found",
+                "description": "Connected to {host}:{port} but no Huawei Solar device responded on slave ID {slave_id}. Please verify that:\n- The slave ID is correct\n- The inverter's Modbus TCP interface is enabled\n- The inverter is not in a state that blocks communication (e.g. night mode on some models)\n\nPress Submit to go back and try again."
+            },
             "network_login": {
                 "data": {
                     "password": "Password",
@@ -32,13 +89,14 @@
             "setup_serial": {
                 "data": {
                     "port": "Selezionare dispositivo",
-                    "slave_ids": "Slave IDs (Separato dalla virgola)"
+                    "slave_ids": "Id slave: AUTO per la scansione automatica, altrimenti una lista separata da virgola"
                 },
                 "title": "Dispositivo"
             },
             "setup_serial_manual_path": {
                 "data": {
-                    "port": "Percorso dispositivo USB"
+                    "port": "Percorso dispositivo USB",
+                    "slave_ids": "Id slave: AUTO per la scansione automatica, altrimenti una lista separata da virgola"
                 },
                 "title": "Percorso"
             },
