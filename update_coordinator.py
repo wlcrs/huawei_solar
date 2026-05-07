@@ -9,6 +9,7 @@ from typing import Any
 
 from huawei_solar import (
     ConnectionInterruptedException,
+    DecodeError,
     HuaweiSolarException,
     ReadException,
     RegisterName,
@@ -149,6 +150,13 @@ class HuaweiSolarOptimizerUpdateCoordinator(
             raise UpdateFailed(
                 f"Connection to {self.device.serial_number} was interrupted, probably by another device. "
                 "The inverter only supports one Modbus connection at a time."
+            ) from err
+        except DecodeError as err:
+            raise UpdateFailed(
+                f"Could not decode optimizer data from {self.device.serial_number}: {err}. "
+                "This is typically a transient problem that will resolve itself when the device generates a "
+                "new optimizer data file.",
+                retry_after=15 * 60,  # optimizer files are generated every 15 minutes
             ) from err
         except HuaweiSolarException as err:
             raise UpdateFailed(
