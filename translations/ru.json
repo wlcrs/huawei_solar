@@ -265,7 +265,7 @@
                 "name": "Активная мощность фазы C"
             },
             "active_grid_frequency": {
-                "name": "Частота"
+                "name": "[%key:component::sensor::entity_component::frequency::name%]"
             },
             "active_grid_power_factor": {
                 "name": "Коэффициент мощности"
@@ -453,8 +453,68 @@
             "load_power": {
                 "name": "Мощность нагрузки"
             },
+            "meter_a_b_line_voltage": {
+                "name": "Line voltage A-B"
+            },
+            "meter_active_power": {
+                "name": "Активная мощность"
+            },
+            "meter_apparent_power": {
+                "name": "Apparent power"
+            },
+            "meter_b_c_line_voltage": {
+                "name": "Line voltage B-C"
+            },
+            "meter_c_a_line_voltage": {
+                "name": "Line voltage C-A"
+            },
+            "meter_negative_active_energy": {
+                "name": "Negative active energy"
+            },
+            "meter_phase_a_active_power": {
+                "name": "Активная мощность фазы A"
+            },
+            "meter_phase_a_current": {
+                "name": "Ток фазы A"
+            },
+            "meter_phase_a_voltage": {
+                "name": "Напряжение фазы A"
+            },
+            "meter_phase_b_active_power": {
+                "name": "Активная мощность фазы B"
+            },
+            "meter_phase_b_current": {
+                "name": "Ток фазы B"
+            },
+            "meter_phase_b_voltage": {
+                "name": "Напряжение фазы B"
+            },
+            "meter_phase_c_active_power": {
+                "name": "Активная мощность фазы C"
+            },
+            "meter_phase_c_current": {
+                "name": "Ток фазы C"
+            },
+            "meter_phase_c_voltage": {
+                "name": "Напряжение фазы C"
+            },
+            "meter_positive_active_energy": {
+                "name": "Positive active energy"
+            },
+            "meter_power_factor": {
+                "name": "Коэффициент мощности"
+            },
+            "meter_reactive_power": {
+                "name": "Reactive power"
+            },
             "meter_status": {
                 "name": "Статус счетчика"
+            },
+            "meter_total_active_energy": {
+                "name": "Total active energy"
+            },
+            "meter_total_reactive_energy": {
+                "name": "Total reactive energy"
             },
             "monthly_yield_energy": {
                 "name": "Месячная выработка"
@@ -667,7 +727,7 @@
                 "name": "Активная мощность"
             },
             "power_meter_reactive_power": {
-                "name": "Реактивная мощность"
+                "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
             },
             "pv_01_current": {
                 "name": "Ток PV 1"
@@ -826,7 +886,7 @@
                 "name": "Номинальная мощность"
             },
             "reactive_power": {
-                "name": "Реактивная мощность"
+                "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
             },
             "running_status": {
                 "name": "Рабочий статус"
@@ -850,10 +910,10 @@
                 "name": "Время выключения"
             },
             "single_phase_meter_current": {
-                "name": "Ток"
+                "name": "[%key:component::sensor::entity_component::current::name%]"
             },
             "single_phase_meter_voltage": {
-                "name": "Напряжение"
+                "name": "[%key:component::sensor::entity_component::voltage::name%]"
             },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "Grid A-B line voltage"
@@ -1015,7 +1075,7 @@
                 "name": "Получено из сети сегодня"
             },
             "temperature": {
-                "name": "Температура"
+                "name": "[%key:component::sensor::entity_component::temperature::name%]"
             },
             "total_active_energy_built_in_energy": {
                 "name": "Total active energy"
