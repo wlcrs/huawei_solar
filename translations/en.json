@@ -453,8 +453,68 @@
             "load_power": {
                 "name": "Load power"
             },
+            "meter_a_b_line_voltage": {
+                "name": "Line voltage A-B"
+            },
+            "meter_active_power": {
+                "name": "Active power"
+            },
+            "meter_apparent_power": {
+                "name": "Apparent power"
+            },
+            "meter_b_c_line_voltage": {
+                "name": "Line voltage B-C"
+            },
+            "meter_c_a_line_voltage": {
+                "name": "Line voltage C-A"
+            },
+            "meter_negative_active_energy": {
+                "name": "Negative active energy"
+            },
+            "meter_phase_a_active_power": {
+                "name": "Phase A active power"
+            },
+            "meter_phase_a_current": {
+                "name": "Phase A current"
+            },
+            "meter_phase_a_voltage": {
+                "name": "Phase A voltage"
+            },
+            "meter_phase_b_active_power": {
+                "name": "Phase B active power"
+            },
+            "meter_phase_b_current": {
+                "name": "Phase B current"
+            },
+            "meter_phase_b_voltage": {
+                "name": "Phase B voltage"
+            },
+            "meter_phase_c_active_power": {
+                "name": "Phase C active power"
+            },
+            "meter_phase_c_current": {
+                "name": "Phase C current"
+            },
+            "meter_phase_c_voltage": {
+                "name": "Phase C voltage"
+            },
+            "meter_positive_active_energy": {
+                "name": "Positive active energy"
+            },
+            "meter_power_factor": {
+                "name": "Power factor"
+            },
+            "meter_reactive_power": {
+                "name": "Reactive power"
+            },
             "meter_status": {
                 "name": "Meter status"
+            },
+            "meter_total_active_energy": {
+                "name": "Total active energy"
+            },
+            "meter_total_reactive_energy": {
+                "name": "Total reactive energy"
             },
             "monthly_yield_energy": {
                 "name": "Monthly yield"
