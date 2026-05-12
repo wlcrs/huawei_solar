@@ -8,6 +8,7 @@ from huawei_solar import (
     EMMADevice,
     HuaweiSolarException,
     InvalidCredentials,
+    MeterDevice,
     SChargerDevice,
     SDongleDevice,
     SmartLoggerDevice,
@@ -411,6 +412,7 @@ async def _setup_inverter_device_data(
 
 DEVICE_CLASS_TO_TRANSLATION_KEY: dict[type[HuaweiSolarDevice], str] = {
     EMMADevice: "emma",
+    MeterDevice: "power_meter",
     SChargerDevice: "charger",
     SDongleDevice: "sdongle",
     SmartLoggerDevice: "smartlogger",

@@ -7,6 +7,7 @@ from typing import Any
 from huawei_solar import (
     EMMADevice,
     HuaweiSolarDevice,
+    MeterDevice,
     SChargerDevice,
     SDongleDevice,
     SmartLoggerDevice,
@@ -2020,6 +2021,170 @@ def create_sdongle_entities(
     ]
 
 
+METER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_ACTIVE_POWER,
+        translation_key="meter_active_power",
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_REACTIVE_POWER,
+        translation_key="meter_reactive_power",
+        native_unit_of_measurement=UnitOfReactivePower.KILO_VOLT_AMPERE_REACTIVE,
+        device_class=SensorDeviceClass.REACTIVE_POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_APPARENT_POWER,
+        translation_key="meter_apparent_power",
+        native_unit_of_measurement=UnitOfApparentPower.VOLT_AMPERE,
+        device_class=SensorDeviceClass.APPARENT_POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_POWER_FACTOR,
+        translation_key="meter_power_factor",
+        device_class=SensorDeviceClass.POWER_FACTOR,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_PHASE_A_VOLTAGE,
+        translation_key="meter_phase_a_voltage",
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_PHASE_B_VOLTAGE,
+        translation_key="meter_phase_b_voltage",
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_PHASE_C_VOLTAGE,
+        translation_key="meter_phase_c_voltage",
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_A_B_LINE_VOLTAGE,
+        translation_key="meter_a_b_line_voltage",
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_B_C_LINE_VOLTAGE,
+        translation_key="meter_b_c_line_voltage",
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_C_A_LINE_VOLTAGE,
+        translation_key="meter_c_a_line_voltage",
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_PHASE_A_CURRENT,
+        translation_key="meter_phase_a_current",
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        device_class=SensorDeviceClass.CURRENT,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_PHASE_B_CURRENT,
+        translation_key="meter_phase_b_current",
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        device_class=SensorDeviceClass.CURRENT,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_PHASE_C_CURRENT,
+        translation_key="meter_phase_c_current",
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        device_class=SensorDeviceClass.CURRENT,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_PHASE_A_ACTIVE_POWER,
+        translation_key="meter_phase_a_active_power",
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_PHASE_B_ACTIVE_POWER,
+        translation_key="meter_phase_b_active_power",
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_PHASE_C_ACTIVE_POWER,
+        translation_key="meter_phase_c_active_power",
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_POSITIVE_ACTIVE_ELECTRICITY_TOTAL,
+        translation_key="meter_positive_active_energy",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_NEGATIVE_ACTIVE_ELECTRICITY,
+        translation_key="meter_negative_active_energy",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_TOTAL_ACTIVE_ELECTRICITY,
+        translation_key="meter_total_active_energy",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOGGER_EXTERNAL_METER_TOTAL_REACTIVE_ELECTRICITY,
+        translation_key="meter_total_reactive_energy",
+        native_unit_of_measurement="kvarh",
+        state_class=SensorStateClass.TOTAL,
+        entity_registry_enabled_default=False,
+    ),
+)
+
+
+def create_meter_entities(
+    ucs: HuaweiSolarDeviceData,
+) -> list["HuaweiSolarSensorEntity"]:
+    """Create power-meter sensor entities."""
+    assert isinstance(ucs.device, MeterDevice)
+
+    return [
+        HuaweiSolarSensorEntity(
+            ucs.update_coordinator, entity_description, ucs.device_info
+        )
+        for entity_description in METER_SENSOR_DESCRIPTIONS
+    ]
+
+
 def create_smartlogger_entities(
     ucs: HuaweiSolarDeviceData,
 ) -> list["HuaweiSolarSensorEntity"]:
@@ -2056,6 +2221,8 @@ async def async_setup_entry(
             entities_to_add.extend(create_charger_entities(ucs))
         elif isinstance(ucs.device, SDongleDevice):
             entities_to_add.extend(create_sdongle_entities(ucs))
+        elif isinstance(ucs.device, MeterDevice):
+            entities_to_add.extend(create_meter_entities(ucs))
         elif isinstance(ucs.device, SmartLoggerDevice):
             entities_to_add.extend(create_smartlogger_entities(ucs))
 
