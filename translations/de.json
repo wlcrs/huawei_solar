@@ -453,8 +453,68 @@
             "load_power": {
                 "name": "Ladestrom"
             },
+            "meter_a_b_line_voltage": {
+                "name": "Line voltage A-B"
+            },
+            "meter_active_power": {
+                "name": "Wirkleistung"
+            },
+            "meter_apparent_power": {
+                "name": "Scheinleistung"
+            },
+            "meter_b_c_line_voltage": {
+                "name": "Line voltage B-C"
+            },
+            "meter_c_a_line_voltage": {
+                "name": "Line voltage C-A"
+            },
+            "meter_negative_active_energy": {
+                "name": "Negative active energy"
+            },
+            "meter_phase_a_active_power": {
+                "name": "Phase A Wirkleistung"
+            },
+            "meter_phase_a_current": {
+                "name": "Phase A Strom"
+            },
+            "meter_phase_a_voltage": {
+                "name": "Phase A Spannung"
+            },
+            "meter_phase_b_active_power": {
+                "name": "Phase B Wirkleistung"
+            },
+            "meter_phase_b_current": {
+                "name": "Phase B Strom"
+            },
+            "meter_phase_b_voltage": {
+                "name": "Phase B Spannung"
+            },
+            "meter_phase_c_active_power": {
+                "name": "Phase C Wirkleistung"
+            },
+            "meter_phase_c_current": {
+                "name": "Phase C Strom"
+            },
+            "meter_phase_c_voltage": {
+                "name": "Phase C Spannung"
+            },
+            "meter_positive_active_energy": {
+                "name": "Positive active energy"
+            },
+            "meter_power_factor": {
+                "name": "Leistungsfaktor"
+            },
+            "meter_reactive_power": {
+                "name": "Reactive power"
+            },
             "meter_status": {
                 "name": "Zählerstatus"
+            },
+            "meter_total_active_energy": {
+                "name": "Gesamte Wirkenergie"
+            },
+            "meter_total_reactive_energy": {
+                "name": "Total reactive energy"
             },
             "monthly_yield_energy": {
                 "name": "Monatlicher Ertrag"
@@ -1194,7 +1254,7 @@
             "fields": {
                 "device_id": {
                     "description": "Muss ein \"Wechselrichter\"sein",
-                    "name": "Wechselrichter"
+                    "name": "[%key:component::huawei_solar::services::reset_maximum_feed_grid_power::fields::device_id::name%]"
                 }
             },
             "name": "Wirkleistungssteuerung auf 'DI active scheduling' setzen"
@@ -1246,7 +1306,7 @@
             "fields": {
                 "device_id": {
                     "description": "Muss ein \"Wechselrichter\"sein",
-                    "name": "Batterie"
+                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]"
                 },
                 "periods": {
                     "description": "Ein Zeitraum pro Zeile. Für Huawei LUNA2000 Batterien: '[Startzeit]-[Endzeit]/[Wochentage]/[Ladung]', mit 1=Montag, 7=Sonntag (Beispiel: '12:00-14:00/1234567/-'). Für LG RESU Batterien: '[Startzeit]-[Endzeit]/[Strompreis]' (Beispiel: 13:00-14:00/0.50)",
