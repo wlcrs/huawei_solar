@@ -7,6 +7,7 @@ from typing import Any
 from homeassistant.components.diagnostics import async_redact_data
 from homeassistant.const import CONF_PASSWORD
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import entity_registry as er
 
 from .const import DATA_DEVICE_DATAS
 from .types import (
@@ -26,6 +27,12 @@ async def async_get_config_entry_diagnostics(
 
     diagnostics_data = {
         "config_entry_data": async_redact_data(dict(entry.data), TO_REDACT),
+        "entities": {
+            entity_entry.entity_id: entity_entry.extended_dict
+            for entity_entry in er.async_entries_for_config_entry(
+                er.async_get(hass), entry.entry_id
+            )
+        },
     }
     for dd in device_datas:
         if isinstance(dd, HuaweiSolarInverterData):
