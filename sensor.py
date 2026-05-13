@@ -1167,7 +1167,7 @@ async def create_sun2000_entities(ucs: HuaweiSolarInverterData) -> list[SensorEn
         )
 
     if (
-        not isinstance(ucs.device.primary_device, EMMADevice)
+        not isinstance(ucs.device.primary_device, (EMMADevice, SmartLoggerDevice))
         and await ucs.device.has_write_permission()
         and ucs.configuration_update_coordinator
     ):
