@@ -108,6 +108,15 @@
             }
         }
     },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "scan_interval": "Интервал на опресняване (секунди)"
+                }
+            }
+        }
+    },
     "device": {
         "battery_1": {
             "name": "Battery 1"

@@ -36,9 +36,11 @@ from homeassistant.const import (
     CONF_HOST,
     CONF_PASSWORD,
     CONF_PORT,
+    CONF_SCAN_INTERVAL,
     CONF_TYPE,
     CONF_USERNAME,
 )
+from homeassistant.core import callback
 import homeassistant.helpers.config_validation as cv
 
 from .const import (
@@ -1394,6 +1396,14 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         return self.async_create_entry(title=inverter_info["model_name"], data=data)
 
+    @staticmethod
+    @callback
+    def async_get_options_flow(
+        config_entry: config_entries.ConfigEntry,
+    ) -> HuaweiSolarOptionsFlowHandler:
+        """Get the options flow for this handler."""
+        return HuaweiSolarOptionsFlowHandler()
+
 
 class UnitIdsParseException(Exception):
     """Error while parsing the unit id's."""
@@ -1406,3 +1416,28 @@ class DeviceException(Exception):
         """Initialize DeviceException."""
         super().__init__(message)
         self.unit_id = unit_id
+
+
+class HuaweiSolarOptionsFlowHandler(config_entries.OptionsFlow):
+    """Handle Huawei Solar options."""
+
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Manage the options."""
+        if user_input is not None:
+            return self.async_create_entry(title="", data=user_input)
+
+        options = self.config_entry.options
+
+        return self.async_show_form(
+            step_id="init",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_SCAN_INTERVAL,
+                        default=options.get(CONF_SCAN_INTERVAL, 30),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=5)),
+                }
+            ),
+        )

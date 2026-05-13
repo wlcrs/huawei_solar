@@ -108,6 +108,15 @@
             }
         }
     },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "scan_interval": "Интервал обновления (секунды)"
+                }
+            }
+        }
+    },
     "device": {
         "battery_1": {
             "name": "Батарея 1"

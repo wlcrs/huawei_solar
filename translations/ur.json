@@ -108,6 +108,15 @@
             }
         }
     },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "scan_interval": "اپ ڈیٹ کا وقفہ (سیکنڈ)"
+                }
+            }
+        }
+    },
     "device": {
         "battery_1": {
             "name": "Battery 1"

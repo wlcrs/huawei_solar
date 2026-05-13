@@ -1,6 +1,5 @@
-"""The Huawei Solar integration."""
-
 import logging
+from datetime import timedelta
 
 from huawei_solar import (
     ConnectionException,
@@ -27,6 +26,7 @@ from homeassistant.const import (
     CONF_HOST,
     CONF_PASSWORD,
     CONF_PORT,
+    CONF_SCAN_INTERVAL,
     CONF_USERNAME,
     Platform,
 )
@@ -201,10 +201,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
             await primary_device.stop()
         raise
 
+    entry.async_on_unload(entry.add_update_listener(async_update_options))
+
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     await async_setup_services(hass, entry)
 
     return True
+
+
+async def async_update_options(
+    hass: HomeAssistant, entry: HuaweiSolarConfigEntry
+) -> None:
+    """Update options."""
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(
@@ -241,6 +250,7 @@ async def _setup_inverter_device_data(
     device: SUN2000Device,
     connecting_inverter_device_id: tuple[str, str] | None,
 ) -> HuaweiSolarInverterData:
+    scan_interval = timedelta(seconds=entry.options.get(CONF_SCAN_INTERVAL, 30))
     device_registry = dr.async_get(hass)
 
     inverter_device_info = DeviceInfo(
@@ -268,7 +278,7 @@ async def _setup_inverter_device_data(
         _LOGGER,
         device=device,
         name=f"{device.serial_number}_data_update_coordinator",
-        update_interval=INVERTER_UPDATE_INTERVAL,
+        update_interval=scan_interval,
     )
 
     # Add power meter device if a power meter is detected
@@ -285,7 +295,7 @@ async def _setup_inverter_device_data(
             _LOGGER,
             device=device,
             name=f"{device.serial_number}_power_meter_data_update_coordinator",
-            update_interval=POWER_METER_UPDATE_INTERVAL,
+            update_interval=scan_interval,
         )
     else:
         power_meter_device_info = None
@@ -308,7 +318,7 @@ async def _setup_inverter_device_data(
             _LOGGER,
             device=device,
             name=f"{device.serial_number}_battery_data_update_coordinator",
-            update_interval=ENERGY_STORAGE_UPDATE_INTERVAL,
+            update_interval=scan_interval,
         )
     else:
         battery_device_info = None
@@ -428,6 +438,7 @@ async def _setup_device_data(
     if isinstance(device, SUN2000Device):
         return await _setup_inverter_device_data(hass, entry, device, None)
 
+    scan_interval = timedelta(seconds=entry.options.get(CONF_SCAN_INTERVAL, 30))
     device_registry = dr.async_get(hass)
 
     sw_version = getattr(device, "software_version", None)
@@ -456,7 +467,7 @@ async def _setup_device_data(
         _LOGGER,
         device=device,
         name=f"{device.serial_number}_data_update_coordinator",
-        update_interval=INVERTER_UPDATE_INTERVAL,
+        update_interval=scan_interval,
     )
 
     if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):

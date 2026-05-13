@@ -50,6 +50,15 @@
             }
         }
     },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "scan_interval": "Interval d'actualització (segons)"
+                }
+            }
+        }
+    },
     "entity": {
         "button": {
             "stop_forcible_charge": {

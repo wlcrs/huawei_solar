@@ -108,6 +108,15 @@
             }
         }
     },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "scan_interval": "Aktualisierungsintervall (Sekunden)"
+                }
+            }
+        }
+    },
     "device": {
         "battery_1": {
             "name": "Batterie 1"

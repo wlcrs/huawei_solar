@@ -108,6 +108,15 @@
             }
         }
     },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "scan_interval": "Frissítési időköz (másodperc)"
+                }
+            }
+        }
+    },
     "device": {
         "battery_1": {
             "name": "Battery 1"
