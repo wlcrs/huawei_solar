@@ -1,7 +1,9 @@
 """Support for Huawei inverter monitoring API."""
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
+from datetime import timedelta
+import logging
 from typing import Any
 
 from huawei_solar import (
@@ -46,7 +48,17 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DATA_DEVICE_DATAS
+from .const import (
+    CONF_MONITORING_UPDATE_INTERVAL,
+    CONF_REALTIME_POWER_UPDATE_INTERVAL,
+    CONF_SPLIT_POWER_POLLING,
+    CONF_UPDATE_TIMEOUT,
+    DATA_DEVICE_DATAS,
+    DEFAULT_SPLIT_POWER_POLLING,
+    MONITORING_UPDATE_INTERVAL,
+    REALTIME_POWER_UPDATE_INTERVAL,
+    UPDATE_TIMEOUT,
+)
 from .types import (
     HuaweiSolarConfigEntry,
     HuaweiSolarDeviceData,
@@ -61,6 +73,20 @@ from .update_coordinator import (
 )
 
 PARALLEL_UPDATES = 1
+
+_LOGGER = logging.getLogger(__name__)
+
+
+def _get_seconds_option(
+    options: Mapping[str, Any], key: str, default: timedelta
+) -> timedelta:
+    """Return an entry option stored in seconds as a timedelta."""
+    return timedelta(seconds=options.get(key, int(default.total_seconds())))
+
+
+def _get_split_power_polling(options: Mapping[str, Any]) -> bool:
+    """Return whether power sensors should use dedicated fast coordinators."""
+    return bool(options.get(CONF_SPLIT_POWER_POLLING, DEFAULT_SPLIT_POWER_POLLING))
 
 
 @dataclass(frozen=True)
@@ -87,6 +113,66 @@ class HuaweiSolarSensorEntityDescription(
     def context(self) -> HuaweiSolarEntityContext:
         """Context used by DataUpdateCoordinator."""
         return {"register_names": [rn.RegisterName(self.key.split("#")[0])]}
+
+
+REALTIME_INVERTER_REGISTERS = {
+    rn.INPUT_POWER,
+    rn.ACTIVE_POWER,
+}
+
+REALTIME_POWER_METER_REGISTERS = {
+    rn.POWER_METER_ACTIVE_POWER,
+    rn.ACTIVE_GRID_A_POWER,
+    rn.ACTIVE_GRID_B_POWER,
+    rn.ACTIVE_GRID_C_POWER,
+}
+
+REALTIME_ENERGY_STORAGE_REGISTERS = {
+    rn.STORAGE_CHARGE_DISCHARGE_POWER,
+    rn.STORAGE_UNIT_1_CHARGE_DISCHARGE_POWER,
+    rn.STORAGE_UNIT_2_CHARGE_DISCHARGE_POWER,
+}
+
+REALTIME_SDONGLE_REGISTERS = {
+    rn.SDONGLE_TOTAL_INPUT_POWER,
+    rn.SDONGLE_LOAD_POWER,
+    rn.SDONGLE_GRID_POWER,
+    rn.SDONGLE_TOTAL_BATTERY_POWER,
+    rn.SDONGLE_TOTAL_ACTIVE_POWER,
+}
+
+MONITORING_REGISTERS = {
+    rn.DEVICE_STATUS,
+    rn.STATE_1,
+    rn.STATE_2,
+    rn.STATE_3,
+    rn.ALARM_1,
+    rn.ALARM_2,
+    rn.ALARM_3,
+}
+
+
+def _register_name_from_key(key: str) -> rn.RegisterName:
+    """Get the underlying register name from an entity key."""
+    return rn.RegisterName(key.split("#")[0])
+
+
+def _select_sun2000_coordinator(
+    entity_description: HuaweiSolarSensorEntityDescription,
+    realtime_update_coordinator: HuaweiSolarUpdateCoordinator,
+    monitoring_update_coordinator: HuaweiSolarUpdateCoordinator,
+    default_update_coordinator: HuaweiSolarUpdateCoordinator,
+    realtime_registers: set[rn.RegisterName],
+) -> HuaweiSolarUpdateCoordinator:
+    """Route high-rate and monitoring sensors away from slow background polling."""
+    register_name = _register_name_from_key(entity_description.key)
+
+    if register_name in realtime_registers:
+        return realtime_update_coordinator
+    if register_name in MONITORING_REGISTERS:
+        return monitoring_update_coordinator
+
+    return default_update_coordinator
 
 
 # Every list in this file describes a group of entities which are related to each other.
@@ -1111,25 +1197,67 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
 )
 
 
-async def create_sun2000_entities(ucs: HuaweiSolarInverterData) -> list[SensorEntity]:
+async def create_sun2000_entities(
+    ucs: HuaweiSolarInverterData, options: Mapping[str, Any]
+) -> list[SensorEntity]:
     """Create SUN2000 sensor entities."""
     entities_to_add: list[SensorEntity] = []
+    split_power_polling = _get_split_power_polling(options)
+    update_timeout = _get_seconds_option(options, CONF_UPDATE_TIMEOUT, UPDATE_TIMEOUT)
+
+    realtime_update_coordinator = ucs.update_coordinator
+    monitoring_update_coordinator = ucs.update_coordinator
+    if split_power_polling:
+        realtime_update_coordinator = HuaweiSolarUpdateCoordinator(
+            ucs.update_coordinator.hass,
+            _LOGGER,
+            device=ucs.device,
+            name=f"{ucs.device.serial_number}_realtime_power_update_coordinator",
+            update_interval=_get_seconds_option(
+                options,
+                CONF_REALTIME_POWER_UPDATE_INTERVAL,
+                REALTIME_POWER_UPDATE_INTERVAL,
+            ),
+            update_timeout=update_timeout,
+        )
+        monitoring_update_coordinator = HuaweiSolarUpdateCoordinator(
+            ucs.update_coordinator.hass,
+            _LOGGER,
+            device=ucs.device,
+            name=f"{ucs.device.serial_number}_monitoring_update_coordinator",
+            update_interval=_get_seconds_option(
+                options, CONF_MONITORING_UPDATE_INTERVAL, MONITORING_UPDATE_INTERVAL
+            ),
+            update_timeout=update_timeout,
+        )
 
     entities_to_add.extend(
         HuaweiSolarSensorEntity(
-            ucs.update_coordinator,
+            _select_sun2000_coordinator(
+                entity_description,
+                realtime_update_coordinator,
+                monitoring_update_coordinator,
+                ucs.update_coordinator,
+                REALTIME_INVERTER_REGISTERS,
+            ),
             entity_description,
             ucs.device_info,
         )
         for entity_description in INVERTER_SENSOR_DESCRIPTIONS
     )
     entities_to_add.append(
-        HuaweiSolarAlarmSensorEntity(ucs.update_coordinator, ucs.device_info)
+        HuaweiSolarAlarmSensorEntity(monitoring_update_coordinator, ucs.device_info)
     )
 
     entities_to_add.extend(
         HuaweiSolarSensorEntity(
-            ucs.update_coordinator,
+            _select_sun2000_coordinator(
+                entity_description,
+                realtime_update_coordinator,
+                monitoring_update_coordinator,
+                ucs.update_coordinator,
+                REALTIME_INVERTER_REGISTERS,
+            ),
             entity_description,
             ucs.device_info,
         )
@@ -1149,9 +1277,31 @@ async def create_sun2000_entities(ucs: HuaweiSolarInverterData) -> list[SensorEn
     if ucs.device.power_meter_type == rv.MeterType.SINGLE_PHASE:
         assert ucs.power_meter_update_coordinator
         assert ucs.power_meter
+        power_meter_realtime_update_coordinator = ucs.power_meter_update_coordinator
+        if split_power_polling:
+            power_meter_realtime_update_coordinator = HuaweiSolarUpdateCoordinator(
+                ucs.power_meter_update_coordinator.hass,
+                _LOGGER,
+                device=ucs.device,
+                name=f"{ucs.device.serial_number}_power_meter_realtime_power_update_coordinator",
+                update_interval=_get_seconds_option(
+                    options,
+                    CONF_REALTIME_POWER_UPDATE_INTERVAL,
+                    REALTIME_POWER_UPDATE_INTERVAL,
+                ),
+                update_timeout=update_timeout,
+            )
         entities_to_add.extend(
             HuaweiSolarSensorEntity(
-                ucs.power_meter_update_coordinator, entity_description, ucs.power_meter
+                _select_sun2000_coordinator(
+                    entity_description,
+                    power_meter_realtime_update_coordinator,
+                    monitoring_update_coordinator,
+                    ucs.power_meter_update_coordinator,
+                    REALTIME_POWER_METER_REGISTERS,
+                ),
+                entity_description,
+                ucs.power_meter,
             )
             for entity_description in SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS
         )
@@ -1159,9 +1309,31 @@ async def create_sun2000_entities(ucs: HuaweiSolarInverterData) -> list[SensorEn
     elif ucs.device.power_meter_type == rv.MeterType.THREE_PHASE:
         assert ucs.power_meter_update_coordinator
         assert ucs.power_meter
+        power_meter_realtime_update_coordinator = ucs.power_meter_update_coordinator
+        if split_power_polling:
+            power_meter_realtime_update_coordinator = HuaweiSolarUpdateCoordinator(
+                ucs.power_meter_update_coordinator.hass,
+                _LOGGER,
+                device=ucs.device,
+                name=f"{ucs.device.serial_number}_power_meter_realtime_power_update_coordinator",
+                update_interval=_get_seconds_option(
+                    options,
+                    CONF_REALTIME_POWER_UPDATE_INTERVAL,
+                    REALTIME_POWER_UPDATE_INTERVAL,
+                ),
+                update_timeout=update_timeout,
+            )
         entities_to_add.extend(
             HuaweiSolarSensorEntity(
-                ucs.power_meter_update_coordinator, entity_description, ucs.power_meter
+                _select_sun2000_coordinator(
+                    entity_description,
+                    power_meter_realtime_update_coordinator,
+                    monitoring_update_coordinator,
+                    ucs.power_meter_update_coordinator,
+                    REALTIME_POWER_METER_REGISTERS,
+                ),
+                entity_description,
+                ucs.power_meter,
             )
             for entity_description in THREE_PHASE_METER_ENTITY_DESCRIPTIONS
         )
@@ -1182,10 +1354,32 @@ async def create_sun2000_entities(ucs: HuaweiSolarInverterData) -> list[SensorEn
     if ucs.device.battery_type != rv.StorageProductModel.NONE:
         assert ucs.energy_storage_update_coordinator
         assert ucs.connected_energy_storage
+        energy_storage_realtime_update_coordinator = (
+            ucs.energy_storage_update_coordinator
+        )
+        if split_power_polling:
+            energy_storage_realtime_update_coordinator = HuaweiSolarUpdateCoordinator(
+                ucs.energy_storage_update_coordinator.hass,
+                _LOGGER,
+                device=ucs.device,
+                name=f"{ucs.device.serial_number}_energy_storage_realtime_power_update_coordinator",
+                update_interval=_get_seconds_option(
+                    options,
+                    CONF_REALTIME_POWER_UPDATE_INTERVAL,
+                    REALTIME_POWER_UPDATE_INTERVAL,
+                ),
+                update_timeout=update_timeout,
+            )
 
         entities_to_add.extend(
             HuaweiSolarSensorEntity(
-                ucs.energy_storage_update_coordinator,
+                _select_sun2000_coordinator(
+                    entity_description,
+                    energy_storage_realtime_update_coordinator,
+                    monitoring_update_coordinator,
+                    ucs.energy_storage_update_coordinator,
+                    REALTIME_ENERGY_STORAGE_REGISTERS,
+                ),
                 entity_description,
                 ucs.connected_energy_storage,
             )
@@ -2008,14 +2202,39 @@ def create_charger_entities(
 
 
 def create_sdongle_entities(
+    hass: HomeAssistant,
     ucs: HuaweiSolarDeviceData,
+    options: Mapping[str, Any],
 ) -> list["HuaweiSolarSensorEntity"]:
     """Create SDongle sensor entities."""
     assert isinstance(ucs.device, SDongleDevice)
+    realtime_update_coordinator = ucs.update_coordinator
+    if _get_split_power_polling(options):
+        realtime_update_coordinator = HuaweiSolarUpdateCoordinator(
+            hass,
+            _LOGGER,
+            device=ucs.device,
+            name=f"{ucs.device.serial_number}_realtime_power_update_coordinator",
+            update_interval=_get_seconds_option(
+                options,
+                CONF_REALTIME_POWER_UPDATE_INTERVAL,
+                REALTIME_POWER_UPDATE_INTERVAL,
+            ),
+            update_timeout=_get_seconds_option(
+                options, CONF_UPDATE_TIMEOUT, UPDATE_TIMEOUT
+            ),
+        )
 
     return [
         HuaweiSolarSensorEntity(
-            ucs.update_coordinator, entity_description, ucs.device_info
+            (
+                realtime_update_coordinator
+                if _register_name_from_key(entity_description.key)
+                in REALTIME_SDONGLE_REGISTERS
+                else ucs.update_coordinator
+            ),
+            entity_description,
+            ucs.device_info,
         )
         for entity_description in SDONGLE_SENSOR_DESCRIPTIONS
     ]
@@ -2214,13 +2433,13 @@ async def async_setup_entry(
     entities_to_add = []
     for ucs in device_datas:
         if isinstance(ucs, HuaweiSolarInverterData):
-            entities_to_add.extend(await create_sun2000_entities(ucs))
+            entities_to_add.extend(await create_sun2000_entities(ucs, entry.options))
         elif isinstance(ucs.device, EMMADevice):
             entities_to_add.extend(create_emma_entities(ucs))
         elif isinstance(ucs.device, SChargerDevice):
             entities_to_add.extend(create_charger_entities(ucs))
         elif isinstance(ucs.device, SDongleDevice):
-            entities_to_add.extend(create_sdongle_entities(ucs))
+            entities_to_add.extend(create_sdongle_entities(hass, ucs, entry.options))
         elif isinstance(ucs.device, MeterDevice):
             entities_to_add.extend(create_meter_entities(ucs))
         elif isinstance(ucs.device, SmartLoggerDevice):

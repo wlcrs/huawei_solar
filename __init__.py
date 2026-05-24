@@ -1,6 +1,7 @@
 """The Huawei Solar integration."""
 
 import logging
+from datetime import timedelta
 
 from huawei_solar import (
     ConnectionException,
@@ -37,14 +38,23 @@ from homeassistant.helpers.device_registry import DeviceInfo
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
+    CONF_ENERGY_STORAGE_UPDATE_INTERVAL,
+    CONF_INVERTER_UPDATE_INTERVAL,
     CONF_SLAVE_IDS,
+    CONF_POWER_METER_UPDATE_INTERVAL,
+    CONF_TCP_TIMEOUT,
+    CONF_UPDATE_TIMEOUT,
+    CONF_WAIT_BETWEEN_REQUESTS,
     CONFIGURATION_UPDATE_INTERVAL,
     DATA_DEVICE_DATAS,
+    DEFAULT_TCP_TIMEOUT,
+    DEFAULT_WAIT_BETWEEN_REQUESTS,
     DOMAIN,
     ENERGY_STORAGE_UPDATE_INTERVAL,
     INVERTER_UPDATE_INTERVAL,
     OPTIMIZER_UPDATE_INTERVAL,
     POWER_METER_UPDATE_INTERVAL,
+    UPDATE_TIMEOUT,
 )
 from .services import async_setup_services
 from .types import (
@@ -66,6 +76,25 @@ PLATFORMS: list[Platform] = [
     Platform.SENSOR,
     Platform.SWITCH,
 ]
+
+
+def _get_seconds_option(
+    entry: ConfigEntry, key: str, default: timedelta
+) -> timedelta:
+    """Return an entry option stored in seconds as a timedelta."""
+    return timedelta(seconds=entry.options.get(key, int(default.total_seconds())))
+
+
+def _get_update_timeout(entry: ConfigEntry) -> timedelta:
+    """Return the configured coordinator update timeout."""
+    return _get_seconds_option(entry, CONF_UPDATE_TIMEOUT, UPDATE_TIMEOUT)
+
+
+async def _async_options_updated(
+    hass: HomeAssistant, entry: HuaweiSolarConfigEntry
+) -> None:
+    """Reload the integration when options are changed."""
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) -> bool:
@@ -96,15 +125,23 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
         #  │ SLAVE X │     │ SLAVE Y │    │SLAVE ...│
         #  └─────────┘     └─────────┘    └─────────┘
 
+        wait_between_requests = entry.options.get(
+            CONF_WAIT_BETWEEN_REQUESTS, DEFAULT_WAIT_BETWEEN_REQUESTS
+        )
+
         if entry.data[CONF_HOST] is None:
             client = create_rtu_client(
-                port=entry.data[CONF_PORT], unit_id=entry.data[CONF_SLAVE_IDS][0]
+                port=entry.data[CONF_PORT],
+                unit_id=entry.data[CONF_SLAVE_IDS][0],
+                wait_between_requests=wait_between_requests,
             )
         else:
             client = create_tcp_client(
                 host=entry.data[CONF_HOST],
                 port=entry.data[CONF_PORT],
                 unit_id=entry.data[CONF_SLAVE_IDS][0],
+                timeout=entry.options.get(CONF_TCP_TIMEOUT, DEFAULT_TCP_TIMEOUT),
+                wait_between_requests=wait_between_requests,
             )
 
         primary_device = await create_device_instance(client)
@@ -202,6 +239,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
         raise
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    entry.async_on_unload(entry.add_update_listener(_async_options_updated))
     await async_setup_services(hass, entry)
 
     return True
@@ -268,7 +306,10 @@ async def _setup_inverter_device_data(
         _LOGGER,
         device=device,
         name=f"{device.serial_number}_data_update_coordinator",
-        update_interval=INVERTER_UPDATE_INTERVAL,
+        update_interval=_get_seconds_option(
+            entry, CONF_INVERTER_UPDATE_INTERVAL, INVERTER_UPDATE_INTERVAL
+        ),
+        update_timeout=_get_update_timeout(entry),
     )
 
     # Add power meter device if a power meter is detected
@@ -285,7 +326,10 @@ async def _setup_inverter_device_data(
             _LOGGER,
             device=device,
             name=f"{device.serial_number}_power_meter_data_update_coordinator",
-            update_interval=POWER_METER_UPDATE_INTERVAL,
+            update_interval=_get_seconds_option(
+                entry, CONF_POWER_METER_UPDATE_INTERVAL, POWER_METER_UPDATE_INTERVAL
+            ),
+            update_timeout=_get_update_timeout(entry),
         )
     else:
         power_meter_device_info = None
@@ -308,7 +352,12 @@ async def _setup_inverter_device_data(
             _LOGGER,
             device=device,
             name=f"{device.serial_number}_battery_data_update_coordinator",
-            update_interval=ENERGY_STORAGE_UPDATE_INTERVAL,
+            update_interval=_get_seconds_option(
+                entry,
+                CONF_ENERGY_STORAGE_UPDATE_INTERVAL,
+                ENERGY_STORAGE_UPDATE_INTERVAL,
+            ),
+            update_timeout=_get_update_timeout(entry),
         )
     else:
         battery_device_info = None
@@ -456,7 +505,10 @@ async def _setup_device_data(
         _LOGGER,
         device=device,
         name=f"{device.serial_number}_data_update_coordinator",
-        update_interval=INVERTER_UPDATE_INTERVAL,
+        update_interval=_get_seconds_option(
+            entry, CONF_INVERTER_UPDATE_INTERVAL, INVERTER_UPDATE_INTERVAL
+        ),
+        update_timeout=_get_update_timeout(entry),
     )
 
     if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):

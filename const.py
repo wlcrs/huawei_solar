@@ -15,6 +15,22 @@ CONF_ENABLE_PARAMETER_CONFIGURATION = "enable_parameter_configuration"
 DATA_DEVICE_DATAS = "device_datas"
 DATA_UPDATE_COORDINATORS = "update_coordinators"
 
+CONF_TCP_TIMEOUT = "tcp_timeout"
+CONF_WAIT_BETWEEN_REQUESTS = "wait_between_requests"
+CONF_SPLIT_POWER_POLLING = "split_power_polling"
+CONF_REALTIME_POWER_UPDATE_INTERVAL = "realtime_power_update_interval"
+CONF_MONITORING_UPDATE_INTERVAL = "monitoring_update_interval"
+CONF_INVERTER_UPDATE_INTERVAL = "inverter_update_interval"
+CONF_POWER_METER_UPDATE_INTERVAL = "power_meter_update_interval"
+CONF_ENERGY_STORAGE_UPDATE_INTERVAL = "energy_storage_update_interval"
+CONF_UPDATE_TIMEOUT = "update_timeout"
+
+DEFAULT_TCP_TIMEOUT = 10
+DEFAULT_WAIT_BETWEEN_REQUESTS = 0.05
+DEFAULT_SPLIT_POWER_POLLING = False
+
+REALTIME_POWER_UPDATE_INTERVAL = timedelta(seconds=30)
+MONITORING_UPDATE_INTERVAL = timedelta(seconds=30)
 INVERTER_UPDATE_INTERVAL = timedelta(seconds=30)
 POWER_METER_UPDATE_INTERVAL = timedelta(seconds=30)
 ENERGY_STORAGE_UPDATE_INTERVAL = timedelta(seconds=30)
