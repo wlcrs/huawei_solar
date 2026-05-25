@@ -43,16 +43,39 @@ import homeassistant.helpers.config_validation as cv
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
+    CONF_ENERGY_STORAGE_UPDATE_INTERVAL,
+    CONF_INVERTER_UPDATE_INTERVAL,
+    CONF_MONITORING_UPDATE_INTERVAL,
+    CONF_POWER_METER_UPDATE_INTERVAL,
+    CONF_REALTIME_POWER_UPDATE_INTERVAL,
     CONF_SLAVE_IDS,
+    CONF_SPLIT_POWER_POLLING,
+    CONF_TCP_TIMEOUT,
+    CONF_UPDATE_TIMEOUT,
+    CONF_WAIT_BETWEEN_REQUESTS,
     DEFAULT_PORT,
     DEFAULT_SERIAL_SLAVE_ID,
+    DEFAULT_SPLIT_POWER_POLLING,
+    DEFAULT_TCP_TIMEOUT,
     DEFAULT_USERNAME,
+    DEFAULT_WAIT_BETWEEN_REQUESTS,
     DOMAIN,
+    ENERGY_STORAGE_UPDATE_INTERVAL,
+    INVERTER_UPDATE_INTERVAL,
+    MONITORING_UPDATE_INTERVAL,
+    POWER_METER_UPDATE_INTERVAL,
+    REALTIME_POWER_UPDATE_INTERVAL,
+    UPDATE_TIMEOUT,
 )
 
 _LOGGER = logging.getLogger(__name__)
 
 CONF_MANUAL_PATH = "Enter Manually"
+
+
+def _seconds(timedelta_value) -> int:
+    """Return whole seconds from a timedelta."""
+    return int(timedelta_value.total_seconds())
 
 
 async def validate_serial_setup(port: str, unit_ids: list[int]) -> dict[str, Any]:
@@ -508,6 +531,13 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
     MINOR_VERSION = 1
+
+    @staticmethod
+    def async_get_options_flow(
+        _config_entry: config_entries.ConfigEntry,
+    ) -> config_entries.OptionsFlow:
+        """Create the options flow."""
+        return HuaweiSolarOptionsFlowHandler()
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
@@ -1393,6 +1423,87 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._abort_if_unique_id_configured(updates=data)
 
         return self.async_create_entry(title=inverter_info["model_name"], data=data)
+
+
+class HuaweiSolarOptionsFlowHandler(config_entries.OptionsFlow):
+    """Handle Huawei Solar options."""
+
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Manage integration options."""
+        if user_input is not None:
+            return self.async_create_entry(title="", data=user_input)
+
+        options = self.config_entry.options
+
+        return self.async_show_form(
+            step_id="init",
+            data_schema=vol.Schema(
+                {
+                    vol.Optional(
+                        CONF_TCP_TIMEOUT,
+                        default=options.get(CONF_TCP_TIMEOUT, DEFAULT_TCP_TIMEOUT),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=1)),
+                    vol.Optional(
+                        CONF_WAIT_BETWEEN_REQUESTS,
+                        default=options.get(
+                            CONF_WAIT_BETWEEN_REQUESTS,
+                            DEFAULT_WAIT_BETWEEN_REQUESTS,
+                        ),
+                    ): vol.All(vol.Coerce(float), vol.Range(min=0)),
+                    vol.Optional(
+                        CONF_UPDATE_TIMEOUT,
+                        default=options.get(
+                            CONF_UPDATE_TIMEOUT,
+                            _seconds(UPDATE_TIMEOUT),
+                        ),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=1)),
+                    vol.Optional(
+                        CONF_SPLIT_POWER_POLLING,
+                        default=options.get(
+                            CONF_SPLIT_POWER_POLLING,
+                            DEFAULT_SPLIT_POWER_POLLING,
+                        ),
+                    ): bool,
+                    vol.Optional(
+                        CONF_REALTIME_POWER_UPDATE_INTERVAL,
+                        default=options.get(
+                            CONF_REALTIME_POWER_UPDATE_INTERVAL,
+                            _seconds(REALTIME_POWER_UPDATE_INTERVAL),
+                        ),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=1)),
+                    vol.Optional(
+                        CONF_MONITORING_UPDATE_INTERVAL,
+                        default=options.get(
+                            CONF_MONITORING_UPDATE_INTERVAL,
+                            _seconds(MONITORING_UPDATE_INTERVAL),
+                        ),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=1)),
+                    vol.Optional(
+                        CONF_INVERTER_UPDATE_INTERVAL,
+                        default=options.get(
+                            CONF_INVERTER_UPDATE_INTERVAL,
+                            _seconds(INVERTER_UPDATE_INTERVAL),
+                        ),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=1)),
+                    vol.Optional(
+                        CONF_POWER_METER_UPDATE_INTERVAL,
+                        default=options.get(
+                            CONF_POWER_METER_UPDATE_INTERVAL,
+                            _seconds(POWER_METER_UPDATE_INTERVAL),
+                        ),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=1)),
+                    vol.Optional(
+                        CONF_ENERGY_STORAGE_UPDATE_INTERVAL,
+                        default=options.get(
+                            CONF_ENERGY_STORAGE_UPDATE_INTERVAL,
+                            _seconds(ENERGY_STORAGE_UPDATE_INTERVAL),
+                        ),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=1)),
+                }
+            ),
+        )
 
 
 class UnitIdsParseException(Exception):

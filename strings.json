@@ -108,6 +108,24 @@
             }
         }
     },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "tcp_timeout": "TCP request timeout (seconds)",
+                    "wait_between_requests": "Minimum wait between requests (seconds)",
+                    "update_timeout": "Coordinator update timeout (seconds)",
+                    "split_power_polling": "Use separate fast polling for power sensors",
+                    "realtime_power_update_interval": "Power sensor update interval (seconds)",
+                    "monitoring_update_interval": "Status and alarm update interval (seconds)",
+                    "inverter_update_interval": "Inverter background update interval (seconds)",
+                    "power_meter_update_interval": "Power meter background update interval (seconds)",
+                    "energy_storage_update_interval": "Energy storage background update interval (seconds)"
+                },
+                "description": "Tune Modbus request timing and polling intervals. Defaults match the integration's standard behavior."
+            }
+        }
+    },
     "device": {
         "battery_1": {
             "name": "Battery 1"
