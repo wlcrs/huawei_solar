@@ -2445,7 +2445,10 @@ async def async_setup_entry(
         elif isinstance(ucs.device, SmartLoggerDevice):
             entities_to_add.extend(create_smartlogger_entities(ucs))
 
-    async_add_entities(entities_to_add, True)
+    async_add_entities(
+        entities_to_add,
+        not _get_split_power_polling(entry.options),
+    )
 
 
 class HuaweiSolarSensorEntity(
