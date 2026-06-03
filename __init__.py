@@ -2,26 +2,6 @@
 
 import logging
 
-from huawei_solar import (
-    ConnectionException,
-    ConnectionInterruptedException,
-    EMMADevice,
-    HuaweiSolarException,
-    InvalidCredentials,
-    MeterDevice,
-    SChargerDevice,
-    SDongleDevice,
-    SmartLoggerDevice,
-    SUN2000Device,
-    create_device_instance,
-    create_rtu_client,
-    create_sub_device_instance,
-    create_tcp_client,
-    register_values as rv,
-)
-from huawei_solar.device.base import HuaweiSolarDevice, HuaweiSolarDeviceWithLogin
-from huawei_solar.modbus_pdu import PermissionDeniedError
-
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONF_HOST,
@@ -34,6 +14,26 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.device_registry import DeviceInfo
+from huawei_solar import (
+    ConnectionException,
+    ConnectionInterruptedException,
+    EMMADevice,
+    HuaweiSolarException,
+    InvalidCredentials,
+    MeterDevice,
+    ReadException,
+    SChargerDevice,
+    SDongleDevice,
+    SmartLoggerDevice,
+    SUN2000Device,
+    create_device_instance,
+    create_rtu_client,
+    create_sub_device_instance,
+    create_tcp_client,
+    register_values as rv,
+)
+from huawei_solar.device.base import HuaweiSolarDevice, HuaweiSolarDeviceWithLogin
+from huawei_solar.modbus_pdu import PermissionDeniedError
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
@@ -371,12 +371,18 @@ async def _setup_inverter_device_data(
                 optimizers_device_infos,
                 OPTIMIZER_UPDATE_INTERVAL,
             )
-        except PermissionDeniedError as exception:
-            _LOGGER.info(
-                "Cannot create optimizer sensor entities as the integration has insufficient permissions. "
-                "Consider enabling elevated permissions to get more optimizer data",
-                exc_info=exception,
-            )
+        except ReadException as exception:
+            if exception.modbus_exception_code == PermissionDeniedError.error_code:
+                _LOGGER.info(
+                    "Cannot create optimizer sensor entities as the integration has insufficient permissions. "
+                    "Consider enabling elevated permissions to get more optimizer data",
+                    exc_info=exception,
+                )
+            else:
+                _LOGGER.exception(
+                    "Cannot create optimizer sensor entities due to a read error",
+                    exc_info=exception,
+                )
         except Exception as exc:  # pylint: disable=broad-except
             _LOGGER.exception(
                 "Cannot create optimizer sensor entities due to an unexpected error",
