@@ -1168,8 +1168,8 @@ async def create_sun2000_entities(ucs: HuaweiSolarInverterData) -> list[SensorEn
 
     if (
         not isinstance(ucs.device.primary_device, (EMMADevice, SmartLoggerDevice))
-        and await ucs.device.has_write_permission()
         and ucs.configuration_update_coordinator
+        and await ucs.device.has_write_permission()
     ):
         entities_to_add.append(
             HuaweiSolarActivePowerControlModeEntity(
