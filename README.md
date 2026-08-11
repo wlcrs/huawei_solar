@@ -22,7 +22,8 @@ Looking for more information? The [Wiki](https://github.com/wlcrs/huawei_solar/w
 | **Inverter**                                                           | **Battery**                                                  |
 |:----------------------------------------------------------------------:|:------------------------------------------------------------:|
 |![Inverter Sensors](images/inverter_sensors.png)                        | ![Battery Sensors](images/battery_sensors.png)               |
-|![Inverter Diagnostics](images/inverter_configuration_diagnostics.png)  | ![Battery Configuration](images/battery_configuration.png)   |
+|![Inverter Configuration](images/inverter-configuration.png)            | ![Battery Configuration](images/battery-configuration.png)   |
+|![Inverter Diagnostics](images/inverter-diagnostics.png)              |    |
 
 
 |**Power Meter**                                          | **Optimizer**                                       |
@@ -55,7 +56,7 @@ Detailed information can be found on the ['Connecting to the inverter' Wiki-page
 
 > [!NOTE]
 > Modbus devices only support **one connection at a time**.
-> 
+>
 > Make sure that nothing else is trying to connect to your Huawei solar installation.
 > Otherwise the connection from this integration to your installation will constantly be interrupted.
 
