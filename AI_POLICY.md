@@ -28,18 +28,10 @@ AI can be a helpful tool for writing code and documentation. However, due to the
 
 All contributions must be reviewed and understood by the contributor before submission. You should be able to explain every change in a pull request you submit. Pull requests that appear to be unreviewed AI output will be closed without review.
 
-## Our use of AI
-
-Some of our projects use AI tools to assist with code reviews, issue triaging, reporting, and other project management tasks. These tools may leave comments on pull requests or issues. As with any automated tooling, these comments are not always correct.
-
-If an AI tool leaves a comment on your contribution, treat it as you would any other review comment. If you believe it is incorrect, say so; a brief explanation is sufficient. Maintainers always have the final say. If in doubt, ask a maintainer.
-
 ## Enforcement
 
-Contributions that do not follow this policy will be closed. Repeated violations may result in being blocked from contributing to OHF projects. If you believe your contribution was closed in error, you are welcome to reach out to a maintainer to discuss.
+Contributions that do not follow this policy will be closed. Repeated violations may result in being blocked from contributing to this project. If you believe your contribution was closed in error, you are welcome to reach out to a maintainer to discuss.
 
 ---
 
-This policy was adopted from the Open Home Foundation. The canonical version of this policy is published at
-<https://developers.home-assistant.io/docs/ai_policy>. In case of differences,
-the published version applies.
+This policy was adopted from the [Open Home Foundation AI Policy](https://developers.home-assistant.io/docs/ai_policy).
