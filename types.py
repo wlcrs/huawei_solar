@@ -20,6 +20,7 @@ class HuaweiSolarDeviceData:
     """Runtime data for the Huawei Solar integration."""
 
     device: HuaweiSolarDevice
+    ha_device_id: str
     device_info: DeviceInfo
     update_coordinator: HuaweiSolarUpdateCoordinator
     configuration_update_coordinator: HuaweiSolarUpdateCoordinator | None
