@@ -156,7 +156,7 @@ class HuaweiSolarOptimizerUpdateCoordinator(
                 f"Could not decode optimizer data from {self.device.serial_number}: {err}. "
                 "This is typically a transient problem that will resolve itself when the device generates a "
                 "new optimizer data file.",
-                retry_after=15 * 60,  # optimizer files are generated every 15 minutes
+                retry_after=5 * 60,  # optimizer files are generated every 5 minutes
             ) from err
         except HuaweiSolarException as err:
             raise UpdateFailed(

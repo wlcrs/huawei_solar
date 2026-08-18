@@ -462,6 +462,8 @@ async def _setup_inverter_device_data(
                 optimizers_device_infos,
                 OPTIMIZER_UPDATE_INTERVAL,
             )
+        except ConfigEntryNotReady:
+            raise
         except ReadException as exception:
             if exception.modbus_exception_code == PermissionDeniedError.error_code:
                 _LOGGER.info(
@@ -474,6 +476,9 @@ async def _setup_inverter_device_data(
                     "Cannot create optimizer sensor entities due to a read error",
                     exc_info=exception,
                 )
+                raise ConfigEntryNotReady(
+                    "Cannot create optimizer sensor entities due to a read error. "
+                ) from exception
         except Exception as exc:  # pylint: disable=broad-except
             _LOGGER.exception(
                 "Cannot create optimizer sensor entities due to an unexpected error",
