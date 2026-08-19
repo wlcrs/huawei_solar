@@ -1157,7 +1157,9 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
 )
 
 
-async def create_sun2000_entities(ucs: HuaweiSolarInverterData) -> list[SensorEntity]:
+async def create_sun2000_entities(
+    ucs: HuaweiSolarInverterData, *, has_emma: bool = False
+) -> list[SensorEntity]:
     """Create SUN2000 sensor entities."""
     entities_to_add: list[SensorEntity] = []
 
@@ -1239,7 +1241,10 @@ async def create_sun2000_entities(ucs: HuaweiSolarInverterData) -> list[SensorEn
         )
 
         if ucs.configuration_update_coordinator:
-            if ucs.device.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000:
+            if (
+                not has_emma
+                and ucs.device.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000
+            ):
                 entities_to_add.append(
                     HuaweiSolarTOUSensorEntity(
                         ucs.configuration_update_coordinator,
@@ -1247,7 +1252,10 @@ async def create_sun2000_entities(ucs: HuaweiSolarInverterData) -> list[SensorEn
                         ucs.connected_energy_storage,
                     ),
                 )
-            elif ucs.device.battery_type == rv.StorageProductModel.LG_RESU:
+            elif (
+                not has_emma
+                and ucs.device.battery_type == rv.StorageProductModel.LG_RESU
+            ):
                 entities_to_add.append(
                     HuaweiSolarPricePeriodsSensorEntity(
                         ucs.configuration_update_coordinator,
@@ -2258,11 +2266,16 @@ async def async_setup_entry(
 ) -> None:
     """Add Huawei Solar entry."""
     device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
+    has_emma = any(
+        isinstance(device_data.device, EMMADevice) for device_data in device_datas
+    )
 
     entities_to_add = []
     for ucs in device_datas:
         if isinstance(ucs, HuaweiSolarInverterData):
-            entities_to_add.extend(await create_sun2000_entities(ucs))
+            entities_to_add.extend(
+                await create_sun2000_entities(ucs, has_emma=has_emma)
+            )
         elif isinstance(ucs.device, EMMADevice):
             entities_to_add.extend(create_emma_entities(ucs))
         elif isinstance(ucs.device, SChargerDevice):
