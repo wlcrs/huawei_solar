@@ -315,7 +315,7 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
         entity_registry_enabled_default=False,
-    ),    
+    ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CUMULATIVE_DC_ENERGY_YIELD_MPPT2,
         icon="mdi:solar-power",
@@ -323,7 +323,7 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
         entity_registry_enabled_default=False,
-    ),    
+    ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CUMULATIVE_DC_ENERGY_YIELD_MPPT3,
         icon="mdi:solar-power",
@@ -331,7 +331,7 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
         entity_registry_enabled_default=False,
-    ),    
+    ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CUMULATIVE_DC_ENERGY_YIELD_MPPT4,
         icon="mdi:solar-power",
@@ -339,7 +339,7 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
         entity_registry_enabled_default=False,
-    ),    
+    ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STATE_1,
         entity_category=EntityCategory.DIAGNOSTIC,
@@ -1253,6 +1253,7 @@ async def create_sun2000_entities(ucs: HuaweiSolarInverterData) -> list[SensorEn
                         ucs.configuration_update_coordinator,
                         ucs.device,
                         ucs.connected_energy_storage,
+                        translation_key="storage_lg_resu_time_of_use_price_periods",
                     ),
                 )
             entities_to_add.append(
@@ -2546,6 +2547,7 @@ class HuaweiSolarPricePeriodsSensorEntity(
         device_info: DeviceInfo,
         register_name: str = rn.STORAGE_LG_RESU_TIME_OF_USE_PRICE_PERIODS,
         entity_registry_enabled_default: bool = True,
+        translation_key: str | None = None,
     ) -> None:
         """Huawei Solar TOU Sensor Entity constructor."""
         super().__init__(
@@ -2556,6 +2558,7 @@ class HuaweiSolarPricePeriodsSensorEntity(
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
             key=register_name,
+            translation_key=translation_key,
             icon="mdi:calendar-text",
             entity_registry_enabled_default=entity_registry_enabled_default,
         )
@@ -2614,6 +2617,7 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
             key=rn.STORAGE_CAPACITY_CONTROL_PERIODS,
+            translation_key="storage_capacity_control_periods",
             icon="mdi:calendar-text",
         )
 
