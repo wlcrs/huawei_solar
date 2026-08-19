@@ -1787,6 +1787,7 @@ def create_emma_entities(
                 ucs.device_info,
                 register_name=rn.EMMA_TOU_PERIODS,
                 entity_registry_enabled_default=False,
+                translation_key="emma_tou_periods",
             )
         )
 
@@ -2466,6 +2467,7 @@ class HuaweiSolarTOUSensorEntity(
         device_info: DeviceInfo,
         register_name: str = rn.STORAGE_HUAWEI_LUNA2000_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS,
         entity_registry_enabled_default: bool = True,
+        translation_key: str | None = None,
     ) -> None:
         """Huawei Solar TOU Sensor Entity constructor."""
         super().__init__(
@@ -2476,6 +2478,7 @@ class HuaweiSolarTOUSensorEntity(
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
             key=register_name,
+            translation_key=translation_key,
             icon="mdi:calendar-text",
             entity_registry_enabled_default=entity_registry_enabled_default,
         )

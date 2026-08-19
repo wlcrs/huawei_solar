@@ -156,6 +156,9 @@
             "emma_tou_maximum_power_for_charging_batteries_from_grid": {
                 "name": "Maximum power for charging batteries from grid"
             },
+            "emma_tou_periods": {
+                "name": "TOU periods"
+            },
             "mppt_scanning_interval": {
                 "name": "MPPT-Scan Interval"
             },
