@@ -118,7 +118,7 @@ EMMA_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.EMMA_MAXIMUM_FEED_GRID_POWER_WATT,
-        static_maximum_key=rn.INVERTER_RATED_POWER,
+        native_max_value=50000,
         native_step=1,
         native_min_value=-1000,
         icon="mdi:transmission-tower-off",
