@@ -9,4 +9,5 @@
 [autolink-references]: https://help.github.com/articles/autolinked-references-and-urls/
 
 **Please confirm the following:**
-[ ] I'm following the [AI Policy](../AI_POLICY.md).
+
+- [ ] I'm following the [AI Policy](../AI_POLICY.md).
