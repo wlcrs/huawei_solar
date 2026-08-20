@@ -118,7 +118,14 @@ EMMA_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.EMMA_MAXIMUM_FEED_GRID_POWER_WATT,
-        static_maximum_key=rn.INVERTER_RATED_POWER,
+        # rn.INVERTER_RATED_POWER (EMMA register 30362) only reports the rated
+        # power of a single inverter, not the capacity of the whole plant. When
+        # the EMMA manages multiple inverters, using it as maximum under-clamps
+        # this entity: an EMMA-A02 managing a 6kW + 3.3kW inverter reports
+        # 6000W, making the real 9.3kW feed-in limit impossible to configure.
+        # Use a fixed upper bound instead, like
+        # EMMA_TOU_MAXIMUM_POWER_FOR_CHARGING_BATTERIES_FROM_GRID below.
+        native_max_value=50000,
         native_step=1,
         native_min_value=-1000,
         icon="mdi:transmission-tower-off",
