@@ -188,3 +188,20 @@ set_fixed_charge_periods:
       selector:
         text:
           multiline: true
+
+import_history:
+  supports_response: "optional"
+  target:
+    entity:
+      integration: huawei_solar
+      domain: sensor
+  fields:
+    start_date:
+      required: false
+      selector:
+        datetime:
+    end_date:
+      required: false
+      selector:
+        datetime:
+

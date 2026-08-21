@@ -1337,6 +1337,38 @@
                 }
             },
             "name": "Stop the forcible charge or discharge"
+        },
+        "import_history": {
+            "description": "Import missing historical telemetry from the inverter into Home Assistant Long-Term Statistics",
+            "fields": {
+                "end_date": {
+                    "description": "End timestamp for historical query (defaults to now)",
+                    "name": "End Date"
+                },
+                "start_date": {
+                    "description": "Start timestamp for historical query (defaults to last recorded statistic)",
+                    "name": "Start Date"
+                }
+            },
+            "name": "Import Inverter History"
+        }
+    },
+    "notification": {
+        "import_history_start": {
+            "message": "Starting historical telemetry import for {total_entities} entity/entities...",
+            "title": "Huawei Solar History Import"
+        },
+        "import_history_progress": {
+            "message": "⏳ **Importing entity {idx}/{total_entities}**\n\n• Entity: `{entity_id}`\n• Querying: {start} to {end}\n• Points imported so far: {total_points}",
+            "title": "Huawei Solar History Import"
+        },
+        "import_history_complete": {
+            "message": "✅ **Import complete!**\n\nSuccessfully imported **{total_points}** data points across {total_entities} entity/entities.",
+            "title": "Huawei Solar History Import"
+        },
+        "import_history_failed": {
+            "message": "❌ **Import failed:**\n\n{error}",
+            "title": "Huawei Solar History Import"
         }
     }
 }

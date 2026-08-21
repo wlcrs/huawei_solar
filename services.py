@@ -25,8 +25,14 @@ from huawei_solar.register_definitions.periods import (
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntryState
-from homeassistant.const import ATTR_DEVICE_ID
-from homeassistant.core import HomeAssistant, ServiceCall, callback
+from homeassistant.const import ATTR_DEVICE_ID, ATTR_ENTITY_ID
+from homeassistant.core import (
+    HomeAssistant,
+    ServiceCall,
+    ServiceResponse,
+    SupportsResponse,
+    callback,
+)
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import device_registry as dr
 import homeassistant.helpers.config_validation as cv
@@ -39,6 +45,7 @@ from .const import (
     SERVICE_FORCIBLE_CHARGE_SOC,
     SERVICE_FORCIBLE_DISCHARGE,
     SERVICE_FORCIBLE_DISCHARGE_SOC,
+    SERVICE_IMPORT_HISTORY,
     SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
     SERVICE_SET_CAPACITY_CONTROL_PERIODS,
     SERVICE_SET_DI_ACTIVE_POWER_SCHEDULING,
@@ -49,6 +56,7 @@ from .const import (
     SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
     SERVICE_STOP_FORCIBLE_CHARGE,
 )
+from .history import async_import_history
 from .types import (
     HuaweiSolarConfigEntry,
     HuaweiSolarDeviceData,
@@ -60,6 +68,7 @@ ALL_SERVICES = [
     SERVICE_FORCIBLE_CHARGE_SOC,
     SERVICE_FORCIBLE_DISCHARGE,
     SERVICE_FORCIBLE_DISCHARGE_SOC,
+    SERVICE_IMPORT_HISTORY,
     SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
     SERVICE_SET_CAPACITY_CONTROL_PERIODS,
     SERVICE_SET_DI_ACTIVE_POWER_SCHEDULING,
@@ -77,6 +86,8 @@ DATA_POWER_PERCENTAGE = "power_percentage"
 DATA_DURATION = "duration"
 DATA_TARGET_SOC = "target_soc"
 DATA_PERIODS = "periods"
+DATA_START_DATE = "start_date"
+DATA_END_DATE = "end_date"
 
 
 _LOGGER = logging.getLogger(__name__)
@@ -223,6 +234,12 @@ def get_inverter_data(call: ServiceCall) -> HuaweiSolarInverterData:
 ###################################################
 
 INVERTER_DEVICE_SCHEMA = vol.Schema({DATA_DEVICE_ID: vol.All(cv.string, str)})
+IMPORT_HISTORY_SCHEMA = cv.make_entity_service_schema(
+    {
+        vol.Optional(DATA_START_DATE): cv.datetime,
+        vol.Optional(DATA_END_DATE): cv.datetime,
+    }
+)
 
 
 FORCIBLE_CHARGE_BASE_SCHEMA = BATTERY_DEVICE_SCHEMA.extend(
@@ -755,15 +772,40 @@ async def set_fixed_charge_periods(service_call: ServiceCall) -> None:
     dd.configuration_update_coordinator.async_request_refresh()
 
 
+async def import_history(service_call: ServiceCall) -> ServiceResponse:
+    """Import historical data from the inverter into Home Assistant statistics."""
+    entity_ids = cv.extract_entity_ids(service_call.hass, service_call)
+    start_time = service_call.data.get(DATA_START_DATE)
+    end_time = service_call.data.get(DATA_END_DATE)
+
+    return await async_import_history(
+        service_call.hass,
+        entity_ids=list(entity_ids),
+        start_time=start_time,
+        end_time=end_time,
+    )
+
+
 async def async_setup_services(
     hass: HomeAssistant,
     entry: HuaweiSolarConfigEntry,
 ) -> None:
     """Huawei Solar Services Setup."""
+
     if not entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
         return
 
     hsucs: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
+
+    has_inverter = any(isinstance(uc.device, SUN2000Device) for uc in hsucs)
+    if has_inverter and not hass.services.has_service(DOMAIN, SERVICE_IMPORT_HISTORY):
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_IMPORT_HISTORY,
+            import_history,
+            schema=IMPORT_HISTORY_SCHEMA,
+            supports_response=SupportsResponse.OPTIONAL,
+        )
 
     has_battery = any(
         isinstance(uc.device, SUN2000Device)
