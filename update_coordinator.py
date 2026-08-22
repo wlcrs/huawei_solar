@@ -24,7 +24,12 @@ from homeassistant.helpers.debounce import Debouncer
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import OPTIMIZER_UPDATE_TIMEOUT, UPDATE_TIMEOUT
+from .const import (
+    MAX_UPDATE_RETRIES,
+    OPTIMIZER_UPDATE_TIMEOUT,
+    RETRY_DELAY_BETWEEN_ATTEMPTS,
+    UPDATE_TIMEOUT,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -47,6 +52,8 @@ class HuaweiSolarUpdateCoordinator(
         | None = None,
         request_refresh_debouncer: Debouncer | None = None,
         update_timeout: timedelta = UPDATE_TIMEOUT,
+        max_retries: int = MAX_UPDATE_RETRIES,
+        retry_delay: float = RETRY_DELAY_BETWEEN_ATTEMPTS.total_seconds(),
     ) -> None:
         """Create a HuaweiSolarUpdateCoordinator."""
         super().__init__(
@@ -59,49 +66,106 @@ class HuaweiSolarUpdateCoordinator(
         )
         self.device = device
         self.update_timeout = update_timeout
+        self._max_retries = max_retries
+        self._retry_delay = retry_delay
+
+    _RETRYABLE_EXCEPTION_CODES = frozenset({
+        0x04,  # SERVER_DEVICE_FAILURE
+        0x05,  # ACKNOWLEDGE
+        0x06,  # SERVER_DEVICE_BUSY
+    })
 
     async def _async_update_data(self) -> dict[RegisterName, Result[Any]]:
         register_names_set = set(
             chain.from_iterable(ctx["register_names"] for ctx in self.async_contexts())
         )
-        try:
-            async with asyncio.timeout(self.update_timeout.total_seconds()):
-                return await self.device.batch_update(list(register_names_set))
-        except TimeoutError as err:
-            raise UpdateFailed(
-                f"Timeout communicating with {self.device.serial_number}: "
-                "the device did not respond in time"
-            ) from err
-        except ReadException as err:
-            if err.modbus_exception_code == 0x02:  # ILLEGAL_DATA_ADDRESS
-                _LOGGER.error(
-                    "Device %s reported an illegal address error during a batch update. "
-                    "This likely means the library is querying a register that is not "
-                    "supported by your specific device. "
-                    "To find the culprit: systematically disable sensors one by one in "
-                    "Home Assistant, wait at least 30 seconds after each change, and "
-                    "check whether the error disappears. Please report the offending "
-                    "sensor to the integration maintainers.",
+        register_names_list = list(register_names_set)
+
+        for attempt in range(self._max_retries + 1):
+            try:
+                async with asyncio.timeout(self.update_timeout.total_seconds()):
+                    return await self.device.batch_update(register_names_list)
+            except TimeoutError as err:
+                if attempt < self._max_retries:
+                    _LOGGER.debug(
+                        "Timeout updating %s (attempt %d/%d). "
+                        "This is common in cascade setups where coordinators share "
+                        "a Modbus connection. Retrying in %.1fs",
+                        self.device.serial_number,
+                        attempt + 1,
+                        self._max_retries + 1,
+                        self._retry_delay,
+                    )
+                    await asyncio.sleep(self._retry_delay)
+                    continue
+                raise UpdateFailed(
+                    f"Timeout communicating with {self.device.serial_number}: "
+                    "the device did not respond in time after "
+                    f"{self._max_retries + 1} attempts"
+                ) from err
+            except ReadException as err:
+                if (
+                    err.modbus_exception_code in self._RETRYABLE_EXCEPTION_CODES
+                    and attempt < self._max_retries
+                ):
+                    _LOGGER.debug(
+                        "Device %s returned transient Modbus exception 0x%02x "
+                        "during batch update (attempt %d/%d). Retrying in %.1fs",
+                        self.device.serial_number,
+                        err.modbus_exception_code,
+                        attempt + 1,
+                        self._max_retries + 1,
+                        self._retry_delay,
+                    )
+                    await asyncio.sleep(self._retry_delay)
+                    continue
+
+                if err.modbus_exception_code == 0x02:  # ILLEGAL_DATA_ADDRESS
+                    _LOGGER.error(
+                        "Device %s reported an illegal address error during a batch update. "
+                        "This likely means the library is querying a register that is not "
+                        "supported by your specific device. "
+                        "To find the culprit: systematically disable sensors one by one in "
+                        "Home Assistant, wait at least 30 seconds after each change, and "
+                        "check whether the error disappears. Please report the offending "
+                        "sensor to the integration maintainers.",
+                        self.device.serial_number,
+                    )
+                raise UpdateFailed(
+                    f"Could not update {self.device.serial_number} values: {err}"
+                ) from err
+            except ConnectionInterruptedException as err:
+                if attempt < self._max_retries:
+                    _LOGGER.debug(
+                        "Connection to %s was interrupted during update "
+                        "(attempt %d/%d). Retrying in %.1fs",
+                        self.device.serial_number,
+                        attempt + 1,
+                        self._max_retries + 1,
+                        self._retry_delay,
+                    )
+                    await asyncio.sleep(self._retry_delay)
+                    continue
+                _LOGGER.warning(
+                    "Connection to %s was interrupted during update. "
+                    "The inverter only supports one Modbus connection at a time - "
+                    "check whether another device has connected to the inverter",
                     self.device.serial_number,
                 )
-            raise UpdateFailed(
-                f"Could not update {self.device.serial_number} values: {err}"
-            ) from err
-        except ConnectionInterruptedException as err:
-            _LOGGER.warning(
-                "Connection to %s was interrupted during update. "
-                "The inverter only supports one Modbus connection at a time - "
-                "check whether another device has connected to the inverter",
-                self.device.serial_number,
-            )
-            raise UpdateFailed(
-                f"Connection to {self.device.serial_number} was interrupted, probably by another device. "
-                "The inverter only supports one Modbus connection at a time."
-            ) from err
-        except HuaweiSolarException as err:
-            raise UpdateFailed(
-                f"Could not update {self.device.serial_number} values: {err}"
-            ) from err
+                raise UpdateFailed(
+                    f"Connection to {self.device.serial_number} was interrupted, probably by another device. "
+                    "The inverter only supports one Modbus connection at a time."
+                ) from err
+            except HuaweiSolarException as err:
+                raise UpdateFailed(
+                    f"Could not update {self.device.serial_number} values: {err}"
+                ) from err
+
+        # Should not be reached, but satisfies the type checker
+        raise UpdateFailed(
+            f"Could not update {self.device.serial_number} values after "
+            f"{self._max_retries + 1} attempts"
+        )
 
 
 class HuaweiSolarOptimizerUpdateCoordinator(
