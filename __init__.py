@@ -39,6 +39,7 @@ from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
     CONF_SLAVE_IDS,
     CONFIGURATION_UPDATE_INTERVAL,
+    CONFIGURATION_UPDATE_TIMEOUT,
     DATA_DEVICE_DATAS,
     DOMAIN,
     ENERGY_STORAGE_UPDATE_INTERVAL,
@@ -492,6 +493,7 @@ async def _setup_inverter_device_data(
             device=device,
             name=f"{device.serial_number}_config_data_update_coordinator",
             update_interval=CONFIGURATION_UPDATE_INTERVAL,
+            update_timeout=CONFIGURATION_UPDATE_TIMEOUT,
         )
     else:
         configuration_update_coordinator = None
@@ -575,6 +577,7 @@ async def _setup_device_data(
             device=device,
             name=f"{device.serial_number}_config_data_update_coordinator",
             update_interval=CONFIGURATION_UPDATE_INTERVAL,
+            update_timeout=CONFIGURATION_UPDATE_TIMEOUT,
         )
     else:
         configuration_update_coordinator = None
