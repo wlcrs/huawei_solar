@@ -25,12 +25,10 @@ from huawei_solar.modbus_client import create_scan_rtu_client, create_scan_tcp_c
 from huawei_solar.device import detect_device_type
 from huawei_solar.device.base import HuaweiSolarDeviceWithLogin
 from huawei_solar.exceptions import DeviceDetectionError
-import serial.tools.list_ports
 from tmodbus.exceptions import ModbusConnectionError
 import voluptuous as vol
 
 from homeassistant import config_entries
-from homeassistant.components import usb
 from homeassistant.config_entries import ConfigFlowResult
 from homeassistant.const import (
     CONF_HOST,
@@ -44,6 +42,7 @@ from homeassistant.helpers.selector import (
     SelectSelector,
     SelectSelectorConfig,
     SelectSelectorMode,
+    SerialPortSelector,
 )
 
 from .const import (
@@ -58,8 +57,6 @@ from .const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
-
-CONF_MANUAL_PATH = "Enter Manually"
 
 BAUDRATE_OPTIONS = ["9600", "19200"]
 BAUDRATE_SELECTOR = SelectSelector(
@@ -595,7 +592,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         current_conn_type = None
         if self._host:
             current_conn_type = "Network"
-        elif self._port:
+        elif self._serial_port or self._port:
             current_conn_type = "Serial"
         schema = vol.Schema(
             {vol.Required(CONF_TYPE, default=current_conn_type): vol.In(list_of_types)}
@@ -614,23 +611,10 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             self._host = None
             self._baudrate = int(user_input[CONF_BAUDRATE])
+            self._serial_port = user_input[CONF_PORT]
             slave_ids_input = user_input[CONF_SLAVE_IDS].strip().upper()
 
-            if user_input[CONF_PORT] == CONF_MANUAL_PATH:
-                if slave_ids_input == "AUTO":
-                    # Need the port first; go to manual path step which will
-                    # then route to auto-discovery.
-                    return await self.async_step_setup_serial_manual_path()
-                try:
-                    self._slave_ids = parse_unit_ids(user_input[CONF_SLAVE_IDS])
-                except UnitIdsParseException:
-                    errors["base"] = "invalid_slave_ids"
-                else:
-                    return await self.async_step_setup_serial_manual_path()
-            elif slave_ids_input == "AUTO":
-                self._serial_port = await self.hass.async_add_executor_job(
-                    usb.get_serial_by_id, user_input[CONF_PORT]
-                )
+            if slave_ids_input == "AUTO":
                 return await self.async_step_serial_auto_discovery()
             else:
                 try:
@@ -638,9 +622,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 except UnitIdsParseException:
                     errors["base"] = "invalid_slave_ids"
                 else:
-                    self._serial_port = await self.hass.async_add_executor_job(
-                        usb.get_serial_by_id, user_input[CONF_PORT]
-                    )
                     assert isinstance(self._serial_port, str)
                     try:
                         info = await validate_serial_setup(
@@ -648,7 +629,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         )
                     except ConnectionInterruptedException:
                         errors["base"] = "connection_interrupted"
-                    except (ConnectionException, ModbusConnectionError):
+                    except ConnectionException, ModbusConnectionError:
                         errors["base"] = "cannot_connect"
                     except DeviceException:
                         errors["base"] = "slave_cannot_connect"
@@ -662,24 +643,11 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     else:
                         return await self._create_or_update_entry(info)
 
-        ports = await self.hass.async_add_executor_job(serial.tools.list_ports.comports)
-        list_of_ports = {
-            port.device: usb.human_readable_device_name(
-                port.device,
-                port.serial_number,
-                port.manufacturer,
-                port.description,
-                port.vid,
-                port.pid,
-            )
-            for port in ports
-        }
-
-        list_of_ports[CONF_MANUAL_PATH] = CONF_MANUAL_PATH
-
         schema = vol.Schema(
             {
-                vol.Required(CONF_PORT, default=self._port): vol.In(list_of_ports),
+                vol.Required(
+                    CONF_PORT, default=self._serial_port or vol.UNDEFINED
+                ): SerialPortSelector(),
                 vol.Required(
                     CONF_BAUDRATE, default=str(self._baudrate or DEFAULT_BAUDRATE)
                 ): BAUDRATE_SELECTOR,
@@ -695,64 +663,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="setup_serial",
             data_schema=schema,
             errors=errors,
-        )
-
-    async def async_step_setup_serial_manual_path(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
-        """Select path manually."""
-        errors = {}
-
-        if user_input is not None:
-            self._serial_port = user_input[CONF_PORT]
-            assert isinstance(self._serial_port, str)
-            self._baudrate = int(user_input[CONF_BAUDRATE])
-
-            slave_ids_input = user_input[CONF_SLAVE_IDS].strip().upper()
-            if slave_ids_input == "AUTO":
-                return await self.async_step_serial_auto_discovery()
-
-            try:
-                self._slave_ids = parse_unit_ids(user_input[CONF_SLAVE_IDS])
-            except UnitIdsParseException:
-                errors["base"] = "invalid_slave_ids"
-            else:
-                try:
-                    info = await validate_serial_setup(
-                        self._serial_port, self._slave_ids, self._baudrate
-                    )
-                except ConnectionInterruptedException:
-                    errors["base"] = "connection_interrupted"
-                except (ConnectionException, ModbusConnectionError):
-                    errors["base"] = "cannot_connect"
-                except DeviceException:
-                    errors["base"] = "slave_cannot_connect"
-                except ReadException:
-                    errors["base"] = "read_error"
-                except Exception:  # allowed in config flow
-                    _LOGGER.exception(
-                        "Unexpected exception while connecting over serial"
-                    )
-                    errors["base"] = "unknown"
-                else:
-                    return await self._create_or_update_entry(info)
-
-        schema = vol.Schema(
-            {
-                vol.Required(CONF_PORT, default=self._serial_port): str,
-                vol.Required(
-                    CONF_BAUDRATE, default=str(self._baudrate or DEFAULT_BAUDRATE)
-                ): BAUDRATE_SELECTOR,
-                vol.Required(
-                    CONF_SLAVE_IDS,
-                    default=",".join(map(str, self._slave_ids))
-                    if self._slave_ids
-                    else "AUTO",
-                ): str,
-            }
-        )
-        return self.async_show_form(
-            step_id="setup_serial_manual_path", data_schema=schema, errors=errors
         )
 
     async def async_step_serial_auto_discovery(
@@ -795,7 +705,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_show_progress_done(
                 next_step_id="connection_interrupted_serial"
             )
-        except (ConnectionException, ModbusConnectionError, TimeoutError):
+        except ConnectionException, ModbusConnectionError, TimeoutError:
             _LOGGER.warning("AUTO/serial: could not open %s", self._serial_port)
             return self.async_show_progress_done(next_step_id="cannot_connect_serial")
         except Exception:
@@ -852,7 +762,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_show_progress_done(
                 next_step_id="connection_interrupted_serial"
             )
-        except (ConnectionException, ModbusConnectionError, TimeoutError):
+        except ConnectionException, ModbusConnectionError, TimeoutError:
             _LOGGER.warning("SCAN/serial: could not open %s", self._serial_port)
             return self.async_show_progress_done(next_step_id="cannot_connect_serial")
         except DeviceException:
@@ -896,13 +806,11 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         try:
             info = task.result()
         except ConnectionInterruptedException:
-            _LOGGER.warning(
-                "Connection interrupted on %s", self._serial_port
-            )
+            _LOGGER.warning("Connection interrupted on %s", self._serial_port)
             return self.async_show_progress_done(
                 next_step_id="connection_interrupted_serial"
             )
-        except (ConnectionException, ModbusConnectionError, TimeoutError):
+        except ConnectionException, ModbusConnectionError, TimeoutError:
             _LOGGER.warning(
                 "Could not connect to discovered serial device on %s", self._serial_port
             )
@@ -1049,7 +957,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         task, self._discovery_task = self._discovery_task, None
         try:
             info = task.result()
-        except (ConnectionException, ModbusConnectionError, TimeoutError):
+        except ConnectionException, ModbusConnectionError, TimeoutError:
             _LOGGER.warning("Could not connect to %s:%s", self._host, self._port)
             return self.async_show_progress_done(next_step_id="cannot_connect")
         except DeviceException as err:
@@ -1069,7 +977,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 self._port,
             )
             return self.async_show_progress_done(next_step_id="connection_interrupted")
-        except (HuaweiSolarException, ReadException):
+        except HuaweiSolarException, ReadException:
             _LOGGER.exception("Error while connecting to %s:%s", self._host, self._port)
             return self.async_show_progress_done(next_step_id="cannot_connect")
         except Exception:  # allowed in config flow
@@ -1123,7 +1031,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "AUTO: connection interrupted on %s:%s", self._host, self._port
             )
             return self.async_show_progress_done(next_step_id="connection_interrupted")
-        except (ConnectionException, ModbusConnectionError, TimeoutError):
+        except ConnectionException, ModbusConnectionError, TimeoutError:
             _LOGGER.warning("AUTO: could not connect to %s:%s", self._host, self._port)
             return self.async_show_progress_done(next_step_id="cannot_connect")
         except Exception:  # allowed in config flow
@@ -1176,7 +1084,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "SCAN: connection interrupted on %s:%s", self._host, self._port
             )
             return self.async_show_progress_done(next_step_id="connection_interrupted")
-        except (ConnectionException, ModbusConnectionError, TimeoutError):
+        except ConnectionException, ModbusConnectionError, TimeoutError:
             _LOGGER.warning("SCAN: could not connect to %s:%s", self._host, self._port)
             return self.async_show_progress_done(next_step_id="cannot_connect")
         except DeviceException:
@@ -1223,7 +1131,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         task, self._discovery_task = self._discovery_task, None
         try:
             info = task.result()
-        except (ConnectionException, ModbusConnectionError, TimeoutError):
+        except ConnectionException, ModbusConnectionError, TimeoutError:
             _LOGGER.warning(
                 "Could not connect to discovered device at %s:%s unit_id %s",
                 self._host,
@@ -1240,7 +1148,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 self._port,
             )
             return self.async_show_progress_done(next_step_id="connection_interrupted")
-        except (HuaweiSolarException, DeviceException):
+        except HuaweiSolarException, DeviceException:
             _LOGGER.exception(
                 "Error while connecting to discovered device at %s:%s unit_id %s",
                 self._host,
@@ -1360,7 +1268,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     return await self._create_or_update_entry(self._inverter_info)
 
                 errors["base"] = "invalid_auth"
-            except (ConnectionException, ModbusConnectionError):
+            except ConnectionException, ModbusConnectionError:
                 errors["base"] = "cannot_connect"
             except DeviceException:
                 errors["base"] = "slave_cannot_connect"

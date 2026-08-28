@@ -97,17 +97,6 @@
                 },
                 "title": "Dispositiu"
             },
-            "setup_serial_manual_path": {
-                "data": {
-                    "port": "Ruta al dispositiu USB",
-                    "baudrate": "Baud rate",
-                    "slave_ids": "IDs d'esclaus (separats per comes)"
-                },
-                "data_description": {
-                    "baudrate": "Default is 9600"
-                },
-                "title": "Ruta"
-            },
             "user": {
                 "data": {
                     "type": "Tipus de connexió"

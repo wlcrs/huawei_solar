@@ -97,17 +97,6 @@
                 },
                 "title": "Périphérique"
             },
-            "setup_serial_manual_path": {
-                "data": {
-                    "port": "Chemin du périphérique USB",
-                    "baudrate": "Baud rate",
-                    "slave_ids": "ID d'esclaves : AUTO pour la découverte automatique, sinon une liste séparée par des virgules"
-                },
-                "data_description": {
-                    "baudrate": "Default is 9600"
-                },
-                "title": "Chemin"
-            },
             "user": {
                 "data": {
                     "type": "Type de connexion"
