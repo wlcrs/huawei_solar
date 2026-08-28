@@ -40,10 +40,17 @@ from homeassistant.const import (
     CONF_USERNAME,
 )
 import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.selector import (
+    SelectSelector,
+    SelectSelectorConfig,
+    SelectSelectorMode,
+)
 
 from .const import (
+    CONF_BAUDRATE,
     CONF_ENABLE_PARAMETER_CONFIGURATION,
     CONF_SLAVE_IDS,
+    DEFAULT_BAUDRATE,
     DEFAULT_PORT,
     DEFAULT_SERIAL_SLAVE_ID,
     DEFAULT_USERNAME,
@@ -54,11 +61,19 @@ _LOGGER = logging.getLogger(__name__)
 
 CONF_MANUAL_PATH = "Enter Manually"
 
+BAUDRATE_OPTIONS = ["9600", "19200"]
+BAUDRATE_SELECTOR = SelectSelector(
+    SelectSelectorConfig(options=BAUDRATE_OPTIONS, mode=SelectSelectorMode.DROPDOWN)
+)
 
-async def validate_serial_setup(port: str, unit_ids: list[int]) -> dict[str, Any]:
+
+async def validate_serial_setup(
+    port: str, unit_ids: list[int], baudrate: int = DEFAULT_BAUDRATE
+) -> dict[str, Any]:
     """Validate the serial device that was passed by the user."""
     client = create_rtu_client(
         port=port,
+        baudrate=baudrate,
         unit_id=unit_ids[0],
     )
     try:
@@ -193,10 +208,11 @@ async def _tcp_auto_slave_discovery(
 async def _rtu_auto_slave_discovery(
     *,
     serial_port: str,
+    baudrate: int = DEFAULT_BAUDRATE,
     on_progress: Callable[[float], None] | None = None,
 ) -> tuple[int, list[int]] | None:
     """Auto-discovery over RTU (serial). Opens/closes its own connection."""
-    client = create_scan_rtu_client(serial_port, unit_id=0)
+    client = create_scan_rtu_client(serial_port, baudrate=baudrate, unit_id=0)
     try:
         await client.connect()
         return await _auto_slave_discovery(client, on_progress=on_progress)
@@ -278,10 +294,11 @@ async def _tcp_scan_slave_discovery(
 async def _rtu_scan_slave_discovery(
     *,
     serial_port: str,
+    baudrate: int = DEFAULT_BAUDRATE,
     on_progress: Callable[[float], None] | None = None,
 ) -> tuple[int, list[int]]:
     """Scan-discovery over RTU (serial). Opens/closes its own connection."""
-    client = create_scan_rtu_client(serial_port, unit_id=0)
+    client = create_scan_rtu_client(serial_port, baudrate=baudrate, unit_id=0)
     try:
         await client.connect()
         return await _scan_slave_discovery(client, on_progress=on_progress)
@@ -478,6 +495,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     _port: int | None = None
 
     _serial_port: str | None = None
+    _baudrate: int | None = None
     _slave_ids: list[int] | None = None
 
     _username: str | None = None
@@ -519,6 +537,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._host = entry_data.get(CONF_HOST)
         if self._host is None:
             self._serial_port = entry_data.get(CONF_PORT)
+            self._baudrate = entry_data.get(CONF_BAUDRATE, DEFAULT_BAUDRATE)
         else:
             self._port = entry_data.get(CONF_PORT)
 
@@ -594,6 +613,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             self._host = None
+            self._baudrate = int(user_input[CONF_BAUDRATE])
             slave_ids_input = user_input[CONF_SLAVE_IDS].strip().upper()
 
             if user_input[CONF_PORT] == CONF_MANUAL_PATH:
@@ -624,7 +644,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     assert isinstance(self._serial_port, str)
                     try:
                         info = await validate_serial_setup(
-                            self._serial_port, self._slave_ids
+                            self._serial_port, self._slave_ids, self._baudrate
                         )
                     except ConnectionInterruptedException:
                         errors["base"] = "connection_interrupted"
@@ -661,6 +681,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             {
                 vol.Required(CONF_PORT, default=self._port): vol.In(list_of_ports),
                 vol.Required(
+                    CONF_BAUDRATE, default=str(self._baudrate or DEFAULT_BAUDRATE)
+                ): BAUDRATE_SELECTOR,
+                vol.Required(
                     CONF_SLAVE_IDS,
                     default=",".join(map(str, self._slave_ids))
                     if self._slave_ids
@@ -683,6 +706,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             self._serial_port = user_input[CONF_PORT]
             assert isinstance(self._serial_port, str)
+            self._baudrate = int(user_input[CONF_BAUDRATE])
 
             slave_ids_input = user_input[CONF_SLAVE_IDS].strip().upper()
             if slave_ids_input == "AUTO":
@@ -695,7 +719,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             else:
                 try:
                     info = await validate_serial_setup(
-                        self._serial_port, self._slave_ids
+                        self._serial_port, self._slave_ids, self._baudrate
                     )
                 except ConnectionInterruptedException:
                     errors["base"] = "connection_interrupted"
@@ -716,6 +740,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         schema = vol.Schema(
             {
                 vol.Required(CONF_PORT, default=self._serial_port): str,
+                vol.Required(
+                    CONF_BAUDRATE, default=str(self._baudrate or DEFAULT_BAUDRATE)
+                ): BAUDRATE_SELECTOR,
                 vol.Required(
                     CONF_SLAVE_IDS,
                     default=",".join(map(str, self._slave_ids))
@@ -744,6 +771,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._discovery_task = self.hass.async_create_background_task(
                 _rtu_auto_slave_discovery(
                     serial_port=self._serial_port,
+                    baudrate=self._baudrate or DEFAULT_BAUDRATE,
                     on_progress=self.async_update_progress,
                 ),
                 "huawei_solar_serial_auto_discovery",
@@ -800,6 +828,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._discovery_task = self.hass.async_create_background_task(
                 _rtu_scan_slave_discovery(
                     serial_port=self._serial_port,
+                    baudrate=self._baudrate or DEFAULT_BAUDRATE,
                     on_progress=self.async_update_progress,
                 ),
                 "huawei_solar_serial_scan_discovery",
@@ -849,7 +878,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 *self._discovered_sub_unit_ids,
             ]
             self._discovery_task = self.hass.async_create_background_task(
-                validate_serial_setup(self._serial_port, unit_ids),
+                validate_serial_setup(
+                    self._serial_port, unit_ids, self._baudrate or DEFAULT_BAUDRATE
+                ),
                 "huawei_solar_serial_finish_setup",
             )
 
@@ -1367,6 +1398,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_PORT: self._serial_port
             if self._serial_port is not None
             else self._port,
+            CONF_BAUDRATE: self._baudrate or DEFAULT_BAUDRATE,
             CONF_SLAVE_IDS: self._slave_ids,
             CONF_ENABLE_PARAMETER_CONFIGURATION: self._elevated_permissions,
             CONF_USERNAME: self._username,

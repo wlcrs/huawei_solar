@@ -36,11 +36,13 @@ from huawei_solar.device.base import HuaweiSolarDevice, HuaweiSolarDeviceWithLog
 from huawei_solar.modbus_pdu import PermissionDeniedError
 
 from .const import (
+    CONF_BAUDRATE,
     CONF_ENABLE_PARAMETER_CONFIGURATION,
     CONF_SLAVE_IDS,
     CONFIGURATION_UPDATE_INTERVAL,
     CONFIGURATION_UPDATE_TIMEOUT,
     DATA_DEVICE_DATAS,
+    DEFAULT_BAUDRATE,
     DOMAIN,
     ENERGY_STORAGE_UPDATE_INTERVAL,
     INVERTER_UPDATE_INTERVAL,
@@ -188,7 +190,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
 
         if entry.data[CONF_HOST] is None:
             client = create_rtu_client(
-                port=entry.data[CONF_PORT], unit_id=entry.data[CONF_SLAVE_IDS][0]
+                port=entry.data[CONF_PORT],
+                baudrate=entry.data.get(CONF_BAUDRATE, DEFAULT_BAUDRATE),
+                unit_id=entry.data[CONF_SLAVE_IDS][0],
             )
         else:
             client = create_tcp_client(
@@ -222,7 +226,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
 
         for extra_unit_id in entry.data[CONF_SLAVE_IDS][1:]:
             sub_device = await create_sub_device_instance(primary_device, extra_unit_id)
-            sub_device_data = await _setup_device_data(hass, entry, sub_device)
+            sub_device_data = await _setup_device_data(
+                hass,
+                entry,
+                sub_device,
+                via_device_id=primary_device_data.ha_device_id,
+            )
 
             device_datas.append(sub_device_data)
 

@@ -89,14 +89,22 @@
             "setup_serial": {
                 "data": {
                     "port": "Selecciona un dispositivo",
+                    "baudrate": "Baud rate",
                     "slave_ids": "IDs esclavos: AUTO para autodescubrimiento, de lo contrario una lista separada por comas"
+                },
+                "data_description": {
+                    "baudrate": "Default is 9600"
                 },
                 "title": "Dispositivo"
             },
             "setup_serial_manual_path": {
                 "data": {
                     "port": "Ruta al dispositivo USB",
+                    "baudrate": "Baud rate",
                     "slave_ids": "IDs esclavos: AUTO para autodescubrimiento, de lo contrario una lista separada por comas"
+                },
+                "data_description": {
+                    "baudrate": "Default is 9600"
                 },
                 "title": "Ruta"
             },
