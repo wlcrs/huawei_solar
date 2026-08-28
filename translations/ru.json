@@ -1118,9 +1118,6 @@
             },
             "yearly_yield_energy": {
                 "name": "Годовая выработка"
-            },
-            "emma_tou_periods": {
-                "name": "TOU periods"
             }
         },
         "switch": {
