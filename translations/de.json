@@ -1118,9 +1118,6 @@
             },
             "yearly_yield_energy": {
                 "name": "Jährlicher Ertrag"
-            },
-            "emma_tou_periods": {
-                "name": "TOU periods"
             }
         },
         "switch": {
