@@ -1,5 +1,6 @@
 """The Huawei Solar integration."""
 
+import asyncio
 import logging
 
 from homeassistant.config_entries import ConfigEntry
@@ -48,6 +49,7 @@ from .const import (
     INVERTER_UPDATE_INTERVAL,
     OPTIMIZER_UPDATE_INTERVAL,
     POWER_METER_UPDATE_INTERVAL,
+    SUB_DEVICE_STAGGER_DELAY,
 )
 from .services import async_setup_services
 from .types import (
@@ -224,7 +226,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
 
         device_datas: list[HuaweiSolarDeviceData] = [primary_device_data]
 
-        for extra_unit_id in entry.data[CONF_SLAVE_IDS][1:]:
+        for sub_index, extra_unit_id in enumerate(entry.data[CONF_SLAVE_IDS][1:]):
+            if sub_index > 0:
+                await asyncio.sleep(SUB_DEVICE_STAGGER_DELAY.total_seconds())
+
             sub_device = await create_sub_device_instance(primary_device, extra_unit_id)
             sub_device_data = await _setup_device_data(
                 hass,

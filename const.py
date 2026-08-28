@@ -21,6 +21,12 @@ INVERTER_UPDATE_INTERVAL = timedelta(seconds=30)
 POWER_METER_UPDATE_INTERVAL = timedelta(seconds=30)
 ENERGY_STORAGE_UPDATE_INTERVAL = timedelta(seconds=30)
 UPDATE_TIMEOUT = timedelta(seconds=29)
+
+# retry transient errors (timeouts, device-busy) a few times before failing
+MAX_UPDATE_RETRIES = 2
+RETRY_DELAY_BETWEEN_ATTEMPTS = timedelta(seconds=2)
+# stagger sub-device setup in cascades to reduce Modbus bus contention
+SUB_DEVICE_STAGGER_DELAY = timedelta(seconds=5)
 # configuration can only change when edited through FusionSolar web or app
 CONFIGURATION_UPDATE_INTERVAL = timedelta(minutes=15)
 CONFIGURATION_UPDATE_TIMEOUT = timedelta(minutes=1)
