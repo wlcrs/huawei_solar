@@ -2868,6 +2868,7 @@ class HuaweiSolarOptimizerSensorEntity(
 
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device_info['name']}_{description.key}"
+        self._attr_available = False
 
     @property
     def available(self) -> bool:
@@ -2883,7 +2884,8 @@ class HuaweiSolarOptimizerSensorEntity(
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         self._attr_available = (
-            self.optimizer_id in self.coordinator.data
+            self.coordinator.data is not None
+            and self.optimizer_id in self.coordinator.data
             # Optimizer data fields only return sensible data when the
             # optimizer is not offline
             and (
@@ -2893,7 +2895,10 @@ class HuaweiSolarOptimizerSensorEntity(
             )
         )
 
-        if self.optimizer_id in self.coordinator.data:
+        if (
+            self.coordinator.data is not None
+            and self.optimizer_id in self.coordinator.data
+        ):
             value = getattr(
                 self.coordinator.data[self.optimizer_id], self.entity_description.key
             )

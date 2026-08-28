@@ -181,6 +181,6 @@ async def create_optimizer_update_coordinator(
         update_interval=update_interval,
     )
 
-    await coordinator.async_config_entry_first_refresh()
+    await coordinator.async_refresh()
 
     return coordinator
