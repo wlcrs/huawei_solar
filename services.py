@@ -375,6 +375,20 @@ def _parse_lg_resu_periods(text: str) -> list[LG_RESU_TimeOfUsePeriod]:
 ###################################
 
 
+@callback
+def _request_configuration_refresh(
+    service_call: ServiceCall, dd: HuaweiSolarDeviceData
+) -> None:
+    """Schedule a configuration refresh without blocking the service call."""
+    assert dd.configuration_update_coordinator
+    _, entry = async_get_entry_id_for_service_call(service_call)
+    entry.async_create_background_task(
+        service_call.hass,
+        dd.configuration_update_coordinator.async_request_refresh(),
+        "Refresh Huawei Solar configuration",
+    )
+
+
 async def forcible_charge(service_call: ServiceCall) -> None:
     """Start a forcible charge on the battery."""
     dd = get_battery_device_data(service_call)
@@ -400,11 +414,10 @@ async def forcible_charge(service_call: ServiceCall) -> None:
         rv.StorageForcibleChargeDischarge.CHARGE,
     )
 
-    assert dd.configuration_update_coordinator
     # Request a refresh without awaiting to avoid deadlocks between the
     # transport communication lock and the device update lock. The
     # coordinator will perform the refresh in the background.
-    dd.configuration_update_coordinator.async_request_refresh()
+    _request_configuration_refresh(service_call, dd)
 
 
 async def forcible_discharge(service_call: ServiceCall) -> None:
@@ -431,8 +444,7 @@ async def forcible_discharge(service_call: ServiceCall) -> None:
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
         rv.StorageForcibleChargeDischarge.DISCHARGE,
     )
-    assert dd.configuration_update_coordinator
-    dd.configuration_update_coordinator.async_request_refresh()
+    _request_configuration_refresh(service_call, dd)
 
 
 async def forcible_charge_soc(service_call: ServiceCall) -> None:
@@ -453,8 +465,7 @@ async def forcible_charge_soc(service_call: ServiceCall) -> None:
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
         rv.StorageForcibleChargeDischarge.CHARGE,
     )
-    assert dd.configuration_update_coordinator
-    dd.configuration_update_coordinator.async_request_refresh()
+    _request_configuration_refresh(service_call, dd)
 
 
 async def forcible_discharge_soc(service_call: ServiceCall) -> None:
@@ -475,8 +486,7 @@ async def forcible_discharge_soc(service_call: ServiceCall) -> None:
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
         rv.StorageForcibleChargeDischarge.DISCHARGE,
     )
-    assert dd.configuration_update_coordinator
-    dd.configuration_update_coordinator.async_request_refresh()
+    _request_configuration_refresh(service_call, dd)
 
 
 async def stop_forcible_charge(service_call: ServiceCall) -> None:
@@ -496,8 +506,7 @@ async def stop_forcible_charge(service_call: ServiceCall) -> None:
         rv.StorageForcibleChargeDischargeTargetMode.TIME,
     )
 
-    assert dd.configuration_update_coordinator
-    dd.configuration_update_coordinator.async_request_refresh()
+    _request_configuration_refresh(service_call, dd)
 
 
 class _PowerControlRegisters(TypedDict):
@@ -548,8 +557,7 @@ async def reset_maximum_feed_grid_power(
         0,
     )
 
-    assert dd.configuration_update_coordinator
-    dd.configuration_update_coordinator.async_request_refresh()
+    _request_configuration_refresh(service_call, dd)
 
 
 # only available for inverters
@@ -566,8 +574,7 @@ async def set_di_active_power_scheduling(service_call: ServiceCall) -> None:
         0,
     )
 
-    assert dd.configuration_update_coordinator
-    dd.configuration_update_coordinator.async_request_refresh()
+    _request_configuration_refresh(service_call, dd)
 
 
 async def set_zero_power_grid_connection(
@@ -586,8 +593,7 @@ async def set_zero_power_grid_connection(
         0,
     )
 
-    assert dd.configuration_update_coordinator
-    dd.configuration_update_coordinator.async_request_refresh()
+    _request_configuration_refresh(service_call, dd)
 
 
 async def set_maximum_feed_grid_power(
@@ -606,8 +612,7 @@ async def set_maximum_feed_grid_power(
         rv.ActivePowerControlMode.POWER_LIMITED_GRID_CONNECTION_WATT,
     )
 
-    assert dd.configuration_update_coordinator
-    dd.configuration_update_coordinator.async_request_refresh()
+    _request_configuration_refresh(service_call, dd)
 
 
 async def set_maximum_feed_grid_power_percentage(
@@ -627,8 +632,7 @@ async def set_maximum_feed_grid_power_percentage(
         rv.ActivePowerControlMode.POWER_LIMITED_GRID_CONNECTION_PERCENT,
     )
 
-    assert dd.configuration_update_coordinator
-    dd.configuration_update_coordinator.async_request_refresh()
+    _request_configuration_refresh(service_call, dd)
 
 
 async def set_battery_tou_periods(
@@ -659,8 +663,7 @@ async def set_battery_tou_periods(
             _parse_lg_resu_periods(service_call.data[DATA_PERIODS]),
         )
 
-    assert dd.configuration_update_coordinator
-    dd.configuration_update_coordinator.async_request_refresh()
+    _request_configuration_refresh(service_call, dd)
 
 
 async def set_emma_tou_periods(
@@ -679,8 +682,7 @@ async def set_emma_tou_periods(
         _parse_huawei_luna2000_periods(service_call.data[DATA_PERIODS]),
     )
 
-    assert dd.configuration_update_coordinator
-    dd.configuration_update_coordinator.async_request_refresh()
+    _request_configuration_refresh(service_call, dd)
 
 
 def _parse_capacity_control_periods(text: str) -> list[PeakSettingPeriod]:
@@ -717,8 +719,7 @@ async def set_capacity_control_periods(service_call: ServiceCall) -> None:
         _parse_capacity_control_periods(service_call.data[DATA_PERIODS]),
     )
 
-    assert dd.configuration_update_coordinator
-    dd.configuration_update_coordinator.async_request_refresh()
+    _request_configuration_refresh(service_call, dd)
 
 
 def _parse_fixed_charge_periods(text: str) -> list[ChargeDischargePeriod]:
@@ -751,8 +752,7 @@ async def set_fixed_charge_periods(service_call: ServiceCall) -> None:
         _parse_fixed_charge_periods(service_call.data[DATA_PERIODS]),
     )
 
-    assert dd.configuration_update_coordinator
-    dd.configuration_update_coordinator.async_request_refresh()
+    _request_configuration_refresh(service_call, dd)
 
 
 async def async_setup_services(
