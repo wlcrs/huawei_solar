@@ -34,6 +34,7 @@ from huawei_solar import (
 )
 from huawei_solar.device.base import HuaweiSolarDevice, HuaweiSolarDeviceWithLogin
 from huawei_solar.modbus_pdu import PermissionDeniedError
+from tmodbus.exceptions import IllegalFunctionError
 
 from .const import (
     CONF_BAUDRATE,
@@ -479,6 +480,18 @@ async def _setup_inverter_device_data(
                 _LOGGER.info(
                     "Cannot create optimizer sensor entities as the integration has insufficient permissions. "
                     "Consider enabling elevated permissions to get more optimizer data",
+                    exc_info=exception,
+                )
+            elif exception.modbus_exception_code == IllegalFunctionError.error_code:
+                # The device rejected the file transfer function code itself.
+                # Retrying the setup can never succeed, so continue without
+                # optimizer entities instead of leaving the entry in setup_retry.
+                _LOGGER.info(
+                    "Cannot create optimizer sensor entities: the device rejected the "
+                    "optimizer file transfer request with 'illegal function'. This "
+                    "happens when the connection passes through a Modbus proxy or "
+                    "gateway that does not forward Huawei's vendor-specific function "
+                    "codes. Continuing without optimizer entities",
                     exc_info=exception,
                 )
             else:
