@@ -605,6 +605,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Handle connection parameters when using ModbusRTU."""
         # You always have elevated permissions when connecting over serial
         self._elevated_permissions = True
+        # Serial devices don't need login; drop credentials from any previous TCP setup
+        self._username = None
+        self._password = None
 
         errors = {}
 
