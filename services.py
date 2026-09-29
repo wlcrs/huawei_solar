@@ -602,7 +602,12 @@ async def set_maximum_feed_grid_power(
 ) -> None:
     """Set Active Power Control to 'Power-limited grid connection' with the given wattage."""
     dd = _get_power_control_device_data(manager_type, service_call)
-    power = await _validate_power_value(service_call.data[DATA_POWER], dd, rn.P_MAX)
+    if manager_type == "emma":
+        # The EMMA has no P_MAX register (it is an inverter register), so there
+        # is nothing to validate against. The schema already enforces the minimum.
+        power = service_call.data[DATA_POWER]
+    else:
+        power = await _validate_power_value(service_call.data[DATA_POWER], dd, rn.P_MAX)
 
     await dd.device.set(
         POWER_CONTROL_REGISTERS[manager_type]["POWER_WATT_REGISTER"], power
