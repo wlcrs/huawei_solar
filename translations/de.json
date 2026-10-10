@@ -511,7 +511,7 @@
                 "name": "Gesamte Wirkenergie"
             },
             "meter_total_reactive_energy": {
-                "name": "Gesamtblindleistung"
+                "name": "Gesamte Blindenergie"
             },
             "monthly_yield_energy": {
                 "name": "Monatlicher Ertrag"
