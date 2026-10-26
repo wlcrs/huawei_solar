@@ -1240,6 +1240,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Charge from grid"
+            },
+            "storage_ess_low_power": {
+                "name": "ESS low power"
             }
         }
     },

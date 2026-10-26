@@ -95,6 +95,14 @@ ENERGY_STORAGE_WITHOUT_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[
     ),
 )
 
+ENERGY_STORAGE_ESS_LOW_POWER_SWITCH_DESCRIPTION = (
+    HuaweiSolarSwitchEntityDescription(
+        key=rn.STORAGE_ESS_LOW_POWER,
+        icon="mdi:battery-saver",
+        entity_category=EntityCategory.CONFIG,
+    )
+)
+
 
 INVERTER_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     HuaweiSolarSwitchEntityDescription(
@@ -188,6 +196,16 @@ async def async_setup_entry(
                             ucs.connected_energy_storage,
                         )
                         for entity_description in ENERGY_STORAGE_WITHOUT_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS
+                    )
+
+                if ucs.device.supports_ess_low_power:
+                    slave_entities.append(
+                        HuaweiSolarSwitchEntity(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            ENERGY_STORAGE_ESS_LOW_POWER_SWITCH_DESCRIPTION,
+                            ucs.connected_energy_storage,
+                        )
                     )
 
         if isinstance(ucs.device, SChargerDevice):

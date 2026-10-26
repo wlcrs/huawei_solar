@@ -48,6 +48,7 @@ async def async_get_config_entry_diagnostics(
                 "battery_2_type": dd.device.battery_2_type,
                 "power_meter_type": dd.device.power_meter_type,
                 "supports_capacity_control": dd.device.supports_capacity_control,
+                "supports_ess_low_power": dd.device.supports_ess_low_power,
             }
 
             if dd.power_meter_update_coordinator:
