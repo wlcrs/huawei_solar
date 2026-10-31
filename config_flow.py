@@ -5,7 +5,6 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import logging
-from pathlib import Path
 from collections.abc import Callable
 from typing import Any
 
@@ -675,12 +674,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         assert self._serial_port is not None
 
         if self._discovery_task is None:
-            if not Path(self._serial_port).is_char_device():
-                _LOGGER.warning(
-                    "AUTO/serial: %s is not a serial device", self._serial_port
-                )
-                return await self.async_step_cannot_connect_serial()
-
             self._discovery_task = self.hass.async_create_background_task(
                 _rtu_auto_slave_discovery(
                     serial_port=self._serial_port,
@@ -732,12 +725,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         assert self._serial_port is not None
 
         if self._discovery_task is None:
-            if not Path(self._serial_port).is_char_device():
-                _LOGGER.warning(
-                    "SCAN/serial: %s is not a serial device", self._serial_port
-                )
-                return await self.async_step_cannot_connect_serial()
-
             self._discovery_task = self.hass.async_create_background_task(
                 _rtu_scan_slave_discovery(
                     serial_port=self._serial_port,
