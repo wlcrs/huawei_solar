@@ -103,6 +103,13 @@ ENERGY_STORAGE_ESS_LOW_POWER_SWITCH_DESCRIPTION = (
     )
 )
 
+BACKUP_SWITCH_TO_OFF_GRID_SWITCH_DESCRIPTION = HuaweiSolarSwitchEntityDescription(
+    key=rn.BACKUP_SWITCH_TO_OFF_GRID,
+    icon="mdi:transmission-tower-off",
+    entity_category=EntityCategory.CONFIG,
+    entity_registry_enabled_default=False,
+)
+"""In FusionSolar: Settings > Feature parameters > Off-grid mode / Switch to off-grid."""
 
 INVERTER_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     HuaweiSolarSwitchEntityDescription(
@@ -175,6 +182,16 @@ async def async_setup_entry(
                     for entity_description in INVERTER_SWITCH_DESCRIPTIONS
                 ]
             )
+
+            if ucs.device.supports_off_grid_switch:
+                slave_entities.append(
+                    HuaweiSolarSwitchEntity(
+                        ucs.configuration_update_coordinator,
+                        ucs.device,
+                        BACKUP_SWITCH_TO_OFF_GRID_SWITCH_DESCRIPTION,
+                        ucs.device_info,
+                    )
+                )
 
             if ucs.connected_energy_storage:
                 if ucs.device.supports_capacity_control:
