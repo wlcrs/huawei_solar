@@ -8,6 +8,7 @@ from huawei_solar import (
     HuaweiSolarDevice,
     RegisterName,
     SChargerDevice,
+    SmartAcGunDevice,
     register_names as rn,
 )
 
@@ -255,6 +256,12 @@ CHARGER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfPower.KILO_WATT,
         entity_category=EntityCategory.CONFIG,
     ),
+)
+
+
+SMART_AC_GUN_NUMBER_DESCRIPTIONS: tuple[
+    HuaweiSolarNumberEntityDescription, ...
+] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.CHARGER_GUN_MAX_CURRENT,
         native_min_value=6.0,
@@ -268,7 +275,7 @@ CHARGER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.CHARGER_MAX_POWER_FROM_GRID,
         native_min_value=0.0,
-        dynamic_maximum_key=rn.CHARGER_MAX_CHARGING_POWER,
+        dynamic_maximum_key=rn.CHARGER_GUN_RATED_POWER,
         native_step=0.1,
         icon="mdi:transmission-tower",
         native_unit_of_measurement=UnitOfPower.KILO_WATT,
@@ -277,7 +284,7 @@ CHARGER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.CHARGER_SURPLUS_POWER_START_THRESHOLD,
         native_min_value=0.0,
-        dynamic_maximum_key=rn.CHARGER_MAX_CHARGING_POWER,
+        dynamic_maximum_key=rn.CHARGER_GUN_RATED_POWER,
         native_step=0.1,
         icon="mdi:solar-power-variant",
         native_unit_of_measurement=UnitOfPower.KILO_WATT,
@@ -316,6 +323,17 @@ async def async_setup_entry(
 
         if isinstance(ucs.device, SChargerDevice):
             for entity_description in CHARGER_NUMBER_DESCRIPTIONS:
+                slave_entities.append(  # noqa: PERF401
+                    await HuaweiSolarNumberEntity.create(
+                        ucs.configuration_update_coordinator,
+                        ucs.device,
+                        entity_description,
+                        ucs.device_info,
+                    )
+                )
+
+        if isinstance(ucs.device, SmartAcGunDevice):
+            for entity_description in SMART_AC_GUN_NUMBER_DESCRIPTIONS:
                 slave_entities.append(  # noqa: PERF401
                     await HuaweiSolarNumberEntity.create(
                         ucs.configuration_update_coordinator,

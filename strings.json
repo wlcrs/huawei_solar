@@ -115,6 +115,9 @@
         "charger": {
             "name": "Charger"
         },
+        "charger_connector": {
+            "name": "Charger connector"
+        },
         "connected_energy_storage": {
             "name": "Batteries"
         },

@@ -10,6 +10,7 @@ from huawei_solar import (
     EMMADevice,
     HuaweiSolarDevice,
     SChargerDevice,
+    SmartAcGunDevice,
     SUN2000Device,
     register_names as rn,
     register_values as rv,
@@ -102,7 +103,9 @@ EMMA_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     ),
 )
 
-CHARGER_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
+SMART_AC_GUN_SELECT_DESCRIPTIONS: tuple[
+    HuaweiSolarSelectEntityDescription, ...
+] = (
     HuaweiSolarSelectEntityDescription(
         key=rn.CHARGER_GUN_WORK_MODE,
         icon="mdi:solar-power",
@@ -145,7 +148,7 @@ async def async_setup_entry(
                     )
                 )
 
-        if isinstance(ucs.device, SChargerDevice):
+        if isinstance(ucs.device, SmartAcGunDevice):
             slave_entities.extend(
                 HuaweiSolarSelectEntity(
                     ucs.configuration_update_coordinator,
@@ -153,7 +156,7 @@ async def async_setup_entry(
                     entity_description,
                     ucs.device_info,
                 )
-                for entity_description in CHARGER_SELECT_DESCRIPTIONS
+                for entity_description in SMART_AC_GUN_SELECT_DESCRIPTIONS
             )
 
         if isinstance(ucs, HuaweiSolarInverterData) and ucs.connected_energy_storage:

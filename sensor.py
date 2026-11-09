@@ -10,6 +10,7 @@ from huawei_solar import (
     MeterDevice,
     SChargerDevice,
     SDongleDevice,
+    SmartAcGunDevice,
     SmartLoggerDevice,
     register_names as rn,
     register_values as rv,
@@ -1870,6 +1871,14 @@ CHARGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         icon="mdi:timer-sand",
     ),
     HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_INDICATOR_LIGHT_STATUS,
+        icon="mdi:led-on",
+    ),
+)
+
+
+SMART_AC_GUN_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
+    HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_GUN_WORK_STATUS,
         icon="mdi:ev-station",
     ),
@@ -1960,10 +1969,6 @@ CHARGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_CHARGING_METHOD,
         icon="mdi:calendar-clock",
-    ),
-    HuaweiSolarSensorEntityDescription(
-        key=rn.CHARGER_INDICATOR_LIGHT_STATUS,
-        icon="mdi:led-on",
     ),
 )
 
@@ -2184,6 +2189,20 @@ def create_charger_entities(
     ]
 
 
+def create_smart_ac_gun_entities(
+    ucs: HuaweiSolarDeviceData,
+) -> list["HuaweiSolarSensorEntity"]:
+    """Create SmartAcGun sensor entities."""
+    assert isinstance(ucs.device, SmartAcGunDevice)
+
+    return [
+        HuaweiSolarSensorEntity(
+            ucs.update_coordinator, entity_description, ucs.device_info
+        )
+        for entity_description in SMART_AC_GUN_SENSOR_DESCRIPTIONS
+    ]
+
+
 def create_sdongle_entities(
     ucs: HuaweiSolarDeviceData,
 ) -> list["HuaweiSolarSensorEntity"]:
@@ -2401,6 +2420,8 @@ async def async_setup_entry(
             entities_to_add.extend(create_emma_entities(ucs))
         elif isinstance(ucs.device, SChargerDevice):
             entities_to_add.extend(create_charger_entities(ucs))
+        elif isinstance(ucs.device, SmartAcGunDevice):
+            entities_to_add.extend(create_smart_ac_gun_entities(ucs))
         elif isinstance(ucs.device, SDongleDevice):
             entities_to_add.extend(create_sdongle_entities(ucs))
         elif isinstance(ucs.device, MeterDevice):
