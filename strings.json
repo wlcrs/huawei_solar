@@ -130,6 +130,9 @@
         "power_meter": {
             "name": "Power meter"
         },
+        "smartguard": {
+            "name": "SmartGuard"
+        },
         "smartlogger": {
             "name": "SmartLogger"
         }

@@ -25,6 +25,7 @@ from huawei_solar import (
     SChargerDevice,
     SDongleDevice,
     SmartAcGunDevice,
+    SmartGuardDevice,
     SmartLoggerDevice,
     SUN2000Device,
     create_device_instance,
@@ -551,6 +552,7 @@ DEVICE_CLASS_TO_TRANSLATION_KEY: dict[type[HuaweiSolarDevice], str] = {
     SChargerDevice: "charger",
     SDongleDevice: "sdongle",
     SmartAcGunDevice: "charger_connector",
+    SmartGuardDevice: "smartguard",
     SmartLoggerDevice: "smartlogger",
 }
 
