@@ -144,6 +144,21 @@
             "active_power_percentage_derating": {
                 "name": "Power derating (by percentage)"
             },
+            "charger_dynamic_power_threshold": {
+                "name": "Dynamic power limit threshold"
+            },
+            "charger_gun_max_current": {
+                "name": "Maximum charging current"
+            },
+            "charger_max_power_from_grid": {
+                "name": "Maximum power from grid"
+            },
+            "charger_orderly_charging_power": {
+                "name": "Scheduled charging power"
+            },
+            "charger_surplus_power_start_threshold": {
+                "name": "Surplus power start threshold"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximum feed grid power (%)"
             },
@@ -182,6 +197,21 @@
             }
         },
         "select": {
+            "charger_gun_lock_control_mode": {
+                "name": "Connector lock mode",
+                "state": {
+                    "lock_during_charging": "Lock during charging",
+                    "lock_when_plugged": "Lock when plugged",
+                    "manual_lock": "Manual lock"
+                }
+            },
+            "charger_gun_work_mode": {
+                "name": "Work mode",
+                "state": {
+                    "fast_charging": "Fast charging",
+                    "green_power_priority": "Green power priority"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS Control Mode",
                 "state": {
@@ -306,6 +336,60 @@
             "bms_temperature": {
                 "name": "BMS temperature"
             },
+            "charger_cable_max_current": {
+                "name": "Cable maximum current"
+            },
+            "charger_charging_method": {
+                "name": "Charging method"
+            },
+            "charger_charging_wait_reason": {
+                "name": "Charging wait reason"
+            },
+            "charger_gun_lock_status": {
+                "name": "Connector lock status"
+            },
+            "charger_gun_output_power": {
+                "name": "Charging power"
+            },
+            "charger_gun_phase_a_current": {
+                "name": "Connector Phase A current"
+            },
+            "charger_gun_phase_a_voltage": {
+                "name": "Connector Phase A voltage"
+            },
+            "charger_gun_phase_b_current": {
+                "name": "Connector Phase B current"
+            },
+            "charger_gun_phase_b_voltage": {
+                "name": "Connector Phase B voltage"
+            },
+            "charger_gun_phase_c_current": {
+                "name": "Connector Phase C current"
+            },
+            "charger_gun_phase_c_voltage": {
+                "name": "Connector Phase C voltage"
+            },
+            "charger_gun_temperature": {
+                "name": "Connector temperature"
+            },
+            "charger_gun_total_energy_charged": {
+                "name": "Connector total charged energy"
+            },
+            "charger_gun_work_status": {
+                "name": "Connector status"
+            },
+            "charger_indicator_light_status": {
+                "name": "Indicator light status"
+            },
+            "charger_max_charging_power": {
+                "name": "Maximum charging power"
+            },
+            "charger_min_charging_power": {
+                "name": "Minimum charging power"
+            },
+            "charger_output_relay_status": {
+                "name": "Output contactor status"
+            },
             "charger_phase_a_voltage": {
                 "name": "Charger Phase A voltage"
             },
@@ -315,14 +399,26 @@
             "charger_phase_c_voltage": {
                 "name": "Charger Phase C voltage"
             },
+            "charger_planned_departure_time": {
+                "name": "Planned departure time"
+            },
             "charger_rated_power": {
                 "name": "Charger rated power"
+            },
+            "charger_reported_work_mode": {
+                "name": "Reported work mode"
+            },
+            "charger_target_charged_energy": {
+                "name": "Target charged energy"
             },
             "charger_temperature": {
                 "name": "Charger temperature"
             },
             "charger_total_energy_charged": {
                 "name": "Charger total charged energy"
+            },
+            "charger_wifi_signal_strength": {
+                "name": "Wi-Fi signal strength"
             },
             "consumption_today": {
                 "name": "Consumption today"
@@ -1121,6 +1217,15 @@
             }
         },
         "switch": {
+            "charger_dynamic_power_control": {
+                "name": "Dynamic power control"
+            },
+            "charger_random_delay_charging": {
+                "name": "Random delay charging"
+            },
+            "charger_single_three_phase_switch": {
+                "name": "Automatic phase switching"
+            },
             "mppt_multimodal_scanning": {
                 "name": "MPPT-Scan"
             },

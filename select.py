@@ -9,6 +9,7 @@ from typing import Any, TypeVar, cast
 from huawei_solar import (
     EMMADevice,
     HuaweiSolarDevice,
+    SChargerDevice,
     SUN2000Device,
     register_names as rn,
     register_values as rv,
@@ -101,6 +102,19 @@ EMMA_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     ),
 )
 
+CHARGER_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
+    HuaweiSolarSelectEntityDescription(
+        key=rn.CHARGER_GUN_WORK_MODE,
+        icon="mdi:solar-power",
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarSelectEntityDescription(
+        key=rn.CHARGER_GUN_LOCK_CONTROL_MODE,
+        icon="mdi:lock-cog",
+        entity_category=EntityCategory.CONFIG,
+    ),
+)
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -130,6 +144,17 @@ async def async_setup_entry(
                         ucs.device_info,
                     )
                 )
+
+        if isinstance(ucs.device, SChargerDevice):
+            slave_entities.extend(
+                HuaweiSolarSelectEntity(
+                    ucs.configuration_update_coordinator,
+                    ucs.device,
+                    entity_description,
+                    ucs.device_info,
+                )
+                for entity_description in CHARGER_SELECT_DESCRIPTIONS
+            )
 
         if isinstance(ucs, HuaweiSolarInverterData) and ucs.connected_energy_storage:
             slave_entities.extend(

@@ -7,6 +7,7 @@ from huawei_solar import (
     EMMADevice,
     HuaweiSolarDevice,
     RegisterName,
+    SChargerDevice,
     register_names as rn,
 )
 
@@ -16,7 +17,12 @@ from homeassistant.components.number import (
     NumberMode,
 )
 from homeassistant.components.number.const import DEFAULT_MAX_VALUE, DEFAULT_MIN_VALUE
-from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfPower
+from homeassistant.const import (
+    PERCENTAGE,
+    EntityCategory,
+    UnitOfElectricCurrent,
+    UnitOfPower,
+)
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -230,6 +236,56 @@ NON_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[
 )
 
 
+CHARGER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
+    HuaweiSolarNumberEntityDescription(
+        key=rn.CHARGER_DYNAMIC_POWER_THRESHOLD,
+        dynamic_minimum_key=rn.CHARGER_MIN_CHARGING_POWER,
+        dynamic_maximum_key=rn.CHARGER_MAX_CHARGING_POWER,
+        native_step=0.1,
+        icon="mdi:gauge",
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.CHARGER_ORDERLY_CHARGING_POWER,
+        dynamic_minimum_key=rn.CHARGER_MIN_CHARGING_POWER,
+        dynamic_maximum_key=rn.CHARGER_MAX_CHARGING_POWER,
+        native_step=0.1,
+        icon="mdi:calendar-clock",
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.CHARGER_GUN_MAX_CURRENT,
+        native_min_value=6.0,
+        native_max_value=32.0,
+        dynamic_maximum_key=rn.CHARGER_CABLE_MAX_CURRENT,
+        native_step=0.1,
+        icon="mdi:current-ac",
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.CHARGER_MAX_POWER_FROM_GRID,
+        native_min_value=0.0,
+        dynamic_maximum_key=rn.CHARGER_MAX_CHARGING_POWER,
+        native_step=0.1,
+        icon="mdi:transmission-tower",
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.CHARGER_SURPLUS_POWER_START_THRESHOLD,
+        native_min_value=0.0,
+        dynamic_maximum_key=rn.CHARGER_MAX_CHARGING_POWER,
+        native_step=0.1,
+        icon="mdi:solar-power-variant",
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        entity_category=EntityCategory.CONFIG,
+    ),
+)
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: HuaweiSolarConfigEntry,
@@ -249,6 +305,17 @@ async def async_setup_entry(
         slave_entities: list[HuaweiSolarNumberEntity] = []
         if isinstance(ucs.device, EMMADevice):
             for entity_description in EMMA_NUMBER_DESCRIPTIONS:
+                slave_entities.append(  # noqa: PERF401
+                    await HuaweiSolarNumberEntity.create(
+                        ucs.configuration_update_coordinator,
+                        ucs.device,
+                        entity_description,
+                        ucs.device_info,
+                    )
+                )
+
+        if isinstance(ucs.device, SChargerDevice):
+            for entity_description in CHARGER_NUMBER_DESCRIPTIONS:
                 slave_entities.append(  # noqa: PERF401
                     await HuaweiSolarNumberEntity.create(
                         ucs.configuration_update_coordinator,
