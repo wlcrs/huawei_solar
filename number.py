@@ -259,9 +259,7 @@ CHARGER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
 )
 
 
-SMART_AC_GUN_NUMBER_DESCRIPTIONS: tuple[
-    HuaweiSolarNumberEntityDescription, ...
-] = (
+SMART_AC_GUN_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.CHARGER_GUN_MAX_CURRENT,
         native_min_value=6.0,

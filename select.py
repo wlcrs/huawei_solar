@@ -103,9 +103,7 @@ EMMA_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     ),
 )
 
-SMART_AC_GUN_SELECT_DESCRIPTIONS: tuple[
-    HuaweiSolarSelectEntityDescription, ...
-] = (
+SMART_AC_GUN_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     HuaweiSolarSelectEntityDescription(
         key=rn.CHARGER_GUN_WORK_MODE,
         icon="mdi:solar-power",

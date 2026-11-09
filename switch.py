@@ -113,9 +113,7 @@ CHARGER_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     ),
 )
 
-SMART_AC_GUN_SWITCH_DESCRIPTIONS: tuple[
-    HuaweiSolarSwitchEntityDescription, ...
-] = (
+SMART_AC_GUN_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     HuaweiSolarSwitchEntityDescription(
         key=rn.CHARGER_SINGLE_THREE_PHASE_SWITCH,
         icon="mdi:numeric-3-box-multiple",
