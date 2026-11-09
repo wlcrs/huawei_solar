@@ -107,23 +107,26 @@ def async_get_entry_id_for_service_call(
             translation_placeholders={"device_id": device_id},
         )
 
-    for entry_id in device_entry.config_entries:
-        if (entry := call.hass.config_entries.async_get_entry(entry_id)) is None:
-            continue
-        if entry.domain == DOMAIN:
-            if entry.state is not ConfigEntryState.LOADED:
-                raise ServiceValidationError(
-                    translation_domain=DOMAIN,
-                    translation_key="entry_not_loaded",
-                    translation_placeholders={"entry": entry.title},
-                )
-            return (device_entry, entry)
+    if (
+        device_entry.config_entry_id is None
+        or (entry := call.hass.config_entries.async_get_entry(device_entry.config_entry_id))
+        is None
+        or entry.domain != DOMAIN
+    ):
+        raise ServiceValidationError(
+            translation_domain=DOMAIN,
+            translation_key="config_entry_not_found",
+            translation_placeholders={"device_id": device_id},
+        )
 
-    raise ServiceValidationError(
-        translation_domain=DOMAIN,
-        translation_key="config_entry_not_found",
-        translation_placeholders={"device_id": device_id},
-    )
+    if entry.state is not ConfigEntryState.LOADED:
+        raise ServiceValidationError(
+            translation_domain=DOMAIN,
+            translation_key="entry_not_loaded",
+            translation_placeholders={"entry": entry.title},
+        )
+
+    return (device_entry, entry)
 
 
 @callback
