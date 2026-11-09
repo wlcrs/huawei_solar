@@ -203,9 +203,9 @@
             "charger_gun_lock_control_mode": {
                 "name": "Connector lock mode",
                 "state": {
+                    "always_locked": "Always locked",
                     "lock_during_charging": "Lock during charging",
-                    "lock_when_plugged": "Lock when plugged",
-                    "manual_lock": "Manual lock"
+                    "lock_when_plugged": "Lock when plugged"
                 }
             },
             "charger_gun_work_mode": {

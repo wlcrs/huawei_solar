@@ -273,7 +273,7 @@ SMART_AC_GUN_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...]
     HuaweiSolarNumberEntityDescription(
         key=rn.CHARGER_MAX_POWER_FROM_GRID,
         native_min_value=0.0,
-        dynamic_maximum_key=rn.CHARGER_GUN_RATED_POWER,
+        native_max_value=22.0,
         native_step=0.1,
         icon="mdi:transmission-tower",
         native_unit_of_measurement=UnitOfPower.KILO_WATT,
@@ -282,7 +282,7 @@ SMART_AC_GUN_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...]
     HuaweiSolarNumberEntityDescription(
         key=rn.CHARGER_SURPLUS_POWER_START_THRESHOLD,
         native_min_value=0.0,
-        dynamic_maximum_key=rn.CHARGER_GUN_RATED_POWER,
+        native_max_value=22.0,
         native_step=0.1,
         icon="mdi:solar-power-variant",
         native_unit_of_measurement=UnitOfPower.KILO_WATT,
