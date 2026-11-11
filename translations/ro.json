@@ -115,6 +115,9 @@
         "charger": {
             "name": "Charger"
         },
+        "charger_connector": {
+            "name": "Conector încărcător"
+        },
         "connected_energy_storage": {
             "name": "Batteries"
         },
@@ -126,6 +129,9 @@
         },
         "power_meter": {
             "name": "Power meter"
+        },
+        "smartguard": {
+            "name": "SmartGuard"
         },
         "smartlogger": {
             "name": "SmartLogger"
@@ -141,8 +147,29 @@
             "active_power_fixed_value_derating": {
                 "name": "Power derating"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Prag de siguranță pentru puterea activă"
+            },
             "active_power_percentage_derating": {
                 "name": "Power derating (by percentage)"
+            },
+            "charger_dynamic_power_threshold": {
+                "name": "Prag limită de putere dinamică"
+            },
+            "charger_gun_max_current": {
+                "name": "Curent maxim de încărcare"
+            },
+            "charger_max_power_from_grid": {
+                "name": "Putere maximă din rețea"
+            },
+            "charger_orderly_charging_power": {
+                "name": "Putere de încărcare programată"
+            },
+            "charger_surplus_power_start_threshold": {
+                "name": "Prag pornire surplus de putere"
+            },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Putere maximă de încărcare din rețea"
             },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximum feed grid power (%)"
@@ -155,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "MPPT-Scan Interval"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Bandă moartă de ajustare a bateriei"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "Backup power SOC"
@@ -177,11 +207,43 @@
             "storage_maximum_discharging_power": {
                 "name": "Maximum discharging power"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Putere maximă din rețea în timpul descărcării"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Grid charge maximum power"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Mod de limitare a puterii active",
+                "state": {
+                    "total_power": "Putere totală",
+                    "single_phase_power": "Putere monofazată"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Tensiune în funcționare independentă",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
+            "charger_gun_lock_control_mode": {
+                "name": "Mod blocare conector",
+                "state": {
+                    "always_locked": "Întotdeauna blocat",
+                    "lock_during_charging": "Blocare în timpul încărcării",
+                    "lock_when_plugged": "Blocare la conectare"
+                }
+            },
+            "charger_gun_work_mode": {
+                "name": "Mod de lucru",
+                "state": {
+                    "fast_charging": "Încărcare rapidă",
+                    "green_power_priority": "Prioritate energie verde"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS Control Mode",
                 "state": {
@@ -306,6 +368,60 @@
             "bms_temperature": {
                 "name": "BMS temperature"
             },
+            "charger_cable_max_current": {
+                "name": "Curent maxim cablu"
+            },
+            "charger_charging_method": {
+                "name": "Metodă de încărcare"
+            },
+            "charger_charging_wait_reason": {
+                "name": "Motiv așteptare încărcare"
+            },
+            "charger_gun_lock_status": {
+                "name": "Stare blocare conector"
+            },
+            "charger_gun_output_power": {
+                "name": "Putere de încărcare"
+            },
+            "charger_gun_phase_a_current": {
+                "name": "Conector curent faza A"
+            },
+            "charger_gun_phase_a_voltage": {
+                "name": "Conector tensiune faza A"
+            },
+            "charger_gun_phase_b_current": {
+                "name": "Conector curent faza B"
+            },
+            "charger_gun_phase_b_voltage": {
+                "name": "Conector tensiune faza B"
+            },
+            "charger_gun_phase_c_current": {
+                "name": "Conector curent faza C"
+            },
+            "charger_gun_phase_c_voltage": {
+                "name": "Conector tensiune faza C"
+            },
+            "charger_gun_temperature": {
+                "name": "Temperatură conector"
+            },
+            "charger_gun_total_energy_charged": {
+                "name": "Conector energie totală încărcată"
+            },
+            "charger_gun_work_status": {
+                "name": "Stare conector"
+            },
+            "charger_indicator_light_status": {
+                "name": "Stare indicator luminos"
+            },
+            "charger_max_charging_power": {
+                "name": "Maximum charging power"
+            },
+            "charger_min_charging_power": {
+                "name": "Putere minimă de încărcare"
+            },
+            "charger_output_relay_status": {
+                "name": "Stare contactor de ieșire"
+            },
             "charger_phase_a_voltage": {
                 "name": "Charger Phase A voltage"
             },
@@ -315,14 +431,26 @@
             "charger_phase_c_voltage": {
                 "name": "Charger Phase C voltage"
             },
+            "charger_planned_departure_time": {
+                "name": "Oră de plecare planificată"
+            },
             "charger_rated_power": {
                 "name": "Charger rated power"
+            },
+            "charger_reported_work_mode": {
+                "name": "Mod de lucru raportat"
+            },
+            "charger_target_charged_energy": {
+                "name": "Energie încărcată țintă"
             },
             "charger_temperature": {
                 "name": "Charger temperature"
             },
             "charger_total_energy_charged": {
                 "name": "Charger total charged energy"
+            },
+            "charger_wifi_signal_strength": {
+                "name": "Putere semnal Wi-Fi"
             },
             "consumption_today": {
                 "name": "Consumption today"
@@ -1121,6 +1249,18 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Comutare la off-grid"
+            },
+            "charger_dynamic_power_control": {
+                "name": "Control dinamic al puterii"
+            },
+            "charger_random_delay_charging": {
+                "name": "Întârziere aleatorie a încărcării"
+            },
+            "charger_single_three_phase_switch": {
+                "name": "Comutare automată a fazelor"
+            },
             "mppt_multimodal_scanning": {
                 "name": "MPPT-Scan"
             },
@@ -1129,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Charge from grid"
+            },
+            "storage_ess_low_power": {
+                "name": "Putere redusă ESS"
             }
         }
     },
