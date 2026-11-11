@@ -115,6 +115,9 @@
         "charger": {
             "name": "Caricabatterie"
         },
+        "charger_connector": {
+            "name": "Connettore di ricarica"
+        },
         "connected_energy_storage": {
             "name": "Batterie"
         },
@@ -126,6 +129,9 @@
         },
         "power_meter": {
             "name": "Contatore di energia"
+        },
+        "smartguard": {
+            "name": "SmartGuard"
         },
         "smartlogger": {
             "name": "SmartLogger"
@@ -141,8 +147,29 @@
             "active_power_fixed_value_derating": {
                 "name": "Riduzione della Potenza"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Soglia di sicurezza potenza attiva"
+            },
             "active_power_percentage_derating": {
                 "name": "Riduzione della Potenza (in percentuale)"
+            },
+            "charger_dynamic_power_threshold": {
+                "name": "Soglia limite di potenza dinamica"
+            },
+            "charger_gun_max_current": {
+                "name": "Corrente massima di carica"
+            },
+            "charger_max_power_from_grid": {
+                "name": "Massima potenza dalla rete"
+            },
+            "charger_orderly_charging_power": {
+                "name": "Potenza di ricarica programmata"
+            },
+            "charger_surplus_power_start_threshold": {
+                "name": "Soglia di avvio per surplus di potenza"
+            },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Potenza massima di carica dalla rete"
             },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Potenza massima della rete di alimentazione (%)"
@@ -155,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "MPPT scan interval"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Banda morta di regolazione della batteria"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "Alimentazione backup SOC batteria"
@@ -177,11 +207,43 @@
             "storage_maximum_discharging_power": {
                 "name": "Potenza massima di scaricamento batteria"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Massima potenza dalla rete durante la scarica"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Potenza massima di carica batteria dalla rete"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Modalità di limitazione della potenza attiva",
+                "state": {
+                    "total_power": "Potenza totale",
+                    "single_phase_power": "Potenza monofase"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Tensione in funzionamento indipendente",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
+            "charger_gun_lock_control_mode": {
+                "name": "Modalità di blocco connettore",
+                "state": {
+                    "always_locked": "Sempre bloccato",
+                    "lock_during_charging": "Blocca durante la ricarica",
+                    "lock_when_plugged": "Blocca quando collegato"
+                }
+            },
+            "charger_gun_work_mode": {
+                "name": "Modalità di funzionamento",
+                "state": {
+                    "fast_charging": "Ricarica rapida",
+                    "green_power_priority": "Priorità energia verde"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "Modalità Controllo ESS",
                 "state": {
@@ -306,6 +368,60 @@
             "bms_temperature": {
                 "name": "Temperatura BMS"
             },
+            "charger_cable_max_current": {
+                "name": "Corrente massima del cavo"
+            },
+            "charger_charging_method": {
+                "name": "Metodo di ricarica"
+            },
+            "charger_charging_wait_reason": {
+                "name": "Motivo di attesa ricarica"
+            },
+            "charger_gun_lock_status": {
+                "name": "Stato di blocco del connettore"
+            },
+            "charger_gun_output_power": {
+                "name": "Potenza di ricarica"
+            },
+            "charger_gun_phase_a_current": {
+                "name": "Connettore corrente fase A"
+            },
+            "charger_gun_phase_a_voltage": {
+                "name": "Connettore tensione fase A"
+            },
+            "charger_gun_phase_b_current": {
+                "name": "Connettore corrente fase B"
+            },
+            "charger_gun_phase_b_voltage": {
+                "name": "Connettore tensione fase B"
+            },
+            "charger_gun_phase_c_current": {
+                "name": "Connettore corrente fase C"
+            },
+            "charger_gun_phase_c_voltage": {
+                "name": "Connettore tensione fase C"
+            },
+            "charger_gun_temperature": {
+                "name": "Temperatura del connettore"
+            },
+            "charger_gun_total_energy_charged": {
+                "name": "Connettore energia totale caricata"
+            },
+            "charger_gun_work_status": {
+                "name": "Stato del connettore"
+            },
+            "charger_indicator_light_status": {
+                "name": "Stato spia indicatrice"
+            },
+            "charger_max_charging_power": {
+                "name": "Potenza massima di carica batteria"
+            },
+            "charger_min_charging_power": {
+                "name": "Minima potenza di carica"
+            },
+            "charger_output_relay_status": {
+                "name": "Stato contattore di uscita"
+            },
             "charger_phase_a_voltage": {
                 "name": "Charger Phase A voltage"
             },
@@ -315,14 +431,26 @@
             "charger_phase_c_voltage": {
                 "name": "Charger Phase C voltage"
             },
+            "charger_planned_departure_time": {
+                "name": "Ora di partenza programmata"
+            },
             "charger_rated_power": {
                 "name": "Charger rated power"
+            },
+            "charger_reported_work_mode": {
+                "name": "Modalità di funzionamento segnalata"
+            },
+            "charger_target_charged_energy": {
+                "name": "Energia di carica obiettivo"
             },
             "charger_temperature": {
                 "name": "Charger temperature"
             },
             "charger_total_energy_charged": {
                 "name": "Charger total charged energy"
+            },
+            "charger_wifi_signal_strength": {
+                "name": "Intensità segnale Wi-Fi"
             },
             "consumption_today": {
                 "name": "Consumo di oggi"
@@ -1121,6 +1249,18 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Passa a off-grid"
+            },
+            "charger_dynamic_power_control": {
+                "name": "Controllo dinamico della potenza"
+            },
+            "charger_random_delay_charging": {
+                "name": "Ritardo casuale di ricarica"
+            },
+            "charger_single_three_phase_switch": {
+                "name": "Commutazione automatica delle fasi"
+            },
             "mppt_multimodal_scanning": {
                 "name": "MPPT scanning"
             },
@@ -1129,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Carica dalla rete"
+            },
+            "storage_ess_low_power": {
+                "name": "Bassa potenza ESS"
             }
         }
     },
