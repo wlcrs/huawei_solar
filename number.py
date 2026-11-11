@@ -241,7 +241,7 @@ CHARGER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.CHARGER_DYNAMIC_POWER_THRESHOLD,
         dynamic_minimum_key=rn.CHARGER_MIN_CHARGING_POWER,
-        dynamic_maximum_key=rn.CHARGER_MAX_CHARGING_POWER,
+        dynamic_maximum_key=rn.CHARGER_MAX_FIXED_POWER,
         native_step=0.1,
         icon="mdi:gauge",
         native_unit_of_measurement=UnitOfPower.KILO_WATT,
