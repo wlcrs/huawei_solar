@@ -1,13 +1,13 @@
 {
     "config": {
         "abort": {
-            "already_configured": "Device is already configured",
-            "reauth_successful": "Re-authentication was successful",
-            "reconfigure_successful": "Re-configuration was successful"
+            "already_configured": "Apparaat is al geconfigureerd",
+            "reauth_successful": "Herauthenticatie was succesvol",
+            "reconfigure_successful": "Herconfiguratie was succesvol"
         },
         "error": {
             "cannot_connect": "Verbinden mislukt",
-            "connection_interrupted": "Connection interrupted — the inverter only supports one Modbus connection at a time. Check whether another app or device (SCharger, EMS, ...) is connected and close it, then try again.",
+            "connection_interrupted": "Verbinding onderbroken — de omvormer ondersteunt slechts één Modbus-verbinding tegelijk. Controleer of een andere app of apparaat (SCharger, EMS, ...) verbonden is, sluit deze en probeer het opnieuw.",
             "invalid_auth": "Ongeldige authenticatie",
             "invalid_slave_ids": "Slave IDs moeten een kommagescheiden lijst van gehele getallen zijn",
             "read_error": "Lezen van de omvormer is mislukt.",
@@ -16,60 +16,60 @@
         },
         "step": {
             "auto_discovery": {
-                "title": "Auto-discovering devices",
-                "description": "Scanning {host}:{port} for Huawei Solar devices using the Huawei discovery protocol. This may take up to a minute."
+                "title": "Apparaten automatisch detecteren",
+                "description": "Scannen van {host}:{port} naar Huawei Solar-apparaten via het Huawei-detectieprotocol. Dit kan tot een minuut duren."
             },
             "scan_discovery": {
-                "title": "Scanning for devices",
-                "description": "Auto-discovery found no devices on {host}:{port}. Scanning frequently used slave IDs individually. This may take up to a minute."
+                "title": "Scannen naar apparaten",
+                "description": "Automatische detectie heeft geen apparaten gevonden op {host}:{port}. Veelgebruikte slave-ID's worden individueel gescand. Dit kan tot een minuut duren."
             },
             "serial_auto_discovery": {
-                "title": "Auto-discovering devices",
-                "description": "Scanning {serial_port} for Huawei Solar devices using the Huawei discovery protocol. This may take up to a minute."
+                "title": "Apparaten automatisch detecteren",
+                "description": "Scannen van {serial_port} naar Huawei Solar-apparaten via het Huawei-detectieprotocol. Dit kan tot een minuut duren."
             },
             "serial_scan_discovery": {
-                "title": "Scanning for devices",
-                "description": "Auto-discovery found no devices on {serial_port}. Scanning frequently used slave IDs individually. This may take up to a minute."
+                "title": "Scannen naar apparaten",
+                "description": "Automatische detectie heeft geen apparaten gevonden op {serial_port}. Veelgebruikte slave-ID's worden individueel gescand. Dit kan tot een minuut duren."
             },
             "serial_finish_setup": {
-                "title": "Connecting",
-                "description": "Connecting to the devices discovered on {serial_port} and reading their configuration."
+                "title": "Verbinden",
+                "description": "Verbinden met de gevonden apparaten op {serial_port} en configuratie uitlezen."
             },
             "cannot_connect_serial": {
-                "title": "Could not connect",
-                "description": "Could not open serial port {serial_port}. Please verify that:\n- The device is connected and the port is correct\n- No other application is using the port\n\nPress Submit to go back and try again."
+                "title": "Kan geen verbinding maken",
+                "description": "Kan seriële poort {serial_port} niet openen. Controleer of:\n- Het apparaat is aangesloten en de poort correct is\n- Geen andere applicatie de poort gebruikt\n\nDruk op Verzenden om terug te gaan en opnieuw te proberen."
             },
             "connection_interrupted_serial": {
-                "title": "Connection interrupted",
-                "description": "The connection to the inverter on {serial_port} was interrupted. The inverter only supports **one Modbus connection at a time**.\n\nCheck whether another application or device is currently connected to the inverter, such as:\n- The Huawei SCharger\n- The Huawei FusionSolar Android/iPhone App (device commissioning via dongle or direct connection)\n- SolarmanPV or another monitoring tool\n\nClose the other connection and press Submit to try again."
+                "title": "Verbinding onderbroken",
+                "description": "De verbinding met de omvormer op {serial_port} is onderbroken. De omvormer ondersteunt slechts **één Modbus-verbinding tegelijk**.\n\nControleer of een andere toepassing of apparaat momenteel is verbonden met de omvormer, zoals:\n- De Huawei SCharger\n- De Huawei FusionSolar Android/iPhone-app (apparaat inbedrijfstelling via dongle of directe verbinding)\n- SolarmanPV of een andere monitoringstool\n\nVerbreek de andere verbinding en druk op Verzenden om opnieuw te proberen."
             },
             "no_device_found_serial": {
-                "title": "No device found",
-                "description": "Connected to {serial_port} but no Huawei Solar device responded on slave ID {slave_id}. Please verify that:\n- The slave ID is correct\n- The inverter is powered on and its RS485 interface is enabled\n\nPress Submit to go back and try again."
+                "title": "Geen apparaat gevonden",
+                "description": "Verbonden met {serial_port}, maar er heeft geen Huawei Solar-apparaat gereageerd op slave-ID {slave_id}. Controleer of:\n- De slave-ID correct is\n- De omvormer is ingeschakeld en de RS485-interface is geactiveerd\n\nDruk op Verzenden om terug te gaan en opnieuw te proberen."
             },
             "manual_connect": {
-                "title": "Connecting",
-                "description": "Connecting to {host}:{port} on slave ID(s): {slave_ids}."
+                "title": "Verbinden",
+                "description": "Verbinden met {host}:{port} op slave-ID('s): {slave_ids}."
             },
             "finish_network_setup": {
-                "title": "Connecting",
-                "description": "Connecting to the devices discovered at {host}:{port} and reading their configuration."
+                "title": "Verbinden",
+                "description": "Verbinden met de gevonden apparaten op {host}:{port} en configuratie uitlezen."
             },
             "confirm_setup": {
-                "title": "Device found",
-                "description": "Successfully connected to **{model_name}** (serial number: {serial_number}) on slave ID(s): {slave_ids}.\n\nPress Submit to add this device to Home Assistant."
+                "title": "Apparaat gevonden",
+                "description": "Succesvol verbonden met **{model_name}** (serienummer: {serial_number}) op slave-ID('s): {slave_ids}.\n\nDruk op Verzenden om dit apparaat aan Home Assistant toe te voegen."
             },
             "cannot_connect": {
-                "title": "Could not connect",
-                "description": "Could not connect to {host}:{port}. Please verify that:\n- The IP address and port are correct\n- The device is powered on and reachable on your network\n- No firewall is blocking the connection\n\nPress Submit to go back and try again."
+                "title": "Kan geen verbinding maken",
+                "description": "Kan geen verbinding maken met {host}:{port}. Controleer of:\n- Het IP-adres en de poort correct zijn\n- Het apparaat is ingeschakeld en bereikbaar is in uw netwerk\n- Geen firewall de verbinding blokkeert\n\nDruk op Verzenden om terug te gaan en opnieuw te proberen."
             },
             "connection_interrupted": {
-                "title": "Connection interrupted",
-                "description": "The connection to {host}:{port} was interrupted. The inverter only supports **one Modbus connection at a time**.\n\nCheck whether another application or device is currently connected to the inverter, such as:\n- The Huawei SCharger\n- The Huawei FusionSolar Android/iPhone App (device commissioning via dongle or direct connection)\n- SolarmanPV or another monitoring tool\n\nClose the other connection and press Submit to try again."
+                "title": "Verbinding onderbroken",
+                "description": "De verbinding met {host}:{port} is onderbroken. De omvormer ondersteunt slechts **één Modbus-verbinding tegelijk**.\n\nControleer of een andere toepassing of apparaat momenteel is verbonden met de omvormer, zoals:\n- De Huawei SCharger\n- De Huawei FusionSolar Android/iPhone-app (apparaat inbedrijfstelling via dongle of directe verbinding)\n- SolarmanPV of een andere monitoringstool\n\nVerbreek de andere verbinding en druk op Verzenden om opnieuw te proberen."
             },
             "no_device_found": {
-                "title": "No device found",
-                "description": "Connected to {host}:{port} but no Huawei Solar device responded on slave ID {slave_id}. Please verify that:\n- The slave ID is correct\n- The inverter's Modbus TCP interface is enabled\n- The inverter is not in a state that blocks communication (e.g. night mode on some models)\n\nPress Submit to go back and try again."
+                "title": "Geen apparaat gevonden",
+                "description": "Verbonden met {host}:{port}, maar er heeft geen Huawei Solar-apparaat gereageerd op slave-ID {slave_id}. Controleer of:\n- De slave-ID correct is\n- De Modbus TCP-interface van de omvormer is ingeschakeld\n- De omvormer zich niet in een toestand bevindt die communicatie blokkeert (bijv. nachtmodus op sommige modellen)\n\nDruk op Verzenden om terug te gaan en opnieuw te proberen."
             },
             "network_login": {
                 "data": {
@@ -89,11 +89,11 @@
             "setup_serial": {
                 "data": {
                     "port": "Selecteer toestel",
-                    "baudrate": "Baud rate",
+                    "baudrate": "Baudsnelheid",
                     "slave_ids": "Slave-IDs: AUTO voor automatische ontdekking, anders een door komma's gescheiden lijst"
                 },
                 "data_description": {
-                    "baudrate": "Default is 9600"
+                    "baudrate": "Standaard is 9600"
                 },
                 "title": "Toestel"
             },
@@ -113,7 +113,7 @@
             "name": "Batterij 2"
         },
         "charger": {
-            "name": "Charger"
+            "name": "Lader"
         },
         "charger_connector": {
             "name": "Laadconnector"
@@ -172,13 +172,13 @@
                 "name": "Maximaal laadvermogen van het elektriciteitsnet"
             },
             "emma_maximum_feed_grid_power_percent": {
-                "name": "Maximum feed grid power (%)"
+                "name": "Maximaal terugleververmogen (%)"
             },
             "emma_maximum_feed_grid_power_watt": {
-                "name": "Maximum feed grid power"
+                "name": "Maximaal terugleververmogen"
             },
             "emma_tou_maximum_power_for_charging_batteries_from_grid": {
-                "name": "Maximum power for charging batteries from grid"
+                "name": "Maximaal vermogen voor laden van batterijen vanaf het net"
             },
             "mppt_scanning_interval": {
                 "name": "MPPT scan interval"
@@ -291,7 +291,7 @@
         },
         "sensor": {
             "accumulated_energy_yield": {
-                "name": "Total energy"
+                "name": "Totale energie"
             },
             "accumulated_yield_energy": {
                 "name": "Totale opbrengst"
@@ -336,7 +336,7 @@
                 "name": "Werkelijk vermogen"
             },
             "active_power_control_mode": {
-                "name": "Active power control mode"
+                "name": "Actief vermogen regelmodus"
             },
             "active_power_external_energy": {
                 "name": "Werkelijk vermogen"
@@ -348,16 +348,16 @@
                 "name": "Alarmen"
             },
             "apparent_power_built_in_energy": {
-                "name": "Apparent power"
+                "name": "Schijnbaar vermogen"
             },
             "apparent_power_external_energy": {
-                "name": "Apparent power"
+                "name": "Schijnbaar vermogen"
             },
             "backup_power_state_of_charge": {
-                "name": "Backup batterijpercentage"
+                "name": "Noodstroom laadstatus (SOC)"
             },
             "battery_charge_discharge_power": {
-                "name": "Battery charge/discharge power"
+                "name": "Batterij laad-/ontlaadvermogen"
             },
             "battery_remaining_charge_discharge_time": {
                 "name": "Resterende (ont)laadtijd"
@@ -366,7 +366,7 @@
                 "name": "Werkmodus"
             },
             "bms_temperature": {
-                "name": "BMS temperature"
+                "name": "BMS-temperatuur"
             },
             "charger_cable_max_current": {
                 "name": "Maximale kabelstroom"
@@ -423,19 +423,19 @@
                 "name": "Status uitgangsrelais"
             },
             "charger_phase_a_voltage": {
-                "name": "Charger Phase A voltage"
+                "name": "Lader fase A spanning"
             },
             "charger_phase_b_voltage": {
-                "name": "Charger Phase B voltagey"
+                "name": "Lader fase B spanning"
             },
             "charger_phase_c_voltage": {
-                "name": "Charger Phase C voltage"
+                "name": "Lader fase C spanning"
             },
             "charger_planned_departure_time": {
                 "name": "Geplande vertrektijd"
             },
             "charger_rated_power": {
-                "name": "Charger rated power"
+                "name": "Nominaal vermogen lader"
             },
             "charger_reported_work_mode": {
                 "name": "Gerapporteerde werkmodus"
@@ -444,55 +444,55 @@
                 "name": "Doel geladen energie"
             },
             "charger_temperature": {
-                "name": "Charger temperature"
+                "name": "Ladertemperatuur"
             },
             "charger_total_energy_charged": {
-                "name": "Charger total charged energy"
+                "name": "Totale geladen energie lader"
             },
             "charger_wifi_signal_strength": {
                 "name": "Wifi-signaalsterkte"
             },
             "consumption_today": {
-                "name": "Consumption today"
+                "name": "Verbruik vandaag"
             },
             "current_electricity_generation_statistics_time": {
-                "name": "Huidige energieopwekkingstatistiekentijd"
+                "name": "Statistiektijd huidige elektriciteitsproductie"
             },
             "daily_yield_energy": {
                 "name": "Dagelijkse opbrengst"
             },
             "day_active_power_peak": {
-                "name": "Dagelijkse piek vermogen"
+                "name": "Piek actief vermogen vandaag"
             },
             "device_status": {
-                "name": "Toestel status"
+                "name": "Apparaatstatus"
             },
             "efficiency": {
-                "name": "Efficientie"
+                "name": "Rendement"
             },
             "energy_charged_today": {
-                "name": "Energy charged today"
+                "name": "Geladen energie vandaag"
             },
             "energy_discharged_today": {
-                "name": "Energy discharged today"
+                "name": "Ontladen energie vandaag"
             },
             "ess_chargeable_capacity": {
                 "name": "ESS laadbare capaciteit"
             },
             "ess_chargeable_energy": {
-                "name": "ESS Chargeable energy"
+                "name": "ESS laadbare energie"
             },
             "ess_dischargeable_capacity": {
                 "name": "ESS ontlaadbare capaciteit"
             },
             "ess_dischargeable_energy": {
-                "name": "ESS Dischargeable energy"
+                "name": "ESS ontlaadbare energie"
             },
             "feed_in_power": {
-                "name": "Feed in power"
+                "name": "Terugleververmogen"
             },
             "feed_in_to_grid_today": {
-                "name": "Feed in to grid today"
+                "name": "Teruggeleverd aan het net vandaag"
             },
             "forcible_charge_summary": {
                 "name": "Geforceerd laden"
@@ -534,67 +534,67 @@
                 "name": "Interne temperatuur"
             },
             "inverter_active_power": {
-                "name": "Inverter active power"
+                "name": "Actief vermogen omvormer"
             },
             "inverter_energy_yield_today": {
-                "name": "Inverter energy yield today"
+                "name": "Energieopbrengst omvormer vandaag"
             },
             "inverter_rated_power": {
-                "name": "Nominaal vermogen"
+                "name": "Nominaal vermogen omvormer"
             },
             "inverter_total_absorbed_energy": {
-                "name": "Total absorbed energy"
+                "name": "Totale opgenomen energie"
             },
             "inverter_total_energy_yield": {
-                "name": "Inverter total energy yield"
+                "name": "Totale energieopbrengst omvormer"
             },
             "line_voltage_a_b": {
-                "name": "A-B lijnspanning"
+                "name": "Lijnspanning A-B"
             },
             "line_voltage_a_b_built_in_energy": {
-                "name": "A-B lijnspanning"
+                "name": "Lijnspanning A-B"
             },
             "line_voltage_a_b_external_energy": {
-                "name": "A-B lijnspanning"
+                "name": "Lijnspanning A-B"
             },
             "line_voltage_b_c": {
-                "name": "B-C lijnspanning"
+                "name": "Lijnspanning B-C"
             },
             "line_voltage_b_c_built_in_energy": {
-                "name": "B-C lijnspanning"
+                "name": "Lijnspanning B-C"
             },
             "line_voltage_b_c_external_energy": {
-                "name": "B-C lijnspanning"
+                "name": "Lijnspanning B-C"
             },
             "line_voltage_c_a": {
-                "name": "C-A lijnspanning"
+                "name": "Lijnspanning C-A"
             },
             "line_voltage_c_a_built_in_energy": {
-                "name": "C-A lijnspanning"
+                "name": "Lijnspanning C-A"
             },
             "line_voltage_c_a_external_energy": {
-                "name": "C-A lijnspanning"
+                "name": "Lijnspanning C-A"
             },
             "load_power": {
-                "name": "Load power"
+                "name": "Belastingsvermogen"
             },
             "meter_a_b_line_voltage": {
-                "name": "Line voltage A-B"
+                "name": "Lijnspanning A-B"
             },
             "meter_active_power": {
                 "name": "Werkelijk vermogen"
             },
             "meter_apparent_power": {
-                "name": "Apparent power"
+                "name": "Schijnbaar vermogen"
             },
             "meter_b_c_line_voltage": {
-                "name": "Line voltage B-C"
+                "name": "Lijnspanning B-C"
             },
             "meter_c_a_line_voltage": {
-                "name": "Line voltage C-A"
+                "name": "Lijnspanning C-A"
             },
             "meter_negative_active_energy": {
-                "name": "Negative active energy"
+                "name": "Negatieve actieve energie"
             },
             "meter_phase_a_active_power": {
                 "name": "Fase A werkelijk vermogen"
@@ -624,28 +624,28 @@
                 "name": "Fase C spanning"
             },
             "meter_positive_active_energy": {
-                "name": "Positive active energy"
+                "name": "Positieve actieve energie"
             },
             "meter_power_factor": {
                 "name": "Arbeidsfactor"
             },
             "meter_reactive_power": {
-                "name": "Reactive power"
+                "name": "Reactief vermogen"
             },
             "meter_status": {
-                "name": "Meter status"
+                "name": "Meterstatus"
             },
             "meter_total_active_energy": {
-                "name": "Total active energy"
+                "name": "Totale actieve energie"
             },
             "meter_total_reactive_energy": {
-                "name": "Total reactive energy"
+                "name": "Totale reactieve energie"
             },
             "monthly_yield_energy": {
-                "name": "Monthly yield"
+                "name": "Maandelijkse opbrengst"
             },
             "nb_online_optimizers": {
-                "name": "Optimizers online"
+                "name": "Online optimizers"
             },
             "output_current": {
                 "name": "Uitgangsstroom"
@@ -660,112 +660,112 @@
                 "name": "Maximaal actief vermogen"
             },
             "pack_1_charge_discharge_power": {
-                "name": "Pack 1 charge discharge power"
+                "name": "Pakket 1 laad-/ontlaadvermogen"
             },
             "pack_1_current": {
-                "name": "Pack 1 current"
+                "name": "Pakket 1 stroom"
             },
             "pack_1_firmware_version": {
-                "name": "Pack 1 firmware version"
+                "name": "Pakket 1 firmwareversie"
             },
             "pack_1_max_temperature": {
-                "name": "Pack 1 max temperature"
+                "name": "Pakket 1 maximale temperatuur"
             },
             "pack_1_min_temperature": {
-                "name": "Pack 1 min temperature"
+                "name": "Pakket 1 minimale temperatuur"
             },
             "pack_1_serial_number": {
-                "name": "Pack 1 serial number"
+                "name": "Pakket 1 serienummer"
             },
             "pack_1_soh_calibration_status": {
-                "name": "Pack 1 SOH calibration status"
+                "name": "Pakket 1 SOH-kalibratiestatus"
             },
             "pack_1_state_of_capacity": {
-                "name": "Pack 1 state of capacity"
+                "name": "Pakket 1 capaciteitsstatus"
             },
             "pack_1_total_charge": {
-                "name": "Pack 1 total charge"
+                "name": "Pakket 1 totale lading"
             },
             "pack_1_total_discharge": {
-                "name": "Pack 1 total discharge"
+                "name": "Pakket 1 totale ontlading"
             },
             "pack_1_voltage": {
-                "name": "Pack 1 voltage"
+                "name": "Pakket 1 spanning"
             },
             "pack_1_working_status": {
-                "name": "Pack 1 working status"
+                "name": "Pakket 1 bedrijfsstatus"
             },
             "pack_2_charge_discharge_power": {
-                "name": "Pack 2 charge discharge power"
+                "name": "Pakket 2 laad-/ontlaadvermogen"
             },
             "pack_2_current": {
-                "name": "Pack 2 current"
+                "name": "Pakket 2 stroom"
             },
             "pack_2_firmware_version": {
-                "name": "Pack 2 firmware version"
+                "name": "Pakket 2 firmwareversie"
             },
             "pack_2_max_temperature": {
-                "name": "Pack 2 max temperature"
+                "name": "Pakket 2 maximale temperatuur"
             },
             "pack_2_min_temperature": {
-                "name": "Pack 2 min temperature"
+                "name": "Pakket 2 minimale temperatuur"
             },
             "pack_2_serial_number": {
-                "name": "Pack 2 serial number"
+                "name": "Pakket 2 serienummer"
             },
             "pack_2_soh_calibration_status": {
-                "name": "Pack 2 SOH calibration status"
+                "name": "Pakket 2 SOH-kalibratiestatus"
             },
             "pack_2_state_of_capacity": {
-                "name": "Pack 2 state of capacity"
+                "name": "Pakket 2 capaciteitsstatus"
             },
             "pack_2_total_charge": {
-                "name": "Pack 2 total charge"
+                "name": "Pakket 2 totale lading"
             },
             "pack_2_total_discharge": {
-                "name": "Pack 2 total discharge"
+                "name": "Pakket 2 totale ontlading"
             },
             "pack_2_voltage": {
-                "name": "Pack 2 voltage"
+                "name": "Pakket 2 spanning"
             },
             "pack_2_working_status": {
-                "name": "Pack 2 working status"
+                "name": "Pakket 2 bedrijfsstatus"
             },
             "pack_3_charge_discharge_power": {
-                "name": "Pack 3 charge discharge power"
+                "name": "Pakket 3 laad-/ontlaadvermogen"
             },
             "pack_3_current": {
-                "name": "Pack 3 current"
+                "name": "Pakket 3 stroom"
             },
             "pack_3_firmware_version": {
-                "name": "Pack 3 firmware version"
+                "name": "Pakket 3 firmwareversie"
             },
             "pack_3_max_temperature": {
-                "name": "Pack 3 max temperature"
+                "name": "Pakket 3 maximale temperatuur"
             },
             "pack_3_min_temperature": {
-                "name": "Pack 3 min temperature"
+                "name": "Pakket 3 minimale temperatuur"
             },
             "pack_3_serial_number": {
-                "name": "Pack 3 serial number"
+                "name": "Pakket 3 serienummer"
             },
             "pack_3_soh_calibration_status": {
-                "name": "Pack 3 SOH calibration status"
+                "name": "Pakket 3 SOH-kalibratiestatus"
             },
             "pack_3_state_of_capacity": {
-                "name": "Pack 3 state of capacity"
+                "name": "Pakket 3 capaciteitsstatus"
             },
             "pack_3_total_charge": {
-                "name": "Pack 3 total charge"
+                "name": "Pakket 3 totale lading"
             },
             "pack_3_total_discharge": {
-                "name": "Pack 3 total discharge"
+                "name": "Pakket 3 totale ontlading"
             },
             "pack_3_voltage": {
-                "name": "Pack 3 voltage"
+                "name": "Pakket 3 spanning"
             },
             "pack_3_working_status": {
-                "name": "Pack 3 working status"
+                "name": "Pakket 3 bedrijfsstatus"
             },
             "phase_a_active_power_built_in_energy": {
                 "name": "Fase A werkelijk vermogen"
@@ -999,13 +999,13 @@
                 "name": "PV 24 spanning"
             },
             "pv_output_power": {
-                "name": "PV output power"
+                "name": "PV-uitgangsvermogen"
             },
             "pv_yield_today": {
-                "name": "PV yield today"
+                "name": "PV-opbrengst vandaag"
             },
             "rated_ess_capacity": {
-                "name": "Rated ESS capacity"
+                "name": "Nominale ESS-capaciteit"
             },
             "rated_power": {
                 "name": "Nominaal vermogen"
@@ -1017,22 +1017,22 @@
                 "name": "Operationele status"
             },
             "sdongle_grid_power": {
-                "name": "Grid power"
+                "name": "Netvermogen"
             },
             "sdongle_load_power": {
-                "name": "Load power"
+                "name": "Belastingsvermogen"
             },
             "sdongle_total_active_power": {
-                "name": "Total active power"
+                "name": "Totaal actief vermogen"
             },
             "sdongle_total_battery_power": {
-                "name": "Total battery power"
+                "name": "Totaal batterijvermogen"
             },
             "sdongle_total_input_power": {
-                "name": "Total input power"
+                "name": "Totaal ingangsvermogen"
             },
             "shutdown_time": {
-                "name": "Afsluittijd"
+                "name": "Uitschakeltijd"
             },
             "single_phase_meter_current": {
                 "name": "Stroom"
@@ -1041,88 +1041,88 @@
                 "name": "Spanning"
             },
             "smartlogger_a_b_line_voltage_of_grid": {
-                "name": "Grid A-B line voltage"
+                "name": "Net lijnspanning A-B"
             },
             "smartlogger_active_ess_power": {
-                "name": "Active ESS power"
+                "name": "Actief ESS-vermogen"
             },
             "smartlogger_active_power": {
                 "name": "Werkelijk vermogen"
             },
             "smartlogger_active_pv_power": {
-                "name": "Active PV power"
+                "name": "Actief PV-vermogen"
             },
             "smartlogger_alarms": {
                 "name": "Alarmen"
             },
             "smartlogger_array_in_operation": {
-                "name": "Array in operation"
+                "name": "Zonnepaneelveld in werking"
             },
             "smartlogger_b_c_line_voltage_of_grid": {
-                "name": "Grid B-C line voltage"
+                "name": "Net lijnspanning B-C"
             },
             "smartlogger_c_a_line_voltage_of_grid": {
-                "name": "Grid C-A line voltage"
+                "name": "Net lijnspanning C-A"
             },
             "smartlogger_energy_charged_today": {
-                "name": "Energy charged today"
+                "name": "Geladen energie vandaag"
             },
             "smartlogger_energy_discharged_today": {
-                "name": "Energy discharged today"
+                "name": "Ontladen energie vandaag"
             },
             "smartlogger_input_power": {
                 "name": "Ingangsvermogen"
             },
             "smartlogger_phase_a_current_of_grid": {
-                "name": "Grid phase A current"
+                "name": "Netstroom fase A"
             },
             "smartlogger_phase_b_current_of_grid": {
-                "name": "Grid phase B current"
+                "name": "Netstroom fase B"
             },
             "smartlogger_phase_c_current_of_grid": {
-                "name": "Grid phase C current"
+                "name": "Netstroom fase C"
             },
             "smartlogger_plant_status": {
-                "name": "Plant status"
+                "name": "Installatiestatus"
             },
             "smartlogger_power_factor": {
                 "name": "Arbeidsfactor"
             },
             "smartlogger_power_supply_from_grid_today": {
-                "name": "Power supply from grid today"
+                "name": "Stroomlevering vanaf net vandaag"
             },
             "smartlogger_rated_ess_power": {
-                "name": "Rated ESS power"
+                "name": "Nominaal ESS-vermogen"
             },
             "smartlogger_rated_pv_power": {
-                "name": "Rated PV power"
+                "name": "Nominaal PV-vermogen"
             },
             "smartlogger_soc": {
-                "name": "State of charge"
+                "name": "Laadstatus (SOC)"
             },
             "smartlogger_soe": {
-                "name": "State of energy"
+                "name": "Energiestatus (SOE)"
             },
             "smartlogger_soh": {
-                "name": "State of health"
+                "name": "Gezondheidstoestand (SOH)"
             },
             "smartlogger_total_energy_charged": {
-                "name": "Total charged energy"
+                "name": "Totale geladen energie"
             },
             "smartlogger_total_energy_discharge_d": {
-                "name": "Total discharged energy"
+                "name": "Totale ontladen energie"
             },
             "smartlogger_total_energy_yield": {
-                "name": "Total energy yield"
+                "name": "Totale energieopbrengst"
             },
             "smartlogger_total_power_supply_from_grid": {
-                "name": "Total power supply from grid"
+                "name": "Totale stroomlevering vanaf net"
             },
             "smartlogger_yield_today": {
                 "name": "Dagelijkse opbrengst"
             },
             "soh_calibration_status": {
-                "name": "SOH calibration status"
+                "name": "SOH-kalibratiestatus"
             },
             "startup_time": {
                 "name": "Opstarttijd"
@@ -1158,22 +1158,22 @@
                 "name": "Dagelijkse piek vermogen"
             },
             "storage_charge_discharge_power": {
-                "name": "Laad/Ontlaad vermogen"
+                "name": "Batterij laad-/ontlaadvermogen"
             },
             "storage_current_day_charge_capacity": {
-                "name": "Dag Lading"
+                "name": "Batterijlading vandaag"
             },
             "storage_current_day_discharge_capacity": {
-                "name": "Dag Ontlading"
+                "name": "Batterijontlading vandaag"
             },
             "storage_forcible_charge_discharge_write": {
-                "name": "Forcible charge/discharge"
+                "name": "Geforceerd laden/ontladen"
             },
             "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
-                "name": "TOU charging and discharging periods"
+                "name": "TOU laad- en ontlaadperioden"
             },
             "storage_lg_resu_time_of_use_price_periods": {
-                "name": "TOU price periods"
+                "name": "TOU prijsperioden"
             },
             "storage_maximum_charge_power": {
                 "name": "Maximaal laadvermogen"
@@ -1185,67 +1185,70 @@
                 "name": "Beoordeelde capaciteit"
             },
             "storage_running_status": {
-                "name": "Status"
+                "name": "Bedrijfsstatus"
             },
             "storage_state_of_capacity": {
-                "name": "Batterijpercentage"
+                "name": "Batterij laadstatus"
             },
             "storage_total_charge": {
-                "name": "Totale lading"
+                "name": "Totale lading batterij"
             },
             "storage_total_discharge": {
-                "name": "Totale ontlading"
+                "name": "Totale ontlading batterij"
             },
             "supply_from_grid_today": {
-                "name": "Supply from grid today"
+                "name": "Afname van net vandaag"
             },
             "temperature": {
                 "name": "Temperatuur"
             },
             "total_active_energy_built_in_energy": {
-                "name": "Total active energy"
+                "name": "Totale actieve energie"
             },
             "total_active_energy_external_energy": {
-                "name": "Total active energy"
+                "name": "Totale actieve energie"
             },
             "total_charged_energy": {
-                "name": "Total charged energy"
+                "name": "Totale geladen energie"
             },
             "total_dc_input_power": {
                 "name": "Totale DC ingangsenergie"
             },
             "total_discharged_energy": {
-                "name": "Total discharged energy"
+                "name": "Totale ontladen energie"
             },
             "total_energy_consumption": {
-                "name": "Total energy consumption"
+                "name": "Totaal energieverbruik"
             },
             "total_feed_in_to_grid": {
-                "name": "Total feed in to grid"
+                "name": "Totaal teruggeleverd aan het net"
             },
             "total_negative_active_energy_built_in_energy": {
-                "name": "Total negative active energy"
+                "name": "Totale negatieve actieve energie"
             },
             "total_negative_active_energy_external_energy": {
-                "name": "Total negative active energy"
+                "name": "Totale negatieve actieve energie"
             },
             "total_positive_active_energy_built_in_energy": {
-                "name": "Total positive active energy"
+                "name": "Totale positieve actieve energie"
             },
             "total_positive_active_energy_external_energy": {
-                "name": "Total positive active energy"
+                "name": "Totale positieve actieve energie"
             },
             "total_pv_energy_yield": {
-                "name": "Total PV energy yield"
+                "name": "Totale PV-energieopbrengst"
             },
             "total_supply_from_grid": {
-                "name": "Total supply from grid"
+                "name": "Totale afname van net"
             },
             "voltage_to_ground": {
                 "name": "Spanning naar aarde"
             },
             "yearly_yield_energy": {
-                "name": "Yearly yield"
+                "name": "Jaarlijkse opbrengst"
+            },
+            "emma_tou_periods": {
+                "name": "TOU-perioden"
             }
         },
         "switch": {
@@ -1277,19 +1280,19 @@
     },
     "exceptions": {
         "config_entry_not_found": {
-            "message": "Entry not found for device: {device_id}"
+            "message": "Item niet gevonden voor apparaat: {device_id}"
         },
         "entry_not_loaded": {
-            "message": "Entry not loaded: {entry}"
+            "message": "Item niet geladen: {entry}"
         },
         "ha_device_not_found": {
-            "message": "Could not retrieve Huawei Solar device associated with ID {device_id}"
+            "message": "Kon Huawei Solar-apparaat niet ophalen gekoppeld aan ID {device_id}"
         },
         "invalid_device_id": {
-            "message": "Invalid device ID specified: {device_id}"
+            "message": "Ongeldige apparaat-ID opgegeven: {device_id}"
         },
         "wrong_device_type": {
-            "message": "Got wrong Huawei Solar device type for ID {device_id}: expected {expected_type}, got {actual_type}"
+            "message": "Verkeerd type Huawei Solar-apparaat voor ID {device_id}: verwachtte {expected_type}, kreeg {actual_type}"
         }
     },
     "services": {
@@ -1348,7 +1351,7 @@
             "name": "Geforceerd ontladen"
         },
         "forcible_discharge_soc": {
-            "description": "Forcible Discharge of the battery to a certain State of Charge level",
+            "description": "Geforceerd ontladen van de batterij tot een bepaalde laadstatus (SOC)",
             "fields": {
                 "device_id": {
                     "description": "Toesteltype moet 'Batterijen' zijn",
