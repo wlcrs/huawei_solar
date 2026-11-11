@@ -237,10 +237,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
                 )
                 continue
             parent_ha_device_id = primary_device_data.ha_device_id
+            translation_placeholders: dict[str, str] | None = None
             if isinstance(sub_device, SmartAcGunDevice):
-                for dd in device_datas:
+                # Name the connector after its SCharger so that multiple
+                # connectors can be told apart.
+                translation_placeholders = {"charger": primary_device.serial_number}
+                # Link the connector to the most recently added SCharger, i.e. the
+                # charger that precedes it in the slave ID list. Iterating from the
+                # start would attach every connector to the first SCharger.
+                for dd in reversed(device_datas):
                     if isinstance(dd.device, SChargerDevice):
                         parent_ha_device_id = dd.ha_device_id
+                        translation_placeholders = {
+                            "charger": dd.device.serial_number
+                        }
                         break
 
             sub_device_data = await _setup_device_data(
@@ -248,6 +258,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
                 entry,
                 sub_device,
                 via_device_id=parent_ha_device_id,
+                translation_placeholders=translation_placeholders,
             )
 
             device_datas.append(sub_device_data)
@@ -569,6 +580,7 @@ async def _setup_device_data(
     device: HuaweiSolarDevice,
     *,
     via_device_id: str | None = None,
+    translation_placeholders: dict[str, str] | None = None,
 ) -> HuaweiSolarDeviceData:
     """Create the correct DeviceInfo-objects, which can be used to correctly assign to entities in this integration."""
     if isinstance(device, SUN2000Device):
@@ -583,6 +595,7 @@ async def _setup_device_data(
     device_info = DeviceInfo(
         identifiers={(DOMAIN, device.serial_number)},
         translation_key=DEVICE_CLASS_TO_TRANSLATION_KEY[type(device)],
+        translation_placeholders=translation_placeholders,
         manufacturer="Huawei",
         model=device.model_name,
         serial_number=device.serial_number,
