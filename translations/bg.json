@@ -115,6 +115,9 @@
         "charger": {
             "name": "Charger"
         },
+        "charger_connector": {
+            "name": "Конектор на зарядното"
+        },
         "connected_energy_storage": {
             "name": "Batteries"
         },
@@ -126,6 +129,9 @@
         },
         "power_meter": {
             "name": "Power meter"
+        },
+        "smartguard": {
+            "name": "SmartGuard"
         },
         "smartlogger": {
             "name": "SmartLogger"
@@ -141,8 +147,29 @@
             "active_power_fixed_value_derating": {
                 "name": "Ограничаване на мощността"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Праг за безотказност на активната мощност"
+            },
             "active_power_percentage_derating": {
                 "name": "Ограничаване на мощността (в проценти)"
+            },
+            "charger_dynamic_power_threshold": {
+                "name": "Праг за динамично ограничение на мощността"
+            },
+            "charger_gun_max_current": {
+                "name": "Максимален ток на зареждане"
+            },
+            "charger_max_power_from_grid": {
+                "name": "Максимална мощност от мрежата"
+            },
+            "charger_orderly_charging_power": {
+                "name": "Планирана мощност на зареждане"
+            },
+            "charger_surplus_power_start_threshold": {
+                "name": "Начален праг на излишната мощност"
+            },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Максимална мощност за зареждане от мрежата"
             },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Максимална мощност към мрежата (%)"
@@ -155,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "Интервал на MPPT сканиране"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Мъртва зона за регулиране на батерията"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "SOC за резервна мощност"
@@ -177,11 +207,43 @@
             "storage_maximum_discharging_power": {
                 "name": "Максимална разрядна мощност"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Максимална мощност от мрежата по време на разреждане"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Максимална мощност за зареждане от мрежата"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Режим на ограничаване на активната мощност",
+                "state": {
+                    "total_power": "Обща мощност",
+                    "single_phase_power": "Еднофазна мощност"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Напрежение при независима работа",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
+            "charger_gun_lock_control_mode": {
+                "name": "Режим на заключване на конектора",
+                "state": {
+                    "always_locked": "Винаги заключен",
+                    "lock_during_charging": "Заключване по време на зареждане",
+                    "lock_when_plugged": "Заключване при включване"
+                }
+            },
+            "charger_gun_work_mode": {
+                "name": "Работен режим",
+                "state": {
+                    "fast_charging": "Бързо зареждане",
+                    "green_power_priority": "Приоритет на зелена енергия"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "Режим на управление на ESS",
                 "state": {
@@ -306,6 +368,60 @@
             "bms_temperature": {
                 "name": "Температура на BMS"
             },
+            "charger_cable_max_current": {
+                "name": "Максимален ток на кабела"
+            },
+            "charger_charging_method": {
+                "name": "Метод на зареждане"
+            },
+            "charger_charging_wait_reason": {
+                "name": "Причина за изчакване на зареждането"
+            },
+            "charger_gun_lock_status": {
+                "name": "Състояние на заключване на конектора"
+            },
+            "charger_gun_output_power": {
+                "name": "Мощност на зареждане"
+            },
+            "charger_gun_phase_a_current": {
+                "name": "Конектор ток фаза A"
+            },
+            "charger_gun_phase_a_voltage": {
+                "name": "Конектор напрежение фаза A"
+            },
+            "charger_gun_phase_b_current": {
+                "name": "Конектор ток фаза B"
+            },
+            "charger_gun_phase_b_voltage": {
+                "name": "Конектор напрежение фаза B"
+            },
+            "charger_gun_phase_c_current": {
+                "name": "Конектор ток фаза C"
+            },
+            "charger_gun_phase_c_voltage": {
+                "name": "Конектор напрежение фаза C"
+            },
+            "charger_gun_temperature": {
+                "name": "Температура на конектора"
+            },
+            "charger_gun_total_energy_charged": {
+                "name": "Конектор обща заредена енергия"
+            },
+            "charger_gun_work_status": {
+                "name": "Състояние на конектора"
+            },
+            "charger_indicator_light_status": {
+                "name": "Състояние на светлинния индикатор"
+            },
+            "charger_max_charging_power": {
+                "name": "Максимална зарядна мощност"
+            },
+            "charger_min_charging_power": {
+                "name": "Минимална мощност на зареждане"
+            },
+            "charger_output_relay_status": {
+                "name": "Състояние на изходния контактор"
+            },
             "charger_phase_a_voltage": {
                 "name": "Charger Phase A voltage"
             },
@@ -315,14 +431,26 @@
             "charger_phase_c_voltage": {
                 "name": "Charger Phase C voltage"
             },
+            "charger_planned_departure_time": {
+                "name": "Планирано време на тръгване"
+            },
             "charger_rated_power": {
                 "name": "Charger rated power"
+            },
+            "charger_reported_work_mode": {
+                "name": "Отчетен работен режим"
+            },
+            "charger_target_charged_energy": {
+                "name": "Целева заредена енергия"
             },
             "charger_temperature": {
                 "name": "Charger temperature"
             },
             "charger_total_energy_charged": {
                 "name": "Charger total charged energy"
+            },
+            "charger_wifi_signal_strength": {
+                "name": "Сила на Wi-Fi сигнала"
             },
             "consumption_today": {
                 "name": "Консумация днес"
@@ -1121,6 +1249,18 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Превключване към работа извън мрежата"
+            },
+            "charger_dynamic_power_control": {
+                "name": "Динамичен контрол на мощността"
+            },
+            "charger_random_delay_charging": {
+                "name": "Случайно отлагане на зареждането"
+            },
+            "charger_single_three_phase_switch": {
+                "name": "Автоматично превключване на фазите"
+            },
             "mppt_multimodal_scanning": {
                 "name": "MPPT сканиране"
             },
@@ -1129,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Зареждане от мрежата"
+            },
+            "storage_ess_low_power": {
+                "name": "Ниска мощност на ESS"
             }
         }
     },
