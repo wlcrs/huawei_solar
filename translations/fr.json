@@ -115,6 +115,9 @@
         "charger": {
             "name": "Charger"
         },
+        "charger_connector": {
+            "name": "Connecteur de charge"
+        },
         "connected_energy_storage": {
             "name": "Batteries"
         },
@@ -126,6 +129,9 @@
         },
         "power_meter": {
             "name": "Mesure du courant"
+        },
+        "smartguard": {
+            "name": "SmartGuard"
         },
         "smartlogger": {
             "name": "SmartLogger"
@@ -141,8 +147,29 @@
             "active_power_fixed_value_derating": {
                 "name": "Réduction de puissance"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Seuil de sécurité de la puissance active"
+            },
             "active_power_percentage_derating": {
                 "name": "Réduction de puissance (en pourcentage)"
+            },
+            "charger_dynamic_power_threshold": {
+                "name": "Seuil limite de puissance dynamique"
+            },
+            "charger_gun_max_current": {
+                "name": "Courant de charge maximal"
+            },
+            "charger_max_power_from_grid": {
+                "name": "Puissance maximale depuis le réseau"
+            },
+            "charger_orderly_charging_power": {
+                "name": "Puissance de charge programmée"
+            },
+            "charger_surplus_power_start_threshold": {
+                "name": "Seuil de démarrage sur surplus d'énergie"
+            },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Puissance maximale de charge depuis le réseau"
             },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Puissance maximale fournie au réseau (%)"
@@ -155,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "Intervalle d'analyse MPPT"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Bande morte d'ajustement de la batterie"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "SOC de la batterie de secours"
@@ -177,11 +207,43 @@
             "storage_maximum_discharging_power": {
                 "name": "Puissance de décharge maximale"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Puissance maximale du réseau pendant la décharge"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Puissance de charge maximale depuis le réseau"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Mode de limitation de puissance active",
+                "state": {
+                    "total_power": "Puissance totale",
+                    "single_phase_power": "Puissance monophasée"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Tension en fonctionnement autonome",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
+            "charger_gun_lock_control_mode": {
+                "name": "Mode de verrouillage du connecteur",
+                "state": {
+                    "always_locked": "Toujours verrouillé",
+                    "lock_during_charging": "Verrouiller pendant la charge",
+                    "lock_when_plugged": "Verrouiller une fois branché"
+                }
+            },
+            "charger_gun_work_mode": {
+                "name": "Mode de fonctionnement",
+                "state": {
+                    "fast_charging": "Charge rapide",
+                    "green_power_priority": "Priorité énergie verte"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "Mode de contrôle de l'ESS",
                 "state": {
@@ -306,6 +368,60 @@
             "bms_temperature": {
                 "name": "Température du BMS"
             },
+            "charger_cable_max_current": {
+                "name": "Courant maximal du câble"
+            },
+            "charger_charging_method": {
+                "name": "Méthode de charge"
+            },
+            "charger_charging_wait_reason": {
+                "name": "Raison d'attente de charge"
+            },
+            "charger_gun_lock_status": {
+                "name": "État du verrouillage du connecteur"
+            },
+            "charger_gun_output_power": {
+                "name": "Puissance de charge"
+            },
+            "charger_gun_phase_a_current": {
+                "name": "Connecteur courant de la phase A"
+            },
+            "charger_gun_phase_a_voltage": {
+                "name": "Connecteur tension de la phase A"
+            },
+            "charger_gun_phase_b_current": {
+                "name": "Connecteur courant de la phase B"
+            },
+            "charger_gun_phase_b_voltage": {
+                "name": "Connecteur tension de la phase B"
+            },
+            "charger_gun_phase_c_current": {
+                "name": "Connecteur courant de la phase C"
+            },
+            "charger_gun_phase_c_voltage": {
+                "name": "Connecteur tension de la phase C"
+            },
+            "charger_gun_temperature": {
+                "name": "Température du connecteur"
+            },
+            "charger_gun_total_energy_charged": {
+                "name": "Connecteur énergie totale chargée"
+            },
+            "charger_gun_work_status": {
+                "name": "État du connecteur"
+            },
+            "charger_indicator_light_status": {
+                "name": "État du voyant lumineux"
+            },
+            "charger_max_charging_power": {
+                "name": "Puissance de charge maximale"
+            },
+            "charger_min_charging_power": {
+                "name": "Puissance de charge minimale"
+            },
+            "charger_output_relay_status": {
+                "name": "État du contacteur de sortie"
+            },
             "charger_phase_a_voltage": {
                 "name": "Charger Phase A voltage"
             },
@@ -315,14 +431,26 @@
             "charger_phase_c_voltage": {
                 "name": "Charger Phase C voltage"
             },
+            "charger_planned_departure_time": {
+                "name": "Heure de départ prévue"
+            },
             "charger_rated_power": {
                 "name": "Charger rated power"
+            },
+            "charger_reported_work_mode": {
+                "name": "Mode de fonctionnement signalé"
+            },
+            "charger_target_charged_energy": {
+                "name": "Énergie cible chargée"
             },
             "charger_temperature": {
                 "name": "Charger temperature"
             },
             "charger_total_energy_charged": {
                 "name": "Charger total charged energy"
+            },
+            "charger_wifi_signal_strength": {
+                "name": "Puissance du signal Wi-Fi"
             },
             "consumption_today": {
                 "name": "Consommation d'aujourd'hui"
@@ -1121,6 +1249,18 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Basculer hors réseau"
+            },
+            "charger_dynamic_power_control": {
+                "name": "Contrôle dynamique de la puissance"
+            },
+            "charger_random_delay_charging": {
+                "name": "Délai de charge aléatoire"
+            },
+            "charger_single_three_phase_switch": {
+                "name": "Commutation automatique de phase"
+            },
             "mppt_multimodal_scanning": {
                 "name": "MPPT scanning"
             },
@@ -1129,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Charge depuis le réseau"
+            },
+            "storage_ess_low_power": {
+                "name": "Faible puissance ESS"
             }
         }
     },
