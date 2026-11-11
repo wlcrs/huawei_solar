@@ -115,6 +115,9 @@
         "charger": {
             "name": "Charger"
         },
+        "charger_connector": {
+            "name": "Конектор на зарядното"
+        },
         "connected_energy_storage": {
             "name": "Batteries"
         },
@@ -126,6 +129,9 @@
         },
         "power_meter": {
             "name": "Power meter"
+        },
+        "smartguard": {
+            "name": "SmartGuard"
         },
         "smartlogger": {
             "name": "SmartLogger"
@@ -143,6 +149,21 @@
             },
             "active_power_percentage_derating": {
                 "name": "Ограничаване на мощността (в проценти)"
+            },
+            "charger_dynamic_power_threshold": {
+                "name": "Праг за динамично ограничение на мощността"
+            },
+            "charger_gun_max_current": {
+                "name": "Максимален ток на зареждане"
+            },
+            "charger_max_power_from_grid": {
+                "name": "Максимална мощност от мрежата"
+            },
+            "charger_orderly_charging_power": {
+                "name": "Планирана мощност на зареждане"
+            },
+            "charger_surplus_power_start_threshold": {
+                "name": "Начален праг на излишната мощност"
             },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Максимална мощност към мрежата (%)"
@@ -182,6 +203,21 @@
             }
         },
         "select": {
+            "charger_gun_lock_control_mode": {
+                "name": "Режим на заключване на конектора",
+                "state": {
+                    "always_locked": "Винаги заключен",
+                    "lock_during_charging": "Заключване по време на зареждане",
+                    "lock_when_plugged": "Заключване при включване"
+                }
+            },
+            "charger_gun_work_mode": {
+                "name": "Работен режим",
+                "state": {
+                    "fast_charging": "Бързо зареждане",
+                    "green_power_priority": "Приоритет на зелена енергия"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "Режим на управление на ESS",
                 "state": {
@@ -306,6 +342,60 @@
             "bms_temperature": {
                 "name": "Температура на BMS"
             },
+            "charger_cable_max_current": {
+                "name": "Максимален ток на кабела"
+            },
+            "charger_charging_method": {
+                "name": "Метод на зареждане"
+            },
+            "charger_charging_wait_reason": {
+                "name": "Причина за изчакване на зареждането"
+            },
+            "charger_gun_lock_status": {
+                "name": "Състояние на заключване на конектора"
+            },
+            "charger_gun_output_power": {
+                "name": "Мощност на зареждане"
+            },
+            "charger_gun_phase_a_current": {
+                "name": "Конектор ток фаза A"
+            },
+            "charger_gun_phase_a_voltage": {
+                "name": "Конектор напрежение фаза A"
+            },
+            "charger_gun_phase_b_current": {
+                "name": "Конектор ток фаза B"
+            },
+            "charger_gun_phase_b_voltage": {
+                "name": "Конектор напрежение фаза B"
+            },
+            "charger_gun_phase_c_current": {
+                "name": "Конектор ток фаза C"
+            },
+            "charger_gun_phase_c_voltage": {
+                "name": "Конектор напрежение фаза C"
+            },
+            "charger_gun_temperature": {
+                "name": "Температура на конектора"
+            },
+            "charger_gun_total_energy_charged": {
+                "name": "Конектор обща заредена енергия"
+            },
+            "charger_gun_work_status": {
+                "name": "Състояние на конектора"
+            },
+            "charger_indicator_light_status": {
+                "name": "Състояние на светлинния индикатор"
+            },
+            "charger_max_charging_power": {
+                "name": "Максимална мощност на зареждане"
+            },
+            "charger_min_charging_power": {
+                "name": "Минимална мощност на зареждане"
+            },
+            "charger_output_relay_status": {
+                "name": "Състояние на изходния контактор"
+            },
             "charger_phase_a_voltage": {
                 "name": "Charger Phase A voltage"
             },
@@ -315,14 +405,26 @@
             "charger_phase_c_voltage": {
                 "name": "Charger Phase C voltage"
             },
+            "charger_planned_departure_time": {
+                "name": "Планирано време на тръгване"
+            },
             "charger_rated_power": {
                 "name": "Charger rated power"
+            },
+            "charger_reported_work_mode": {
+                "name": "Отчетен работен режим"
+            },
+            "charger_target_charged_energy": {
+                "name": "Целева заредена енергия"
             },
             "charger_temperature": {
                 "name": "Charger temperature"
             },
             "charger_total_energy_charged": {
                 "name": "Charger total charged energy"
+            },
+            "charger_wifi_signal_strength": {
+                "name": "Сила на Wi-Fi сигнала"
             },
             "consumption_today": {
                 "name": "Консумация днес"
@@ -1121,6 +1223,15 @@
             }
         },
         "switch": {
+            "charger_dynamic_power_control": {
+                "name": "Динамичен контрол на мощността"
+            },
+            "charger_random_delay_charging": {
+                "name": "Случайно отлагане на зареждането"
+            },
+            "charger_single_three_phase_switch": {
+                "name": "Автоматично превключване на фазите"
+            },
             "mppt_multimodal_scanning": {
                 "name": "MPPT сканиране"
             },

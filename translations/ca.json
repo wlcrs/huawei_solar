@@ -115,6 +115,9 @@
         "charger": {
             "name": "Charger"
         },
+        "charger_connector": {
+            "name": "Connector de càrrega"
+        },
         "connected_energy_storage": {
             "name": "Batteries"
         },
@@ -126,6 +129,9 @@
         },
         "power_meter": {
             "name": "Power meter"
+        },
+        "smartguard": {
+            "name": "SmartGuard"
         },
         "smartlogger": {
             "name": "SmartLogger"
@@ -143,6 +149,21 @@
             },
             "active_power_percentage_derating": {
                 "name": "Power derating (by percentage)"
+            },
+            "charger_dynamic_power_threshold": {
+                "name": "Llindar de límit de potència dinàmica"
+            },
+            "charger_gun_max_current": {
+                "name": "Corrent màxim de càrrega"
+            },
+            "charger_max_power_from_grid": {
+                "name": "Potència màxima de la xarxa"
+            },
+            "charger_orderly_charging_power": {
+                "name": "Potència de càrrega programada"
+            },
+            "charger_surplus_power_start_threshold": {
+                "name": "Llindar d'inici per excedent d'energia"
             },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximum feed grid power (%)"
@@ -182,6 +203,21 @@
             }
         },
         "select": {
+            "charger_gun_lock_control_mode": {
+                "name": "Mode de bloqueig del connector",
+                "state": {
+                    "always_locked": "Sempre bloquejat",
+                    "lock_during_charging": "Bloqueja durant la càrrega",
+                    "lock_when_plugged": "Bloqueja en endollar"
+                }
+            },
+            "charger_gun_work_mode": {
+                "name": "Mode de funcionament",
+                "state": {
+                    "fast_charging": "Càrrega ràpida",
+                    "green_power_priority": "Prioritat energia verda"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS Control Mode",
                 "state": {
@@ -306,6 +342,60 @@
             "bms_temperature": {
                 "name": "BMS temperature"
             },
+            "charger_cable_max_current": {
+                "name": "Corrent màxim del cable"
+            },
+            "charger_charging_method": {
+                "name": "Mètode de càrrega"
+            },
+            "charger_charging_wait_reason": {
+                "name": "Motiu d'espera de càrrega"
+            },
+            "charger_gun_lock_status": {
+                "name": "Estat de bloqueig del connector"
+            },
+            "charger_gun_output_power": {
+                "name": "Potència de càrrega"
+            },
+            "charger_gun_phase_a_current": {
+                "name": "Connector corrent de fase A"
+            },
+            "charger_gun_phase_a_voltage": {
+                "name": "Connector tensió de fase A"
+            },
+            "charger_gun_phase_b_current": {
+                "name": "Connector corrent de fase B"
+            },
+            "charger_gun_phase_b_voltage": {
+                "name": "Connector tensió de fase B"
+            },
+            "charger_gun_phase_c_current": {
+                "name": "Connector corrent de fase C"
+            },
+            "charger_gun_phase_c_voltage": {
+                "name": "Connector tensió de fase C"
+            },
+            "charger_gun_temperature": {
+                "name": "Temperatura del connector"
+            },
+            "charger_gun_total_energy_charged": {
+                "name": "Connector energia total carregada"
+            },
+            "charger_gun_work_status": {
+                "name": "Estat del connector"
+            },
+            "charger_indicator_light_status": {
+                "name": "Estat del llum indicador"
+            },
+            "charger_max_charging_power": {
+                "name": "Potència de càrrega màxima"
+            },
+            "charger_min_charging_power": {
+                "name": "Potència de càrrega mínima"
+            },
+            "charger_output_relay_status": {
+                "name": "Estat del contactor de sortida"
+            },
             "charger_phase_a_voltage": {
                 "name": "Charger Phase A voltage"
             },
@@ -315,14 +405,26 @@
             "charger_phase_c_voltage": {
                 "name": "Charger Phase C voltage"
             },
+            "charger_planned_departure_time": {
+                "name": "Hora de sortida prevista"
+            },
             "charger_rated_power": {
                 "name": "Charger rated power"
+            },
+            "charger_reported_work_mode": {
+                "name": "Mode de funcionament notificat"
+            },
+            "charger_target_charged_energy": {
+                "name": "Energia carregada objectiu"
             },
             "charger_temperature": {
                 "name": "Charger temperature"
             },
             "charger_total_energy_charged": {
                 "name": "Charger total charged energy"
+            },
+            "charger_wifi_signal_strength": {
+                "name": "Intensitat del senyal Wi-Fi"
             },
             "consumption_today": {
                 "name": "Consumption today"
@@ -1121,6 +1223,15 @@
             }
         },
         "switch": {
+            "charger_dynamic_power_control": {
+                "name": "Control dinàmic de potència"
+            },
+            "charger_random_delay_charging": {
+                "name": "Retard aleatori de càrrega"
+            },
+            "charger_single_three_phase_switch": {
+                "name": "Commutació automàtica de fase"
+            },
             "mppt_multimodal_scanning": {
                 "name": "MPPT scanning"
             },
