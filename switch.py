@@ -8,7 +8,13 @@ from dataclasses import dataclass
 import logging
 from typing import Any, TypeVar
 
-from huawei_solar import HuaweiSolarDevice, register_names as rn, register_values as rv
+from huawei_solar import (
+    HuaweiSolarDevice,
+    SChargerDevice,
+    SmartAcGunDevice,
+    register_names as rn,
+    register_values as rv,
+)
 
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.const import EntityCategory
@@ -99,6 +105,27 @@ INVERTER_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     ),
 )
 
+CHARGER_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
+    HuaweiSolarSwitchEntityDescription(
+        key=rn.CHARGER_RANDOM_DELAY_CHARGING,
+        icon="mdi:timer-sand",
+        entity_category=EntityCategory.CONFIG,
+    ),
+)
+
+SMART_AC_GUN_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
+    HuaweiSolarSwitchEntityDescription(
+        key=rn.CHARGER_SINGLE_THREE_PHASE_SWITCH,
+        icon="mdi:numeric-3-box-multiple",
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarSwitchEntityDescription(
+        key=rn.CHARGER_DYNAMIC_POWER_CONTROL,
+        icon="mdi:flash-auto",
+        entity_category=EntityCategory.CONFIG,
+    ),
+)
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -162,6 +189,28 @@ async def async_setup_entry(
                         )
                         for entity_description in ENERGY_STORAGE_WITHOUT_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS
                     )
+
+        if isinstance(ucs.device, SChargerDevice):
+            slave_entities.extend(
+                HuaweiSolarSwitchEntity(
+                    ucs.configuration_update_coordinator,
+                    ucs.device,
+                    entity_description,
+                    ucs.device_info,
+                )
+                for entity_description in CHARGER_SWITCH_DESCRIPTIONS
+            )
+
+        if isinstance(ucs.device, SmartAcGunDevice):
+            slave_entities.extend(
+                HuaweiSolarSwitchEntity(
+                    ucs.configuration_update_coordinator,
+                    ucs.device,
+                    entity_description,
+                    ucs.device_info,
+                )
+                for entity_description in SMART_AC_GUN_SWITCH_DESCRIPTIONS
+            )
 
         entities_to_add.extend(slave_entities)
 

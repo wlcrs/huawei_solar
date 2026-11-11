@@ -24,6 +24,8 @@ from huawei_solar import (
     ReadException,
     SChargerDevice,
     SDongleDevice,
+    SmartAcGunDevice,
+    SmartGuardDevice,
     SmartLoggerDevice,
     SUN2000Device,
     create_device_instance,
@@ -227,11 +229,26 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
 
         for extra_unit_id in entry.data[CONF_SLAVE_IDS][1:]:
             sub_device = await create_sub_device_instance(primary_device, extra_unit_id)
+            if isinstance(sub_device, MeterDevice) and not isinstance(
+                primary_device, SmartLoggerDevice
+            ):
+                _LOGGER.warning(
+                    "Skipping meter device at unit_id %s: meters are only supported when connected via a SmartLogger",
+                    extra_unit_id,
+                )
+                continue
+            parent_ha_device_id = primary_device_data.ha_device_id
+            if isinstance(sub_device, SmartAcGunDevice):
+                for dd in device_datas:
+                    if isinstance(dd.device, SChargerDevice):
+                        parent_ha_device_id = dd.ha_device_id
+                        break
+
             sub_device_data = await _setup_device_data(
                 hass,
                 entry,
                 sub_device,
-                via_device_id=primary_device_data.ha_device_id,
+                via_device_id=parent_ha_device_id,
             )
 
             device_datas.append(sub_device_data)
@@ -542,6 +559,8 @@ DEVICE_CLASS_TO_TRANSLATION_KEY: dict[type[HuaweiSolarDevice], str] = {
     MeterDevice: "power_meter",
     SChargerDevice: "charger",
     SDongleDevice: "sdongle",
+    SmartAcGunDevice: "charger_connector",
+    SmartGuardDevice: "smartguard",
     SmartLoggerDevice: "smartlogger",
 }
 

@@ -10,6 +10,7 @@ from huawei_solar import (
     MeterDevice,
     SChargerDevice,
     SDongleDevice,
+    SmartAcGunDevice,
     SmartLoggerDevice,
     register_names as rn,
     register_values as rv,
@@ -1844,6 +1845,131 @@ CHARGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.TEMPERATURE,
         state_class=SensorStateClass.MEASUREMENT,
     ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_MIN_CHARGING_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_MAX_CHARGING_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_WIFI_SIGNAL_STRENGTH,
+        native_unit_of_measurement="dBm",
+        device_class=SensorDeviceClass.SIGNAL_STRENGTH,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_CHARGING_WAIT_REASON,
+        icon="mdi:timer-sand",
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_INDICATOR_LIGHT_STATUS,
+        icon="mdi:led-on",
+    ),
+)
+
+
+SMART_AC_GUN_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_GUN_WORK_STATUS,
+        icon="mdi:ev-station",
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_OUTPUT_RELAY_STATUS,
+        icon="mdi:electric-switch",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_GUN_TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_GUN_PHASE_A_VOLTAGE,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_GUN_PHASE_B_VOLTAGE,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_GUN_PHASE_C_VOLTAGE,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_GUN_PHASE_A_CURRENT,
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        device_class=SensorDeviceClass.CURRENT,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_GUN_PHASE_B_CURRENT,
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        device_class=SensorDeviceClass.CURRENT,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_GUN_PHASE_C_CURRENT,
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        device_class=SensorDeviceClass.CURRENT,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_GUN_OUTPUT_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_GUN_TOTAL_ENERGY_CHARGED,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_GUN_LOCK_STATUS,
+        icon="mdi:lock",
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_CABLE_MAX_CURRENT,
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        device_class=SensorDeviceClass.CURRENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_REPORTED_WORK_MODE,
+        icon="mdi:tune",
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_PLANNED_DEPARTURE_TIME,
+        icon="mdi:clock-outline",
+        device_class=SensorDeviceClass.TIMESTAMP,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_TARGET_CHARGED_ENERGY,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_CHARGING_METHOD,
+        icon="mdi:calendar-clock",
+    ),
 )
 
 
@@ -2060,6 +2186,20 @@ def create_charger_entities(
             ucs.update_coordinator, entity_description, ucs.device_info
         )
         for entity_description in CHARGER_SENSOR_DESCRIPTIONS
+    ]
+
+
+def create_smart_ac_gun_entities(
+    ucs: HuaweiSolarDeviceData,
+) -> list["HuaweiSolarSensorEntity"]:
+    """Create SmartAcGun sensor entities."""
+    assert isinstance(ucs.device, SmartAcGunDevice)
+
+    return [
+        HuaweiSolarSensorEntity(
+            ucs.update_coordinator, entity_description, ucs.device_info
+        )
+        for entity_description in SMART_AC_GUN_SENSOR_DESCRIPTIONS
     ]
 
 
@@ -2280,6 +2420,8 @@ async def async_setup_entry(
             entities_to_add.extend(create_emma_entities(ucs))
         elif isinstance(ucs.device, SChargerDevice):
             entities_to_add.extend(create_charger_entities(ucs))
+        elif isinstance(ucs.device, SmartAcGunDevice):
+            entities_to_add.extend(create_smart_ac_gun_entities(ucs))
         elif isinstance(ucs.device, SDongleDevice):
             entities_to_add.extend(create_sdongle_entities(ucs))
         elif isinstance(ucs.device, MeterDevice):

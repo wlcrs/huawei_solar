@@ -109,7 +109,11 @@ def async_get_entry_id_for_service_call(
 
     if (
         device_entry.config_entry_id is None
-        or (entry := call.hass.config_entries.async_get_entry(device_entry.config_entry_id))
+        or (
+            entry := call.hass.config_entries.async_get_entry(
+                device_entry.config_entry_id
+            )
+        )
         is None
         or entry.domain != DOMAIN
     ):

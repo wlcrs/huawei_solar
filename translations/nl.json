@@ -115,6 +115,9 @@
         "charger": {
             "name": "Charger"
         },
+        "charger_connector": {
+            "name": "Laadconnector"
+        },
         "connected_energy_storage": {
             "name": "Batterijen"
         },
@@ -126,6 +129,9 @@
         },
         "power_meter": {
             "name": "Elektriciteitsmeter"
+        },
+        "smartguard": {
+            "name": "SmartGuard"
         },
         "smartlogger": {
             "name": "SmartLogger"
@@ -143,6 +149,21 @@
             },
             "active_power_percentage_derating": {
                 "name": "Vermogensbeperking (percentage)"
+            },
+            "charger_dynamic_power_threshold": {
+                "name": "Drempelwaarde dynamische vermogenslimiet"
+            },
+            "charger_gun_max_current": {
+                "name": "Maximale laadstroom"
+            },
+            "charger_max_power_from_grid": {
+                "name": "Maximaal vermogen van het elektriciteitsnet"
+            },
+            "charger_orderly_charging_power": {
+                "name": "Gepland laadvermogen"
+            },
+            "charger_surplus_power_start_threshold": {
+                "name": "Startdrempel overschotvermogen"
             },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximum feed grid power (%)"
@@ -182,6 +203,21 @@
             }
         },
         "select": {
+            "charger_gun_lock_control_mode": {
+                "name": "Vergrendelingsmodus laadconnector",
+                "state": {
+                    "always_locked": "Altijd vergrendeld",
+                    "lock_during_charging": "Vergrendelen tijdens opladen",
+                    "lock_when_plugged": "Vergrendelen indien aangesloten"
+                }
+            },
+            "charger_gun_work_mode": {
+                "name": "Werkmodus",
+                "state": {
+                    "fast_charging": "Snelladen",
+                    "green_power_priority": "Groene stroom prioriteit"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS regelmodus",
                 "state": {
@@ -306,6 +342,60 @@
             "bms_temperature": {
                 "name": "BMS temperature"
             },
+            "charger_cable_max_current": {
+                "name": "Maximale kabelstroom"
+            },
+            "charger_charging_method": {
+                "name": "Laadmethode"
+            },
+            "charger_charging_wait_reason": {
+                "name": "Wachtreden laden"
+            },
+            "charger_gun_lock_status": {
+                "name": "Vergrendelingsstatus connector"
+            },
+            "charger_gun_output_power": {
+                "name": "Laadvermogen"
+            },
+            "charger_gun_phase_a_current": {
+                "name": "Connector Fase A stroom"
+            },
+            "charger_gun_phase_a_voltage": {
+                "name": "Connector Fase A spanning"
+            },
+            "charger_gun_phase_b_current": {
+                "name": "Connector Fase B stroom"
+            },
+            "charger_gun_phase_b_voltage": {
+                "name": "Connector Fase B spanning"
+            },
+            "charger_gun_phase_c_current": {
+                "name": "Connector Fase C stroom"
+            },
+            "charger_gun_phase_c_voltage": {
+                "name": "Connector Fase C spanning"
+            },
+            "charger_gun_temperature": {
+                "name": "Connectortemperatuur"
+            },
+            "charger_gun_total_energy_charged": {
+                "name": "Connector totale geladen energie"
+            },
+            "charger_gun_work_status": {
+                "name": "Connectorstatus"
+            },
+            "charger_indicator_light_status": {
+                "name": "Status indicatielampje"
+            },
+            "charger_max_charging_power": {
+                "name": "Maximaal laadvermogen"
+            },
+            "charger_min_charging_power": {
+                "name": "Minimaal laadvermogen"
+            },
+            "charger_output_relay_status": {
+                "name": "Status uitgangsrelais"
+            },
             "charger_phase_a_voltage": {
                 "name": "Charger Phase A voltage"
             },
@@ -315,14 +405,26 @@
             "charger_phase_c_voltage": {
                 "name": "Charger Phase C voltage"
             },
+            "charger_planned_departure_time": {
+                "name": "Geplande vertrektijd"
+            },
             "charger_rated_power": {
                 "name": "Charger rated power"
+            },
+            "charger_reported_work_mode": {
+                "name": "Gerapporteerde werkmodus"
+            },
+            "charger_target_charged_energy": {
+                "name": "Doel geladen energie"
             },
             "charger_temperature": {
                 "name": "Charger temperature"
             },
             "charger_total_energy_charged": {
                 "name": "Charger total charged energy"
+            },
+            "charger_wifi_signal_strength": {
+                "name": "Wifi-signaalsterkte"
             },
             "consumption_today": {
                 "name": "Consumption today"
@@ -1121,6 +1223,15 @@
             }
         },
         "switch": {
+            "charger_dynamic_power_control": {
+                "name": "Dynamische vermogensregeling"
+            },
+            "charger_random_delay_charging": {
+                "name": "Willekeurige vertraging bij laden"
+            },
+            "charger_single_three_phase_switch": {
+                "name": "Automatische fasewisseling"
+            },
             "mppt_multimodal_scanning": {
                 "name": "MPPT scanning"
             },

@@ -115,6 +115,9 @@
         "charger": {
             "name": "Charger"
         },
+        "charger_connector": {
+            "name": "Разъем зарядного устройства"
+        },
         "connected_energy_storage": {
             "name": "Батареи"
         },
@@ -126,6 +129,9 @@
         },
         "power_meter": {
             "name": "Счетчик электроэнергии"
+        },
+        "smartguard": {
+            "name": "SmartGuard"
         },
         "smartlogger": {
             "name": "SmartLogger"
@@ -143,6 +149,21 @@
             },
             "active_power_percentage_derating": {
                 "name": "Снижение мощности (в процентах)"
+            },
+            "charger_dynamic_power_threshold": {
+                "name": "Порог динамического ограничения мощности"
+            },
+            "charger_gun_max_current": {
+                "name": "Максимальный ток зарядки"
+            },
+            "charger_max_power_from_grid": {
+                "name": "Максимальная мощность из сети"
+            },
+            "charger_orderly_charging_power": {
+                "name": "Мощность зарядки по расписанию"
+            },
+            "charger_surplus_power_start_threshold": {
+                "name": "Порог запуска по избыточной мощности"
             },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Максимальная мощность отдачи в сеть (%)"
@@ -182,6 +203,21 @@
             }
         },
         "select": {
+            "charger_gun_lock_control_mode": {
+                "name": "Режим блокировки разъема",
+                "state": {
+                    "always_locked": "Всегда заблокирован",
+                    "lock_during_charging": "Блокировать во время зарядки",
+                    "lock_when_plugged": "Блокировать при подключении"
+                }
+            },
+            "charger_gun_work_mode": {
+                "name": "Режим работы",
+                "state": {
+                    "fast_charging": "Быстрая зарядка",
+                    "green_power_priority": "Приоритет зеленой энергии"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "Режим управления ESS",
                 "state": {
@@ -306,6 +342,60 @@
             "bms_temperature": {
                 "name": "Температура BMS"
             },
+            "charger_cable_max_current": {
+                "name": "Максимальный ток кабеля"
+            },
+            "charger_charging_method": {
+                "name": "Метод зарядки"
+            },
+            "charger_charging_wait_reason": {
+                "name": "Причина ожидания зарядки"
+            },
+            "charger_gun_lock_status": {
+                "name": "Статус блокировки разъема"
+            },
+            "charger_gun_output_power": {
+                "name": "Мощность зарядки"
+            },
+            "charger_gun_phase_a_current": {
+                "name": "Разъем ток фазы A"
+            },
+            "charger_gun_phase_a_voltage": {
+                "name": "Разъем напряжение фазы A"
+            },
+            "charger_gun_phase_b_current": {
+                "name": "Разъем ток фазы B"
+            },
+            "charger_gun_phase_b_voltage": {
+                "name": "Разъем напряжение фазы B"
+            },
+            "charger_gun_phase_c_current": {
+                "name": "Разъем ток фазы C"
+            },
+            "charger_gun_phase_c_voltage": {
+                "name": "Разъем напряжение фазы C"
+            },
+            "charger_gun_temperature": {
+                "name": "Температура разъема"
+            },
+            "charger_gun_total_energy_charged": {
+                "name": "Разъем общая заряженная энергия"
+            },
+            "charger_gun_work_status": {
+                "name": "Статус разъема"
+            },
+            "charger_indicator_light_status": {
+                "name": "Статус индикатора"
+            },
+            "charger_max_charging_power": {
+                "name": "Максимальная мощность зарядки"
+            },
+            "charger_min_charging_power": {
+                "name": "Минимальная мощность зарядки"
+            },
+            "charger_output_relay_status": {
+                "name": "Статус выходного контактора"
+            },
             "charger_phase_a_voltage": {
                 "name": "Charger Phase A voltage"
             },
@@ -315,14 +405,26 @@
             "charger_phase_c_voltage": {
                 "name": "Charger Phase C voltage"
             },
+            "charger_planned_departure_time": {
+                "name": "Планируемое время отъезда"
+            },
             "charger_rated_power": {
                 "name": "Charger rated power"
+            },
+            "charger_reported_work_mode": {
+                "name": "Сообщенный режим работы"
+            },
+            "charger_target_charged_energy": {
+                "name": "Целевая энергия зарядки"
             },
             "charger_temperature": {
                 "name": "Charger temperature"
             },
             "charger_total_energy_charged": {
                 "name": "Charger total charged energy"
+            },
+            "charger_wifi_signal_strength": {
+                "name": "Уровень сигнала Wi-Fi"
             },
             "consumption_today": {
                 "name": "Потребление сегодня"
@@ -1121,6 +1223,15 @@
             }
         },
         "switch": {
+            "charger_dynamic_power_control": {
+                "name": "Динамическое управление мощностью"
+            },
+            "charger_random_delay_charging": {
+                "name": "Случайная задержка зарядки"
+            },
+            "charger_single_three_phase_switch": {
+                "name": "Автоматическое переключение фаз"
+            },
             "mppt_multimodal_scanning": {
                 "name": "Сканирование MPPT"
             },
