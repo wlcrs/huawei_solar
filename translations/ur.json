@@ -115,6 +115,9 @@
         "charger": {
             "name": "Charger"
         },
+        "charger_connector": {
+            "name": "چارجر کنیکٹر"
+        },
         "connected_energy_storage": {
             "name": "Batteries"
         },
@@ -126,6 +129,9 @@
         },
         "power_meter": {
             "name": "Power meter"
+        },
+        "smartguard": {
+            "name": "SmartGuard"
         },
         "smartlogger": {
             "name": "SmartLogger"
@@ -141,8 +147,29 @@
             "active_power_fixed_value_derating": {
                 "name": "Power derating"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "ایکٹو پاور فیل سیف حد"
+            },
             "active_power_percentage_derating": {
                 "name": "Power derating (by percentage)"
+            },
+            "charger_dynamic_power_threshold": {
+                "name": "ڈائنامک پاور کی حد کی دہلیز"
+            },
+            "charger_gun_max_current": {
+                "name": "زیادہ سے زیادہ چارجنگ کرنٹ"
+            },
+            "charger_max_power_from_grid": {
+                "name": "گرڈ سے زیادہ سے زیادہ پاور"
+            },
+            "charger_orderly_charging_power": {
+                "name": "شیڈول چارجنگ پاور"
+            },
+            "charger_surplus_power_start_threshold": {
+                "name": "اضافی پاور شروع ہونے کی حد"
+            },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "گرڈ سے چارج کرنے کی زیادہ سے زیادہ پاور"
             },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximum feed grid power (%)"
@@ -155,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "MPPT scan interval"
+            },
+            "storage_adjustment_deadband": {
+                "name": "بیٹری ایڈجسٹمنٹ ڈیڈ بینڈ"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "بیک اپ پاور ایس او سی"
@@ -177,11 +207,43 @@
             "storage_maximum_discharging_power": {
                 "name": "زیادہ سے زیادہ ڈسچارج پاور"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "ڈسچارج کے دوران گرڈ کی زیادہ سے زیادہ پاور"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "گرڈ چارج زیادہ سے زیادہ طاقت"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "ایکٹو پاور کی حد کا موڈ",
+                "state": {
+                    "total_power": "کل پاور",
+                    "single_phase_power": "سنگل فیز پاور"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "آزادانہ آپریشن میں وولٹیج",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
+            "charger_gun_lock_control_mode": {
+                "name": "کنیکٹر لاک کا موڈ",
+                "state": {
+                    "always_locked": "ہمیشہ مقفل",
+                    "lock_during_charging": "چارجنگ کے دوران لاک کریں",
+                    "lock_when_plugged": "پلگ ان ہونے پر لاک کریں"
+                }
+            },
+            "charger_gun_work_mode": {
+                "name": "ورک موڈ",
+                "state": {
+                    "fast_charging": "تیز رفتار چارجنگ",
+                    "green_power_priority": "گرین پاور کو ترجیح"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS Control Mode",
                 "state": {
@@ -306,6 +368,60 @@
             "bms_temperature": {
                 "name": "BMS temperature"
             },
+            "charger_cable_max_current": {
+                "name": "کیبل کا زیادہ سے زیادہ کرنٹ"
+            },
+            "charger_charging_method": {
+                "name": "چارجنگ کا طریقہ"
+            },
+            "charger_charging_wait_reason": {
+                "name": "چارجنگ انتظار کی وجہ"
+            },
+            "charger_gun_lock_status": {
+                "name": "کنیکٹر لاک کی حالت"
+            },
+            "charger_gun_output_power": {
+                "name": "چارجنگ پاور"
+            },
+            "charger_gun_phase_a_current": {
+                "name": "کنیکٹر فیز اے کرنٹ"
+            },
+            "charger_gun_phase_a_voltage": {
+                "name": "کنیکٹر فیز اے وولٹیج"
+            },
+            "charger_gun_phase_b_current": {
+                "name": "کنیکٹر فیز بی کرنٹ"
+            },
+            "charger_gun_phase_b_voltage": {
+                "name": "کنیکٹر فیز بی وولٹیج"
+            },
+            "charger_gun_phase_c_current": {
+                "name": "کنیکٹر فیز سی کرنٹ"
+            },
+            "charger_gun_phase_c_voltage": {
+                "name": "کنیکٹر فیز سی وولٹیج"
+            },
+            "charger_gun_temperature": {
+                "name": "کنیکٹر کا درجہ حرارت"
+            },
+            "charger_gun_total_energy_charged": {
+                "name": "کنیکٹر کی کل چارج شدہ انرجی"
+            },
+            "charger_gun_work_status": {
+                "name": "کنیکٹر کی حالت"
+            },
+            "charger_indicator_light_status": {
+                "name": "انڈیکیٹر لائٹ کی حالت"
+            },
+            "charger_max_charging_power": {
+                "name": "زیادہ سے زیادہ چارج کرنے کی طاقت"
+            },
+            "charger_min_charging_power": {
+                "name": "کم سے کم چارجنگ پاور"
+            },
+            "charger_output_relay_status": {
+                "name": "آؤٹ پٹ کنٹیکٹر کی حالت"
+            },
             "charger_phase_a_voltage": {
                 "name": "Charger Phase A voltage"
             },
@@ -315,14 +431,26 @@
             "charger_phase_c_voltage": {
                 "name": "Charger Phase C voltage"
             },
+            "charger_planned_departure_time": {
+                "name": "روانگی کا متوقع وقت"
+            },
             "charger_rated_power": {
                 "name": "Charger rated power"
+            },
+            "charger_reported_work_mode": {
+                "name": "رپورٹ شدہ ورک موڈ"
+            },
+            "charger_target_charged_energy": {
+                "name": "ہدف چارج شدہ انرجی"
             },
             "charger_temperature": {
                 "name": "Charger temperature"
             },
             "charger_total_energy_charged": {
                 "name": "Charger total charged energy"
+            },
+            "charger_wifi_signal_strength": {
+                "name": "وائی فائی سگنل کی طاقت"
             },
             "consumption_today": {
                 "name": "Consumption today"
@@ -1121,6 +1249,18 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "آف گرڈ پر سوئچ کریں"
+            },
+            "charger_dynamic_power_control": {
+                "name": "ڈائنامک پاور کنٹرول"
+            },
+            "charger_random_delay_charging": {
+                "name": "بے ترتیب تاخیری چارجنگ"
+            },
+            "charger_single_three_phase_switch": {
+                "name": "خودکار فیز سوئچنگ"
+            },
             "mppt_multimodal_scanning": {
                 "name": "MPPT scanning"
             },
@@ -1129,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "گرڈ سے چارج کریں۔"
+            },
+            "storage_ess_low_power": {
+                "name": "ای ایس ایس کم پاور"
             }
         }
     },
