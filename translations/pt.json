@@ -115,6 +115,9 @@
         "charger": {
             "name": "Charger"
         },
+        "charger_connector": {
+            "name": "Conector do carregador"
+        },
         "connected_energy_storage": {
             "name": "Batteries"
         },
@@ -126,6 +129,9 @@
         },
         "power_meter": {
             "name": "Power meter"
+        },
+        "smartguard": {
+            "name": "SmartGuard"
         },
         "smartlogger": {
             "name": "SmartLogger"
@@ -141,8 +147,29 @@
             "active_power_fixed_value_derating": {
                 "name": "Power derating"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Limite de segurança de potência ativa"
+            },
             "active_power_percentage_derating": {
                 "name": "Power derating (by percentage)"
+            },
+            "charger_dynamic_power_threshold": {
+                "name": "Limite de potência dinâmica"
+            },
+            "charger_gun_max_current": {
+                "name": "Corrente máxima de carregamento"
+            },
+            "charger_max_power_from_grid": {
+                "name": "Potência máxima da rede"
+            },
+            "charger_orderly_charging_power": {
+                "name": "Potência de carregamento programada"
+            },
+            "charger_surplus_power_start_threshold": {
+                "name": "Limite inicial de excedente de energia"
+            },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Potência máxima de carregamento da rede"
             },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximum feed grid power (%)"
@@ -155,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "MPPT scan interval"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Banda morta de ajuste da bateria"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "SOC de segurança"
@@ -177,11 +207,43 @@
             "storage_maximum_discharging_power": {
                 "name": "Maximum discharging power"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Potência máxima da rede durante a descarga"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Grid charge maximum power"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Modo de limitação de potência ativa",
+                "state": {
+                    "total_power": "Potência total",
+                    "single_phase_power": "Potência monofásica"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Tensão em operação independente",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
+            "charger_gun_lock_control_mode": {
+                "name": "Modo de bloqueio do conector",
+                "state": {
+                    "always_locked": "Sempre bloqueado",
+                    "lock_during_charging": "Bloquear durante o carregamento",
+                    "lock_when_plugged": "Bloquear quando ligado"
+                }
+            },
+            "charger_gun_work_mode": {
+                "name": "Modo de funcionamento",
+                "state": {
+                    "fast_charging": "Carregamento rápido",
+                    "green_power_priority": "Prioridade de energia verde"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS Control Mode",
                 "state": {
@@ -306,6 +368,60 @@
             "bms_temperature": {
                 "name": "BMS temperature"
             },
+            "charger_cable_max_current": {
+                "name": "Corrente máxima do cabo"
+            },
+            "charger_charging_method": {
+                "name": "Método de carregamento"
+            },
+            "charger_charging_wait_reason": {
+                "name": "Motivo de espera do carregamento"
+            },
+            "charger_gun_lock_status": {
+                "name": "Estado do bloqueio do conector"
+            },
+            "charger_gun_output_power": {
+                "name": "Potência de carregamento"
+            },
+            "charger_gun_phase_a_current": {
+                "name": "Conector corrente da fase A"
+            },
+            "charger_gun_phase_a_voltage": {
+                "name": "Conector tensão da fase A"
+            },
+            "charger_gun_phase_b_current": {
+                "name": "Conector corrente da fase B"
+            },
+            "charger_gun_phase_b_voltage": {
+                "name": "Conector tensão da fase B"
+            },
+            "charger_gun_phase_c_current": {
+                "name": "Conector corrente da fase C"
+            },
+            "charger_gun_phase_c_voltage": {
+                "name": "Conector tensão da fase C"
+            },
+            "charger_gun_temperature": {
+                "name": "Temperatura do conector"
+            },
+            "charger_gun_total_energy_charged": {
+                "name": "Conector energia total carregada"
+            },
+            "charger_gun_work_status": {
+                "name": "Estado do conector"
+            },
+            "charger_indicator_light_status": {
+                "name": "Estado da luz indicadora"
+            },
+            "charger_max_charging_power": {
+                "name": "Maximum charging power"
+            },
+            "charger_min_charging_power": {
+                "name": "Potência mínima de carregamento"
+            },
+            "charger_output_relay_status": {
+                "name": "Estado do contactor de saída"
+            },
             "charger_phase_a_voltage": {
                 "name": "Charger Phase A voltage"
             },
@@ -315,14 +431,26 @@
             "charger_phase_c_voltage": {
                 "name": "Charger Phase C voltage"
             },
+            "charger_planned_departure_time": {
+                "name": "Hora de partida planeada"
+            },
             "charger_rated_power": {
                 "name": "Charger rated power"
+            },
+            "charger_reported_work_mode": {
+                "name": "Modo de funcionamento reportado"
+            },
+            "charger_target_charged_energy": {
+                "name": "Energia de carregamento pretendida"
             },
             "charger_temperature": {
                 "name": "Charger temperature"
             },
             "charger_total_energy_charged": {
                 "name": "Charger total charged energy"
+            },
+            "charger_wifi_signal_strength": {
+                "name": "Intensidade do sinal Wi-Fi"
             },
             "consumption_today": {
                 "name": "Consumption today"
@@ -1121,6 +1249,18 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Alternar para fora da rede"
+            },
+            "charger_dynamic_power_control": {
+                "name": "Controlo dinâmico de potência"
+            },
+            "charger_random_delay_charging": {
+                "name": "Atraso aleatório de carregamento"
+            },
+            "charger_single_three_phase_switch": {
+                "name": "Comutação automática de fase"
+            },
             "mppt_multimodal_scanning": {
                 "name": "MPPT scanning"
             },
@@ -1129,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Charge from grid"
+            },
+            "storage_ess_low_power": {
+                "name": "Baixa potência ESS"
             }
         }
     },
