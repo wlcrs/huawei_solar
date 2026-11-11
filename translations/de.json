@@ -115,6 +115,9 @@
         "charger": {
             "name": "Wallbox"
         },
+        "charger_connector": {
+            "name": "Wallbox-Ladestecker"
+        },
         "connected_energy_storage": {
             "name": "Batterien"
         },
@@ -126,6 +129,9 @@
         },
         "power_meter": {
             "name": "Stromzähler"
+        },
+        "smartguard": {
+            "name": "SmartGuard"
         },
         "smartlogger": {
             "name": "SmartLogger"
@@ -141,8 +147,29 @@
             "active_power_fixed_value_derating": {
                 "name": "Leistungsbegrenzung"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Ausfallsicherer Schwellenwert für Wirkleistung"
+            },
             "active_power_percentage_derating": {
                 "name": "Eingangsleistung Wechselrichter in %"
+            },
+            "charger_dynamic_power_threshold": {
+                "name": "Schwellenwert für dynamische Leistungsbegrenzung"
+            },
+            "charger_gun_max_current": {
+                "name": "Maximaler Ladestrom"
+            },
+            "charger_max_power_from_grid": {
+                "name": "Maximale Netzleistung"
+            },
+            "charger_orderly_charging_power": {
+                "name": "Geplante Ladeleistung"
+            },
+            "charger_surplus_power_start_threshold": {
+                "name": "Start-Schwellenwert für Überschussleistung"
+            },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Maximale Ladeleistung aus dem Netz"
             },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximale Netzeinspeiseleistung (%)"
@@ -155,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "MPPT-Scan Intervall"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Totband für Batterieeinstellung"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "Backup-Power Ladestand"
@@ -177,11 +207,43 @@
             "storage_maximum_discharging_power": {
                 "name": "Maximale Entladeleistung"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Maximale Netzleistung beim Entladen"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Maximale Netz-Ladeleistung"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Modus zur Wirkleistungsbegrenzung",
+                "state": {
+                    "total_power": "Gesamtleistung",
+                    "single_phase_power": "Einphasige Leistung"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Spannung im netzunabhängigen Betrieb",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
+            "charger_gun_lock_control_mode": {
+                "name": "Ladestecker-Verriegelungsmodus",
+                "state": {
+                    "always_locked": "Immer verriegelt",
+                    "lock_during_charging": "Während des Ladens verriegeln",
+                    "lock_when_plugged": "Beim Einstecken verriegeln"
+                }
+            },
+            "charger_gun_work_mode": {
+                "name": "Arbeitsmodus",
+                "state": {
+                    "fast_charging": "Schnellladen",
+                    "green_power_priority": "Priorität für Ökostrom"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS-Kontroll-Modus",
                 "state": {
@@ -306,6 +368,60 @@
             "bms_temperature": {
                 "name": "BMS Temperatur"
             },
+            "charger_cable_max_current": {
+                "name": "Maximaler Kabelstrom"
+            },
+            "charger_charging_method": {
+                "name": "Lademethode"
+            },
+            "charger_charging_wait_reason": {
+                "name": "Wartegrund für Laden"
+            },
+            "charger_gun_lock_status": {
+                "name": "Ladestecker-Verriegelungsstatus"
+            },
+            "charger_gun_output_power": {
+                "name": "Ladeleistung"
+            },
+            "charger_gun_phase_a_current": {
+                "name": "Ladestecker Phase A Strom"
+            },
+            "charger_gun_phase_a_voltage": {
+                "name": "Ladestecker Phase A Spannung"
+            },
+            "charger_gun_phase_b_current": {
+                "name": "Ladestecker Phase B Strom"
+            },
+            "charger_gun_phase_b_voltage": {
+                "name": "Ladestecker Phase B Spannung"
+            },
+            "charger_gun_phase_c_current": {
+                "name": "Ladestecker Phase C Strom"
+            },
+            "charger_gun_phase_c_voltage": {
+                "name": "Ladestecker Phase C Spannung"
+            },
+            "charger_gun_temperature": {
+                "name": "Ladesteckertemperatur"
+            },
+            "charger_gun_total_energy_charged": {
+                "name": "Ladestecker gesamte geladene Energie"
+            },
+            "charger_gun_work_status": {
+                "name": "Ladesteckerstatus"
+            },
+            "charger_indicator_light_status": {
+                "name": "Status der Kontrollleuchte"
+            },
+            "charger_max_charging_power": {
+                "name": "Maximale Ladeleistung"
+            },
+            "charger_min_charging_power": {
+                "name": "Minimale Ladeleistung"
+            },
+            "charger_output_relay_status": {
+                "name": "Status des Ausgangsschützes"
+            },
             "charger_phase_a_voltage": {
                 "name": "Phase A Spannung"
             },
@@ -315,14 +431,26 @@
             "charger_phase_c_voltage": {
                 "name": "Phase C Spannung"
             },
+            "charger_planned_departure_time": {
+                "name": "Geplante Abfahrtszeit"
+            },
             "charger_rated_power": {
                 "name": "Nennleistung"
+            },
+            "charger_reported_work_mode": {
+                "name": "Gemeldeter Arbeitsmodus"
+            },
+            "charger_target_charged_energy": {
+                "name": "Ziel-Ladeenergie"
             },
             "charger_temperature": {
                 "name": "Temperatur"
             },
             "charger_total_energy_charged": {
                 "name": "Gesamte Ladeenergie"
+            },
+            "charger_wifi_signal_strength": {
+                "name": "WLAN-Signalstärke"
             },
             "consumption_today": {
                 "name": "Verbrauch heute"
@@ -1121,6 +1249,18 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Auf Inselbetrieb umschalten"
+            },
+            "charger_dynamic_power_control": {
+                "name": "Dynamische Leistungssteuerung"
+            },
+            "charger_random_delay_charging": {
+                "name": "Zufällige Ladeverzögerung"
+            },
+            "charger_single_three_phase_switch": {
+                "name": "Automatische Phasenumschaltung"
+            },
             "mppt_multimodal_scanning": {
                 "name": "MPPT Scan"
             },
@@ -1129,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Laden aus dem Netz"
+            },
+            "storage_ess_low_power": {
+                "name": "ESS geringe Leistung"
             }
         }
     },
