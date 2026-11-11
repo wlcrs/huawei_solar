@@ -147,6 +147,9 @@
             "active_power_fixed_value_derating": {
                 "name": "Leistungsbegrenzung"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Ausfallsicherer Schwellenwert für Wirkleistung"
+            },
             "active_power_percentage_derating": {
                 "name": "Eingangsleistung Wechselrichter in %"
             },
@@ -165,6 +168,9 @@
             "charger_surplus_power_start_threshold": {
                 "name": "Start-Schwellenwert für Überschussleistung"
             },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Maximale Ladeleistung aus dem Netz"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximale Netzeinspeiseleistung (%)"
             },
@@ -176,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "MPPT-Scan Intervall"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Totband für Batterieeinstellung"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "Backup-Power Ladestand"
@@ -198,11 +207,28 @@
             "storage_maximum_discharging_power": {
                 "name": "Maximale Entladeleistung"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Maximale Netzleistung beim Entladen"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Maximale Netz-Ladeleistung"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Modus zur Wirkleistungsbegrenzung",
+                "state": {
+                    "total_power": "Gesamtleistung",
+                    "single_phase_power": "Einphasige Leistung"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Spannung im netzunabhängigen Betrieb",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
             "charger_gun_lock_control_mode": {
                 "name": "Ladestecker-Verriegelungsmodus",
                 "state": {
@@ -1223,6 +1249,9 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Auf Inselbetrieb umschalten"
+            },
             "charger_dynamic_power_control": {
                 "name": "Dynamische Leistungssteuerung"
             },
@@ -1240,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Laden aus dem Netz"
+            },
+            "storage_ess_low_power": {
+                "name": "ESS geringe Leistung"
             }
         }
     },

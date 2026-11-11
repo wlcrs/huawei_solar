@@ -92,6 +92,26 @@ CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, 
     ),
 )
 
+BACKUP_VOLTAGE_INDEPENDENT_OPERATION_SELECT_DESCRIPTION = (
+    HuaweiSolarSelectEntityDescription(
+        key=rn.BACKUP_VOLTAGE_INDEPENDENT_OPERATION,
+        icon="mdi:transmission-tower",
+        entity_category=EntityCategory.CONFIG,
+        entity_registry_enabled_default=False,
+    )
+)
+"""In FusionSolar: Settings > Feature parameters > Voltage in independent operation."""
+
+ACTIVE_POWER_LIMITATION_MODE_SELECT_DESCRIPTION = (
+    HuaweiSolarSelectEntityDescription(
+        key=rn.ACTIVE_POWER_LIMITATION_MODE,
+        icon="mdi:transmission-tower-export",
+        entity_category=EntityCategory.CONFIG,
+        entity_registry_enabled_default=False,
+    )
+)
+"""In FusionSolar: Settings > Power adjustment > Active power control > Grid-tied point control > Limitation mode."""
+
 EMMA_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     HuaweiSolarSelectEntityDescription(
         key=rn.EMMA_ESS_CONTROL_MODE,
@@ -157,28 +177,28 @@ async def async_setup_entry(
                 for entity_description in SMART_AC_GUN_SELECT_DESCRIPTIONS
             )
 
-        if isinstance(ucs, HuaweiSolarInverterData) and ucs.connected_energy_storage:
-            slave_entities.extend(
-                HuaweiSolarSelectEntity(
-                    ucs.configuration_update_coordinator,
-                    ucs.device,
-                    entity_description,
-                    ucs.connected_energy_storage,
+        if isinstance(ucs, HuaweiSolarInverterData):
+            if ucs.device.supports_backup_voltage:
+                slave_entities.append(
+                    HuaweiSolarSelectEntity(
+                        ucs.configuration_update_coordinator,
+                        ucs.device,
+                        BACKUP_VOLTAGE_INDEPENDENT_OPERATION_SELECT_DESCRIPTION,
+                        ucs.device_info,
+                    )
                 )
-                for entity_description in ENERGY_STORAGE_SWITCH_DESCRIPTIONS
-            )
-            slave_entities.append(
-                StorageModeSelectEntity(
-                    ucs.configuration_update_coordinator,
-                    ucs.device,
-                    ucs.connected_energy_storage,
+
+            if ucs.device.supports_active_power_limitation_mode:
+                slave_entities.append(
+                    HuaweiSolarSelectEntity(
+                        ucs.configuration_update_coordinator,
+                        ucs.device,
+                        ACTIVE_POWER_LIMITATION_MODE_SELECT_DESCRIPTION,
+                        ucs.device_info,
+                    )
                 )
-            )
-            if ucs.device.supports_capacity_control:
-                _LOGGER.debug(
-                    "Adding capacity control switch entities for %s",
-                    ucs.device.serial_number,
-                )
+
+            if ucs.connected_energy_storage:
                 slave_entities.extend(
                     HuaweiSolarSelectEntity(
                         ucs.configuration_update_coordinator,
@@ -186,13 +206,34 @@ async def async_setup_entry(
                         entity_description,
                         ucs.connected_energy_storage,
                     )
-                    for entity_description in CAPACITY_CONTROL_SWITCH_DESCRIPTIONS
+                    for entity_description in ENERGY_STORAGE_SWITCH_DESCRIPTIONS
                 )
-            else:
-                _LOGGER.debug(
-                    "Storage capacity control is not supported by inverter %s",
-                    ucs.device.serial_number,
+                slave_entities.append(
+                    StorageModeSelectEntity(
+                        ucs.configuration_update_coordinator,
+                        ucs.device,
+                        ucs.connected_energy_storage,
+                    )
                 )
+                if ucs.device.supports_capacity_control:
+                    _LOGGER.debug(
+                        "Adding capacity control switch entities for %s",
+                        ucs.device.serial_number,
+                    )
+                    slave_entities.extend(
+                        HuaweiSolarSelectEntity(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            entity_description,
+                            ucs.connected_energy_storage,
+                        )
+                        for entity_description in CAPACITY_CONTROL_SWITCH_DESCRIPTIONS
+                    )
+                else:
+                    _LOGGER.debug(
+                        "Storage capacity control is not supported by inverter %s",
+                        ucs.device.serial_number,
+                    )
 
         entities_to_add.extend(slave_entities)
 

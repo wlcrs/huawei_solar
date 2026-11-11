@@ -147,6 +147,9 @@
             "active_power_fixed_value_derating": {
                 "name": "Power derating"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Próg bezpieczeństwa mocy czynnej"
+            },
             "active_power_percentage_derating": {
                 "name": "Power derating (by percentage)"
             },
@@ -165,6 +168,9 @@
             "charger_surplus_power_start_threshold": {
                 "name": "Próg startowy nadwyżki mocy"
             },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Maksymalna moc ładowania z sieci"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximum feed grid power (%)"
             },
@@ -176,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "MPPT scan interval"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Strefa nieczułości regulacji baterii"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "Zasilanie rezerwowe SOC"
@@ -198,11 +207,28 @@
             "storage_maximum_discharging_power": {
                 "name": "Maksymalna moc rozładowania"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Maksymalna moc z sieci podczas rozładowywania"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Maksymalna moc ładowania z sieci"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Tryb ograniczania mocy czynnej",
+                "state": {
+                    "total_power": "Moc całkowita",
+                    "single_phase_power": "Moc jednofazowa"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Napięcie w pracy niezależnej",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
             "charger_gun_lock_control_mode": {
                 "name": "Tryb blokady złącza",
                 "state": {
@@ -1223,6 +1249,9 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Przełącz na pracę poza siecią"
+            },
             "charger_dynamic_power_control": {
                 "name": "Dynamiczna kontrola mocy"
             },
@@ -1240,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Ładowanie z sieci"
+            },
+            "storage_ess_low_power": {
+                "name": "Niska moc ESS"
             }
         }
     },

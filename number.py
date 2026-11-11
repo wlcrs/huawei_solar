@@ -80,6 +80,19 @@ class HuaweiSolarNumberEntityDescription(
         return HuaweiSolarEntityContext(register_names=registers)
 
 
+ACTIVE_POWER_FAIL_SAFE_THRESHOLD_NUMBER_DESCRIPTION = HuaweiSolarNumberEntityDescription(
+    key=rn.ACTIVE_POWER_FAIL_SAFE_THRESHOLD,
+    native_min_value=0,
+    native_max_value=100,
+    native_step=0.1,
+    icon="mdi:transmission-tower-off",
+    native_unit_of_measurement=PERCENTAGE,
+    entity_category=EntityCategory.CONFIG,
+    entity_registry_enabled_default=False,
+)
+"""In FusionSolar: Settings > Power adjustment > Active power control > Active power threshold when communication fails."""
+
+
 INVERTER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.ACTIVE_POWER_PERCENTAGE_DERATING,
@@ -111,6 +124,44 @@ INVERTER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
         entity_registry_enabled_default=False,
     ),
 )
+
+
+DONGLE_PLANT_MAXIMUM_CHARGE_FROM_GRID_POWER_NUMBER_DESCRIPTION = HuaweiSolarNumberEntityDescription(
+    key=rn.DONGLE_PLANT_MAXIMUM_CHARGE_FROM_GRID_POWER,
+    native_min_value=0,
+    icon="mdi:battery-arrow-down",
+    native_unit_of_measurement=UnitOfPower.WATT,
+    entity_category=EntityCategory.CONFIG,
+    entity_registry_enabled_default=False,
+)
+"""In FusionSolar: Settings > Power adjustment > Battery control > Maximum charge power of grid."""
+
+
+STORAGE_MAXIMUM_GRID_POWER_DURING_DISCHARGE_NUMBER_DESCRIPTION = HuaweiSolarNumberEntityDescription(
+    key=rn.STORAGE_MAXIMUM_GRID_POWER_DURING_DISCHARGE,
+    native_min_value=0,
+    native_max_value=1000,
+    native_step=1,
+    icon="mdi:transmission-tower-import",
+    native_unit_of_measurement=UnitOfPower.WATT,
+    entity_category=EntityCategory.CONFIG,
+    entity_registry_enabled_default=False,
+)
+"""In FusionSolar: Settings > Power adjustment > Battery control > Maximum grid power during battery discharge."""
+
+
+STORAGE_ADJUSTMENT_DEADBAND_NUMBER_DESCRIPTION = HuaweiSolarNumberEntityDescription(
+    key=rn.STORAGE_ADJUSTMENT_DEADBAND,
+    native_min_value=0,
+    native_max_value=100,
+    native_step=1,
+    icon="mdi:speedometer",
+    native_unit_of_measurement=UnitOfPower.WATT,
+    entity_category=EntityCategory.CONFIG,
+    entity_registry_enabled_default=False,
+)
+"""In FusionSolar: Settings > Power adjustment > Battery control > Power control hysteresis."""
+
 
 EMMA_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
@@ -352,6 +403,16 @@ async def async_setup_entry(
                     )
                 )
 
+            if ucs.device.supports_active_power_fail_safe:
+                slave_entities.append(
+                    await HuaweiSolarNumberEntity.create(
+                        ucs.configuration_update_coordinator,
+                        ucs.device,
+                        ACTIVE_POWER_FAIL_SAFE_THRESHOLD_NUMBER_DESCRIPTION,
+                        ucs.device_info,
+                    )
+                )
+
             if ucs.connected_energy_storage:
                 for entity_description in ENERGY_STORAGE_NUMBER_DESCRIPTIONS:
                     slave_entities.append(  # noqa: PERF401
@@ -359,6 +420,34 @@ async def async_setup_entry(
                             ucs.configuration_update_coordinator,
                             ucs.device,
                             entity_description,
+                            ucs.device_info,
+                        )
+                    )
+
+                if ucs.device.supports_dongle_charge_power_limit:
+                    slave_entities.append(
+                        await HuaweiSolarNumberEntity.create(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            DONGLE_PLANT_MAXIMUM_CHARGE_FROM_GRID_POWER_NUMBER_DESCRIPTION,
+                            ucs.device_info,
+                        )
+                    )
+
+                if ucs.device.supports_discharge_power_adjustment:
+                    slave_entities.append(
+                        await HuaweiSolarNumberEntity.create(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            STORAGE_MAXIMUM_GRID_POWER_DURING_DISCHARGE_NUMBER_DESCRIPTION,
+                            ucs.device_info,
+                        )
+                    )
+                    slave_entities.append(
+                        await HuaweiSolarNumberEntity.create(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            STORAGE_ADJUSTMENT_DEADBAND_NUMBER_DESCRIPTION,
                             ucs.device_info,
                         )
                     )

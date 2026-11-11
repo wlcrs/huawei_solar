@@ -147,6 +147,9 @@
             "active_power_fixed_value_derating": {
                 "name": "Снижение мощности"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Порог отказоустойчивости активной мощности"
+            },
             "active_power_percentage_derating": {
                 "name": "Снижение мощности (в процентах)"
             },
@@ -165,6 +168,9 @@
             "charger_surplus_power_start_threshold": {
                 "name": "Порог запуска по избыточной мощности"
             },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Максимальная мощность заряда от сети"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Максимальная мощность отдачи в сеть (%)"
             },
@@ -176,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "Интервал сканирования MPPT"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Зона нечувствительности регулирования батареи"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "SOC резервного питания"
@@ -198,11 +207,28 @@
             "storage_maximum_discharging_power": {
                 "name": "Максимальная мощность разряда"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Максимальная мощность из сети во время разряда"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Максимальная мощность заряда от сети"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Режим ограничения активной мощности",
+                "state": {
+                    "total_power": "Общая мощность",
+                    "single_phase_power": "Однофазная мощность"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Напряжение в автономном режиме",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
             "charger_gun_lock_control_mode": {
                 "name": "Режим блокировки разъема",
                 "state": {
@@ -1223,6 +1249,9 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Переключение в автономный режим (off-grid)"
+            },
             "charger_dynamic_power_control": {
                 "name": "Динамическое управление мощностью"
             },
@@ -1240,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Зарядка от сети"
+            },
+            "storage_ess_low_power": {
+                "name": "Низкая мощность ESS"
             }
         }
     },

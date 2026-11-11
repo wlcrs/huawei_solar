@@ -147,6 +147,9 @@
             "active_power_fixed_value_derating": {
                 "name": "Ограничаване на мощността"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Праг за безотказност на активната мощност"
+            },
             "active_power_percentage_derating": {
                 "name": "Ограничаване на мощността (в проценти)"
             },
@@ -165,6 +168,9 @@
             "charger_surplus_power_start_threshold": {
                 "name": "Начален праг на излишната мощност"
             },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Максимална мощност за зареждане от мрежата"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Максимална мощност към мрежата (%)"
             },
@@ -176,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "Интервал на MPPT сканиране"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Мъртва зона за регулиране на батерията"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "SOC за резервна мощност"
@@ -198,11 +207,28 @@
             "storage_maximum_discharging_power": {
                 "name": "Максимална разрядна мощност"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Максимална мощност от мрежата по време на разреждане"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Максимална мощност за зареждане от мрежата"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Режим на ограничаване на активната мощност",
+                "state": {
+                    "total_power": "Обща мощност",
+                    "single_phase_power": "Еднофазна мощност"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Напрежение при независима работа",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
             "charger_gun_lock_control_mode": {
                 "name": "Режим на заключване на конектора",
                 "state": {
@@ -1223,6 +1249,9 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Превключване към работа извън мрежата"
+            },
             "charger_dynamic_power_control": {
                 "name": "Динамичен контрол на мощността"
             },
@@ -1240,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Зареждане от мрежата"
+            },
+            "storage_ess_low_power": {
+                "name": "Ниска мощност на ESS"
             }
         }
     },

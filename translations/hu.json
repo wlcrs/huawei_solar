@@ -147,6 +147,9 @@
             "active_power_fixed_value_derating": {
                 "name": "Power derating"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Hatásos teljesítmény hibabiztos küszöbértéke"
+            },
             "active_power_percentage_derating": {
                 "name": "Power derating (by percentage)"
             },
@@ -165,6 +168,9 @@
             "charger_surplus_power_start_threshold": {
                 "name": "Többletteljesítmény indítási küszöbértéke"
             },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Maximális hálózati töltési teljesítmény"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximum feed grid power (%)"
             },
@@ -176,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "MPPT-Scan Interval"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Akkumulátor beállítási holtsáv"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "Backup power SOC"
@@ -198,11 +207,28 @@
             "storage_maximum_discharging_power": {
                 "name": "Maximum discharging power"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Maximális hálózati teljesítmény kisütés közben"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Grid charge maximum power"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Hatásos teljesítmény korlátozási mód",
+                "state": {
+                    "total_power": "Összteljesítmény",
+                    "single_phase_power": "Egyfázisú teljesítmény"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Feszültség független működés esetén",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
             "charger_gun_lock_control_mode": {
                 "name": "Csatlakozó zárolási módja",
                 "state": {
@@ -1223,6 +1249,9 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Átváltás szigetüzemre"
+            },
             "charger_dynamic_power_control": {
                 "name": "Dinamikus teljesítményszabályozás"
             },
@@ -1240,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Charge from grid"
+            },
+            "storage_ess_low_power": {
+                "name": "ESS alacsony teljesítmény"
             }
         }
     },

@@ -147,6 +147,9 @@
             "active_power_fixed_value_derating": {
                 "name": "Power derating"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Llindar de seguretat de potència activa"
+            },
             "active_power_percentage_derating": {
                 "name": "Power derating (by percentage)"
             },
@@ -165,6 +168,9 @@
             "charger_surplus_power_start_threshold": {
                 "name": "Llindar d'inici per excedent d'energia"
             },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Potència màxima de càrrega des de la xarxa"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximum feed grid power (%)"
             },
@@ -176,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "MPPT scan interval"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Banda morta d'ajust de la bateria"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "Càrrega de reserva SoC"
@@ -198,11 +207,28 @@
             "storage_maximum_discharging_power": {
                 "name": "Potència màxima de descàrrega"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Potència màxima de la xarxa durant la descàrrega"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Potència màxima de càrrega des de la xarxa"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Mode de limitació de potència activa",
+                "state": {
+                    "total_power": "Potència total",
+                    "single_phase_power": "Potència monofàsica"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Tensió en funcionament independent",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
             "charger_gun_lock_control_mode": {
                 "name": "Mode de bloqueig del connector",
                 "state": {
@@ -1223,6 +1249,9 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Canviar a off-grid"
+            },
             "charger_dynamic_power_control": {
                 "name": "Control dinàmic de potència"
             },
@@ -1240,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Càrrega des de la xarxa"
+            },
+            "storage_ess_low_power": {
+                "name": "Baixa potència ESS"
             }
         }
     },
