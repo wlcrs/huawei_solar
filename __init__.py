@@ -229,6 +229,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
 
         for extra_unit_id in entry.data[CONF_SLAVE_IDS][1:]:
             sub_device = await create_sub_device_instance(primary_device, extra_unit_id)
+            if isinstance(sub_device, MeterDevice) and not isinstance(
+                primary_device, SmartLoggerDevice
+            ):
+                _LOGGER.warning(
+                    "Skipping meter device at unit_id %s: meters are only supported when connected via a SmartLogger",
+                    extra_unit_id,
+                )
+                continue
             parent_ha_device_id = primary_device_data.ha_device_id
             if isinstance(sub_device, SmartAcGunDevice):
                 for dd in device_datas:
