@@ -238,7 +238,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
                 continue
             parent_ha_device_id = primary_device_data.ha_device_id
             if isinstance(sub_device, SmartAcGunDevice):
-                for dd in device_datas:
+                # Link the connector to the most recently added SCharger, i.e. the
+                # charger that precedes it in the slave ID list. Iterating from the
+                # start would attach every connector to the first SCharger.
+                for dd in reversed(device_datas):
                     if isinstance(dd.device, SChargerDevice):
                         parent_ha_device_id = dd.ha_device_id
                         break
