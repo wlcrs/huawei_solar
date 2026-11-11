@@ -1,6 +1,5 @@
 """Specialized DataUpdateCoordinators for Huawei Solar entities."""
 
-import asyncio
 from collections.abc import Awaitable, Callable
 from datetime import timedelta
 from itertools import chain
@@ -24,8 +23,6 @@ from homeassistant.helpers.debounce import Debouncer
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import OPTIMIZER_UPDATE_TIMEOUT, UPDATE_TIMEOUT
-
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -46,7 +43,6 @@ class HuaweiSolarUpdateCoordinator(
         update_method: Callable[[], Awaitable[dict[RegisterName, Result[Any]]]]
         | None = None,
         request_refresh_debouncer: Debouncer | None = None,
-        update_timeout: timedelta = UPDATE_TIMEOUT,
     ) -> None:
         """Create a HuaweiSolarUpdateCoordinator."""
         super().__init__(
@@ -58,15 +54,13 @@ class HuaweiSolarUpdateCoordinator(
             request_refresh_debouncer=request_refresh_debouncer,
         )
         self.device = device
-        self.update_timeout = update_timeout
 
     async def _async_update_data(self) -> dict[RegisterName, Result[Any]]:
         register_names_set = set(
             chain.from_iterable(ctx["register_names"] for ctx in self.async_contexts())
         )
         try:
-            async with asyncio.timeout(self.update_timeout.total_seconds()):
-                return await self.device.batch_update(list(register_names_set))
+            return await self.device.batch_update(list(register_names_set))
         except TimeoutError as err:
             raise UpdateFailed(
                 f"Timeout communicating with {self.device.serial_number}: "
@@ -133,8 +127,7 @@ class HuaweiSolarOptimizerUpdateCoordinator(
     async def _async_update_data(self) -> dict[int, OptimizerRealTimeData]:
         """Retrieve the latest values from the optimizers."""
         try:
-            async with asyncio.timeout(OPTIMIZER_UPDATE_TIMEOUT.total_seconds()):
-                return await self.device.get_latest_optimizer_history_data()
+            return await self.device.get_latest_optimizer_history_data()
         except TimeoutError as err:
             raise UpdateFailed(
                 f"Timeout communicating with {self.device.serial_number} optimizers: "
