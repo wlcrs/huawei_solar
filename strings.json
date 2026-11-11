@@ -426,7 +426,7 @@
                 "name": "Charger Phase A voltage"
             },
             "charger_phase_b_voltage": {
-                "name": "Charger Phase B voltagey"
+                "name": "Charger Phase B voltage"
             },
             "charger_phase_c_voltage": {
                 "name": "Charger Phase C voltage"
@@ -1246,6 +1246,9 @@
             },
             "yearly_yield_energy": {
                 "name": "Yearly yield"
+            },
+            "emma_tou_periods": {
+                "name": "TOU periods"
             }
         },
         "switch": {

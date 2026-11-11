@@ -180,9 +180,6 @@
             "emma_tou_maximum_power_for_charging_batteries_from_grid": {
                 "name": "Maximum power for charging batteries from grid"
             },
-            "emma_tou_periods": {
-                "name": "TOU periods"
-            },
             "mppt_scanning_interval": {
                 "name": "MPPT-Scan Interval"
             },
@@ -429,7 +426,7 @@
                 "name": "Charger Phase A voltage"
             },
             "charger_phase_b_voltage": {
-                "name": "Charger Phase B voltagey"
+                "name": "Charger Phase B voltage"
             },
             "charger_phase_c_voltage": {
                 "name": "Charger Phase C voltage"
@@ -1249,6 +1246,9 @@
             },
             "yearly_yield_energy": {
                 "name": "Yearly yield"
+            },
+            "emma_tou_periods": {
+                "name": "TOU periods"
             }
         },
         "switch": {
