@@ -89,11 +89,11 @@
             "setup_serial": {
                 "data": {
                     "port": "Gerät auswählen",
-                    "baudrate": "Baud rate",
+                    "baudrate": "Baudrate",
                     "slave_ids": "Slave-IDs: AUTO für automatische Entdeckung, sonst eine kommaseparierte Liste"
                 },
                 "data_description": {
-                    "baudrate": "Default is 9600"
+                    "baudrate": "Standard ist 9600"
                 },
                 "title": "Gerät"
             },
@@ -1185,7 +1185,7 @@
                 "name": "Akkukapazität"
             },
             "storage_running_status": {
-                "name": "Status"
+                "name": "Betriebsstatus"
             },
             "storage_state_of_capacity": {
                 "name": "Batterieladung"
@@ -1246,6 +1246,9 @@
             },
             "yearly_yield_energy": {
                 "name": "Jährlicher Ertrag"
+            },
+            "emma_tou_periods": {
+                "name": "TOU-Perioden"
             }
         },
         "switch": {
