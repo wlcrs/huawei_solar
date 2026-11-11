@@ -2,12 +2,12 @@
     "config": {
         "abort": {
             "already_configured": "Dispositiu ja configurat",
-            "reauth_successful": "Re-authentication was successful",
-            "reconfigure_successful": "Re-configuration was successful"
+            "reauth_successful": "La reautenticació ha estat correcta",
+            "reconfigure_successful": "La reconfiguració ha estat correcta"
         },
         "error": {
             "cannot_connect": "Error de connexió",
-            "connection_interrupted": "Connection interrupted — the inverter only supports one Modbus connection at a time. Check whether another app or device (SCharger, EMS, ...) is connected and close it, then try again.",
+            "connection_interrupted": "Connexió interrompuda: l'inversor només admet una connexió Modbus alhora. Comproveu si hi ha una altra aplicació o dispositiu (SCharger, EMS, ...) connectat, tanqueu-lo i torneu-ho a provar.",
             "invalid_auth": "Credencials no vàlides",
             "invalid_slave_ids": "Els IDs esclaus han d'estar separats per comes",
             "read_error": "Error de lectura",
@@ -16,60 +16,60 @@
         },
         "step": {
             "auto_discovery": {
-                "title": "Auto-discovering devices",
-                "description": "Scanning {host}:{port} for Huawei Solar devices using the Huawei discovery protocol. This may take up to a minute."
+                "title": "Detecció automàtica de dispositius",
+                "description": "Cercant dispositius Huawei Solar a {host}:{port} mitjançant el protocol de descobriment de Huawei. Això pot trigar fins a un minut."
             },
             "scan_discovery": {
-                "title": "Scanning for devices",
-                "description": "Auto-discovery found no devices on {host}:{port}. Scanning frequently used slave IDs individually. This may take up to a minute."
+                "title": "Cercant dispositius",
+                "description": "La detecció automàtica no ha trobat cap dispositiu a {host}:{port}. Escanejant individualment els ID d'esclau habituals. Això pot trigar fins a un minut."
             },
             "serial_auto_discovery": {
-                "title": "Auto-discovering devices",
-                "description": "Scanning {serial_port} for Huawei Solar devices using the Huawei discovery protocol. This may take up to a minute."
+                "title": "Detecció automàtica de dispositius",
+                "description": "Cercant dispositius Huawei Solar a {serial_port} mitjançant el protocol de descobriment de Huawei. Això pot trigar fins a un minut."
             },
             "serial_scan_discovery": {
-                "title": "Scanning for devices",
-                "description": "Auto-discovery found no devices on {serial_port}. Scanning frequently used slave IDs individually. This may take up to a minute."
+                "title": "Cercant dispositius",
+                "description": "La detecció automàtica no ha trobat cap dispositiu a {serial_port}. Escanejant individualment els ID d'esclau habituals. Això pot trigar fins a un minut."
             },
             "serial_finish_setup": {
-                "title": "Connecting",
-                "description": "Connecting to the devices discovered on {serial_port} and reading their configuration."
+                "title": "Connectant",
+                "description": "Connectant als dispositius descoberts a {serial_port} i llegint la seva configuració."
             },
             "cannot_connect_serial": {
-                "title": "Could not connect",
-                "description": "Could not open serial port {serial_port}. Please verify that:\n- The device is connected and the port is correct\n- No other application is using the port\n\nPress Submit to go back and try again."
+                "title": "No s'ha pogut connectar",
+                "description": "No s'ha pogut obrir el port sèrie {serial_port}. Si us plau, comproveu que:\n- El dispositiu estigui connectat i el port sigui correcte\n- Cap altra aplicació estigui utilitzant el port\n\nPremeu Envia per tornar enrere i provar-ho de nou."
             },
             "connection_interrupted_serial": {
-                "title": "Connection interrupted",
-                "description": "The connection to the inverter on {serial_port} was interrupted. The inverter only supports **one Modbus connection at a time**.\n\nCheck whether another application or device is currently connected to the inverter, such as:\n- The Huawei SCharger\n- The Huawei FusionSolar Android/iPhone App (device commissioning via dongle or direct connection)\n- SolarmanPV or another monitoring tool\n\nClose the other connection and press Submit to try again."
+                "title": "Connexió interrompuda",
+                "description": "S'ha interromput la connexió amb l'inversor a {serial_port}. L'inversor només admet **una connexió Modbus alhora**.\n\nComproveu si hi ha una altra aplicació o dispositiu connectat actualment a l'inversor, com ara:\n- El Huawei SCharger\n- L'aplicació Huawei FusionSolar per a Android/iPhone (posada en servei mitjançant dongle o connexió directa)\n- SolarmanPV o una altra eina de monitoratge\n\nTanqueu l'altra connexió i premeu Envia per provar-ho de nou."
             },
             "no_device_found_serial": {
-                "title": "No device found",
-                "description": "Connected to {serial_port} but no Huawei Solar device responded on slave ID {slave_id}. Please verify that:\n- The slave ID is correct\n- The inverter is powered on and its RS485 interface is enabled\n\nPress Submit to go back and try again."
+                "title": "No s'ha trobat cap dispositiu",
+                "description": "Connectat a {serial_port}, però cap dispositiu Huawei Solar ha respost a l'ID d'esclau {slave_id}. Si us plau, comproveu que:\n- L'ID d'esclau sigui correcte\n- L'inversor estigui encès i la seva interfície RS485 estigui habilitada\n\nPremeu Envia per tornar enrere i provar-ho de nou."
             },
             "manual_connect": {
-                "title": "Connecting",
-                "description": "Connecting to {host}:{port} on slave ID(s): {slave_ids}."
+                "title": "Connectant",
+                "description": "Connectant a {host}:{port} a l'ID o ID d'esclau: {slave_ids}."
             },
             "finish_network_setup": {
-                "title": "Connecting",
-                "description": "Connecting to the devices discovered at {host}:{port} and reading their configuration."
+                "title": "Connectant",
+                "description": "Connectant als dispositius descoberts a {host}:{port} i llegint la seva configuració."
             },
             "confirm_setup": {
-                "title": "Device found",
-                "description": "Successfully connected to **{model_name}** (serial number: {serial_number}) on slave ID(s): {slave_ids}.\n\nPress Submit to add this device to Home Assistant."
+                "title": "Dispositiu trobat",
+                "description": "Connectat correctament a **{model_name}** (número de sèrie: {serial_number}) a l'ID o ID d'esclau: {slave_ids}.\n\nPremeu Envia per afegir aquest dispositiu a Home Assistant."
             },
             "cannot_connect": {
-                "title": "Could not connect",
-                "description": "Could not connect to {host}:{port}. Please verify that:\n- The IP address and port are correct\n- The device is powered on and reachable on your network\n- No firewall is blocking the connection\n\nPress Submit to go back and try again."
+                "title": "No s'ha pogut connectar",
+                "description": "No s'ha pogut connectar a {host}:{port}. Si us plau, comproveu que:\n- L'adreça IP i el port siguin correctes\n- El dispositiu estigui encès i accessible a la vostra xarxa\n- Cap tallafoc estigui blocant la connexió\n\nPremeu Envia per tornar enrere i provar-ho de nou."
             },
             "connection_interrupted": {
-                "title": "Connection interrupted",
-                "description": "The connection to {host}:{port} was interrupted. The inverter only supports **one Modbus connection at a time**.\n\nCheck whether another application or device is currently connected to the inverter, such as:\n- The Huawei SCharger\n- The Huawei FusionSolar Android/iPhone App (device commissioning via dongle or direct connection)\n- SolarmanPV or another monitoring tool\n\nClose the other connection and press Submit to try again."
+                "title": "Connexió interrompuda",
+                "description": "S'ha interromput la connexió amb {host}:{port}. L'inversor només admet **una connexió Modbus alhora**.\n\nComproveu si hi ha una altra aplicació o dispositiu connectat actualment a l'inversor, com ara:\n- El Huawei SCharger\n- L'aplicació Huawei FusionSolar per a Android/iPhone (posada en servei mitjançant dongle o connexió directa)\n- SolarmanPV o una altra eina de monitoratge\n\nTanqueu l'altra connexió i premeu Envia per provar-ho de nou."
             },
             "no_device_found": {
-                "title": "No device found",
-                "description": "Connected to {host}:{port} but no Huawei Solar device responded on slave ID {slave_id}. Please verify that:\n- The slave ID is correct\n- The inverter's Modbus TCP interface is enabled\n- The inverter is not in a state that blocks communication (e.g. night mode on some models)\n\nPress Submit to go back and try again."
+                "title": "No s'ha trobat cap dispositiu",
+                "description": "Connectat a {host}:{port}, però cap dispositiu Huawei Solar ha respost a l'ID d'esclau {slave_id}. Si us plau, comproveu que:\n- L'ID d'esclau sigui correcte\n- La interfície Modbus TCP de l'inversor estigui habilitada\n- L'inversor no estigui en un estat que bloquegi la comunicació (per exemple, mode nocturn en alguns models)\n\nPremeu Envia per tornar enrere i provar-ho de nou."
             },
             "network_login": {
                 "data": {
@@ -89,11 +89,11 @@
             "setup_serial": {
                 "data": {
                     "port": "Selecciona un dispositiu",
-                    "baudrate": "Baud rate",
+                    "baudrate": "Velocitat de transmissió",
                     "slave_ids": "IDs d'esclaus (separats per comes)"
                 },
                 "data_description": {
-                    "baudrate": "Default is 9600"
+                    "baudrate": "El valor per defecte és 9600"
                 },
                 "title": "Dispositiu"
             },
@@ -107,28 +107,28 @@
     },
     "device": {
         "battery_1": {
-            "name": "Battery 1"
+            "name": "Bateria 1"
         },
         "battery_2": {
-            "name": "Battery 2"
+            "name": "Bateria 2"
         },
         "charger": {
-            "name": "Charger"
+            "name": "Carregador"
         },
         "charger_connector": {
             "name": "Connector de càrrega"
         },
         "connected_energy_storage": {
-            "name": "Batteries"
+            "name": "Bateries"
         },
         "emma": {
             "name": "EMMA"
         },
         "inverter": {
-            "name": "Inverter"
+            "name": "Inversor"
         },
         "power_meter": {
-            "name": "Power meter"
+            "name": "Comptador de potència"
         },
         "smartguard": {
             "name": "SmartGuard"
@@ -145,13 +145,13 @@
         },
         "number": {
             "active_power_fixed_value_derating": {
-                "name": "Power derating"
+                "name": "Reducció de potència"
             },
             "active_power_fail_safe_threshold": {
-                "name": "Llindar de seguretat de potència activa"
+                "name": "Llindar a prova d'errors de potència activa"
             },
             "active_power_percentage_derating": {
-                "name": "Power derating (by percentage)"
+                "name": "Reducció de potència (en percentatge)"
             },
             "charger_dynamic_power_threshold": {
                 "name": "Llindar de límit de potència dinàmica"
@@ -166,19 +166,19 @@
                 "name": "Potència de càrrega programada"
             },
             "charger_surplus_power_start_threshold": {
-                "name": "Llindar d'inici per excedent d'energia"
+                "name": "Llindar d'inici de potència excedentària"
             },
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Potència màxima de càrrega des de la xarxa"
             },
             "emma_maximum_feed_grid_power_percent": {
-                "name": "Maximum feed grid power (%)"
+                "name": "Potència màxima d'abocament a la xarxa (%)"
             },
             "emma_maximum_feed_grid_power_watt": {
-                "name": "Maximum feed grid power"
+                "name": "Potència màxima d'abocament a la xarxa"
             },
             "emma_tou_maximum_power_for_charging_batteries_from_grid": {
-                "name": "Maximum power for charging batteries from grid"
+                "name": "Potència màxima per carregar bateries des de la xarxa"
             },
             "mppt_scanning_interval": {
                 "name": "MPPT scan interval"
@@ -233,32 +233,32 @@
                 "name": "Mode de bloqueig del connector",
                 "state": {
                     "always_locked": "Sempre bloquejat",
-                    "lock_during_charging": "Bloqueja durant la càrrega",
-                    "lock_when_plugged": "Bloqueja en endollar"
+                    "lock_during_charging": "Bloquejar durant la càrrega",
+                    "lock_when_plugged": "Bloquejar en endollar"
                 }
             },
             "charger_gun_work_mode": {
                 "name": "Mode de funcionament",
                 "state": {
                     "fast_charging": "Càrrega ràpida",
-                    "green_power_priority": "Prioritat energia verda"
+                    "green_power_priority": "Prioritat d'energia verda"
                 }
             },
             "emma_ess_control_mode": {
-                "name": "ESS Control Mode",
+                "name": "Mode de control d'ESS",
                 "state": {
                     "fully_fed_to_grid": "Vertit complet a la xarxa",
-                    "maximum_self_consumption": "Maximum self consumption",
-                    "reserved_1": "Reserved 1",
-                    "reserved_3": "Reserved 3",
-                    "third_party_dispatch": "Third party dispatch",
+                    "maximum_self_consumption": "Autoconsum màxim",
+                    "reserved_1": "Reservat 1",
+                    "reserved_3": "Reservat 3",
+                    "third_party_dispatch": "Despatx de tercers",
                     "time_of_use": "Horari d'ús"
                 }
             },
             "emma_tou_preferred_use_of_surplus_pv_power": {
                 "name": "Ús d'energia FV excedent en TOU",
                 "state": {
-                    "charge": "Càrrega",
+                    "charge": "Carregar",
                     "fed_to_grid": "Vertir a la xarxa"
                 }
             },
@@ -273,7 +273,7 @@
             "storage_excess_pv_energy_use_in_tou": {
                 "name": "Ús d'energia FV excedent en TOU",
                 "state": {
-                    "charge": "Càrrega",
+                    "charge": "Carregar",
                     "fed_to_grid": "Vertir a la xarxa"
                 }
             },
@@ -291,7 +291,7 @@
         },
         "sensor": {
             "accumulated_energy_yield": {
-                "name": "Rendiment acumulat d'energia"
+                "name": "Energia total"
             },
             "accumulated_yield_energy": {
                 "name": "Rendiment total"
@@ -336,7 +336,7 @@
                 "name": "Potència activa"
             },
             "active_power_control_mode": {
-                "name": "Active power control mode"
+                "name": "Mode de control de potència activa"
             },
             "active_power_external_energy": {
                 "name": "Potència activa"
@@ -348,25 +348,25 @@
                 "name": "Alarmes"
             },
             "apparent_power_built_in_energy": {
-                "name": "Apparent power"
+                "name": "Potència aparent"
             },
             "apparent_power_external_energy": {
-                "name": "Apparent power"
+                "name": "Potència aparent"
             },
             "backup_power_state_of_charge": {
-                "name": "Backup power state of charge"
+                "name": "SoC d'energia de reserva"
             },
             "battery_charge_discharge_power": {
-                "name": "Battery charge/discharge power"
+                "name": "Potència de càrrega/descàrrega de la bateria"
             },
             "battery_remaining_charge_discharge_time": {
-                "name": "Remaining charge/discharge time"
+                "name": "Temps restant de càrrega/descàrrega"
             },
             "battery_working_mode": {
-                "name": "Working mode"
+                "name": "Mode de funcionament"
             },
             "bms_temperature": {
-                "name": "BMS temperature"
+                "name": "Temperatura del BMS"
             },
             "charger_cable_max_current": {
                 "name": "Corrent màxim del cable"
@@ -423,19 +423,19 @@
                 "name": "Estat del contactor de sortida"
             },
             "charger_phase_a_voltage": {
-                "name": "Charger Phase A voltage"
+                "name": "Tensió fase A del carregador"
             },
             "charger_phase_b_voltage": {
-                "name": "Charger Phase B voltagey"
+                "name": "Tensió fase B del carregador"
             },
             "charger_phase_c_voltage": {
-                "name": "Charger Phase C voltage"
+                "name": "Tensió fase C del carregador"
             },
             "charger_planned_departure_time": {
                 "name": "Hora de sortida prevista"
             },
             "charger_rated_power": {
-                "name": "Charger rated power"
+                "name": "Potència nominal del carregador"
             },
             "charger_reported_work_mode": {
                 "name": "Mode de funcionament notificat"
@@ -444,19 +444,19 @@
                 "name": "Energia carregada objectiu"
             },
             "charger_temperature": {
-                "name": "Charger temperature"
+                "name": "Temperatura del carregador"
             },
             "charger_total_energy_charged": {
-                "name": "Charger total charged energy"
+                "name": "Energia total carregada pel carregador"
             },
             "charger_wifi_signal_strength": {
                 "name": "Intensitat del senyal Wi-Fi"
             },
             "consumption_today": {
-                "name": "Consumption today"
+                "name": "Consum d'avui"
             },
             "current_electricity_generation_statistics_time": {
-                "name": "Current electricity generation statistics time"
+                "name": "Hora d'estadístiques de generació elèctrica actual"
             },
             "daily_yield_energy": {
                 "name": "Rendiment diari"
@@ -471,31 +471,31 @@
                 "name": "Eficiència"
             },
             "energy_charged_today": {
-                "name": "Energy charged today"
+                "name": "Energia carregada avui"
             },
             "energy_discharged_today": {
-                "name": "Energy discharged today"
+                "name": "Energia descarregada avui"
             },
             "ess_chargeable_capacity": {
-                "name": "ESS chargeable capacity"
+                "name": "Capacitat carregable d'ESS"
             },
             "ess_chargeable_energy": {
-                "name": "ESS Chargeable energy"
+                "name": "Energia carregable d'ESS"
             },
             "ess_dischargeable_capacity": {
-                "name": "ESS dischargeable capacity"
+                "name": "Capacitat descarregable d'ESS"
             },
             "ess_dischargeable_energy": {
-                "name": "ESS Dischargeable energy"
+                "name": "Energia descarregable d'ESS"
             },
             "feed_in_power": {
-                "name": "Feed in power"
+                "name": "Potència injectada a la xarxa"
             },
             "feed_in_to_grid_today": {
-                "name": "Feed in to grid today"
+                "name": "Injectat a la xarxa avui"
             },
             "forcible_charge_summary": {
-                "name": "Forcible charge"
+                "name": "Càrrega forçada"
             },
             "grid_a_voltage": {
                 "name": "Tensió de fase A"
@@ -516,7 +516,7 @@
                 "name": "Energia exportada"
             },
             "hourly_yield_energy": {
-                "name": "Hourly yield"
+                "name": "Rendiment horari"
             },
             "input_current": {
                 "name": "Corrent d'entrada"
@@ -528,25 +528,25 @@
                 "name": "Tensió d'entrada"
             },
             "insulation_resistance": {
-                "name": "Insulation resistance"
+                "name": "Resistència d'aïllament"
             },
             "internal_temperature": {
                 "name": "Temperatura interna"
             },
             "inverter_active_power": {
-                "name": "Inverter active power"
+                "name": "Potència activa de l'inversor"
             },
             "inverter_energy_yield_today": {
-                "name": "Inverter energy yield today"
+                "name": "Rendiment energètic de l'inversor avui"
             },
             "inverter_rated_power": {
-                "name": "Inverter rated power"
+                "name": "Potència nominal de l'inversor"
             },
             "inverter_total_absorbed_energy": {
-                "name": "Total absorbed energy"
+                "name": "Energia total absorbida"
             },
             "inverter_total_energy_yield": {
-                "name": "Inverter total energy yield"
+                "name": "Rendiment energètic total de l'inversor"
             },
             "line_voltage_a_b": {
                 "name": "Tensió de línia A-B"
@@ -576,25 +576,25 @@
                 "name": "Tensió de línia C-A"
             },
             "load_power": {
-                "name": "Load power"
+                "name": "Potència de càrrega"
             },
             "meter_a_b_line_voltage": {
-                "name": "Line voltage A-B"
+                "name": "Tensió de línia A-B"
             },
             "meter_active_power": {
                 "name": "Potència activa"
             },
             "meter_apparent_power": {
-                "name": "Apparent power"
+                "name": "Potència aparent"
             },
             "meter_b_c_line_voltage": {
-                "name": "Line voltage B-C"
+                "name": "Tensió de línia B-C"
             },
             "meter_c_a_line_voltage": {
-                "name": "Line voltage C-A"
+                "name": "Tensió de línia C-A"
             },
             "meter_negative_active_energy": {
-                "name": "Negative active energy"
+                "name": "Energia activa negativa"
             },
             "meter_phase_a_active_power": {
                 "name": "Potència activa de fase A"
@@ -624,25 +624,25 @@
                 "name": "Tensió de fase C"
             },
             "meter_positive_active_energy": {
-                "name": "Positive active energy"
+                "name": "Energia activa positiva"
             },
             "meter_power_factor": {
                 "name": "Factor de potència"
             },
             "meter_reactive_power": {
-                "name": "Reactive power"
+                "name": "Potència reactiva"
             },
             "meter_status": {
                 "name": "Estat del comptador"
             },
             "meter_total_active_energy": {
-                "name": "Total active energy"
+                "name": "Energia activa total"
             },
             "meter_total_reactive_energy": {
-                "name": "Total reactive energy"
+                "name": "Energia reactiva total"
             },
             "monthly_yield_energy": {
-                "name": "Monthly yield"
+                "name": "Rendiment mensual"
             },
             "nb_online_optimizers": {
                 "name": "Optimitzadors en línia"
@@ -660,112 +660,112 @@
                 "name": "Potència activa màxima"
             },
             "pack_1_charge_discharge_power": {
-                "name": "Pack 1 charge discharge power"
+                "name": "Potència de càrrega/descàrrega del paquet 1"
             },
             "pack_1_current": {
-                "name": "Pack 1 current"
+                "name": "Corrent del paquet 1"
             },
             "pack_1_firmware_version": {
-                "name": "Pack 1 firmware version"
+                "name": "Versió de microprogramari del paquet 1"
             },
             "pack_1_max_temperature": {
-                "name": "Pack 1 max temperature"
+                "name": "Temperatura màxima del paquet 1"
             },
             "pack_1_min_temperature": {
-                "name": "Pack 1 min temperature"
+                "name": "Temperatura mínima del paquet 1"
             },
             "pack_1_serial_number": {
-                "name": "Pack 1 serial number"
+                "name": "Número de sèrie del paquet 1"
             },
             "pack_1_soh_calibration_status": {
-                "name": "Pack 1 SOH calibration status"
+                "name": "Estat de calibratge de SOH del paquet 1"
             },
             "pack_1_state_of_capacity": {
-                "name": "Pack 1 state of capacity"
+                "name": "Estat de capacitat del paquet 1"
             },
             "pack_1_total_charge": {
-                "name": "Pack 1 total charge"
+                "name": "Càrrega total del paquet 1"
             },
             "pack_1_total_discharge": {
-                "name": "Pack 1 total discharge"
+                "name": "Descàrrega total del paquet 1"
             },
             "pack_1_voltage": {
-                "name": "Pack 1 voltage"
+                "name": "Tensió del paquet 1"
             },
             "pack_1_working_status": {
-                "name": "Pack 1 working status"
+                "name": "Estat de funcionament del paquet 1"
             },
             "pack_2_charge_discharge_power": {
-                "name": "Pack 2 charge discharge power"
+                "name": "Potència de càrrega/descàrrega del paquet 2"
             },
             "pack_2_current": {
-                "name": "Pack 2 current"
+                "name": "Corrent del paquet 2"
             },
             "pack_2_firmware_version": {
-                "name": "Pack 2 firmware version"
+                "name": "Versió de microprogramari del paquet 2"
             },
             "pack_2_max_temperature": {
-                "name": "Pack 2 max temperature"
+                "name": "Temperatura màxima del paquet 2"
             },
             "pack_2_min_temperature": {
-                "name": "Pack 2 min temperature"
+                "name": "Temperatura mínima del paquet 2"
             },
             "pack_2_serial_number": {
-                "name": "Pack 2 serial number"
+                "name": "Número de sèrie del paquet 2"
             },
             "pack_2_soh_calibration_status": {
-                "name": "Pack 2 SOH calibration status"
+                "name": "Estat de calibratge de SOH del paquet 2"
             },
             "pack_2_state_of_capacity": {
-                "name": "Pack 2 state of capacity"
+                "name": "Estat de capacitat del paquet 2"
             },
             "pack_2_total_charge": {
-                "name": "Pack 2 total charge"
+                "name": "Càrrega total del paquet 2"
             },
             "pack_2_total_discharge": {
-                "name": "Pack 2 total discharge"
+                "name": "Descàrrega total del paquet 2"
             },
             "pack_2_voltage": {
-                "name": "Pack 2 voltage"
+                "name": "Tensió del paquet 2"
             },
             "pack_2_working_status": {
-                "name": "Pack 2 working status"
+                "name": "Estat de funcionament del paquet 2"
             },
             "pack_3_charge_discharge_power": {
-                "name": "Pack 3 charge discharge power"
+                "name": "Potència de càrrega/descàrrega del paquet 3"
             },
             "pack_3_current": {
-                "name": "Pack 3 current"
+                "name": "Corrent del paquet 3"
             },
             "pack_3_firmware_version": {
-                "name": "Pack 3 firmware version"
+                "name": "Versió de microprogramari del paquet 3"
             },
             "pack_3_max_temperature": {
-                "name": "Pack 3 max temperature"
+                "name": "Temperatura màxima del paquet 3"
             },
             "pack_3_min_temperature": {
-                "name": "Pack 3 min temperature"
+                "name": "Temperatura mínima del paquet 3"
             },
             "pack_3_serial_number": {
-                "name": "Pack 3 serial number"
+                "name": "Número de sèrie del paquet 3"
             },
             "pack_3_soh_calibration_status": {
-                "name": "Pack 3 SOH calibration status"
+                "name": "Estat de calibratge de SOH del paquet 3"
             },
             "pack_3_state_of_capacity": {
-                "name": "Pack 3 state of capacity"
+                "name": "Estat de capacitat del paquet 3"
             },
             "pack_3_total_charge": {
-                "name": "Pack 3 total charge"
+                "name": "Càrrega total del paquet 3"
             },
             "pack_3_total_discharge": {
-                "name": "Pack 3 total discharge"
+                "name": "Descàrrega total del paquet 3"
             },
             "pack_3_voltage": {
-                "name": "Pack 3 voltage"
+                "name": "Tensió del paquet 3"
             },
             "pack_3_working_status": {
-                "name": "Pack 3 working status"
+                "name": "Estat de funcionament del paquet 3"
             },
             "phase_a_active_power_built_in_energy": {
                 "name": "Potència activa de fase A"
@@ -999,13 +999,13 @@
                 "name": "Tensió FV 24"
             },
             "pv_output_power": {
-                "name": "PV output power"
+                "name": "Potència de sortida FV"
             },
             "pv_yield_today": {
-                "name": "PV yield today"
+                "name": "Rendiment FV d'avui"
             },
             "rated_ess_capacity": {
-                "name": "Rated ESS capacity"
+                "name": "Capacitat nominal d'ESS"
             },
             "rated_power": {
                 "name": "Potència nominal"
@@ -1017,19 +1017,19 @@
                 "name": "Estat de funcionament"
             },
             "sdongle_grid_power": {
-                "name": "Grid power"
+                "name": "Potència de xarxa"
             },
             "sdongle_load_power": {
-                "name": "Load power"
+                "name": "Potència de càrrega"
             },
             "sdongle_total_active_power": {
-                "name": "Total active power"
+                "name": "Potència activa total"
             },
             "sdongle_total_battery_power": {
-                "name": "Total battery power"
+                "name": "Potència total de bateria"
             },
             "sdongle_total_input_power": {
-                "name": "Total input power"
+                "name": "Potència d'entrada total"
             },
             "shutdown_time": {
                 "name": "Hora d'apagat"
@@ -1041,88 +1041,88 @@
                 "name": "Tensió"
             },
             "smartlogger_a_b_line_voltage_of_grid": {
-                "name": "Grid A-B line voltage"
+                "name": "Tensió de xarxa de línia A-B"
             },
             "smartlogger_active_ess_power": {
-                "name": "Active ESS power"
+                "name": "Potència activa ESS"
             },
             "smartlogger_active_power": {
                 "name": "Potència activa"
             },
             "smartlogger_active_pv_power": {
-                "name": "Active PV power"
+                "name": "Potència activa FV"
             },
             "smartlogger_alarms": {
                 "name": "Alarmes"
             },
             "smartlogger_array_in_operation": {
-                "name": "Array in operation"
+                "name": "Camp FV en funcionament"
             },
             "smartlogger_b_c_line_voltage_of_grid": {
-                "name": "Grid B-C line voltage"
+                "name": "Tensió de xarxa de línia B-C"
             },
             "smartlogger_c_a_line_voltage_of_grid": {
-                "name": "Grid C-A line voltage"
+                "name": "Tensió de xarxa de línia C-A"
             },
             "smartlogger_energy_charged_today": {
-                "name": "Energy charged today"
+                "name": "Energia carregada avui"
             },
             "smartlogger_energy_discharged_today": {
-                "name": "Energy discharged today"
+                "name": "Energia descarregada avui"
             },
             "smartlogger_input_power": {
                 "name": "Potència d'entrada"
             },
             "smartlogger_phase_a_current_of_grid": {
-                "name": "Grid phase A current"
+                "name": "Corrent de xarxa fase A"
             },
             "smartlogger_phase_b_current_of_grid": {
-                "name": "Grid phase B current"
+                "name": "Corrent de xarxa fase B"
             },
             "smartlogger_phase_c_current_of_grid": {
-                "name": "Grid phase C current"
+                "name": "Corrent de xarxa fase C"
             },
             "smartlogger_plant_status": {
-                "name": "Plant status"
+                "name": "Estat de la planta"
             },
             "smartlogger_power_factor": {
                 "name": "Factor de potència"
             },
             "smartlogger_power_supply_from_grid_today": {
-                "name": "Power supply from grid today"
+                "name": "Subministrament d'energia de la xarxa avui"
             },
             "smartlogger_rated_ess_power": {
-                "name": "Rated ESS power"
+                "name": "Potència nominal ESS"
             },
             "smartlogger_rated_pv_power": {
-                "name": "Rated PV power"
+                "name": "Potència nominal FV"
             },
             "smartlogger_soc": {
-                "name": "State of charge"
+                "name": "Estat de càrrega"
             },
             "smartlogger_soe": {
-                "name": "State of energy"
+                "name": "Estat d'energia"
             },
             "smartlogger_soh": {
-                "name": "State of health"
+                "name": "Estat de salut"
             },
             "smartlogger_total_energy_charged": {
-                "name": "Total charged energy"
+                "name": "Energia total carregada"
             },
             "smartlogger_total_energy_discharge_d": {
-                "name": "Total discharged energy"
+                "name": "Energia total descarregada"
             },
             "smartlogger_total_energy_yield": {
-                "name": "Total energy yield"
+                "name": "Rendiment energètic total"
             },
             "smartlogger_total_power_supply_from_grid": {
-                "name": "Total power supply from grid"
+                "name": "Subministrament total d'energia de la xarxa"
             },
             "smartlogger_yield_today": {
                 "name": "Rendiment diari"
             },
             "soh_calibration_status": {
-                "name": "SOH calibration status"
+                "name": "Estat de calibratge de SOH"
             },
             "startup_time": {
                 "name": "Hora d'inici"
@@ -1167,13 +1167,13 @@
                 "name": "Descàrrega diària"
             },
             "storage_forcible_charge_discharge_write": {
-                "name": "Forcible charge/discharge"
+                "name": "Càrrega/descàrrega forçada"
             },
             "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
-                "name": "TOU charging and discharging periods"
+                "name": "Períodes de càrrega i descàrrega TOU"
             },
             "storage_lg_resu_time_of_use_price_periods": {
-                "name": "TOU price periods"
+                "name": "Períodes de preu TOU"
             },
             "storage_maximum_charge_power": {
                 "name": "Potència de càrrega màxima"
@@ -1197,55 +1197,58 @@
                 "name": "Descàrrega total"
             },
             "supply_from_grid_today": {
-                "name": "Supply from grid today"
+                "name": "Subministrament de la xarxa avui"
             },
             "temperature": {
                 "name": "Temperatura"
             },
             "total_active_energy_built_in_energy": {
-                "name": "Total active energy"
+                "name": "Energia activa total"
             },
             "total_active_energy_external_energy": {
-                "name": "Total active energy"
+                "name": "Energia activa total"
             },
             "total_charged_energy": {
-                "name": "Total charged energy"
+                "name": "Energia total carregada"
             },
             "total_dc_input_power": {
-                "name": "Total DC input energy"
+                "name": "Energia d'entrada CC total"
             },
             "total_discharged_energy": {
-                "name": "Total discharged energy"
+                "name": "Energia total descarregada"
             },
             "total_energy_consumption": {
-                "name": "Total energy consumption"
+                "name": "Consum total d'energia"
             },
             "total_feed_in_to_grid": {
-                "name": "Total feed in to grid"
+                "name": "Energia total injectada a la xarxa"
             },
             "total_negative_active_energy_built_in_energy": {
-                "name": "Total negative active energy"
+                "name": "Energia activa negativa total"
             },
             "total_negative_active_energy_external_energy": {
-                "name": "Total negative active energy"
+                "name": "Energia activa negativa total"
             },
             "total_positive_active_energy_built_in_energy": {
-                "name": "Total positive active energy"
+                "name": "Energia activa positiva total"
             },
             "total_positive_active_energy_external_energy": {
-                "name": "Total positive active energy"
+                "name": "Energia activa positiva total"
             },
             "total_pv_energy_yield": {
-                "name": "Total PV energy yield"
+                "name": "Rendiment total d'energia FV"
             },
             "total_supply_from_grid": {
-                "name": "Total supply from grid"
+                "name": "Subministrament total de la xarxa"
             },
             "voltage_to_ground": {
                 "name": "Tensió a terra"
             },
             "yearly_yield_energy": {
-                "name": "Yearly yield"
+                "name": "Rendiment anual"
+            },
+            "emma_tou_periods": {
+                "name": "Períodes TOU"
             }
         },
         "switch": {
@@ -1277,19 +1280,19 @@
     },
     "exceptions": {
         "config_entry_not_found": {
-            "message": "Entry not found for device: {device_id}"
+            "message": "Entrada no trobada per al dispositiu: {device_id}"
         },
         "entry_not_loaded": {
-            "message": "Entry not loaded: {entry}"
+            "message": "Entrada no carregada: {entry}"
         },
         "ha_device_not_found": {
-            "message": "Could not retrieve Huawei Solar device associated with ID {device_id}"
+            "message": "No s'ha pogut recuperar el dispositiu Huawei Solar associat a l'ID {device_id}"
         },
         "invalid_device_id": {
-            "message": "Invalid device ID specified: {device_id}"
+            "message": "S'ha especificat un ID de dispositiu no vàlid: {device_id}"
         },
         "wrong_device_type": {
-            "message": "Got wrong Huawei Solar device type for ID {device_id}: expected {expected_type}, got {actual_type}"
+            "message": "S'ha obtingut un tipus de dispositiu Huawei Solar incorrecte per a l'ID {device_id}: s'esperava {expected_type}, s'ha obtingut {actual_type}"
         }
     },
     "services": {
@@ -1394,7 +1397,7 @@
             "fields": {
                 "device_id": {
                     "description": "Ha de ser un dispositiu 'Inversor'",
-                    "name": "Inverter"
+                    "name": "Inversor"
                 }
             },
             "name": "Establir control de potència activa a 'Programació Activa DI'"
