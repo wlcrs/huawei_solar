@@ -147,6 +147,9 @@
             "active_power_fixed_value_derating": {
                 "name": "Power derating"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Active power fail-safe threshold"
+            },
             "active_power_percentage_derating": {
                 "name": "Power derating (by percentage)"
             },
@@ -165,6 +168,9 @@
             "charger_surplus_power_start_threshold": {
                 "name": "Surplus power start threshold"
             },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Maximum power of charge from grid"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximum feed grid power (%)"
             },
@@ -179,6 +185,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "MPPT-Scan Interval"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Battery adjustment deadband"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "Backup power SOC"
@@ -201,11 +210,28 @@
             "storage_maximum_discharging_power": {
                 "name": "Maximum discharging power"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Maximum grid power during discharge"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Grid charge maximum power"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Active power limitation mode",
+                "state": {
+                    "total_power": "Total power",
+                    "single_phase_power": "Single-phase power"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Voltage in independent operation",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
             "charger_gun_lock_control_mode": {
                 "name": "Connector lock mode",
                 "state": {
@@ -1226,6 +1252,9 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Switch to off-grid"
+            },
             "charger_dynamic_power_control": {
                 "name": "Dynamic power control"
             },

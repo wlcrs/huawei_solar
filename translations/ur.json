@@ -147,6 +147,9 @@
             "active_power_fixed_value_derating": {
                 "name": "Power derating"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "ایکٹو پاور فیل سیف حد"
+            },
             "active_power_percentage_derating": {
                 "name": "Power derating (by percentage)"
             },
@@ -165,6 +168,9 @@
             "charger_surplus_power_start_threshold": {
                 "name": "اضافی پاور شروع ہونے کی حد"
             },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "گرڈ سے چارج کرنے کی زیادہ سے زیادہ پاور"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximum feed grid power (%)"
             },
@@ -176,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "MPPT scan interval"
+            },
+            "storage_adjustment_deadband": {
+                "name": "بیٹری ایڈجسٹمنٹ ڈیڈ بینڈ"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "بیک اپ پاور ایس او سی"
@@ -198,11 +207,28 @@
             "storage_maximum_discharging_power": {
                 "name": "زیادہ سے زیادہ ڈسچارج پاور"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "ڈسچارج کے دوران گرڈ کی زیادہ سے زیادہ پاور"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "گرڈ چارج زیادہ سے زیادہ طاقت"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "ایکٹو پاور کی حد کا موڈ",
+                "state": {
+                    "total_power": "کل پاور",
+                    "single_phase_power": "سنگل فیز پاور"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "آزادانہ آپریشن میں وولٹیج",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
             "charger_gun_lock_control_mode": {
                 "name": "کنیکٹر لاک کا موڈ",
                 "state": {
@@ -1223,6 +1249,9 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "آف گرڈ پر سوئچ کریں"
+            },
             "charger_dynamic_power_control": {
                 "name": "ڈائنامک پاور کنٹرول"
             },
@@ -1240,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "گرڈ سے چارج کریں۔"
+            },
+            "storage_ess_low_power": {
+                "name": "ای ایس ایس کم پاور"
             }
         }
     },

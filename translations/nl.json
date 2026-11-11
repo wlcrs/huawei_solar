@@ -147,6 +147,9 @@
             "active_power_fixed_value_derating": {
                 "name": "Vermogensbeperking"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Storingsveilige drempelwaarde voor werkelijk vermogen"
+            },
             "active_power_percentage_derating": {
                 "name": "Vermogensbeperking (percentage)"
             },
@@ -165,6 +168,9 @@
             "charger_surplus_power_start_threshold": {
                 "name": "Startdrempel overschotvermogen"
             },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Maximaal laadvermogen van het elektriciteitsnet"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximum feed grid power (%)"
             },
@@ -176,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "MPPT scan interval"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Dode band voor batterijaanpassing"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "Noodvermogen batterijpercentage"
@@ -198,11 +207,28 @@
             "storage_maximum_discharging_power": {
                 "name": "Maximum ontlaadvermogen"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Maximaal netvermogen tijdens ontladen"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Maximum laadvermogen van stroomnet"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Modus voor werkelijk vermogensbegrenzing",
+                "state": {
+                    "total_power": "Totaal vermogen",
+                    "single_phase_power": "Eenfasig vermogen"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Spanning in stand-alone bedrijf",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
             "charger_gun_lock_control_mode": {
                 "name": "Vergrendelingsmodus laadconnector",
                 "state": {
@@ -1223,6 +1249,9 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Overschakelen naar off-grid"
+            },
             "charger_dynamic_power_control": {
                 "name": "Dynamische vermogensregeling"
             },
@@ -1240,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Laden van stroomnet"
+            },
+            "storage_ess_low_power": {
+                "name": "ESS laag vermogen"
             }
         }
     },

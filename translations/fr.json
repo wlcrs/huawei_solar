@@ -147,6 +147,9 @@
             "active_power_fixed_value_derating": {
                 "name": "Réduction de puissance"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Seuil de sécurité de la puissance active"
+            },
             "active_power_percentage_derating": {
                 "name": "Réduction de puissance (en pourcentage)"
             },
@@ -165,6 +168,9 @@
             "charger_surplus_power_start_threshold": {
                 "name": "Seuil de démarrage sur surplus d'énergie"
             },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Puissance maximale de charge depuis le réseau"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Puissance maximale fournie au réseau (%)"
             },
@@ -176,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "Intervalle d'analyse MPPT"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Bande morte d'ajustement de la batterie"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "SOC de la batterie de secours"
@@ -198,11 +207,28 @@
             "storage_maximum_discharging_power": {
                 "name": "Puissance de décharge maximale"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Puissance maximale du réseau pendant la décharge"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Puissance de charge maximale depuis le réseau"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Mode de limitation de puissance active",
+                "state": {
+                    "total_power": "Puissance totale",
+                    "single_phase_power": "Puissance monophasée"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Tension en fonctionnement autonome",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
             "charger_gun_lock_control_mode": {
                 "name": "Mode de verrouillage du connecteur",
                 "state": {
@@ -1223,6 +1249,9 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Basculer hors réseau"
+            },
             "charger_dynamic_power_control": {
                 "name": "Contrôle dynamique de la puissance"
             },
@@ -1240,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Charge depuis le réseau"
+            },
+            "storage_ess_low_power": {
+                "name": "Faible puissance ESS"
             }
         }
     },
