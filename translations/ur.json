@@ -2,98 +2,98 @@
     "config": {
         "abort": {
             "already_configured": "ڈیوائس پہلے سے تشکیل شدہ ہے",
-            "reauth_successful": "Re-authentication was successful",
-            "reconfigure_successful": "Re-configuration was successful"
+            "reauth_successful": "دوبارہ توثیق کامیاب رہی",
+            "reconfigure_successful": "دوبارہ ترتیب کامیاب رہی"
         },
         "error": {
             "cannot_connect": "رابطہ قائم کرنے میں ناکام",
-            "connection_interrupted": "Connection interrupted — the inverter only supports one Modbus connection at a time. Check whether another app or device (SCharger, EMS, ...) is connected and close it, then try again.",
+            "connection_interrupted": "کنکشن منقطع ہو گیا — انورٹر ایک وقت میں صرف ایک موڈبس کنکشن کو سپورٹ کرتا ہے۔ چیک کریں کہ آیا کوئی دوسری ایپ یا ڈیوائس (SCharger, EMS, ...) منسلک ہے، اسے بند کریں اور دوبارہ کوشش کریں۔",
             "invalid_auth": "غلط تصدیق",
-            "invalid_slave_ids": "Slave IDs must be comma-separated list of ints",
+            "invalid_slave_ids": "سلیو آئی ڈیز کوما سے الگ کردہ عدد ہونے چاہئیں",
             "read_error": "انورٹر سے پڑھنا ناکام رہا.",
             "slave_cannot_connect": "اضافی غلام سے منسلک ہونے میں ناکام",
             "unknown": "غیر متوقع خرابی"
         },
         "step": {
             "auto_discovery": {
-                "title": "Auto-discovering devices",
-                "description": "Scanning {host}:{port} for Huawei Solar devices using the Huawei discovery protocol. This may take up to a minute."
+                "title": "آلات کی خودکار دریافت",
+                "description": "ہواوے ڈسکوری پروٹوکول کا استعمال کرتے ہوئے {host}:{port} پر ہواوے سولر ڈیوائسز تلاش کی جا رہی ہیں۔ اس میں ایک منٹ تک کا وقت لگ سکتا ہے۔"
             },
             "scan_discovery": {
-                "title": "Scanning for devices",
-                "description": "Auto-discovery found no devices on {host}:{port}. Scanning frequently used slave IDs individually. This may take up to a minute."
+                "title": "آلات کی تلاش",
+                "description": "خودکار دریافت کو {host}:{port} پر کوئی ڈیوائس نہیں ملی۔ عام طور پر استعمال ہونے والی سلیو آئی ڈیز کو انفرادی طور پر اسکین کیا جا رہا ہے۔ اس میں ایک منٹ تک لگ سکتا ہے۔"
             },
             "serial_auto_discovery": {
-                "title": "Auto-discovering devices",
-                "description": "Scanning {serial_port} for Huawei Solar devices using the Huawei discovery protocol. This may take up to a minute."
+                "title": "آلات کی خودکار دریافت",
+                "description": "ہواوے ڈسکوری پروٹوکول کا استعمال کرتے ہوئے {serial_port} پر ہواوے سولر ڈیوائسز تلاش کی جا رہی ہیں۔ اس میں ایک منٹ تک لگ سکتا ہے۔"
             },
             "serial_scan_discovery": {
-                "title": "Scanning for devices",
-                "description": "Auto-discovery found no devices on {serial_port}. Scanning frequently used slave IDs individually. This may take up to a minute."
+                "title": "آلات کی تلاش",
+                "description": "خودکار دریافت کو {serial_port} پر کوئی ڈیوائس نہیں ملی۔ عام طور پر استعمال ہونے والی سلیو آئی ڈیز کو انفرادی طور پر اسکین کیا جا رہا ہے۔ اس میں ایک منٹ تک لگ سکتا ہے۔"
             },
             "serial_finish_setup": {
-                "title": "Connecting",
-                "description": "Connecting to the devices discovered on {serial_port} and reading their configuration."
+                "title": "کنیکٹ ہو رہا ہے",
+                "description": "{serial_port} پر دریافت شدہ آلات سے کنیکٹ ہو رہا ہے اور ان کی کنفیگریشن پڑھی جا رہی ہے۔"
             },
             "cannot_connect_serial": {
-                "title": "Could not connect",
-                "description": "Could not open serial port {serial_port}. Please verify that:\n- The device is connected and the port is correct\n- No other application is using the port\n\nPress Submit to go back and try again."
+                "title": "کنیکٹ نہیں ہو سکا",
+                "description": "سیریل پورٹ {serial_port} نہیں کھل سکی۔ براہ کرم تصدیق کریں کہ:\n- ڈیوائس منسلک ہے اور پورٹ درست ہے\n- کوئی دوسری ایپلی کیشن پورٹ استعمال نہیں کر رہی ہے\n\nواپس جانے اور دوبارہ کوشش کرنے کے لیے سبمٹ دبائیں۔"
             },
             "connection_interrupted_serial": {
-                "title": "Connection interrupted",
-                "description": "The connection to the inverter on {serial_port} was interrupted. The inverter only supports **one Modbus connection at a time**.\n\nCheck whether another application or device is currently connected to the inverter, such as:\n- The Huawei SCharger\n- The Huawei FusionSolar Android/iPhone App (device commissioning via dongle or direct connection)\n- SolarmanPV or another monitoring tool\n\nClose the other connection and press Submit to try again."
+                "title": "کنکشن منقطع ہو گیا",
+                "description": "{serial_port} پر انورٹر سے کنکشن منقطع ہو گیا ہے۔ انورٹر ایک وقت میں صرف **ایک موڈبس کنکشن** کو سپورٹ کرتا ہے۔\n\nچیک کریں کہ کیا کوئی دوسری ایپلی کیشن یا ڈیوائس اس وقت انورٹر سے منسلک ہے، جیسے:\n- ہواوے SCharger\n- ہواوے فیوژن سولر اینڈرائیڈ/آئی فون ایپ\n- سولر مین پی وی یا کوئی دوسرا مانیٹرنگ ٹول\n\nدوسرا کنکشن بند کریں اور دوبارہ کوشش کرنے کے لیے سبمٹ دبائیں۔"
             },
             "no_device_found_serial": {
-                "title": "No device found",
-                "description": "Connected to {serial_port} but no Huawei Solar device responded on slave ID {slave_id}. Please verify that:\n- The slave ID is correct\n- The inverter is powered on and its RS485 interface is enabled\n\nPress Submit to go back and try again."
+                "title": "کوئی ڈیوائس نہیں ملی",
+                "description": "{serial_port} سے منسلک ہوا لیکن سلیو آئی ڈی {slave_id} پر کسی ہواوے سولر ڈیوائس نے جواب نہیں دیا۔ براہ کرم تصدیق کریں کہ:\n- سلیو آئی ڈی درست ہے\n- انورٹر آن ہے اور اس کا RS485 انٹرفیس فعال ہے\n\nواپس جانے اور دوبارہ کوشش کرنے کے لیے سبمٹ دبائیں۔"
             },
             "manual_connect": {
-                "title": "Connecting",
-                "description": "Connecting to {host}:{port} on slave ID(s): {slave_ids}."
+                "title": "کنیکٹ ہو رہا ہے",
+                "description": "{host}:{port} پر سلیو آئی ڈی(ز): {slave_ids} سے کنیکٹ ہو رہا ہے۔"
             },
             "finish_network_setup": {
-                "title": "Connecting",
-                "description": "Connecting to the devices discovered at {host}:{port} and reading their configuration."
+                "title": "کنیکٹ ہو رہا ہے",
+                "description": "{host}:{port} پر دریافت شدہ آلات سے کنیکٹ ہو رہا ہے اور ان کی کنفیگریشن پڑھی جا رہی ہے۔"
             },
             "confirm_setup": {
-                "title": "Device found",
-                "description": "Successfully connected to **{model_name}** (serial number: {serial_number}) on slave ID(s): {slave_ids}.\n\nPress Submit to add this device to Home Assistant."
+                "title": "ڈیوائس مل گئی",
+                "description": "سلیو آئی ڈی(ز): {slave_ids} پر **{model_name}** (سیریل نمبر: {serial_number}) سے کامیابی کے ساتھ جڑ گیا۔\n\nاس ڈیوائس کو ہوم اسسٹنٹ میں شامل کرنے کے لیے سبمٹ دبائیں۔"
             },
             "cannot_connect": {
-                "title": "Could not connect",
-                "description": "Could not connect to {host}:{port}. Please verify that:\n- The IP address and port are correct\n- The device is powered on and reachable on your network\n- No firewall is blocking the connection\n\nPress Submit to go back and try again."
+                "title": "کنیکٹ نہیں ہو سکا",
+                "description": "{host}:{port} سے کنیکٹ نہیں ہو سکا۔ براہ کرم تصدیق کریں کہ:\n- آئی پی ایڈریس اور پورٹ درست ہیں\n- ڈیوائس آن ہے اور آپ کے نیٹ ورک پر قابل رسائی ہے\n- کوئی فائر وال کنکشن کو بلاک نہیں کر رہی ہے\n\nواپس جانے اور دوبارہ کوشش کرنے کے لیے سبمٹ دبائیں۔"
             },
             "connection_interrupted": {
-                "title": "Connection interrupted",
-                "description": "The connection to {host}:{port} was interrupted. The inverter only supports **one Modbus connection at a time**.\n\nCheck whether another application or device is currently connected to the inverter, such as:\n- The Huawei SCharger\n- The Huawei FusionSolar Android/iPhone App (device commissioning via dongle or direct connection)\n- SolarmanPV or another monitoring tool\n\nClose the other connection and press Submit to try again."
+                "title": "کنکشن منقطع ہو گیا",
+                "description": "{host}:{port} سے کنکشن منقطع ہو گیا ہے۔ انورٹر ایک وقت میں صرف **ایک موڈبس کنکشن** کو سپورٹ کرتا ہے۔\n\nچیک کریں کہ کیا کوئی دوسری ایپلی کیشن یا ڈیوائس اس وقت انورٹر سے منسلک ہے، جیسے:\n- ہواوے SCharger\n- ہواوے فیوژن سولر اینڈرائیڈ/آئی فون ایپ\n- سولر مین پی وی یا کوئی دوسرا مانیٹرنگ ٹول\n\nدوسرا کنکشن بند کریں اور دوبارہ کوشش کرنے کے لیے سبمٹ دبائیں۔"
             },
             "no_device_found": {
-                "title": "No device found",
-                "description": "Connected to {host}:{port} but no Huawei Solar device responded on slave ID {slave_id}. Please verify that:\n- The slave ID is correct\n- The inverter's Modbus TCP interface is enabled\n- The inverter is not in a state that blocks communication (e.g. night mode on some models)\n\nPress Submit to go back and try again."
+                "title": "کوئی ڈیوائس نہیں ملی",
+                "description": "{host}:{port} سے منسلک ہوا لیکن سلیو آئی ڈی {slave_id} پر کسی ہواوے سولر ڈیوائس نے جواب نہیں دیا۔ براہ کرم تصدیق کریں کہ:\n- سلیو آئی ڈی درست ہے\n- انورٹر کا موڈبس ٹی سی پی انٹرفیس فعال ہے\n- انورٹر مواصلات کو مسدود کرنے والی حالت میں نہیں ہے\n\nواپس جانے اور دوبارہ کوشش کرنے کے لیے سبمٹ دبائیں۔"
             },
             "network_login": {
                 "data": {
-                    "password": "Password",
-                    "username": "Username"
+                    "password": "پاس ورڈ",
+                    "username": "صارف کا نام"
                 },
                 "description": "براہ کرم انسٹالر کی اسناد درج کریں۔"
             },
             "setup_network": {
                 "data": {
-                    "enable_parameter_configuration": "اعلی درجے کی: اجازتیں بلند کریں۔",
+                    "enable_parameter_configuration": "ایڈوانسڈ: اجازتیں بلند کریں",
                     "host": "Host",
                     "port": "Port",
-                    "slave_ids": "Slave IDs: AUTO for auto-discovery, otherwise a comma separated list"
+                    "slave_ids": "سلیو آئی ڈیز: خودکار دریافت کے لیے AUTO، ورنہ کوما سے الگ کردہ فہرست"
                 }
             },
             "setup_serial": {
                 "data": {
                     "port": "آلہ منتخب کریں",
-                    "baudrate": "Baud rate",
-                    "slave_ids": "Slave IDs: AUTO for auto-discovery, otherwise a comma separated list"
+                    "baudrate": "بوڈ ریٹ",
+                    "slave_ids": "سلیو آئی ڈیز: خودکار دریافت کے لیے AUTO، ورنہ کوما سے الگ کردہ فہرست"
                 },
                 "data_description": {
-                    "baudrate": "Default is 9600"
+                    "baudrate": "طے شدہ 9600 ہے"
                 },
                 "title": "آلہ"
             },
@@ -107,28 +107,28 @@
     },
     "device": {
         "battery_1": {
-            "name": "Battery 1"
+            "name": "بیٹری 1"
         },
         "battery_2": {
-            "name": "Battery 2"
+            "name": "بیٹری 2"
         },
         "charger": {
-            "name": "Charger"
+            "name": "چارجر"
         },
         "charger_connector": {
             "name": "چارجر کنیکٹر"
         },
         "connected_energy_storage": {
-            "name": "Batteries"
+            "name": "بیٹریاں"
         },
         "emma": {
             "name": "EMMA"
         },
         "inverter": {
-            "name": "Inverter"
+            "name": "انورٹر"
         },
         "power_meter": {
-            "name": "Power meter"
+            "name": "پاور میٹر"
         },
         "smartguard": {
             "name": "SmartGuard"
@@ -145,16 +145,16 @@
         },
         "number": {
             "active_power_fixed_value_derating": {
-                "name": "Power derating"
+                "name": "پاور ڈیریٹنگ"
             },
             "active_power_fail_safe_threshold": {
                 "name": "ایکٹو پاور فیل سیف حد"
             },
             "active_power_percentage_derating": {
-                "name": "Power derating (by percentage)"
+                "name": "پاور ڈیریٹنگ (فیصد کے لحاظ سے)"
             },
             "charger_dynamic_power_threshold": {
-                "name": "ڈائنامک پاور کی حد کی دہلیز"
+                "name": "ڈائنامک پاور لمٹ کی حد"
             },
             "charger_gun_max_current": {
                 "name": "زیادہ سے زیادہ چارجنگ کرنٹ"
@@ -163,22 +163,22 @@
                 "name": "گرڈ سے زیادہ سے زیادہ پاور"
             },
             "charger_orderly_charging_power": {
-                "name": "شیڈول چارجنگ پاور"
+                "name": "طے شدہ چارجنگ پاور"
             },
             "charger_surplus_power_start_threshold": {
-                "name": "اضافی پاور شروع ہونے کی حد"
+                "name": "اضافی پاور شروع کرنے کی حد"
             },
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "گرڈ سے چارج کرنے کی زیادہ سے زیادہ پاور"
             },
             "emma_maximum_feed_grid_power_percent": {
-                "name": "Maximum feed grid power (%)"
+                "name": "گرڈ کو زیادہ سے زیادہ پاور فیڈ (%)"
             },
             "emma_maximum_feed_grid_power_watt": {
-                "name": "Maximum feed grid power"
+                "name": "گرڈ کو زیادہ سے زیادہ پاور فیڈ"
             },
             "emma_tou_maximum_power_for_charging_batteries_from_grid": {
-                "name": "Maximum power for charging batteries from grid"
+                "name": "گرڈ سے بیٹریاں چارج کرنے کی زیادہ سے زیادہ پاور"
             },
             "mppt_scanning_interval": {
                 "name": "MPPT scan interval"
@@ -233,32 +233,32 @@
                 "name": "کنیکٹر لاک کا موڈ",
                 "state": {
                     "always_locked": "ہمیشہ مقفل",
-                    "lock_during_charging": "چارجنگ کے دوران لاک کریں",
-                    "lock_when_plugged": "پلگ ان ہونے پر لاک کریں"
+                    "lock_during_charging": "چارجنگ کے دوران مقفل کریں",
+                    "lock_when_plugged": "پلگ ان ہونے پر مقفل کریں"
                 }
             },
             "charger_gun_work_mode": {
                 "name": "ورک موڈ",
                 "state": {
-                    "fast_charging": "تیز رفتار چارجنگ",
-                    "green_power_priority": "گرین پاور کو ترجیح"
+                    "fast_charging": "فاسٹ چارجنگ",
+                    "green_power_priority": "سبز توانائی کی ترجیح"
                 }
             },
             "emma_ess_control_mode": {
-                "name": "ESS Control Mode",
+                "name": "ESS کنٹرول موڈ",
                 "state": {
-                    "fully_fed_to_grid": "Fully fed to grid",
-                    "maximum_self_consumption": "Maximum self consumption",
-                    "reserved_1": "Reserved 1",
-                    "reserved_3": "Reserved 3",
-                    "third_party_dispatch": "Third party dispatch",
+                    "fully_fed_to_grid": "مکمل طور پر گرڈ کو فیڈ",
+                    "maximum_self_consumption": "زیادہ سے زیادہ خود کھپت",
+                    "reserved_1": "محفوظ 1",
+                    "reserved_3": "محفوظ 3",
+                    "third_party_dispatch": "تھرڈ پارٹی ڈسپیچ",
                     "time_of_use": "استعمال کا وقت"
                 }
             },
             "emma_tou_preferred_use_of_surplus_pv_power": {
                 "name": "TOU میں اضافی PV توانائی کا استعمال",
                 "state": {
-                    "charge": "چارج",
+                    "charge": "چارج کریں",
                     "fed_to_grid": "گرڈ کو فیڈ"
                 }
             },
@@ -267,13 +267,13 @@
                 "state": {
                     "active_capacity_control": "فعال صلاحیت کا کنٹرول",
                     "apparent_power_limit": "طاقت کی ظاہری حد",
-                    "disable": "Disable"
+                    "disable": "غیر فعال کریں"
                 }
             },
             "storage_excess_pv_energy_use_in_tou": {
                 "name": "TOU میں اضافی PV توانائی کا استعمال",
                 "state": {
-                    "charge": "چارج",
+                    "charge": "چارج کریں",
                     "fed_to_grid": "گرڈ کو فیڈ"
                 }
             },
@@ -282,7 +282,7 @@
                 "state": {
                     "adaptive": "موافق",
                     "fixed_charge_discharge": "فکسڈ چارج ڈسچارج",
-                    "fully_fed_to_grid": "Fully fed to grid",
+                    "fully_fed_to_grid": "مکمل طور پر گرڈ کو فیڈ",
                     "maximise_self_consumption": "زیادہ سے زیادہ خود استعمال کریں۔",
                     "time_of_use_lg": "استعمال کا وقت",
                     "time_of_use_luna2000": "استعمال کا وقت"
@@ -291,7 +291,7 @@
         },
         "sensor": {
             "accumulated_energy_yield": {
-                "name": "Total energy"
+                "name": "کل توانائی"
             },
             "accumulated_yield_energy": {
                 "name": "کُل پیداوار"
@@ -336,7 +336,7 @@
                 "name": "فعال طاقت"
             },
             "active_power_control_mode": {
-                "name": "Active power control mode"
+                "name": "ایکٹو پاور کنٹرول موڈ"
             },
             "active_power_external_energy": {
                 "name": "فعال طاقت"
@@ -348,25 +348,25 @@
                 "name": "الارم"
             },
             "apparent_power_built_in_energy": {
-                "name": "Apparent power"
+                "name": "ظاہری پاور"
             },
             "apparent_power_external_energy": {
-                "name": "Apparent power"
+                "name": "ظاہری پاور"
             },
             "backup_power_state_of_charge": {
-                "name": "Backup power state of charge"
+                "name": "بیک اپ پاور SOC"
             },
             "battery_charge_discharge_power": {
-                "name": "Battery charge/discharge power"
+                "name": "بیٹری چارج/ڈسچارج پاور"
             },
             "battery_remaining_charge_discharge_time": {
-                "name": "Remaining charge/discharge time"
+                "name": "باقی چارج/ڈسچارج وقت"
             },
             "battery_working_mode": {
-                "name": "Working mode"
+                "name": "ورکنگ موڈ"
             },
             "bms_temperature": {
-                "name": "BMS temperature"
+                "name": "BMS درجہ حرارت"
             },
             "charger_cable_max_current": {
                 "name": "کیبل کا زیادہ سے زیادہ کرنٹ"
@@ -384,118 +384,118 @@
                 "name": "چارجنگ پاور"
             },
             "charger_gun_phase_a_current": {
-                "name": "کنیکٹر فیز اے کرنٹ"
+                "name": "کنیکٹر فیز A کرنٹ"
             },
             "charger_gun_phase_a_voltage": {
-                "name": "کنیکٹر فیز اے وولٹیج"
+                "name": "کنیکٹر فیز A وولٹیج"
             },
             "charger_gun_phase_b_current": {
-                "name": "کنیکٹر فیز بی کرنٹ"
+                "name": "کنیکٹر فیز B کرنٹ"
             },
             "charger_gun_phase_b_voltage": {
-                "name": "کنیکٹر فیز بی وولٹیج"
+                "name": "کنیکٹر فیز B وولٹیج"
             },
             "charger_gun_phase_c_current": {
-                "name": "کنیکٹر فیز سی کرنٹ"
+                "name": "کنیکٹر فیز C کرنٹ"
             },
             "charger_gun_phase_c_voltage": {
-                "name": "کنیکٹر فیز سی وولٹیج"
+                "name": "کنیکٹر فیز C وولٹیج"
             },
             "charger_gun_temperature": {
                 "name": "کنیکٹر کا درجہ حرارت"
             },
             "charger_gun_total_energy_charged": {
-                "name": "کنیکٹر کی کل چارج شدہ انرجی"
+                "name": "کنیکٹر کل چارج شدہ توانائی"
             },
             "charger_gun_work_status": {
                 "name": "کنیکٹر کی حالت"
             },
             "charger_indicator_light_status": {
-                "name": "انڈیکیٹر لائٹ کی حالت"
+                "name": "اشارے والی روشنی کی حالت"
             },
             "charger_max_charging_power": {
                 "name": "زیادہ سے زیادہ چارج کرنے کی طاقت"
             },
             "charger_min_charging_power": {
-                "name": "کم سے کم چارجنگ پاور"
+                "name": "کم از کم چارجنگ پاور"
             },
             "charger_output_relay_status": {
-                "name": "آؤٹ پٹ کنٹیکٹر کی حالت"
+                "name": "آؤٹ پٹ ریلے کی حالت"
             },
             "charger_phase_a_voltage": {
-                "name": "Charger Phase A voltage"
+                "name": "چارجر فیز A وولٹیج"
             },
             "charger_phase_b_voltage": {
-                "name": "Charger Phase B voltagey"
+                "name": "چارجر فیز B وولٹیج"
             },
             "charger_phase_c_voltage": {
-                "name": "Charger Phase C voltage"
+                "name": "چارجر فیز C وولٹیج"
             },
             "charger_planned_departure_time": {
                 "name": "روانگی کا متوقع وقت"
             },
             "charger_rated_power": {
-                "name": "Charger rated power"
+                "name": "چارجر کی ریٹیڈ پاور"
             },
             "charger_reported_work_mode": {
-                "name": "رپورٹ شدہ ورک موڈ"
+                "name": "رپورٹ کردہ ورکنگ موڈ"
             },
             "charger_target_charged_energy": {
-                "name": "ہدف چارج شدہ انرجی"
+                "name": "ہدف چارج شدہ توانائی"
             },
             "charger_temperature": {
-                "name": "Charger temperature"
+                "name": "چارجر کا درجہ حرارت"
             },
             "charger_total_energy_charged": {
-                "name": "Charger total charged energy"
+                "name": "چارجر کی کل چارج شدہ توانائی"
             },
             "charger_wifi_signal_strength": {
                 "name": "وائی فائی سگنل کی طاقت"
             },
             "consumption_today": {
-                "name": "Consumption today"
+                "name": "آج کی کھپت"
             },
             "current_electricity_generation_statistics_time": {
-                "name": "Current electricity generation statistics time"
+                "name": "موجودہ بجلی کی پیداوار کے اعدادوشمار کا وقت"
             },
             "daily_yield_energy": {
                 "name": "روزانہ کی پیداوار"
             },
             "day_active_power_peak": {
-                "name": "دن کی فعال طاقت کی چوٹی"
+                "name": "دن کی ایکٹو پاور کی چوٹی"
             },
             "device_status": {
-                "name": "آلہ کی حیثیت"
+                "name": "ڈیوائس کی حالت"
             },
             "efficiency": {
                 "name": "افادیت"
             },
             "energy_charged_today": {
-                "name": "Energy charged today"
+                "name": "آج چارج کی گئی توانائی"
             },
             "energy_discharged_today": {
-                "name": "Energy discharged today"
+                "name": "آج ڈسچارج کی گئی توانائی"
             },
             "ess_chargeable_capacity": {
-                "name": "ESS chargeable capacity"
+                "name": "ESS چارج ایبل صلاحیت"
             },
             "ess_chargeable_energy": {
-                "name": "ESS Chargeable energy"
+                "name": "ESS چارج ایبل توانائی"
             },
             "ess_dischargeable_capacity": {
-                "name": "ESS dischargeable capacity"
+                "name": "ESS ڈسچارج ایبل صلاحیت"
             },
             "ess_dischargeable_energy": {
-                "name": "ESS Dischargeable energy"
+                "name": "ESS ڈسچارج ایبل توانائی"
             },
             "feed_in_power": {
-                "name": "Feed in power"
+                "name": "فیڈ ان پاور"
             },
             "feed_in_to_grid_today": {
-                "name": "Feed in to grid today"
+                "name": "آج گرڈ کو فیڈ کیا گیا"
             },
             "forcible_charge_summary": {
-                "name": "Forcible charge"
+                "name": "زبردستی چارج"
             },
             "grid_a_voltage": {
                 "name": "فیز اے وولٹیج"
@@ -516,7 +516,7 @@
                 "name": "برآمد"
             },
             "hourly_yield_energy": {
-                "name": "Hourly yield"
+                "name": "گھنٹہ وار پیداوار"
             },
             "input_current": {
                 "name": "ان پٹ کرنٹ"
@@ -528,25 +528,25 @@
                 "name": "ان پٹ وولٹیج"
             },
             "insulation_resistance": {
-                "name": "Insulation resistance"
+                "name": "موصلیت کی مزاحمت"
             },
             "internal_temperature": {
                 "name": "اندرونی درجہ حرارت"
             },
             "inverter_active_power": {
-                "name": "Inverter active power"
+                "name": "انورٹر ایکٹو پاور"
             },
             "inverter_energy_yield_today": {
-                "name": "Inverter energy yield today"
+                "name": "آج انورٹر توانائی کی پیداوار"
             },
             "inverter_rated_power": {
-                "name": "Inverter rated power"
+                "name": "انورٹر کی ریٹیڈ پاور"
             },
             "inverter_total_absorbed_energy": {
-                "name": "Total absorbed energy"
+                "name": "کل جذب شدہ توانائی"
             },
             "inverter_total_energy_yield": {
-                "name": "Inverter total energy yield"
+                "name": "انورٹر کل توانائی کی پیداوار"
             },
             "line_voltage_a_b": {
                 "name": "اے بی لائن وولٹیج"
@@ -579,22 +579,22 @@
                 "name": "لوڈ پاور"
             },
             "meter_a_b_line_voltage": {
-                "name": "Line voltage A-B"
+                "name": "لائن وولٹیج A-B"
             },
             "meter_active_power": {
                 "name": "فعال طاقت"
             },
             "meter_apparent_power": {
-                "name": "Apparent power"
+                "name": "ظاہری پاور"
             },
             "meter_b_c_line_voltage": {
-                "name": "Line voltage B-C"
+                "name": "لائن وولٹیج B-C"
             },
             "meter_c_a_line_voltage": {
-                "name": "Line voltage C-A"
+                "name": "لائن وولٹیج C-A"
             },
             "meter_negative_active_energy": {
-                "name": "Negative active energy"
+                "name": "منفی ایکٹو توانائی"
             },
             "meter_phase_a_active_power": {
                 "name": "فیز اے ایکٹو پاور"
@@ -624,25 +624,25 @@
                 "name": "فیز سی وولٹیج"
             },
             "meter_positive_active_energy": {
-                "name": "Positive active energy"
+                "name": "مثبت ایکٹو توانائی"
             },
             "meter_power_factor": {
                 "name": "طاقت کا عنصر"
             },
             "meter_reactive_power": {
-                "name": "Reactive power"
+                "name": "ری ایکٹو پاور"
             },
             "meter_status": {
                 "name": "میٹر کی حیثیت"
             },
             "meter_total_active_energy": {
-                "name": "Total active energy"
+                "name": "کل ایکٹو توانائی"
             },
             "meter_total_reactive_energy": {
-                "name": "Total reactive energy"
+                "name": "کل ری ایکٹو توانائی"
             },
             "monthly_yield_energy": {
-                "name": "Monthly yield"
+                "name": "ماہانہ پیداوار"
             },
             "nb_online_optimizers": {
                 "name": "اصلاح کنندگان آن لائن"
@@ -660,112 +660,112 @@
                 "name": "زیادہ سے زیادہ فعال طاقت"
             },
             "pack_1_charge_discharge_power": {
-                "name": "Pack 1 charge discharge power"
+                "name": "پیک 1 چارج ڈسچارج پاور"
             },
             "pack_1_current": {
-                "name": "Pack 1 current"
+                "name": "پیک 1 کرنٹ"
             },
             "pack_1_firmware_version": {
-                "name": "Pack 1 firmware version"
+                "name": "پیک 1 فرم ویئر ورژن"
             },
             "pack_1_max_temperature": {
-                "name": "Pack 1 max temperature"
+                "name": "پیک 1 زیادہ سے زیادہ درجہ حرارت"
             },
             "pack_1_min_temperature": {
-                "name": "Pack 1 min temperature"
+                "name": "پیک 1 کم از کم درجہ حرارت"
             },
             "pack_1_serial_number": {
-                "name": "Pack 1 serial number"
+                "name": "پیک 1 سیریل نمبر"
             },
             "pack_1_soh_calibration_status": {
-                "name": "Pack 1 SOH calibration status"
+                "name": "پیک 1 SOH انشانکن حالت"
             },
             "pack_1_state_of_capacity": {
-                "name": "Pack 1 state of capacity"
+                "name": "پیک 1 صلاحیت کی حالت"
             },
             "pack_1_total_charge": {
-                "name": "Pack 1 total charge"
+                "name": "پیک 1 کل چارج"
             },
             "pack_1_total_discharge": {
-                "name": "Pack 1 total discharge"
+                "name": "پیک 1 کل ڈسچارج"
             },
             "pack_1_voltage": {
-                "name": "Pack 1 voltage"
+                "name": "پیک 1 وولٹیج"
             },
             "pack_1_working_status": {
-                "name": "Pack 1 working status"
+                "name": "پیک 1 ورکنگ حالت"
             },
             "pack_2_charge_discharge_power": {
-                "name": "Pack 2 charge discharge power"
+                "name": "پیک 2 چارج ڈسچارج پاور"
             },
             "pack_2_current": {
-                "name": "Pack 2 current"
+                "name": "پیک 2 کرنٹ"
             },
             "pack_2_firmware_version": {
-                "name": "Pack 2 firmware version"
+                "name": "پیک 2 فرم ویئر ورژن"
             },
             "pack_2_max_temperature": {
-                "name": "Pack 2 max temperature"
+                "name": "پیک 2 زیادہ سے زیادہ درجہ حرارت"
             },
             "pack_2_min_temperature": {
-                "name": "Pack 2 min temperature"
+                "name": "پیک 2 کم از کم درجہ حرارت"
             },
             "pack_2_serial_number": {
-                "name": "Pack 2 serial number"
+                "name": "پیک 2 سیریل نمبر"
             },
             "pack_2_soh_calibration_status": {
-                "name": "Pack 2 SOH calibration status"
+                "name": "پیک 2 SOH انشانکن حالت"
             },
             "pack_2_state_of_capacity": {
-                "name": "Pack 2 state of capacity"
+                "name": "پیک 2 صلاحیت کی حالت"
             },
             "pack_2_total_charge": {
-                "name": "Pack 2 total charge"
+                "name": "پیک 2 کل چارج"
             },
             "pack_2_total_discharge": {
-                "name": "Pack 2 total discharge"
+                "name": "پیک 2 کل ڈسچارج"
             },
             "pack_2_voltage": {
-                "name": "Pack 2 voltage"
+                "name": "پیک 2 وولٹیج"
             },
             "pack_2_working_status": {
-                "name": "Pack 2 working status"
+                "name": "پیک 2 ورکنگ حالت"
             },
             "pack_3_charge_discharge_power": {
-                "name": "Pack 3 charge discharge power"
+                "name": "پیک 3 چارج ڈسچارج پاور"
             },
             "pack_3_current": {
-                "name": "Pack 3 current"
+                "name": "پیک 3 کرنٹ"
             },
             "pack_3_firmware_version": {
-                "name": "Pack 3 firmware version"
+                "name": "پیک 3 فرم ویئر ورژن"
             },
             "pack_3_max_temperature": {
-                "name": "Pack 3 max temperature"
+                "name": "پیک 3 زیادہ سے زیادہ درجہ حرارت"
             },
             "pack_3_min_temperature": {
-                "name": "Pack 3 min temperature"
+                "name": "پیک 3 کم از کم درجہ حرارت"
             },
             "pack_3_serial_number": {
-                "name": "Pack 3 serial number"
+                "name": "پیک 3 سیریل نمبر"
             },
             "pack_3_soh_calibration_status": {
-                "name": "Pack 3 SOH calibration status"
+                "name": "پیک 3 SOH انشانکن حالت"
             },
             "pack_3_state_of_capacity": {
-                "name": "Pack 3 state of capacity"
+                "name": "پیک 3 صلاحیت کی حالت"
             },
             "pack_3_total_charge": {
-                "name": "Pack 3 total charge"
+                "name": "پیک 3 کل چارج"
             },
             "pack_3_total_discharge": {
-                "name": "Pack 3 total discharge"
+                "name": "پیک 3 کل ڈسچارج"
             },
             "pack_3_voltage": {
-                "name": "Pack 3 voltage"
+                "name": "پیک 3 وولٹیج"
             },
             "pack_3_working_status": {
-                "name": "Pack 3 working status"
+                "name": "پیک 3 ورکنگ حالت"
             },
             "phase_a_active_power_built_in_energy": {
                 "name": "فیز اے ایکٹو پاور"
@@ -999,13 +999,13 @@
                 "name": "پی وی 24 وولٹیج"
             },
             "pv_output_power": {
-                "name": "PV output power"
+                "name": "PV آؤٹ پٹ پاور"
             },
             "pv_yield_today": {
-                "name": "PV yield today"
+                "name": "آج کی PV پیداوار"
             },
             "rated_ess_capacity": {
-                "name": "Rated ESS capacity"
+                "name": "ریٹیڈ ESS گنجائش"
             },
             "rated_power": {
                 "name": "شرح شدہ طاقت"
@@ -1017,19 +1017,19 @@
                 "name": "چلنے کی حیثیت"
             },
             "sdongle_grid_power": {
-                "name": "Grid power"
+                "name": "گرڈ پاور"
             },
             "sdongle_load_power": {
                 "name": "لوڈ پاور"
             },
             "sdongle_total_active_power": {
-                "name": "Total active power"
+                "name": "کل ایکٹو پاور"
             },
             "sdongle_total_battery_power": {
-                "name": "Total battery power"
+                "name": "کل بیٹری پاور"
             },
             "sdongle_total_input_power": {
-                "name": "Total input power"
+                "name": "کل ان پٹ پاور"
             },
             "shutdown_time": {
                 "name": "بند ہونے کا وقت"
@@ -1041,88 +1041,88 @@
                 "name": "وولٹیج"
             },
             "smartlogger_a_b_line_voltage_of_grid": {
-                "name": "Grid A-B line voltage"
+                "name": "گرڈ A-B لائن وولٹیج"
             },
             "smartlogger_active_ess_power": {
-                "name": "Active ESS power"
+                "name": "ایکٹو ESS پاور"
             },
             "smartlogger_active_power": {
                 "name": "فعال طاقت"
             },
             "smartlogger_active_pv_power": {
-                "name": "Active PV power"
+                "name": "ایکٹو PV پاور"
             },
             "smartlogger_alarms": {
                 "name": "الارم"
             },
             "smartlogger_array_in_operation": {
-                "name": "Array in operation"
+                "name": "آپریشن میں اری"
             },
             "smartlogger_b_c_line_voltage_of_grid": {
-                "name": "Grid B-C line voltage"
+                "name": "گرڈ B-C لائن وولٹیج"
             },
             "smartlogger_c_a_line_voltage_of_grid": {
-                "name": "Grid C-A line voltage"
+                "name": "گرڈ C-A لائن وولٹیج"
             },
             "smartlogger_energy_charged_today": {
-                "name": "Energy charged today"
+                "name": "آج چارج کی گئی توانائی"
             },
             "smartlogger_energy_discharged_today": {
-                "name": "Energy discharged today"
+                "name": "آج ڈسچارج کی گئی توانائی"
             },
             "smartlogger_input_power": {
                 "name": "ان پٹ پاورr"
             },
             "smartlogger_phase_a_current_of_grid": {
-                "name": "Grid phase A current"
+                "name": "گرڈ فیز A کرنٹ"
             },
             "smartlogger_phase_b_current_of_grid": {
-                "name": "Grid phase B current"
+                "name": "گرڈ فیز B کرنٹ"
             },
             "smartlogger_phase_c_current_of_grid": {
-                "name": "Grid phase C current"
+                "name": "گرڈ فیز C کرنٹ"
             },
             "smartlogger_plant_status": {
-                "name": "Plant status"
+                "name": "پلانٹ کی حالت"
             },
             "smartlogger_power_factor": {
                 "name": "طاقت کا عنصر"
             },
             "smartlogger_power_supply_from_grid_today": {
-                "name": "Power supply from grid today"
+                "name": "آج گرڈ سے بجلی کی فراہمی"
             },
             "smartlogger_rated_ess_power": {
-                "name": "Rated ESS power"
+                "name": "ریٹیڈ ESS پاور"
             },
             "smartlogger_rated_pv_power": {
-                "name": "Rated PV power"
+                "name": "ریٹیڈ PV پاور"
             },
             "smartlogger_soc": {
-                "name": "State of charge"
+                "name": "چارج کی حالت (SOC)"
             },
             "smartlogger_soe": {
-                "name": "State of energy"
+                "name": "توانائی کی حالت (SOE)"
             },
             "smartlogger_soh": {
-                "name": "State of health"
+                "name": "صحت کی حالت (SOH)"
             },
             "smartlogger_total_energy_charged": {
-                "name": "Total charged energy"
+                "name": "کل چارج شدہ توانائی"
             },
             "smartlogger_total_energy_discharge_d": {
-                "name": "Total discharged energy"
+                "name": "کل ڈسچارج شدہ توانائی"
             },
             "smartlogger_total_energy_yield": {
-                "name": "Total energy yield"
+                "name": "کل توانائی کی پیداوار"
             },
             "smartlogger_total_power_supply_from_grid": {
-                "name": "Total power supply from grid"
+                "name": "گرڈ سے کل بجلی کی فراہمی"
             },
             "smartlogger_yield_today": {
                 "name": "روزانہ کی پیداوار"
             },
             "soh_calibration_status": {
-                "name": "SOH calibration status"
+                "name": "SOH انشانکن حالت"
             },
             "startup_time": {
                 "name": "آغاز کا وقت"
@@ -1167,13 +1167,13 @@
                 "name": "دن کا اخراج"
             },
             "storage_forcible_charge_discharge_write": {
-                "name": "Forcible charge/discharge"
+                "name": "زبردستی چارج/ڈسچارج"
             },
             "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
-                "name": "TOU charging and discharging periods"
+                "name": "TOU چارجنگ اور ڈسچارجنگ ادوار"
             },
             "storage_lg_resu_time_of_use_price_periods": {
-                "name": "TOU price periods"
+                "name": "TOU قیمت کے ادوار"
             },
             "storage_maximum_charge_power": {
                 "name": "زیادہ سے زیادہ چارج پاور"
@@ -1197,55 +1197,58 @@
                 "name": "کل ڈسچارج"
             },
             "supply_from_grid_today": {
-                "name": "Supply from grid today"
+                "name": "آج گرڈ سے سپلائی"
             },
             "temperature": {
                 "name": "درجہ حرارت"
             },
             "total_active_energy_built_in_energy": {
-                "name": "Total active energy"
+                "name": "کل ایکٹو توانائی"
             },
             "total_active_energy_external_energy": {
-                "name": "Total active energy"
+                "name": "کل ایکٹو توانائی"
             },
             "total_charged_energy": {
-                "name": "Total charged energy"
+                "name": "کل چارج شدہ توانائی"
             },
             "total_dc_input_power": {
-                "name": "Total DC input energy"
+                "name": "کل DC ان پٹ توانائی"
             },
             "total_discharged_energy": {
-                "name": "Total discharged energy"
+                "name": "کل ڈسچارج شدہ توانائی"
             },
             "total_energy_consumption": {
-                "name": "Total energy consumption"
+                "name": "کل توانائی کی کھپت"
             },
             "total_feed_in_to_grid": {
-                "name": "Total feed in to grid"
+                "name": "گرڈ کو کل فیڈ"
             },
             "total_negative_active_energy_built_in_energy": {
-                "name": "Total negative active energy"
+                "name": "کل منفی ایکٹو توانائی"
             },
             "total_negative_active_energy_external_energy": {
-                "name": "Total negative active energy"
+                "name": "کل منفی ایکٹو توانائی"
             },
             "total_positive_active_energy_built_in_energy": {
-                "name": "Total positive active energy"
+                "name": "کل مثبت ایکٹو توانائی"
             },
             "total_positive_active_energy_external_energy": {
-                "name": "Total positive active energy"
+                "name": "کل مثبت ایکٹو توانائی"
             },
             "total_pv_energy_yield": {
-                "name": "Total PV energy yield"
+                "name": "کل PV توانائی کی پیداوار"
             },
             "total_supply_from_grid": {
-                "name": "Total supply from grid"
+                "name": "گرڈ سے کل سپلائی"
             },
             "voltage_to_ground": {
                 "name": "زمین پر وولٹیج"
             },
             "yearly_yield_energy": {
-                "name": "Yearly yield"
+                "name": "سالانہ پیداوار"
+            },
+            "emma_tou_periods": {
+                "name": "TOU ادوار"
             }
         },
         "switch": {
@@ -1277,19 +1280,19 @@
     },
     "exceptions": {
         "config_entry_not_found": {
-            "message": "Entry not found for device: {device_id}"
+            "message": "ڈیوائس کے لیے اندراج نہیں ملا: {device_id}"
         },
         "entry_not_loaded": {
-            "message": "Entry not loaded: {entry}"
+            "message": "اندراج لوڈ نہیں ہوا: {entry}"
         },
         "ha_device_not_found": {
-            "message": "Could not retrieve Huawei Solar device associated with ID {device_id}"
+            "message": "آئی ڈی {device_id} سے وابستہ ہواوے سولر ڈیوائس بازیافت نہیں ہو سکی"
         },
         "invalid_device_id": {
-            "message": "Invalid device ID specified: {device_id}"
+            "message": "غلط ڈیوائس آئی ڈی بتائی گئی: {device_id}"
         },
         "wrong_device_type": {
-            "message": "Got wrong Huawei Solar device type for ID {device_id}: expected {expected_type}, got {actual_type}"
+            "message": "آئی ڈی {device_id} کے لیے غلط ہواوے سولر ڈیوائس کی قسم: متوقع {expected_type}، ملا {actual_type}"
         }
     },
     "services": {
@@ -1394,7 +1397,7 @@
             "fields": {
                 "device_id": {
                     "description": "ایک 'انورٹر' آلہ ہونا چاہیے۔",
-                    "name": "Inverter"
+                    "name": "انورٹر"
                 }
             },
             "name": "ایکٹو پاور کنٹرول کو 'DI ایکٹو شیڈولنگ پر سیٹ کریں۔'"
