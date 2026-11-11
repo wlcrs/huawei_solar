@@ -115,6 +115,9 @@
         "charger": {
             "name": "Charger"
         },
+        "charger_connector": {
+            "name": "Töltőcsatlakozó"
+        },
         "connected_energy_storage": {
             "name": "Batteries"
         },
@@ -126,6 +129,9 @@
         },
         "power_meter": {
             "name": "Power meter"
+        },
+        "smartguard": {
+            "name": "SmartGuard"
         },
         "smartlogger": {
             "name": "SmartLogger"
@@ -141,8 +147,29 @@
             "active_power_fixed_value_derating": {
                 "name": "Power derating"
             },
+            "active_power_fail_safe_threshold": {
+                "name": "Hatásos teljesítmény hibabiztos küszöbértéke"
+            },
             "active_power_percentage_derating": {
                 "name": "Power derating (by percentage)"
+            },
+            "charger_dynamic_power_threshold": {
+                "name": "Dinamikus teljesítménykorlát küszöbértéke"
+            },
+            "charger_gun_max_current": {
+                "name": "Maximális töltőáram"
+            },
+            "charger_max_power_from_grid": {
+                "name": "Maximális hálózati teljesítmény"
+            },
+            "charger_orderly_charging_power": {
+                "name": "Ütemezett töltési teljesítmény"
+            },
+            "charger_surplus_power_start_threshold": {
+                "name": "Többletteljesítmény indítási küszöbértéke"
+            },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "name": "Maximális hálózati töltési teljesítmény"
             },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximum feed grid power (%)"
@@ -155,6 +182,9 @@
             },
             "mppt_scanning_interval": {
                 "name": "MPPT-Scan Interval"
+            },
+            "storage_adjustment_deadband": {
+                "name": "Akkumulátor beállítási holtsáv"
             },
             "storage_backup_power_state_of_charge": {
                 "name": "Backup power SOC"
@@ -177,11 +207,43 @@
             "storage_maximum_discharging_power": {
                 "name": "Maximum discharging power"
             },
+            "storage_maximum_grid_power_during_discharge": {
+                "name": "Maximális hálózati teljesítmény kisütés közben"
+            },
             "storage_power_of_charge_from_grid": {
                 "name": "Grid charge maximum power"
             }
         },
         "select": {
+            "active_power_limitation_mode": {
+                "name": "Hatásos teljesítmény korlátozási mód",
+                "state": {
+                    "total_power": "Összteljesítmény",
+                    "single_phase_power": "Egyfázisú teljesítmény"
+                }
+            },
+            "backup_voltage_independent_operation": {
+                "name": "Feszültség független működés esetén",
+                "state": {
+                    "v220": "220 V",
+                    "v230": "230 V"
+                }
+            },
+            "charger_gun_lock_control_mode": {
+                "name": "Csatlakozó zárolási módja",
+                "state": {
+                    "always_locked": "Mindig zárolva",
+                    "lock_during_charging": "Zárolás töltés közben",
+                    "lock_when_plugged": "Zárolás csatlakoztatáskor"
+                }
+            },
+            "charger_gun_work_mode": {
+                "name": "Működési mód",
+                "state": {
+                    "fast_charging": "Gyorstöltés",
+                    "green_power_priority": "Zöld energia prioritás"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS Control Mode",
                 "state": {
@@ -306,6 +368,60 @@
             "bms_temperature": {
                 "name": "BMS temperature"
             },
+            "charger_cable_max_current": {
+                "name": "Kábel maximális árama"
+            },
+            "charger_charging_method": {
+                "name": "Töltési módszer"
+            },
+            "charger_charging_wait_reason": {
+                "name": "Töltési várakozás oka"
+            },
+            "charger_gun_lock_status": {
+                "name": "Csatlakozó zárolási állapota"
+            },
+            "charger_gun_output_power": {
+                "name": "Töltési teljesítmény"
+            },
+            "charger_gun_phase_a_current": {
+                "name": "Csatlakozó A fázis áram"
+            },
+            "charger_gun_phase_a_voltage": {
+                "name": "Csatlakozó A fázis feszültség"
+            },
+            "charger_gun_phase_b_current": {
+                "name": "Csatlakozó B fázis áram"
+            },
+            "charger_gun_phase_b_voltage": {
+                "name": "Csatlakozó B fázis feszültség"
+            },
+            "charger_gun_phase_c_current": {
+                "name": "Csatlakozó C fázis áram"
+            },
+            "charger_gun_phase_c_voltage": {
+                "name": "Csatlakozó C fázis feszültség"
+            },
+            "charger_gun_temperature": {
+                "name": "Csatlakozó hőmérséklete"
+            },
+            "charger_gun_total_energy_charged": {
+                "name": "Csatlakozó összes betöltött energia"
+            },
+            "charger_gun_work_status": {
+                "name": "Csatlakozó állapota"
+            },
+            "charger_indicator_light_status": {
+                "name": "Jelzőfény állapota"
+            },
+            "charger_max_charging_power": {
+                "name": "Maximum charging power"
+            },
+            "charger_min_charging_power": {
+                "name": "Minimális töltési teljesítmény"
+            },
+            "charger_output_relay_status": {
+                "name": "Kimeneti mágneskapcsoló állapota"
+            },
             "charger_phase_a_voltage": {
                 "name": "Charger Phase A voltage"
             },
@@ -315,14 +431,26 @@
             "charger_phase_c_voltage": {
                 "name": "Charger Phase C voltage"
             },
+            "charger_planned_departure_time": {
+                "name": "Tervezett indulási idő"
+            },
             "charger_rated_power": {
                 "name": "Charger rated power"
+            },
+            "charger_reported_work_mode": {
+                "name": "Jelentett működési mód"
+            },
+            "charger_target_charged_energy": {
+                "name": "Célzott betöltött energia"
             },
             "charger_temperature": {
                 "name": "Charger temperature"
             },
             "charger_total_energy_charged": {
                 "name": "Charger total charged energy"
+            },
+            "charger_wifi_signal_strength": {
+                "name": "Wi-Fi jelerősség"
             },
             "consumption_today": {
                 "name": "Consumption today"
@@ -1121,6 +1249,18 @@
             }
         },
         "switch": {
+            "backup_switch_to_off_grid": {
+                "name": "Átváltás szigetüzemre"
+            },
+            "charger_dynamic_power_control": {
+                "name": "Dinamikus teljesítményszabályozás"
+            },
+            "charger_random_delay_charging": {
+                "name": "Véletlenszerű töltési késleltetés"
+            },
+            "charger_single_three_phase_switch": {
+                "name": "Automatikus fázisváltás"
+            },
             "mppt_multimodal_scanning": {
                 "name": "MPPT-Scan"
             },
@@ -1129,6 +1269,9 @@
             },
             "storage_charge_from_grid_function": {
                 "name": "Charge from grid"
+            },
+            "storage_ess_low_power": {
+                "name": "ESS alacsony teljesítmény"
             }
         }
     },
