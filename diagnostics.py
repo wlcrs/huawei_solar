@@ -4,8 +4,10 @@ from __future__ import annotations
 
 from typing import Any
 
+from huawei_solar import register_names as rn
+
 from homeassistant.components.diagnostics import async_redact_data
-from homeassistant.const import CONF_PASSWORD
+from homeassistant.const import CONF_PASSWORD, CONF_UNIQUE_ID, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 
@@ -16,7 +18,31 @@ from .types import (
     HuaweiSolarInverterData,
 )
 
-TO_REDACT = {CONF_PASSWORD}
+TO_REDACT = {
+    CONF_PASSWORD,
+    CONF_UNIQUE_ID,
+    CONF_USERNAME,
+    "previous_unique_id",
+    "serial_number",
+    rn.CHARGER_ESN,
+    rn.MONITORING_BOARD_SN,
+    rn.PV_PLANT_ID,
+    rn.REGKEY,
+    rn.SDONGLE_4G_APN,
+    rn.SDONGLE_4G_DIAL_NUMBER,
+    rn.SDONGLE_4G_USER_NAME,
+    rn.SMARTLOGGER_EQUIPMENT_SERIAL_NUMBER_ESN,
+    rn.STORAGE_UNIT_1_BATTERY_PACK_1_SERIAL_NUMBER,
+    rn.STORAGE_UNIT_1_BATTERY_PACK_2_SERIAL_NUMBER,
+    rn.STORAGE_UNIT_1_BATTERY_PACK_3_SERIAL_NUMBER,
+    rn.STORAGE_UNIT_1_BATTERY_PACK_4_SERIAL_NUMBER,
+    rn.STORAGE_UNIT_1_SERIAL_NUMBER,
+    rn.STORAGE_UNIT_2_BATTERY_PACK_1_SERIAL_NUMBER,
+    rn.STORAGE_UNIT_2_BATTERY_PACK_2_SERIAL_NUMBER,
+    rn.STORAGE_UNIT_2_BATTERY_PACK_3_SERIAL_NUMBER,
+    rn.STORAGE_UNIT_2_SERIAL_NUMBER,
+    "storage_unit_2_battery_pack_4_serial_number",
+}
 
 
 async def async_get_config_entry_diagnostics(
@@ -26,7 +52,7 @@ async def async_get_config_entry_diagnostics(
     device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
 
     diagnostics_data = {
-        "config_entry_data": async_redact_data(dict(entry.data), TO_REDACT),
+        "config_entry_data": dict(entry.data),
         "entities": {
             entity_entry.entity_id: entity_entry.extended_dict
             for entity_entry in er.async_entries_for_config_entry(
@@ -69,7 +95,6 @@ async def async_get_config_entry_diagnostics(
             diagnostics_data[f"device_{dd.device.client.unit_id}"] = {
                 "_type": type(dd.device).__name__,
                 "model_name": dd.device.model_name,
-                "serial_number": dd.device.serial_number,
             }
 
         diagnostics_data[f"device_{dd.device.client.unit_id}_data"] = (
@@ -81,4 +106,4 @@ async def async_get_config_entry_diagnostics(
                 dd.configuration_update_coordinator.data
             )
 
-    return diagnostics_data
+    return async_redact_data(diagnostics_data, TO_REDACT)
