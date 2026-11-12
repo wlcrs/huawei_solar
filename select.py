@@ -296,9 +296,9 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
 
             if self.entity_description.check_is_available_func:
                 assert self.entity_description.is_available_key
-                is_available_register = self.coordinator.data[
+                is_available_register = self.coordinator.data.get(
                     self.entity_description.is_available_key
-                ]
+                )
                 self._attr_available = self.entity_description.check_is_available_func(
                     is_available_register.value if is_available_register else None
                 )
@@ -318,20 +318,6 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
         self._attr_current_option = option
 
         await self.coordinator.async_request_refresh()
-
-    @property
-    def available(self) -> bool:
-        """Is the entity available.
-
-        Override available property (from CoordinatorEntity) to take into
-        account the custom check_is_available_func result.
-        """
-        available = super().available
-
-        if self.entity_description.check_is_available_func and available:
-            return self._attr_available
-
-        return available
 
 
 class StorageModeSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):

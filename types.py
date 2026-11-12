@@ -83,6 +83,11 @@ class HuaweiSolarCoordinatorEntity[
 ](CoordinatorEntity[CoordinatorT], HuaweiSolarEntity):
     """Huawei Solar Coordinator Entity."""
 
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        return super().available and self._attr_available
+
     async def async_added_to_hass(self) -> None:
         """When entity is added to hass update state from existing coordinator data."""
         await super().async_added_to_hass()

@@ -325,20 +325,6 @@ class HuaweiSolarSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
 
         await self.coordinator.async_request_refresh()
 
-    @property
-    def available(self) -> bool:
-        """Is the entity available.
-
-        Override available property (from CoordinatorEntity) to
-        take into account the custom check_is_available_func result.
-        """
-        available = super().available
-
-        if self.entity_description.check_is_available_func and available:
-            return self._attr_available
-
-        return available
-
 
 class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
     """Huawei Solar Switch Entity."""
