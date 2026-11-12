@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 from itertools import chain
 import logging
-from typing import Any, TypeVar, cast
+from typing import Any, TypeVar, cast, overload
 
 from huawei_solar import (
     EMMADevice,
@@ -248,7 +248,15 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
 
     entity_description: HuaweiSolarSelectEntityDescription
 
-    def _friendly_format(self, value: IntEnum) -> str:
+    @overload
+    def _friendly_format(self, value: None) -> None: ...
+
+    @overload
+    def _friendly_format(self, value: IntEnum) -> str: ...
+
+    def _friendly_format(self, value: IntEnum | None) -> str | None:
+        if value is None:
+            return None
         return value.name.lower()
 
     def _to_enum(self, value: str) -> IntEnum:
@@ -289,6 +297,8 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
         if (
             self.coordinator.data
             and self.entity_description.key in self.coordinator.data
+            and self.coordinator.data[self.entity_description.register_name].value
+            is not None
         ):
             self._attr_current_option = self._friendly_format(
                 self.coordinator.data[self.entity_description.register_name].value
@@ -367,6 +377,8 @@ class StorageModeSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
         if (
             self.coordinator.data
             and self.entity_description.key in self.coordinator.data
+            and self.coordinator.data[self.entity_description.register_name].value
+            is not None
         ):
             self._attr_current_option = self.coordinator.data[
                 self.entity_description.register_name
