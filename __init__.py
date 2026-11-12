@@ -400,15 +400,10 @@ async def _setup_inverter_device_data(
         via_device_id=via_device_id,
     )
 
-    # Add inverter device to device registery
-    ha_device = device_registry.async_get_or_create(
+    # Add inverter device to device registry
+    ha_device = device_registry.async_get_or_create_from_info(
         config_entry_id=entry.entry_id,
-        identifiers={(DOMAIN, device.serial_number)},
-        manufacturer="Huawei",
-        name=device.model_name,
-        model=device.model_name,
-        sw_version=device.software_version,
-        via_device_id=via_device_id,
+        device_info=inverter_device_info,
     )
 
     has_write_permission = False
@@ -646,15 +641,10 @@ async def _setup_device_data(
         via_device_id=via_device_id,
     )
 
-    # Add device to device registery
-    ha_device = device_registry.async_get_or_create(
+    # Add device to device registry
+    ha_device = device_registry.async_get_or_create_from_info(
         config_entry_id=entry.entry_id,
-        identifiers={(DOMAIN, device.serial_number)},
-        manufacturer="Huawei",
-        name=device.model_name,
-        model=device.model_name,
-        sw_version=sw_version,
-        via_device_id=via_device_id,
+        device_info=device_info,
     )
 
     has_write_permission = False
