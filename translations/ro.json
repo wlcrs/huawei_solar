@@ -337,7 +337,14 @@
                 "name": "Putere activă"
             },
             "active_power_control_mode": {
-                "name": "Mod de control al puterii active"
+                "name": "Mod de control al puterii active",
+                "state": {
+                    "unlimited": "Nelimitat",
+                    "power_limited_percent": "Putere limitată (%)",
+                    "power_limited_watt": "Putere limitată (W)",
+                    "zero_power": "Export zero în rețea",
+                    "di_active_scheduling": "Programare activă DI"
+                }
             },
             "active_power_external_energy": {
                 "name": "Putere activă"
@@ -409,7 +416,21 @@
                 "name": "Energie totală încărcată conector"
             },
             "charger_gun_work_status": {
-                "name": "Stare conector"
+                "name": "Stare conector",
+                "state": {
+                    "standby": "În așteptare",
+                    "standby_plugged": "Conectat (în așteptare)",
+                    "scheduled_waiting": "Programat (în așteptare)",
+                    "charging": "Se încarcă",
+                    "charging_ended": "Încărcare finalizată",
+                    "fault": "Defecțiune",
+                    "orderly_waiting": "Încărcare ordonată (în așteptare)",
+                    "upgrading": "Actualizare",
+                    "charging_starting": "Pornire încărcare",
+                    "alarm": "Alarmă",
+                    "green_power_waiting": "Energie verde (în așteptare)",
+                    "green_power_charging": "Încărcare cu energie verde"
+                }
             },
             "charger_indicator_light_status": {
                 "name": "Stare indicator luminos"
@@ -496,7 +517,14 @@
                 "name": "Injectat în rețea astăzi"
             },
             "forcible_charge_summary": {
-                "name": "Încărcare forțată"
+                "name": "Încărcare forțată",
+                "state": {
+                    "stopped": "Oprit",
+                    "charging_soc": "Încărcare (SoC țintă)",
+                    "charging_time": "Încărcare (durată)",
+                    "discharging_soc": "Descărcare (SoC țintă)",
+                    "discharging_time": "Descărcare (durată)"
+                }
             },
             "grid_a_voltage": {
                 "name": "Tensiune faza A"
@@ -634,7 +662,11 @@
                 "name": "Putere reactivă"
             },
             "meter_status": {
-                "name": "Stare contor"
+                "name": "Stare contor",
+                "state": {
+                    "offline": "Offline",
+                    "normal": "Normal"
+                }
             },
             "meter_total_active_energy": {
                 "name": "Energie activă totală"
@@ -1186,7 +1218,14 @@
                 "name": "Capacitate nominală"
             },
             "storage_running_status": {
-                "name": "Stare de funcționare"
+                "name": "Stare de funcționare",
+                "state": {
+                    "offline": "Offline",
+                    "standby": "În așteptare",
+                    "running": "În funcțiune",
+                    "fault": "Defecțiune",
+                    "sleep_mode": "Mod repaus"
+                }
             },
             "storage_state_of_capacity": {
                 "name": "Stare de încărcare baterie"

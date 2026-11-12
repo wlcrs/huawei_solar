@@ -337,7 +337,14 @@
                 "name": "Active power"
             },
             "active_power_control_mode": {
-                "name": "Active power control mode"
+                "name": "Active power control mode",
+                "state": {
+                    "unlimited": "Unlimited",
+                    "power_limited_percent": "Power limited (%)",
+                    "power_limited_watt": "Power limited (W)",
+                    "zero_power": "Zero power grid connection",
+                    "di_active_scheduling": "DI active scheduling"
+                }
             },
             "active_power_external_energy": {
                 "name": "Active power"
@@ -409,7 +416,21 @@
                 "name": "Connector total charged energy"
             },
             "charger_gun_work_status": {
-                "name": "Connector status"
+                "name": "Connector status",
+                "state": {
+                    "standby": "Standby",
+                    "standby_plugged": "Plugged in (standby)",
+                    "scheduled_waiting": "Scheduled (waiting)",
+                    "charging": "Charging",
+                    "charging_ended": "Charging ended",
+                    "fault": "Fault",
+                    "orderly_waiting": "Orderly charging (waiting)",
+                    "upgrading": "Upgrading",
+                    "charging_starting": "Starting charging",
+                    "alarm": "Alarm",
+                    "green_power_waiting": "Green power (waiting)",
+                    "green_power_charging": "Green power charging"
+                }
             },
             "charger_indicator_light_status": {
                 "name": "Indicator light status"
@@ -496,7 +517,14 @@
                 "name": "Feed in to grid today"
             },
             "forcible_charge_summary": {
-                "name": "Forcible charge"
+                "name": "Forcible charge",
+                "state": {
+                    "stopped": "Stopped",
+                    "charging_soc": "Charging (target SoC)",
+                    "charging_time": "Charging (duration)",
+                    "discharging_soc": "Discharging (target SoC)",
+                    "discharging_time": "Discharging (duration)"
+                }
             },
             "grid_a_voltage": {
                 "name": "Phase A voltage"
@@ -634,7 +662,11 @@
                 "name": "Reactive power"
             },
             "meter_status": {
-                "name": "Meter status"
+                "name": "Meter status",
+                "state": {
+                    "offline": "Offline",
+                    "normal": "Normal"
+                }
             },
             "meter_total_active_energy": {
                 "name": "Total active energy"
@@ -1186,7 +1218,14 @@
                 "name": "Rated Capacity"
             },
             "storage_running_status": {
-                "name": "Status"
+                "name": "Status",
+                "state": {
+                    "offline": "Offline",
+                    "standby": "Standby",
+                    "running": "Running",
+                    "fault": "Fault",
+                    "sleep_mode": "Sleep mode"
+                }
             },
             "storage_state_of_capacity": {
                 "name": "State of capacity"

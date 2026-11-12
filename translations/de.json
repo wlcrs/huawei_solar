@@ -337,7 +337,14 @@
                 "name": "Wirkleistung"
             },
             "active_power_control_mode": {
-                "name": "Wirkleistungssteuerung Modus"
+                "name": "Wirkleistungssteuerung Modus",
+                "state": {
+                    "unlimited": "Unbegrenzt",
+                    "power_limited_percent": "Leistungsbegrenzung (%)",
+                    "power_limited_watt": "Leistungsbegrenzung (W)",
+                    "zero_power": "Nulleinspeisung",
+                    "di_active_scheduling": "DI-Wirkleistungssteuerung"
+                }
             },
             "active_power_external_energy": {
                 "name": "Wirkleistung"
@@ -409,7 +416,21 @@
                 "name": "Ladestecker gesamte geladene Energie"
             },
             "charger_gun_work_status": {
-                "name": "Ladesteckerstatus"
+                "name": "Ladesteckerstatus",
+                "state": {
+                    "standby": "Bereitschaft",
+                    "standby_plugged": "Angesteckt (Bereitschaft)",
+                    "scheduled_waiting": "Geplant (wartend)",
+                    "charging": "Lädt",
+                    "charging_ended": "Ladevorgang beendet",
+                    "fault": "Störung",
+                    "orderly_waiting": "Gesteuertes Laden (wartend)",
+                    "upgrading": "Aktualisierung",
+                    "charging_starting": "Ladevorgang startet",
+                    "alarm": "Alarm",
+                    "green_power_waiting": "Ökostrom (wartend)",
+                    "green_power_charging": "Ökostrom-Laden"
+                }
             },
             "charger_indicator_light_status": {
                 "name": "Status der Kontrollleuchte"
@@ -496,7 +517,14 @@
                 "name": "Einspeisung heute"
             },
             "forcible_charge_summary": {
-                "name": "Erzwungene Ladung"
+                "name": "Erzwungene Ladung",
+                "state": {
+                    "stopped": "Gestoppt",
+                    "charging_soc": "Lädt (Ziel-SoC)",
+                    "charging_time": "Lädt (Dauer)",
+                    "discharging_soc": "Entlädt (Ziel-SoC)",
+                    "discharging_time": "Entlädt (Dauer)"
+                }
             },
             "grid_a_voltage": {
                 "name": "Phase A Spannung"
@@ -634,7 +662,11 @@
                 "name": "Blindleistung"
             },
             "meter_status": {
-                "name": "Zählerstatus"
+                "name": "Zählerstatus",
+                "state": {
+                    "offline": "Offline",
+                    "normal": "Normal"
+                }
             },
             "meter_total_active_energy": {
                 "name": "Gesamte Wirkenergie"
@@ -1186,7 +1218,14 @@
                 "name": "Akkukapazität"
             },
             "storage_running_status": {
-                "name": "Betriebsstatus"
+                "name": "Betriebsstatus",
+                "state": {
+                    "offline": "Offline",
+                    "standby": "Bereitschaft",
+                    "running": "In Betrieb",
+                    "fault": "Störung",
+                    "sleep_mode": "Ruhemodus"
+                }
             },
             "storage_state_of_capacity": {
                 "name": "Batterieladung"

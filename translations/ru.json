@@ -337,7 +337,14 @@
                 "name": "Активная мощность"
             },
             "active_power_control_mode": {
-                "name": "Режим управления активной мощностью"
+                "name": "Режим управления активной мощностью",
+                "state": {
+                    "unlimited": "Без ограничений",
+                    "power_limited_percent": "Ограничение мощности (%)",
+                    "power_limited_watt": "Ограничение мощности (Вт)",
+                    "zero_power": "Нулевой экспорт в сеть",
+                    "di_active_scheduling": "Активное планирование DI"
+                }
             },
             "active_power_external_energy": {
                 "name": "Активная мощность"
@@ -409,7 +416,21 @@
                 "name": "Разъем общая заряженная энергия"
             },
             "charger_gun_work_status": {
-                "name": "Статус разъема"
+                "name": "Статус разъема",
+                "state": {
+                    "standby": "Ожидание",
+                    "standby_plugged": "Подключено (ожидание)",
+                    "scheduled_waiting": "По расписанию (ожидание)",
+                    "charging": "Зарядка",
+                    "charging_ended": "Зарядка завершена",
+                    "fault": "Неисправность",
+                    "orderly_waiting": "Упорядоченная зарядка (ожидание)",
+                    "upgrading": "Обновление",
+                    "charging_starting": "Запуск зарядки",
+                    "alarm": "Тревога",
+                    "green_power_waiting": "Зелёная энергия (ожидание)",
+                    "green_power_charging": "Зарядка зелёной энергией"
+                }
             },
             "charger_indicator_light_status": {
                 "name": "Статус индикатора"
@@ -496,7 +517,14 @@
                 "name": "Отдача в сеть сегодня"
             },
             "forcible_charge_summary": {
-                "name": "Принудительный заряд"
+                "name": "Принудительный заряд",
+                "state": {
+                    "stopped": "Остановлено",
+                    "charging_soc": "Зарядка (целевой SoC)",
+                    "charging_time": "Зарядка (длительность)",
+                    "discharging_soc": "Разрядка (целевой SoC)",
+                    "discharging_time": "Разрядка (длительность)"
+                }
             },
             "grid_a_voltage": {
                 "name": "Напряжение фазы A"
@@ -634,7 +662,11 @@
                 "name": "Реактивная мощность"
             },
             "meter_status": {
-                "name": "Статус счетчика"
+                "name": "Статус счетчика",
+                "state": {
+                    "offline": "Не в сети",
+                    "normal": "Норма"
+                }
             },
             "meter_total_active_energy": {
                 "name": "Общая активная энергия"
@@ -1186,7 +1218,14 @@
                 "name": "Номинальная емкость"
             },
             "storage_running_status": {
-                "name": "Статус"
+                "name": "Статус",
+                "state": {
+                    "offline": "Не в сети",
+                    "standby": "Ожидание",
+                    "running": "Работает",
+                    "fault": "Неисправность",
+                    "sleep_mode": "Спящий режим"
+                }
             },
             "storage_state_of_capacity": {
                 "name": "Уровень заряда (SOC)"

@@ -337,7 +337,14 @@
                 "name": "Moc czynna"
             },
             "active_power_control_mode": {
-                "name": "Tryb regulacji mocy czynnej"
+                "name": "Tryb regulacji mocy czynnej",
+                "state": {
+                    "unlimited": "Bez ograniczeń",
+                    "power_limited_percent": "Ograniczenie mocy (%)",
+                    "power_limited_watt": "Ograniczenie mocy (W)",
+                    "zero_power": "Zerowy eksport do sieci",
+                    "di_active_scheduling": "Aktywne harmonogramowanie DI"
+                }
             },
             "active_power_external_energy": {
                 "name": "Moc czynna"
@@ -409,7 +416,21 @@
                 "name": "Całkowita naładowana energia złącza"
             },
             "charger_gun_work_status": {
-                "name": "Stan złącza"
+                "name": "Stan złącza",
+                "state": {
+                    "standby": "Gotowość",
+                    "standby_plugged": "Podłączony (gotowość)",
+                    "scheduled_waiting": "Zaplanowane (oczekiwanie)",
+                    "charging": "Ładowanie",
+                    "charging_ended": "Ładowanie zakończone",
+                    "fault": "Błąd",
+                    "orderly_waiting": "Ładowanie uporządkowane (oczekiwanie)",
+                    "upgrading": "Aktualizacja",
+                    "charging_starting": "Rozpoczynanie ładowania",
+                    "alarm": "Alarm",
+                    "green_power_waiting": "Zielona energia (oczekiwanie)",
+                    "green_power_charging": "Ładowanie zieloną energią"
+                }
             },
             "charger_indicator_light_status": {
                 "name": "Stan wskaźnika świetlnego"
@@ -496,7 +517,14 @@
                 "name": "Oddano do sieci dzisiaj"
             },
             "forcible_charge_summary": {
-                "name": "Wymuszone ładowanie"
+                "name": "Wymuszone ładowanie",
+                "state": {
+                    "stopped": "Zatrzymane",
+                    "charging_soc": "Ładowanie (docelowy SoC)",
+                    "charging_time": "Ładowanie (czas trwania)",
+                    "discharging_soc": "Rozładowywanie (docelowy SoC)",
+                    "discharging_time": "Rozładowywanie (czas trwania)"
+                }
             },
             "grid_a_voltage": {
                 "name": "Napięcie fazowe A"
@@ -634,7 +662,11 @@
                 "name": "Moc bierna"
             },
             "meter_status": {
-                "name": "Status licznika"
+                "name": "Status licznika",
+                "state": {
+                    "offline": "Offline",
+                    "normal": "Normalny"
+                }
             },
             "meter_total_active_energy": {
                 "name": "Całkowita energia czynna"
@@ -1186,7 +1218,14 @@
                 "name": "Pojemność znamionowa"
             },
             "storage_running_status": {
-                "name": "Stan pracy"
+                "name": "Stan pracy",
+                "state": {
+                    "offline": "Offline",
+                    "standby": "Gotowość",
+                    "running": "Praca",
+                    "fault": "Błąd",
+                    "sleep_mode": "Tryb uśpienia"
+                }
             },
             "storage_state_of_capacity": {
                 "name": "Stan pojemności"

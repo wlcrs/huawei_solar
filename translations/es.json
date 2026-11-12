@@ -337,7 +337,14 @@
                 "name": "Potencia activa"
             },
             "active_power_control_mode": {
-                "name": "Modo de control de potencia activa"
+                "name": "Modo de control de potencia activa",
+                "state": {
+                    "unlimited": "Ilimitado",
+                    "power_limited_percent": "Potencia limitada (%)",
+                    "power_limited_watt": "Potencia limitada (W)",
+                    "zero_power": "Conexión a red de potencia cero",
+                    "di_active_scheduling": "Programación activa DI"
+                }
             },
             "active_power_external_energy": {
                 "name": "Potencia activa"
@@ -409,7 +416,21 @@
                 "name": "Conector energía total cargada"
             },
             "charger_gun_work_status": {
-                "name": "Estado del conector"
+                "name": "Estado del conector",
+                "state": {
+                    "standby": "En espera",
+                    "standby_plugged": "Conectado (en espera)",
+                    "scheduled_waiting": "Programado (esperando)",
+                    "charging": "Cargando",
+                    "charging_ended": "Carga finalizada",
+                    "fault": "Fallo",
+                    "orderly_waiting": "Carga ordenada (esperando)",
+                    "upgrading": "Actualizando",
+                    "charging_starting": "Iniciando carga",
+                    "alarm": "Alarma",
+                    "green_power_waiting": "Energía verde (esperando)",
+                    "green_power_charging": "Cargando con energía verde"
+                }
             },
             "charger_indicator_light_status": {
                 "name": "Estado de la luz indicadora"
@@ -496,7 +517,14 @@
                 "name": "Alimenta a la red hoy"
             },
             "forcible_charge_summary": {
-                "name": "Carga Forzada"
+                "name": "Carga Forzada",
+                "state": {
+                    "stopped": "Detenido",
+                    "charging_soc": "Cargando (SoC objetivo)",
+                    "charging_time": "Cargando (duración)",
+                    "discharging_soc": "Descargando (SoC objetivo)",
+                    "discharging_time": "Descargando (duración)"
+                }
             },
             "grid_a_voltage": {
                 "name": "Tensión de fase A"
@@ -634,7 +662,11 @@
                 "name": "Potencia reactiva"
             },
             "meter_status": {
-                "name": "Estado del medidor"
+                "name": "Estado del medidor",
+                "state": {
+                    "offline": "Desconectado",
+                    "normal": "Normal"
+                }
             },
             "meter_total_active_energy": {
                 "name": "Energía activa total"
@@ -1186,7 +1218,14 @@
                 "name": "Capacidad de puntuación"
             },
             "storage_running_status": {
-                "name": "Estado"
+                "name": "Estado",
+                "state": {
+                    "offline": "Desconectado",
+                    "standby": "En espera",
+                    "running": "En funcionamiento",
+                    "fault": "Fallo",
+                    "sleep_mode": "Modo de reposo"
+                }
             },
             "storage_state_of_capacity": {
                 "name": "Estado de la capacidad"

@@ -337,7 +337,14 @@
                 "name": "Активна мощност"
             },
             "active_power_control_mode": {
-                "name": "Режим на управление на активната мощност"
+                "name": "Режим на управление на активната мощност",
+                "state": {
+                    "unlimited": "Неограничено",
+                    "power_limited_percent": "Ограничена мощност (%)",
+                    "power_limited_watt": "Ограничена мощност (W)",
+                    "zero_power": "Нулев износ към мрежата",
+                    "di_active_scheduling": "DI активно планиране"
+                }
             },
             "active_power_external_energy": {
                 "name": "Активна мощност"
@@ -409,7 +416,21 @@
                 "name": "Обща заредена енергия от конектора"
             },
             "charger_gun_work_status": {
-                "name": "Работно състояние на конектора"
+                "name": "Работно състояние на конектора",
+                "state": {
+                    "standby": "В готовност",
+                    "standby_plugged": "Включен (в готовност)",
+                    "scheduled_waiting": "Планирано (изчакване)",
+                    "charging": "Зареждане",
+                    "charging_ended": "Зареждането приключи",
+                    "fault": "Неизправност",
+                    "orderly_waiting": "Подредено зареждане (изчакване)",
+                    "upgrading": "Актуализиране",
+                    "charging_starting": "Стартиране на зареждането",
+                    "alarm": "Аларма",
+                    "green_power_waiting": "Зелена енергия (изчакване)",
+                    "green_power_charging": "Зареждане със зелена енергия"
+                }
             },
             "charger_indicator_light_status": {
                 "name": "Състояние на светлинния индикатор"
@@ -496,7 +517,14 @@
                 "name": "Подадена енергия към мрежата днес"
             },
             "forcible_charge_summary": {
-                "name": "Обобщение на принудителното зареждане"
+                "name": "Обобщение на принудителното зареждане",
+                "state": {
+                    "stopped": "Спряно",
+                    "charging_soc": "Зареждане (целеви SoC)",
+                    "charging_time": "Зареждане (продължителност)",
+                    "discharging_soc": "Разреждане (целеви SoC)",
+                    "discharging_time": "Разреждане (продължителност)"
+                }
             },
             "grid_a_voltage": {
                 "name": "Напрежение фаза A"
@@ -634,7 +662,11 @@
                 "name": "Реактивна мощност"
             },
             "meter_status": {
-                "name": "Състояние на електромера"
+                "name": "Състояние на електромера",
+                "state": {
+                    "offline": "Офлайн",
+                    "normal": "Нормално"
+                }
             },
             "meter_total_active_energy": {
                 "name": "Обща активна енергия"
@@ -1186,7 +1218,14 @@
                 "name": "Номинален капацитет на батерията"
             },
             "storage_running_status": {
-                "name": "Състояние"
+                "name": "Състояние",
+                "state": {
+                    "offline": "Офлайн",
+                    "standby": "В готовност",
+                    "running": "Работи",
+                    "fault": "Неизправност",
+                    "sleep_mode": "Режим на заспиване"
+                }
             },
             "storage_state_of_capacity": {
                 "name": "Състояние на капацитета"

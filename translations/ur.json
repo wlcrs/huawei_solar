@@ -337,7 +337,14 @@
                 "name": "فعال طاقت"
             },
             "active_power_control_mode": {
-                "name": "ایکٹو پاور کنٹرول موڈ"
+                "name": "ایکٹو پاور کنٹرول موڈ",
+                "state": {
+                    "unlimited": "لامحدود",
+                    "power_limited_percent": "طاقت محدود (%)",
+                    "power_limited_watt": "طاقت محدود (W)",
+                    "zero_power": "صفر پاور گرڈ کنکشن",
+                    "di_active_scheduling": "DI فعال شیڈولنگ"
+                }
             },
             "active_power_external_energy": {
                 "name": "فعال طاقت"
@@ -409,7 +416,21 @@
                 "name": "کنیکٹر کل چارج شدہ توانائی"
             },
             "charger_gun_work_status": {
-                "name": "کنیکٹر کی حالت"
+                "name": "کنیکٹر کی حالت",
+                "state": {
+                    "standby": "اسٹینڈ بائی",
+                    "standby_plugged": "پلگ ان (اسٹینڈ بائی)",
+                    "scheduled_waiting": "شیڈول شدہ (انتظار)",
+                    "charging": "چارج ہو رہا ہے",
+                    "charging_ended": "چارجنگ ختم ہو گئی",
+                    "fault": "خرابی",
+                    "orderly_waiting": "ترتیب وار چارجنگ (انتظار)",
+                    "upgrading": "اپ گریڈ ہو رہا ہے",
+                    "charging_starting": "چارجنگ شروع ہو رہی ہے",
+                    "alarm": "الارم",
+                    "green_power_waiting": "سبز توانائی (انتظار)",
+                    "green_power_charging": "سبز توانائی سے چارجنگ"
+                }
             },
             "charger_indicator_light_status": {
                 "name": "اشارے والی روشنی کی حالت"
@@ -496,7 +517,14 @@
                 "name": "آج گرڈ کو فیڈ کیا گیا"
             },
             "forcible_charge_summary": {
-                "name": "زبردستی چارج"
+                "name": "زبردستی چارج",
+                "state": {
+                    "stopped": "روکا گیا",
+                    "charging_soc": "چارجنگ (ہدف SoC)",
+                    "charging_time": "چارجنگ (دورانیہ)",
+                    "discharging_soc": "ڈسچارجنگ (ہدف SoC)",
+                    "discharging_time": "ڈسچارجنگ (دورانیہ)"
+                }
             },
             "grid_a_voltage": {
                 "name": "فیز اے وولٹیج"
@@ -634,7 +662,11 @@
                 "name": "ری ایکٹو پاور"
             },
             "meter_status": {
-                "name": "میٹر کی حیثیت"
+                "name": "میٹر کی حیثیت",
+                "state": {
+                    "offline": "آف لائن",
+                    "normal": "نارمل"
+                }
             },
             "meter_total_active_energy": {
                 "name": "کل ایکٹو توانائی"
@@ -1186,7 +1218,14 @@
                 "name": "شرح شدہ صلاحیت"
             },
             "storage_running_status": {
-                "name": "حالت"
+                "name": "حالت",
+                "state": {
+                    "offline": "آف لائن",
+                    "standby": "اسٹینڈ بائی",
+                    "running": "چل رہا ہے",
+                    "fault": "خرابی",
+                    "sleep_mode": "سلیپ موڈ"
+                }
             },
             "storage_state_of_capacity": {
                 "name": "صلاحیت کی حالت"

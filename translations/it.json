@@ -337,7 +337,14 @@
                 "name": "Potenza attiva"
             },
             "active_power_control_mode": {
-                "name": "Modalità di controllo della potenza attiva"
+                "name": "Modalità di controllo della potenza attiva",
+                "state": {
+                    "unlimited": "Illimitato",
+                    "power_limited_percent": "Potenza limitata (%)",
+                    "power_limited_watt": "Potenza limitata (W)",
+                    "zero_power": "Immissione zero",
+                    "di_active_scheduling": "Pianificazione attiva DI"
+                }
             },
             "active_power_external_energy": {
                 "name": "Potenza attiva"
@@ -409,7 +416,21 @@
                 "name": "Connettore energia totale caricata"
             },
             "charger_gun_work_status": {
-                "name": "Stato del connettore"
+                "name": "Stato del connettore",
+                "state": {
+                    "standby": "In attesa",
+                    "standby_plugged": "Collegato (in attesa)",
+                    "scheduled_waiting": "Programmato (in attesa)",
+                    "charging": "In carica",
+                    "charging_ended": "Ricarica terminata",
+                    "fault": "Guasto",
+                    "orderly_waiting": "Ricarica ordinata (in attesa)",
+                    "upgrading": "Aggiornamento",
+                    "charging_starting": "Avvio ricarica",
+                    "alarm": "Allarme",
+                    "green_power_waiting": "Energia verde (in attesa)",
+                    "green_power_charging": "Ricarica con energia verde"
+                }
             },
             "charger_indicator_light_status": {
                 "name": "Stato spia indicatrice"
@@ -496,7 +517,14 @@
                 "name": "Immissione in rete di oggi"
             },
             "forcible_charge_summary": {
-                "name": "Carica forzata"
+                "name": "Carica forzata",
+                "state": {
+                    "stopped": "Arrestato",
+                    "charging_soc": "In carica (SoC obiettivo)",
+                    "charging_time": "In carica (durata)",
+                    "discharging_soc": "In scarica (SoC obiettivo)",
+                    "discharging_time": "In scarica (durata)"
+                }
             },
             "grid_a_voltage": {
                 "name": "Tensione di Fase A"
@@ -634,7 +662,11 @@
                 "name": "Potenza reattiva"
             },
             "meter_status": {
-                "name": "Stato misuratore"
+                "name": "Stato misuratore",
+                "state": {
+                    "offline": "Offline",
+                    "normal": "Normale"
+                }
             },
             "meter_total_active_energy": {
                 "name": "Energia attiva totale"
@@ -1186,7 +1218,14 @@
                 "name": "Capienza stimata"
             },
             "storage_running_status": {
-                "name": "Stato funzionamento"
+                "name": "Stato funzionamento",
+                "state": {
+                    "offline": "Offline",
+                    "standby": "In attesa",
+                    "running": "In funzione",
+                    "fault": "Guasto",
+                    "sleep_mode": "Modalità sospensione"
+                }
             },
             "storage_state_of_capacity": {
                 "name": "Stato della capacità"

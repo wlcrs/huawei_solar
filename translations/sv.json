@@ -337,7 +337,14 @@
                 "name": "Aktiv effekt"
             },
             "active_power_control_mode": {
-                "name": "Styrläge för aktiv effekt"
+                "name": "Styrläge för aktiv effekt",
+                "state": {
+                    "unlimited": "Obegränsad",
+                    "power_limited_percent": "Effektbegränsad (%)",
+                    "power_limited_watt": "Effektbegränsad (W)",
+                    "zero_power": "Nollexport till nätet",
+                    "di_active_scheduling": "DI aktiv schemaläggning"
+                }
             },
             "active_power_external_energy": {
                 "name": "Aktiv effekt"
@@ -409,7 +416,21 @@
                 "name": "Kontakt totalt laddad energi"
             },
             "charger_gun_work_status": {
-                "name": "Kontaktstatus"
+                "name": "Kontaktstatus",
+                "state": {
+                    "standby": "Standby",
+                    "standby_plugged": "Inkopplad (standby)",
+                    "scheduled_waiting": "Schemalagd (väntar)",
+                    "charging": "Laddar",
+                    "charging_ended": "Laddning avslutad",
+                    "fault": "Fel",
+                    "orderly_waiting": "Ordnad laddning (väntar)",
+                    "upgrading": "Uppdaterar",
+                    "charging_starting": "Startar laddning",
+                    "alarm": "Larm",
+                    "green_power_waiting": "Grön energi (väntar)",
+                    "green_power_charging": "Laddar med grön energi"
+                }
             },
             "charger_indicator_light_status": {
                 "name": "Indikatorlampans status"
@@ -496,7 +517,14 @@
                 "name": "Inmatat till nätet idag"
             },
             "forcible_charge_summary": {
-                "name": "Tvingad laddning"
+                "name": "Tvingad laddning",
+                "state": {
+                    "stopped": "Stoppad",
+                    "charging_soc": "Laddar (mål-SoC)",
+                    "charging_time": "Laddar (varaktighet)",
+                    "discharging_soc": "Laddar ur (mål-SoC)",
+                    "discharging_time": "Laddar ur (varaktighet)"
+                }
             },
             "grid_a_voltage": {
                 "name": "Fas A spänning"
@@ -634,7 +662,11 @@
                 "name": "Reaktiv effekt"
             },
             "meter_status": {
-                "name": "Mätarstatus"
+                "name": "Mätarstatus",
+                "state": {
+                    "offline": "Offline",
+                    "normal": "Normal"
+                }
             },
             "meter_total_active_energy": {
                 "name": "Total aktiv energi"
@@ -1186,7 +1218,14 @@
                 "name": "Märkkapacitet"
             },
             "storage_running_status": {
-                "name": "Driftstatus"
+                "name": "Driftstatus",
+                "state": {
+                    "offline": "Offline",
+                    "standby": "Standby",
+                    "running": "I drift",
+                    "fault": "Fel",
+                    "sleep_mode": "Viloläge"
+                }
             },
             "storage_state_of_capacity": {
                 "name": "Batteriets laddningsstatus"

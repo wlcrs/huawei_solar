@@ -337,7 +337,14 @@
                 "name": "Hatásos teljesítmény"
             },
             "active_power_control_mode": {
-                "name": "Hatásos teljesítmény szabályozási mód"
+                "name": "Hatásos teljesítmény szabályozási mód",
+                "state": {
+                    "unlimited": "Korlátlan",
+                    "power_limited_percent": "Teljesítménykorlátozás (%)",
+                    "power_limited_watt": "Teljesítménykorlátozás (W)",
+                    "zero_power": "Nulla betáplálás",
+                    "di_active_scheduling": "DI aktív ütemezés"
+                }
             },
             "active_power_external_energy": {
                 "name": "Hatásos teljesítmény"
@@ -409,7 +416,21 @@
                 "name": "Csatlakozón betöltött összes energia"
             },
             "charger_gun_work_status": {
-                "name": "Csatlakozó állapota"
+                "name": "Csatlakozó állapota",
+                "state": {
+                    "standby": "Készenlét",
+                    "standby_plugged": "Csatlakoztatva (készenlét)",
+                    "scheduled_waiting": "Ütemezett (várakozás)",
+                    "charging": "Töltés",
+                    "charging_ended": "Töltés befejezve",
+                    "fault": "Hiba",
+                    "orderly_waiting": "Rendezett töltés (várakozás)",
+                    "upgrading": "Frissítés",
+                    "charging_starting": "Töltés indítása",
+                    "alarm": "Riasztás",
+                    "green_power_waiting": "Zöld energia (várakozás)",
+                    "green_power_charging": "Töltés zöld energiával"
+                }
             },
             "charger_indicator_light_status": {
                 "name": "Visszajelző lámpa állapota"
@@ -496,7 +517,14 @@
                 "name": "Hálózatba betáplált energia ma"
             },
             "forcible_charge_summary": {
-                "name": "Kényszerített töltés"
+                "name": "Kényszerített töltés",
+                "state": {
+                    "stopped": "Leállítva",
+                    "charging_soc": "Töltés (cél SoC)",
+                    "charging_time": "Töltés (időtartam)",
+                    "discharging_soc": "Kisütés (cél SoC)",
+                    "discharging_time": "Kisütés (időtartam)"
+                }
             },
             "grid_a_voltage": {
                 "name": "A fázis feszültség"
@@ -634,7 +662,11 @@
                 "name": "Meddő teljesítmény"
             },
             "meter_status": {
-                "name": "Mérő állapota"
+                "name": "Mérő állapota",
+                "state": {
+                    "offline": "Offline",
+                    "normal": "Normál"
+                }
             },
             "meter_total_active_energy": {
                 "name": "Összes hatásos energia"
@@ -1186,7 +1218,14 @@
                 "name": "Névleges kapacitás"
             },
             "storage_running_status": {
-                "name": "Működési állapot"
+                "name": "Működési állapot",
+                "state": {
+                    "offline": "Offline",
+                    "standby": "Készenlét",
+                    "running": "Működik",
+                    "fault": "Hiba",
+                    "sleep_mode": "Alvó mód"
+                }
             },
             "storage_state_of_capacity": {
                 "name": "Akkumulátor töltöttségi állapota"

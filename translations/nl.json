@@ -337,7 +337,14 @@
                 "name": "Werkelijk vermogen"
             },
             "active_power_control_mode": {
-                "name": "Actief vermogen regelmodus"
+                "name": "Actief vermogen regelmodus",
+                "state": {
+                    "unlimited": "Onbeperkt",
+                    "power_limited_percent": "Vermogen beperkt (%)",
+                    "power_limited_watt": "Vermogen beperkt (W)",
+                    "zero_power": "Geen teruglevering",
+                    "di_active_scheduling": "DI actieve planning"
+                }
             },
             "active_power_external_energy": {
                 "name": "Werkelijk vermogen"
@@ -409,7 +416,21 @@
                 "name": "Connector totale geladen energie"
             },
             "charger_gun_work_status": {
-                "name": "Connectorstatus"
+                "name": "Connectorstatus",
+                "state": {
+                    "standby": "Stand-by",
+                    "standby_plugged": "Aangesloten (stand-by)",
+                    "scheduled_waiting": "Gepland (wachtend)",
+                    "charging": "Laden",
+                    "charging_ended": "Laden beëindigd",
+                    "fault": "Storing",
+                    "orderly_waiting": "Geordend laden (wachtend)",
+                    "upgrading": "Bijwerken",
+                    "charging_starting": "Laden starten",
+                    "alarm": "Alarm",
+                    "green_power_waiting": "Groene stroom (wachtend)",
+                    "green_power_charging": "Laden met groene stroom"
+                }
             },
             "charger_indicator_light_status": {
                 "name": "Status indicatielampje"
@@ -496,7 +517,14 @@
                 "name": "Teruggeleverd aan het net vandaag"
             },
             "forcible_charge_summary": {
-                "name": "Geforceerd laden"
+                "name": "Geforceerd laden",
+                "state": {
+                    "stopped": "Gestopt",
+                    "charging_soc": "Laden (doel-SoC)",
+                    "charging_time": "Laden (duur)",
+                    "discharging_soc": "Ontladen (doel-SoC)",
+                    "discharging_time": "Ontladen (duur)"
+                }
             },
             "grid_a_voltage": {
                 "name": "Fase A spanning"
@@ -634,7 +662,11 @@
                 "name": "Reactief vermogen"
             },
             "meter_status": {
-                "name": "Meterstatus"
+                "name": "Meterstatus",
+                "state": {
+                    "offline": "Offline",
+                    "normal": "Normaal"
+                }
             },
             "meter_total_active_energy": {
                 "name": "Totale actieve energie"
@@ -1186,7 +1218,14 @@
                 "name": "Beoordeelde capaciteit"
             },
             "storage_running_status": {
-                "name": "Bedrijfsstatus"
+                "name": "Bedrijfsstatus",
+                "state": {
+                    "offline": "Offline",
+                    "standby": "Stand-by",
+                    "running": "Actief",
+                    "fault": "Storing",
+                    "sleep_mode": "Slaapstand"
+                }
             },
             "storage_state_of_capacity": {
                 "name": "Batterij laadstatus"

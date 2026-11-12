@@ -337,7 +337,14 @@
                 "name": "Potència activa"
             },
             "active_power_control_mode": {
-                "name": "Mode de control de potència activa"
+                "name": "Mode de control de potència activa",
+                "state": {
+                    "unlimited": "Il·limitat",
+                    "power_limited_percent": "Potència limitada (%)",
+                    "power_limited_watt": "Potència limitada (W)",
+                    "zero_power": "Connexió a la xarxa de potència zero",
+                    "di_active_scheduling": "Programació activa DI"
+                }
             },
             "active_power_external_energy": {
                 "name": "Potència activa"
@@ -409,7 +416,21 @@
                 "name": "Connector energia total carregada"
             },
             "charger_gun_work_status": {
-                "name": "Estat del connector"
+                "name": "Estat del connector",
+                "state": {
+                    "standby": "En espera",
+                    "standby_plugged": "Endollat (en espera)",
+                    "scheduled_waiting": "Programat (esperant)",
+                    "charging": "Carregant",
+                    "charging_ended": "Càrrega finalitzada",
+                    "fault": "Avaria",
+                    "orderly_waiting": "Càrrega ordenada (esperant)",
+                    "upgrading": "Actualitzant",
+                    "charging_starting": "Iniciant càrrega",
+                    "alarm": "Alarma",
+                    "green_power_waiting": "Energia verda (esperant)",
+                    "green_power_charging": "Càrrega amb energia verda"
+                }
             },
             "charger_indicator_light_status": {
                 "name": "Estat del llum indicador"
@@ -496,7 +517,14 @@
                 "name": "Injectat a la xarxa avui"
             },
             "forcible_charge_summary": {
-                "name": "Càrrega forçada"
+                "name": "Càrrega forçada",
+                "state": {
+                    "stopped": "Aturat",
+                    "charging_soc": "Carregant (SoC objectiu)",
+                    "charging_time": "Carregant (durada)",
+                    "discharging_soc": "Descarregant (SoC objectiu)",
+                    "discharging_time": "Descarregant (durada)"
+                }
             },
             "grid_a_voltage": {
                 "name": "Tensió de fase A"
@@ -634,7 +662,11 @@
                 "name": "Potència reactiva"
             },
             "meter_status": {
-                "name": "Estat del comptador"
+                "name": "Estat del comptador",
+                "state": {
+                    "offline": "Fora de línia",
+                    "normal": "Normal"
+                }
             },
             "meter_total_active_energy": {
                 "name": "Energia activa total"
@@ -1186,7 +1218,14 @@
                 "name": "Capacitat nominal"
             },
             "storage_running_status": {
-                "name": "Estat"
+                "name": "Estat",
+                "state": {
+                    "offline": "Fora de línia",
+                    "standby": "En espera",
+                    "running": "En funcionament",
+                    "fault": "Avaria",
+                    "sleep_mode": "Mode de repòs"
+                }
             },
             "storage_state_of_capacity": {
                 "name": "Estat de la capacitat"

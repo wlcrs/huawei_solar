@@ -2,6 +2,7 @@
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from enum import Enum
 from typing import Any
 
 from huawei_solar import (
@@ -457,6 +458,8 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     HuaweiSolarSensorEntityDescription(
         key=rn.METER_STATUS,
         icon="mdi:electric-switch",
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.MeterStatus],
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
     ),
@@ -533,6 +536,8 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     HuaweiSolarSensorEntityDescription(
         key=rn.METER_STATUS,
         icon="mdi:electric-switch",
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.MeterStatus],
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
     ),
@@ -705,6 +710,8 @@ BATTERIES_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = 
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_RUNNING_STATUS,
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.StorageStatus],
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HuaweiSolarSensorEntityDescription(
@@ -1887,6 +1894,8 @@ SMART_AC_GUN_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...]
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_GUN_WORK_STATUS,
         icon="mdi:ev-station",
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.ChargerGunWorkStatus],
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_OUTPUT_RELAY_STATUS,
@@ -2476,6 +2485,12 @@ class HuaweiSolarSensorEntity(HuaweiSolarCoordinatorEntity, SensorEntity):
             if self.entity_description.value_conversion_function:
                 value = self.entity_description.value_conversion_function(value)
 
+            if (
+                self.entity_description.device_class == SensorDeviceClass.ENUM
+                and isinstance(value, Enum)
+            ):
+                value = value.name.lower()
+
             self._attr_native_value = value
             self._attr_available = True
         else:
@@ -2848,6 +2863,14 @@ class HuaweiSolarForcibleChargeEntity(
             key=rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
             icon="mdi:battery-charging-medium",
             translation_key="forcible_charge_summary",
+            device_class=SensorDeviceClass.ENUM,
+            options=[
+                "stopped",
+                "charging_soc",
+                "charging_time",
+                "discharging_soc",
+                "discharging_time",
+            ],
         )
 
         self._device = device
@@ -2879,18 +2902,18 @@ class HuaweiSolarForcibleChargeEntity(
             ].value
 
             if mode == rv.StorageForcibleChargeDischarge.STOP:
-                value = "Stopped"
+                value = "stopped"
             elif mode == rv.StorageForcibleChargeDischarge.CHARGE:
                 if setting == rv.StorageForcibleChargeDischargeTargetMode.SOC:
-                    value = f"Charging at {charge_power}W until {target_soc}%"
+                    value = "charging_soc"
                 else:
-                    value = f"Charging at {charge_power}W for {duration} minutes"
+                    value = "charging_time"
             else:
                 assert mode == rv.StorageForcibleChargeDischarge.DISCHARGE
                 if setting == rv.StorageForcibleChargeDischargeTargetMode.SOC:
-                    value = f"Discharging at {discharge_power}W until {target_soc}%"
+                    value = "discharging_soc"
                 else:
-                    value = f"Discharging at {discharge_power}W for {duration} minutes"
+                    value = "discharging_time"
 
             self._attr_available = True
             self._attr_native_value = value
@@ -2937,6 +2960,14 @@ class HuaweiSolarActivePowerControlModeEntity(
             key=rn.ACTIVE_POWER_CONTROL_MODE,
             translation_key="active_power_control_mode",
             icon="mdi:transmission-tower",
+            device_class=SensorDeviceClass.ENUM,
+            options=[
+                "unlimited",
+                "power_limited_percent",
+                "power_limited_watt",
+                "zero_power",
+                "di_active_scheduling",
+            ],
             entity_category=EntityCategory.DIAGNOSTIC,
             entity_registry_enabled_default=False,
         )
@@ -2960,20 +2991,21 @@ class HuaweiSolarActivePowerControlModeEntity(
                 rn.MAXIMUM_FEED_GRID_POWER_PERCENT
             ].value
 
+            value: str | None
             if mode == rv.ActivePowerControlMode.UNLIMITED:
-                value = "Unlimited"
+                value = "unlimited"
             elif (
                 mode == rv.ActivePowerControlMode.POWER_LIMITED_GRID_CONNECTION_PERCENT
             ):
-                value = f"Limited to {maximum_power_percent}%"
+                value = "power_limited_percent"
             elif mode == rv.ActivePowerControlMode.POWER_LIMITED_GRID_CONNECTION_WATT:
-                value = f"Limited to {maximum_power_watt}W"
+                value = "power_limited_watt"
             elif mode == rv.ActivePowerControlMode.ZERO_POWER_GRID_CONNECTION:
-                value = "Zero Power"
+                value = "zero_power"
             elif mode == rv.ActivePowerControlMode.DI_ACTIVE_SCHEDULING:
-                value = "DI Active Scheduling"
+                value = "di_active_scheduling"
             else:
-                value = "Unknown"
+                value = None
 
             self._attr_available = True
             self._attr_native_value = value
@@ -3049,6 +3081,12 @@ class HuaweiSolarOptimizerSensorEntity(
             )
             if self.entity_description.value_conversion_function:
                 value = self.entity_description.value_conversion_function(value)
+
+            if (
+                self.entity_description.device_class == SensorDeviceClass.ENUM
+                and isinstance(value, Enum)
+            ):
+                value = value.name.lower()
 
             self._attr_native_value = value
 
