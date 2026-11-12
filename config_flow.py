@@ -528,7 +528,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Step when user initializes a integration."""
-        return await self.async_step_setup_connection_type()
+        return await self.async_step_setup_connection_type(user_input)
 
     def _update_config_data_from_entry_data(self, entry_data: dict[str, Any]) -> None:
         self._host = entry_data.get(CONF_HOST)
@@ -560,7 +560,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self.context["entry_id"]
         )
         self._update_config_data_from_entry_data(self._reconfigure_entry.data)  # type: ignore[arg-type]
-        await self.hass.config_entries.async_unload(self.context["entry_id"])
         return await self.async_step_setup_connection_type()
 
     async def async_step_reauth(
@@ -597,7 +596,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         schema = vol.Schema(
             {vol.Required(CONF_TYPE, default=current_conn_type): vol.In(list_of_types)}
         )
-        return self.async_show_form(step_id="setup_connection_type", data_schema=schema)
+        return self.async_show_form(step_id="user", data_schema=schema)
 
     async def async_step_setup_serial(
         self, user_input: dict[str, Any] | None = None
@@ -1311,16 +1310,15 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         assert inverter_info
         self.context["title_placeholders"] = {"name": inverter_info["model_name"]}
-        if self._reconfigure_entry:
-            self.hass.config_entries.async_update_entry(
-                self._reconfigure_entry, data=data
-            )
-            await self.hass.config_entries.async_reload(
-                self._reconfigure_entry.entry_id
-            )
-            return self.async_abort(reason="reconfigure_successful")
 
         await self.async_set_unique_id(inverter_info["serial_number"])
+
+        if self._reconfigure_entry:
+            self._abort_if_unique_id_mismatch()
+            return self.async_update_reload_and_abort(
+                self._reconfigure_entry, data=data
+            )
+
         self._abort_if_unique_id_configured(updates=data)
 
         return self.async_create_entry(title=inverter_info["model_name"], data=data)
