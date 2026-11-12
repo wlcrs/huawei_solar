@@ -116,7 +116,7 @@ _MIGRATED_UNIQUE_ID_SUFFIXES: dict[str, str] = {
     "charger_phase_a_voltage_sensor": "charger_phase_a_voltage",
     "charger_phase_b_voltage_sensor": "charger_phase_b_voltage",
     "charger_phase_c_voltage_sensor": "charger_phase_c_voltage",
-    "chager_total_energy_charged_sensor": "chager_total_energy_charged",
+    "charger_total_energy_charged_sensor": "charger_total_energy_charged",
     "charger_temperature_sensor": "charger_temperature",
 }
 
