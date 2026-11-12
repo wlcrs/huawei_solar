@@ -39,6 +39,7 @@ from homeassistant.const import (
     UnitOfEnergy,
     UnitOfFrequency,
     UnitOfPower,
+    UnitOfReactiveEnergy,
     UnitOfReactivePower,
     UnitOfTemperature,
     UnitOfTime,
@@ -229,7 +230,7 @@ INVERTER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.INSULATION_RESISTANCE,
         icon="mdi:omega",
-        native_unit_of_measurement="MOhm",
+        native_unit_of_measurement="MΩ",
         state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
     ),
@@ -518,11 +519,9 @@ SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_ACCUMULATED_REACTIVE_POWER,
-        native_unit_of_measurement="kVarh",
-        # Was SensorDeviceClass.REACTIVE_POWER, which only supports 'var' unit of measurement.
-        # We need a SensorDeviceClass.REACTIVE_ENERGY
-        device_class=None,
-        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=UnitOfReactiveEnergy.KILO_VOLT_AMPERE_REACTIVE_HOUR,
+        device_class=SensorDeviceClass.REACTIVE_ENERGY,
+        state_class=SensorStateClass.TOTAL,
         entity_registry_enabled_default=False,
     ),
 )
@@ -621,10 +620,8 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.GRID_ACCUMULATED_REACTIVE_POWER,
-        native_unit_of_measurement="kVarh",
-        # Was SensorDeviceClass.REACTIVE_POWER, which only supports 'var' unit of measurement.
-        # We need a SensorDeviceClass.REACTIVE_ENERGY
-        device_class=None,
+        native_unit_of_measurement=UnitOfReactiveEnergy.KILO_VOLT_AMPERE_REACTIVE_HOUR,
+        device_class=SensorDeviceClass.REACTIVE_ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
         entity_registry_enabled_default=False,
     ),
@@ -695,6 +692,7 @@ BATTERIES_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = 
         key=rn.STORAGE_RATED_CAPACITY,
         icon="mdi:home-battery",
         native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY_STORAGE,
         state_class=SensorStateClass.MEASUREMENT,
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
@@ -856,6 +854,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         translation_key="storage_state_of_capacity",
         icon="mdi:home-battery",
         native_unit_of_measurement=PERCENTAGE,
+        device_class=SensorDeviceClass.BATTERY,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     BatteryTemplateEntityDescription(
@@ -962,6 +961,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         battery_2_key=rn.STORAGE_UNIT_2_BATTERY_PACK_1_STATE_OF_CAPACITY,
         translation_key="pack_1_state_of_capacity",
         native_unit_of_measurement=PERCENTAGE,
+        device_class=SensorDeviceClass.BATTERY,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     BatteryTemplateEntityDescription(
@@ -1033,6 +1033,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         battery_2_key=rn.STORAGE_UNIT_2_BATTERY_PACK_2_STATE_OF_CAPACITY,
         translation_key="pack_2_state_of_capacity",
         native_unit_of_measurement=PERCENTAGE,
+        device_class=SensorDeviceClass.BATTERY,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     BatteryTemplateEntityDescription(
@@ -1104,6 +1105,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         battery_2_key=rn.STORAGE_UNIT_2_BATTERY_PACK_3_STATE_OF_CAPACITY,
         translation_key="pack_3_state_of_capacity",
         native_unit_of_measurement=PERCENTAGE,
+        device_class=SensorDeviceClass.BATTERY,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     BatteryTemplateEntityDescription(
@@ -1507,6 +1509,7 @@ EMMA_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
         key=rn.STATE_OF_CAPACITY,
         icon="mdi:home-battery",
         native_unit_of_measurement=PERCENTAGE,
+        device_class=SensorDeviceClass.BATTERY,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
@@ -1526,6 +1529,7 @@ EMMA_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.BACKUP_POWER_STATE_OF_CHARGE,
         native_unit_of_measurement=PERCENTAGE,
+        device_class=SensorDeviceClass.BATTERY,
         state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
     ),
@@ -2080,6 +2084,7 @@ SMARTLOGGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] 
     HuaweiSolarSensorEntityDescription(
         key=rn.SMARTLOGGER_SOC,
         native_unit_of_measurement=PERCENTAGE,
+        device_class=SensorDeviceClass.BATTERY,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     HuaweiSolarSensorEntityDescription(
@@ -2362,7 +2367,8 @@ METER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.SMARTLOGGER_EXTERNAL_METER_TOTAL_REACTIVE_ELECTRICITY,
         translation_key="meter_total_reactive_energy",
-        native_unit_of_measurement="kvarh",
+        native_unit_of_measurement=UnitOfReactiveEnergy.KILO_VOLT_AMPERE_REACTIVE_HOUR,
+        device_class=SensorDeviceClass.REACTIVE_ENERGY,
         state_class=SensorStateClass.TOTAL,
         entity_registry_enabled_default=False,
     ),
