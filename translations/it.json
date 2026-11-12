@@ -1301,6 +1301,9 @@
         "invalid_device_id": {
             "message": "ID dispositivo non valido specificato: {device_id}"
         },
+        "inverter_status_change_in_progress": {
+            "message": "L'inverter sta ancora elaborando il comando di avvio o spegnimento precedente. Attendi prima di commutare nuovamente."
+        },
         "no_battery_connected": {
             "message": "Il dispositivo {device_id} non ha alcuna batteria collegata."
         },

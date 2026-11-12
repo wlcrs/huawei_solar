@@ -1314,6 +1314,9 @@
         "invalid_device_id": {
             "message": "Ongeldige apparaat-ID opgegeven: {device_id}"
         },
+        "inverter_status_change_in_progress": {
+            "message": "De omvormer verwerkt nog steeds de vorige opstart- of uitschakelopdracht. Wacht even voordat u opnieuw schakelt."
+        },
         "no_battery_connected": {
             "message": "Apparaat {device_id} heeft geen aangesloten batterij."
         },

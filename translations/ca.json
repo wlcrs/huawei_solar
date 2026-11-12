@@ -1303,6 +1303,9 @@
         "invalid_device_id": {
             "message": "S'ha especificat un ID de dispositiu no vàlid: {device_id}"
         },
+        "inverter_status_change_in_progress": {
+            "message": "L'inversor encara està processant l'ordre d'inici o d'aturada anterior. Espereu abans de tornar-ho a commutar."
+        },
         "no_battery_connected": {
             "message": "El dispositiu {device_id} no té cap bateria connectada."
         },

@@ -1301,6 +1301,9 @@
         "invalid_device_id": {
             "message": "Посочен е невалиден ID на устройство: {device_id}"
         },
+        "inverter_status_change_in_progress": {
+            "message": "Инверторът все още обработва предишната команда за стартиране или спиране. Моля, изчакайте, преди да превключите отново."
+        },
         "no_battery_connected": {
             "message": "Устройството {device_id} няма свързана батерия."
         },

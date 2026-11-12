@@ -1301,6 +1301,9 @@
         "invalid_device_id": {
             "message": "ID d'appareil non valide spécifié : {device_id}"
         },
+        "inverter_status_change_in_progress": {
+            "message": "L'onduleur est encore en train de traiter la commande de démarrage ou d'arrêt précédente. Veuillez patienter avant de basculer à nouveau."
+        },
         "no_battery_connected": {
             "message": "L'appareil {device_id} n'a pas de batterie connectée."
         },

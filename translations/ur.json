@@ -1302,6 +1302,9 @@
         "invalid_device_id": {
             "message": "غلط ڈیوائس آئی ڈی بتائی گئی: {device_id}"
         },
+        "inverter_status_change_in_progress": {
+            "message": "انورٹر ابھی بھی پچھلے اسٹارٹ اپ یا شٹ ڈاؤن کمانڈ پر کارروائی کر رہا ہے۔ براہ کرم دوبارہ ٹوگل کرنے سے پہلے انتظار کریں۔"
+        },
         "no_battery_connected": {
             "message": "ڈیوائس {device_id} سے کوئی بیٹری منسلک نہیں ہے۔"
         },

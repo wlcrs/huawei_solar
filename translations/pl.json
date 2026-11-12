@@ -1301,6 +1301,9 @@
         "invalid_device_id": {
             "message": "Podano nieprawidłowy identyfikator urządzenia: {device_id}"
         },
+        "inverter_status_change_in_progress": {
+            "message": "Falownik nadal przetwarza poprzednie polecenie uruchomienia lub wyłączenia. Poczekaj przed ponownym przełączeniem."
+        },
         "no_battery_connected": {
             "message": "Urządzenie {device_id} nie ma podłączonego akumulatora."
         },

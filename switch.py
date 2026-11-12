@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-import asyncio
 from collections.abc import Callable
 from dataclasses import dataclass
 from itertools import chain
 import logging
+import time
 from typing import Any, TypeVar
 
 from huawei_solar import (
@@ -23,10 +23,11 @@ from huawei_solar import (
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_DEVICE_DATAS
+from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_DEVICE_DATAS, DOMAIN
 from .types import (
     HuaweiSolarConfigEntry,
     HuaweiSolarCoordinatorEntity,
@@ -329,7 +330,6 @@ class HuaweiSolarSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
 class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
     """Huawei Solar Switch Entity."""
 
-    POLL_FREQUENCY_SECONDS = 15
     MAX_STATUS_CHANGE_TIME_SECONDS = 300  # Maximum status change time is 5 minutes
 
     def __init__(
@@ -340,10 +340,7 @@ class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
         device: HuaweiSolarDevice,
         device_info: DeviceInfo,
     ) -> None:
-        """Huawei Solar Switch Entity constructor.
-
-        Do not use directly. Use `.create` instead!
-        """
+        """Huawei Solar Switch Entity constructor."""
         super().__init__(coordinator, {"register_names": [rn.DEVICE_STATUS]})
         self.coordinator = coordinator
 
@@ -357,7 +354,7 @@ class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
 
-        self._change_lock = asyncio.Lock()
+        self._pending_state: tuple[bool, float] | None = None
 
     @staticmethod
     def _is_off(device_status: str) -> bool:
@@ -366,64 +363,54 @@ class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        if self._change_lock.locked():
-            return  # Don't do status updates if async_turn_on or async_turn_off is running
-
         if self.coordinator.data and rn.DEVICE_STATUS in self.coordinator.data:
             device_status = self.coordinator.data[rn.DEVICE_STATUS].value
+            actual_is_on = not self._is_off(device_status)
 
-            self._attr_is_on = not self._is_off(device_status)
+            if self._pending_state is not None:
+                target_is_on, deadline = self._pending_state
+                if actual_is_on == target_is_on or time.monotonic() >= deadline:
+                    self._pending_state = None
+                    self._attr_is_on = actual_is_on
+                else:
+                    self._attr_is_on = target_is_on
+            else:
+                self._attr_is_on = actual_is_on
+
             self._attr_available = True
         else:
             self._attr_available = False
 
         self.async_write_ha_state()
 
+    async def _async_set_power_state(
+        self, target_is_on: bool, register: RegisterName
+    ) -> None:
+        """Send a startup or shutdown command with a non-blocking grace window."""
+        if self._pending_state is not None:
+            _, deadline = self._pending_state
+            if time.monotonic() < deadline:
+                raise HomeAssistantError(
+                    translation_domain=DOMAIN,
+                    translation_key="inverter_status_change_in_progress",
+                )
+            self._pending_state = None
+
+        await self.device.set(register, 0)
+        self._pending_state = (
+            target_is_on,
+            time.monotonic() + self.MAX_STATUS_CHANGE_TIME_SECONDS,
+        )
+        self._attr_is_on = target_is_on
+        self.async_write_ha_state()
+
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the setting on."""
-        async with self._change_lock:
-            await self.device.set(rn.STARTUP, 0)
-
-            # Turning on can take up to 5 minutes... We'll poll every 15 seconds
-            for _ in range(
-                self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
-            ):
-                await asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
-                try:
-                    result = await self.device.get(rn.DEVICE_STATUS)
-                    device_status = result.value
-                except HuaweiSolarException:
-                    continue
-
-                if not self._is_off(device_status):
-                    self._attr_is_on = True
-                    self.async_write_ha_state()
-                    break
-
-        await self.coordinator.async_request_refresh()
+        await self._async_set_power_state(True, rn.STARTUP)
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the setting off."""
-        async with self._change_lock:
-            await self.device.set(rn.SHUTDOWN, 0)
-
-            # Turning off can take up to 5 minutes... We'll poll every 15 seconds
-            for _ in range(
-                self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
-            ):
-                await asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
-                try:
-                    result = await self.device.get(rn.DEVICE_STATUS)
-                    device_status = result.value
-                except HuaweiSolarException:
-                    continue
-
-                if self._is_off(device_status):
-                    self._attr_is_on = False
-                    self.async_write_ha_state()
-                    break
-
-        await self.coordinator.async_request_refresh()
+        await self._async_set_power_state(False, rn.SHUTDOWN)
 
 
 def get_inverter_switch_registers() -> set[RegisterName]:

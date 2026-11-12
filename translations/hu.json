@@ -1301,6 +1301,9 @@
         "invalid_device_id": {
             "message": "Érvénytelen eszközazonosító lett megadva: {device_id}"
         },
+        "inverter_status_change_in_progress": {
+            "message": "Az inverter még mindig feldolgozza az előző indítási vagy leállítási parancsot. Kérjük, várjon az újbóli átkapcsolás előtt."
+        },
         "no_battery_connected": {
             "message": "A(z) {device_id} eszközhöz nincs akkumulátor csatlakoztatva."
         },

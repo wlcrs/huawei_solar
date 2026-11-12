@@ -1301,6 +1301,9 @@
         "invalid_device_id": {
             "message": "ID de dispositivo inválido especificado: {device_id}"
         },
+        "inverter_status_change_in_progress": {
+            "message": "O inversor ainda está processando o comando de inicialização ou desligamento anterior. Aguarde antes de alternar novamente."
+        },
         "no_battery_connected": {
             "message": "O dispositivo {device_id} não possui bateria conectada."
         },

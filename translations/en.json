@@ -1301,6 +1301,9 @@
         "invalid_device_id": {
             "message": "Invalid device ID specified: {device_id}"
         },
+        "inverter_status_change_in_progress": {
+            "message": "The inverter is still processing the previous startup or shutdown command. Please wait before toggling again."
+        },
         "no_battery_connected": {
             "message": "Device {device_id} has no battery connected."
         },

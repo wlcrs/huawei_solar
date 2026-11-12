@@ -1301,6 +1301,9 @@
         "invalid_device_id": {
             "message": "ID dispozitiv invalid specificat: {device_id}"
         },
+        "inverter_status_change_in_progress": {
+            "message": "Invertorul procesează încă comanda anterioară de pornire sau oprire. Vă rugăm să așteptați înainte de a comuta din nou."
+        },
         "no_battery_connected": {
             "message": "Dispozitivul {device_id} nu are nicio baterie conectată."
         },

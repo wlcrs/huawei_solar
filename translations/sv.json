@@ -1301,6 +1301,9 @@
         "invalid_device_id": {
             "message": "Ogiltigt enhets-ID angivet: {device_id}"
         },
+        "inverter_status_change_in_progress": {
+            "message": "Växelriktaren bearbetar fortfarande föregående start- eller avstängningskommando. Vänta innan du växlar igen."
+        },
         "no_battery_connected": {
             "message": "Enheten {device_id} har inget batteri anslutet."
         },
