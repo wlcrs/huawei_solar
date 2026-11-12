@@ -41,6 +41,8 @@ from .update_coordinator import HuaweiSolarUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
+PARALLEL_UPDATES = 1
+
 
 T = TypeVar("T")
 
@@ -79,7 +81,6 @@ class HuaweiSolarSelectEntityDescription[T](
 ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     HuaweiSolarSelectEntityDescription(
         key=rn.STORAGE_EXCESS_PV_ENERGY_USE_IN_TOU,
-        icon="mdi:battery-charging-medium",
         entity_category=EntityCategory.CONFIG,
     ),
 )
@@ -87,7 +88,6 @@ ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ..
 CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     HuaweiSolarSelectEntityDescription(
         key=rn.STORAGE_CAPACITY_CONTROL_MODE,
-        icon="mdi:battery-arrow-up",
         entity_category=EntityCategory.CONFIG,
         # Active capacity control is only available is 'Charge from grid' is enabled
         is_available_key=rn.STORAGE_CHARGE_FROM_GRID_FUNCTION,
@@ -98,7 +98,6 @@ CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, 
 BACKUP_VOLTAGE_INDEPENDENT_OPERATION_SELECT_DESCRIPTION = (
     HuaweiSolarSelectEntityDescription(
         key=rn.BACKUP_VOLTAGE_INDEPENDENT_OPERATION,
-        icon="mdi:transmission-tower",
         entity_category=EntityCategory.CONFIG,
         entity_registry_enabled_default=False,
     )
@@ -108,7 +107,6 @@ BACKUP_VOLTAGE_INDEPENDENT_OPERATION_SELECT_DESCRIPTION = (
 ACTIVE_POWER_LIMITATION_MODE_SELECT_DESCRIPTION = (
     HuaweiSolarSelectEntityDescription(
         key=rn.ACTIVE_POWER_LIMITATION_MODE,
-        icon="mdi:transmission-tower-export",
         entity_category=EntityCategory.CONFIG,
         entity_registry_enabled_default=False,
     )
@@ -129,12 +127,10 @@ EMMA_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
 SMART_AC_GUN_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     HuaweiSolarSelectEntityDescription(
         key=rn.CHARGER_GUN_WORK_MODE,
-        icon="mdi:solar-power",
         entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarSelectEntityDescription(
         key=rn.CHARGER_GUN_LOCK_CONTROL_MODE,
-        icon="mdi:lock-cog",
         entity_category=EntityCategory.CONFIG,
     ),
 )

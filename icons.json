@@ -1,43 +1,374 @@
 {
-    "services": {
-        "forcible_charge": {
-            "service": "mdi:battery-arrow-up"
+    "entity": {
+        "button": {
+            "stop_forcible_charge": {
+                "default": "mdi:battery-off"
+            }
         },
-        "forcible_discharge": {
-            "service": "mdi:battery-arrow-down"
+        "number": {
+            "active_power_fail_safe_threshold": {
+                "default": "mdi:transmission-tower-off"
+            },
+            "active_power_fixed_value_derating": {
+                "default": "mdi:transmission-tower-off"
+            },
+            "active_power_percentage_derating": {
+                "default": "mdi:transmission-tower-off"
+            },
+            "charger_dynamic_power_threshold": {
+                "default": "mdi:gauge"
+            },
+            "charger_gun_max_current": {
+                "default": "mdi:current-ac"
+            },
+            "charger_max_power_from_grid": {
+                "default": "mdi:transmission-tower"
+            },
+            "charger_orderly_charging_power": {
+                "default": "mdi:calendar-clock"
+            },
+            "charger_surplus_power_start_threshold": {
+                "default": "mdi:solar-power-variant"
+            },
+            "dongle_plant_maximum_charge_from_grid_power": {
+                "default": "mdi:battery-arrow-down"
+            },
+            "emma_maximum_feed_grid_power_percent": {
+                "default": "mdi:transmission-tower-off"
+            },
+            "emma_maximum_feed_grid_power_watt": {
+                "default": "mdi:transmission-tower-off"
+            },
+            "emma_tou_maximum_power_for_charging_batteries_from_grid": {
+                "default": "mdi:battery-positive"
+            },
+            "mppt_scanning_interval": {
+                "default": "mdi:sun-clock"
+            },
+            "storage_adjustment_deadband": {
+                "default": "mdi:speedometer"
+            },
+            "storage_backup_power_state_of_charge": {
+                "default": "mdi:battery-negative"
+            },
+            "storage_capacity_control_soc_peak_shaving": {
+                "default": "mdi:battery-arrow-up"
+            },
+            "storage_charging_cutoff_capacity": {
+                "default": "mdi:battery-positive"
+            },
+            "storage_discharging_cutoff_capacity": {
+                "default": "mdi:battery-negative"
+            },
+            "storage_grid_charge_cutoff_state_of_charge": {
+                "default": "mdi:battery-charging-50"
+            },
+            "storage_maximum_charging_power": {
+                "default": "mdi:battery-positive"
+            },
+            "storage_maximum_discharging_power": {
+                "default": "mdi:battery-negative"
+            },
+            "storage_maximum_grid_power_during_discharge": {
+                "default": "mdi:transmission-tower-import"
+            },
+            "storage_power_of_charge_from_grid": {
+                "default": "mdi:battery-negative"
+            }
         },
-        "forcible_charge_soc": {
-            "service": "mdi:battery-arrow-up"
+        "select": {
+            "active_power_limitation_mode": {
+                "default": "mdi:transmission-tower-export"
+            },
+            "backup_voltage_independent_operation": {
+                "default": "mdi:transmission-tower"
+            },
+            "charger_gun_lock_control_mode": {
+                "default": "mdi:lock-cog"
+            },
+            "charger_gun_work_mode": {
+                "default": "mdi:solar-power"
+            },
+            "storage_capacity_control_mode": {
+                "default": "mdi:battery-arrow-up"
+            },
+            "storage_excess_pv_energy_use_in_tou": {
+                "default": "mdi:battery-charging-medium"
+            }
         },
-        "forcible_discharge_soc": {
-            "service": "mdi:battery-arrow-down"
+        "sensor": {
+            "active_grid_a_power": {
+                "default": "mdi:flash"
+            },
+            "active_grid_b_power": {
+                "default": "mdi:flash"
+            },
+            "active_grid_c_power": {
+                "default": "mdi:flash"
+            },
+            "active_power_control_mode": {
+                "default": "mdi:transmission-tower"
+            },
+            "alarm": {
+                "default": "mdi:alarm-light"
+            },
+            "battery_remaining_charge_discharge_time": {
+                "default": "mdi:timer-sand"
+            },
+            "charger_charging_method": {
+                "default": "mdi:calendar-clock"
+            },
+            "charger_charging_wait_reason": {
+                "default": "mdi:timer-sand"
+            },
+            "charger_gun_lock_status": {
+                "default": "mdi:lock"
+            },
+            "charger_gun_work_status": {
+                "default": "mdi:ev-station"
+            },
+            "charger_indicator_light_status": {
+                "default": "mdi:led-on"
+            },
+            "charger_output_relay_status": {
+                "default": "mdi:electric-switch"
+            },
+            "charger_planned_departure_time": {
+                "default": "mdi:clock-outline"
+            },
+            "charger_reported_work_mode": {
+                "default": "mdi:tune"
+            },
+            "cumulative_dc_energy_yield_mppt1": {
+                "default": "mdi:solar-power"
+            },
+            "cumulative_dc_energy_yield_mppt2": {
+                "default": "mdi:solar-power"
+            },
+            "cumulative_dc_energy_yield_mppt3": {
+                "default": "mdi:solar-power"
+            },
+            "cumulative_dc_energy_yield_mppt4": {
+                "default": "mdi:solar-power"
+            },
+            "daily_yield_energy": {
+                "default": "mdi:solar-power"
+            },
+            "emma_tou_periods": {
+                "default": "mdi:calendar-text"
+            },
+            "energy_charged_today": {
+                "default": "mdi:battery-plus-variant"
+            },
+            "energy_discharged_today": {
+                "default": "mdi:battery-minus-variant"
+            },
+            "ess_chargeable_energy": {
+                "default": "mdi:battery-plus-variant"
+            },
+            "ess_dischargeable_energy": {
+                "default": "mdi:battery-minus-variant"
+            },
+            "feed_in_to_grid_today": {
+                "default": "mdi:transmission-tower-import"
+            },
+            "forcible_charge_summary": {
+                "default": "mdi:battery-charging-medium"
+            },
+            "grid_accumulated_energy": {
+                "default": "mdi:transmission-tower-export"
+            },
+            "grid_exported_energy": {
+                "default": "mdi:transmission-tower-import"
+            },
+            "hourly_yield_energy": {
+                "default": "mdi:solar-power"
+            },
+            "insulation_resistance": {
+                "default": "mdi:omega"
+            },
+            "meter_status": {
+                "default": "mdi:electric-switch"
+            },
+            "monthly_yield_energy": {
+                "default": "mdi:solar-power"
+            },
+            "nb_online_optimizers": {
+                "default": "mdi:solar-panel"
+            },
+            "output_power": {
+                "default": "mdi:flash"
+            },
+            "pack_1_charge_discharge_power": {
+                "default": "mdi:home-battery-outline"
+            },
+            "pack_1_current": {
+                "default": "mdi:home-lightning-bolt-outline"
+            },
+            "pack_1_total_charge": {
+                "default": "mdi:battery-plus-variant"
+            },
+            "pack_1_total_discharge": {
+                "default": "mdi:battery-minus-variant"
+            },
+            "pack_1_voltage": {
+                "default": "mdi:home-lightning-bolt"
+            },
+            "pack_2_charge_discharge_power": {
+                "default": "mdi:home-battery-outline"
+            },
+            "pack_2_current": {
+                "default": "mdi:home-lightning-bolt-outline"
+            },
+            "pack_2_total_charge": {
+                "default": "mdi:battery-plus-variant"
+            },
+            "pack_2_total_discharge": {
+                "default": "mdi:battery-minus-variant"
+            },
+            "pack_2_voltage": {
+                "default": "mdi:home-lightning-bolt"
+            },
+            "pack_3_charge_discharge_power": {
+                "default": "mdi:home-battery-outline"
+            },
+            "pack_3_current": {
+                "default": "mdi:home-lightning-bolt-outline"
+            },
+            "pack_3_total_charge": {
+                "default": "mdi:battery-plus-variant"
+            },
+            "pack_3_total_discharge": {
+                "default": "mdi:battery-minus-variant"
+            },
+            "pack_3_voltage": {
+                "default": "mdi:home-lightning-bolt"
+            },
+            "power_meter_active_power": {
+                "default": "mdi:flash"
+            },
+            "power_meter_reactive_power": {
+                "default": "mdi:flash"
+            },
+            "pv_yield_today": {
+                "default": "mdi:solar-power"
+            },
+            "rated_ess_capacity": {
+                "default": "mdi:home-battery-outline"
+            },
+            "shutdown_time": {
+                "default": "mdi:weather-sunset-down"
+            },
+            "smartlogger_energy_charged_today": {
+                "default": "mdi:battery-plus-variant"
+            },
+            "smartlogger_energy_discharged_today": {
+                "default": "mdi:battery-minus-variant"
+            },
+            "smartlogger_total_energy_charged": {
+                "default": "mdi:battery-plus-variant"
+            },
+            "smartlogger_total_energy_discharge_d": {
+                "default": "mdi:battery-minus-variant"
+            },
+            "startup_time": {
+                "default": "mdi:weather-sunset-up"
+            },
+            "state_of_capacity": {
+                "default": "mdi:home-battery"
+            },
+            "storage_bus_current": {
+                "default": "mdi:home-lightning-bolt-outline"
+            },
+            "storage_bus_voltage": {
+                "default": "mdi:home-lightning-bolt"
+            },
+            "storage_capacity_control_periods": {
+                "default": "mdi:calendar-text"
+            },
+            "storage_charge_discharge_power": {
+                "default": "mdi:home-battery-outline"
+            },
+            "storage_current_day_charge_capacity": {
+                "default": "mdi:battery-plus-variant"
+            },
+            "storage_current_day_discharge_capacity": {
+                "default": "mdi:battery-minus-variant"
+            },
+            "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
+                "default": "mdi:calendar-text"
+            },
+            "storage_lg_resu_time_of_use_price_periods": {
+                "default": "mdi:calendar-text"
+            },
+            "storage_maximum_charge_power": {
+                "default": "mdi:battery-plus-variant"
+            },
+            "storage_maximum_discharge_power": {
+                "default": "mdi:battery-minus-variant"
+            },
+            "storage_rated_capacity": {
+                "default": "mdi:home-battery"
+            },
+            "storage_state_of_capacity": {
+                "default": "mdi:home-battery"
+            },
+            "storage_total_charge": {
+                "default": "mdi:battery-plus-variant"
+            },
+            "storage_total_discharge": {
+                "default": "mdi:battery-minus-variant"
+            },
+            "supply_from_grid_today": {
+                "default": "mdi:transmission-tower-export"
+            },
+            "total_charged_energy": {
+                "default": "mdi:battery-plus-variant"
+            },
+            "total_discharged_energy": {
+                "default": "mdi:battery-minus-variant"
+            },
+            "total_feed_in_to_grid": {
+                "default": "mdi:transmission-tower-import"
+            },
+            "total_pv_energy_yield": {
+                "default": "mdi:solar-power"
+            },
+            "total_supply_from_grid": {
+                "default": "mdi:transmission-tower-export"
+            },
+            "voltage_to_ground": {
+                "default": "mdi:lightning-bolt"
+            },
+            "yearly_yield_energy": {
+                "default": "mdi:solar-power"
+            }
         },
-        "stop_forcible_charge": {
-            "service": "mdi:battery-off"
-        },
-        "reset_maximum_feed_grid_power": {
-            "service": "mdi:transmission-tower"
-        },
-        "set_di_active_power_scheduling": {
-            "service": "mdi:calendar-clock"
-        },
-        "set_zero_power_grid_connection": {
-            "service": "mdi:transmission-tower"
-        },
-        "set_maximum_feed_grid_power": {
-            "service": "mdi:transmission-tower-export"
-        },
-        "set_maximum_feed_grid_power_percent": {
-            "service": "mdi:transmission-tower-export"
-        },
-        "set_tou_periods": {
-            "service": "mdi:battery-clock"
-        },
-        "set_capacity_control_periods": {
-            "service": "mdi:battery-clock"
-        },
-        "set_fixed_charge_periods": {
-            "service": "mdi:battery-clock"
+        "switch": {
+            "backup_switch_to_off_grid": {
+                "default": "mdi:transmission-tower-off"
+            },
+            "charger_dynamic_power_control": {
+                "default": "mdi:flash-auto"
+            },
+            "charger_random_delay_charging": {
+                "default": "mdi:timer-sand"
+            },
+            "charger_single_three_phase_switch": {
+                "default": "mdi:numeric-3-box-multiple"
+            },
+            "mppt_multimodal_scanning": {
+                "default": "mdi:magnify-scan"
+            },
+            "startup": {
+                "default": "mdi:power-standby"
+            },
+            "storage_charge_from_grid_function": {
+                "default": "mdi:battery-charging-50"
+            },
+            "storage_ess_low_power": {
+                "default": "mdi:battery-saver"
+            }
         }
     }
 }

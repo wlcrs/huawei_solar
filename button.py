@@ -21,6 +21,8 @@ from .update_coordinator import HuaweiSolarUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
+PARALLEL_UPDATES = 1
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -56,7 +58,6 @@ class StopForcibleChargeButtonEntity(HuaweiSolarEntity, ButtonEntity):
 
     _attr_entity_category = EntityCategory.CONFIG
     _attr_translation_key = "stop_forcible_charge"
-    _attr_icon = "mdi:battery-off"
 
     def __init__(
         self,

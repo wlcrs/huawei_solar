@@ -40,6 +40,8 @@ from .update_coordinator import HuaweiSolarUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
+PARALLEL_UPDATES = 1
+
 
 T = TypeVar("T")
 
@@ -80,7 +82,6 @@ ENERGY_STORAGE_WITH_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[
 ] = (
     HuaweiSolarSwitchEntityDescription(
         key=rn.STORAGE_CHARGE_FROM_GRID_FUNCTION,
-        icon="mdi:battery-charging-50",
         entity_category=EntityCategory.CONFIG,
         is_available_key=rn.STORAGE_CAPACITY_CONTROL_MODE,
         check_is_available_func=(
@@ -94,7 +95,6 @@ ENERGY_STORAGE_WITHOUT_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[
 ] = (
     HuaweiSolarSwitchEntityDescription(
         key=rn.STORAGE_CHARGE_FROM_GRID_FUNCTION,
-        icon="mdi:battery-charging-50",
         entity_category=EntityCategory.CONFIG,
     ),
 )
@@ -102,14 +102,12 @@ ENERGY_STORAGE_WITHOUT_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS: tuple[
 ENERGY_STORAGE_ESS_LOW_POWER_SWITCH_DESCRIPTION = (
     HuaweiSolarSwitchEntityDescription(
         key=rn.STORAGE_ESS_LOW_POWER,
-        icon="mdi:battery-saver",
         entity_category=EntityCategory.CONFIG,
     )
 )
 
 BACKUP_SWITCH_TO_OFF_GRID_SWITCH_DESCRIPTION = HuaweiSolarSwitchEntityDescription(
     key=rn.BACKUP_SWITCH_TO_OFF_GRID,
-    icon="mdi:transmission-tower-off",
     entity_category=EntityCategory.CONFIG,
     entity_registry_enabled_default=False,
 )
@@ -118,7 +116,6 @@ BACKUP_SWITCH_TO_OFF_GRID_SWITCH_DESCRIPTION = HuaweiSolarSwitchEntityDescriptio
 INVERTER_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     HuaweiSolarSwitchEntityDescription(
         key=rn.MPPT_MULTIMODAL_SCANNING,
-        icon="mdi:magnify-scan",
         entity_category=EntityCategory.CONFIG,
         entity_registry_enabled_default=False,
     ),
@@ -127,7 +124,6 @@ INVERTER_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
 CHARGER_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     HuaweiSolarSwitchEntityDescription(
         key=rn.CHARGER_RANDOM_DELAY_CHARGING,
-        icon="mdi:timer-sand",
         entity_category=EntityCategory.CONFIG,
     ),
 )
@@ -135,12 +131,10 @@ CHARGER_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
 SMART_AC_GUN_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     HuaweiSolarSwitchEntityDescription(
         key=rn.CHARGER_SINGLE_THREE_PHASE_SWITCH,
-        icon="mdi:numeric-3-box-multiple",
         entity_category=EntityCategory.CONFIG,
     ),
     HuaweiSolarSwitchEntityDescription(
         key=rn.CHARGER_DYNAMIC_POWER_CONTROL,
-        icon="mdi:flash-auto",
         entity_category=EntityCategory.CONFIG,
     ),
 )
@@ -347,7 +341,7 @@ class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
         self.device = device
         self.entity_description = SwitchEntityDescription(
             key=rn.STARTUP,
-            icon="mdi:power-standby",
+            translation_key=rn.STARTUP,
             entity_category=EntityCategory.CONFIG,
         )
 
