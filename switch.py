@@ -11,6 +11,7 @@ from typing import Any, TypeVar
 
 from huawei_solar import (
     HuaweiSolarDevice,
+    HuaweiSolarException,
     RegisterName,
     SChargerDevice,
     SmartAcGunDevice,
@@ -402,9 +403,15 @@ class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
                 self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
             ):
                 await asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
-                device_status = (await self.device.client.get(rn.DEVICE_STATUS)).value
+                try:
+                    result = await self.device.get(rn.DEVICE_STATUS)
+                    device_status = result.value
+                except HuaweiSolarException:
+                    continue
+
                 if not self._is_off(device_status):
                     self._attr_is_on = True
+                    self.async_write_ha_state()
                     break
 
         await self.coordinator.async_request_refresh()
@@ -414,14 +421,20 @@ class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
         async with self._change_lock:
             await self.device.set(rn.SHUTDOWN, 0)
 
-            # Turning on can take up to 5 minutes... We'll poll every 15 seconds
+            # Turning off can take up to 5 minutes... We'll poll every 15 seconds
             for _ in range(
                 self.MAX_STATUS_CHANGE_TIME_SECONDS // self.POLL_FREQUENCY_SECONDS
             ):
                 await asyncio.sleep(self.POLL_FREQUENCY_SECONDS)
-                device_status = (await self.device.client.get(rn.DEVICE_STATUS)).value
+                try:
+                    result = await self.device.get(rn.DEVICE_STATUS)
+                    device_status = result.value
+                except HuaweiSolarException:
+                    continue
+
                 if self._is_off(device_status):
                     self._attr_is_on = False
+                    self.async_write_ha_state()
                     break
 
         await self.coordinator.async_request_refresh()
