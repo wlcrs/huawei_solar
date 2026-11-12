@@ -22,6 +22,7 @@ from huawei_solar import (
     InvalidCredentials,
     MeterDevice,
     ReadException,
+    RegisterName,
     SChargerDevice,
     SDongleDevice,
     SmartAcGunDevice,
@@ -51,7 +52,17 @@ from .const import (
     OPTIMIZER_UPDATE_INTERVAL,
     POWER_METER_UPDATE_INTERVAL,
 )
+from .number import get_number_registers
+from .select import get_select_registers
+from .sensor import (
+    get_configuration_sensor_registers,
+    get_device_sensor_registers,
+    get_energy_storage_sensor_registers,
+    get_inverter_sensor_registers,
+    get_power_meter_sensor_registers,
+)
 from .services import async_setup_services
+from .switch import get_inverter_switch_registers, get_switch_registers
 from .types import (
     HuaweiSolarConfigEntry,
     HuaweiSolarDeviceData,
@@ -205,18 +216,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
 
         primary_device = await create_device_instance(client)
 
-        if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION):
-            if (
-                isinstance(primary_device, HuaweiSolarDeviceWithLogin)
-                and entry.data.get(CONF_USERNAME)
-                and entry.data.get(CONF_PASSWORD)
-            ):
-                try:
-                    await primary_device.login(
-                        entry.data[CONF_USERNAME], entry.data[CONF_PASSWORD]
-                    )
-                except InvalidCredentials as err:
-                    raise ConfigEntryAuthFailed from err
+        if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION) and (
+            isinstance(primary_device, HuaweiSolarDeviceWithLogin)
+            and entry.data.get(CONF_USERNAME)
+            and entry.data.get(CONF_PASSWORD)
+        ):
+            try:
+                await primary_device.login(
+                    entry.data[CONF_USERNAME], entry.data[CONF_PASSWORD]
+                )
+            except InvalidCredentials as err:
+                raise ConfigEntryAuthFailed from err
 
         primary_device_data = await _setup_device_data(
             hass,
@@ -351,6 +361,20 @@ def _battery_product_model_to_model(spm: rv.StorageProductModel) -> str | None:
     return None
 
 
+def _get_configuration_registers(
+    device: HuaweiSolarDevice, *, has_write_permission: bool = False
+) -> set[RegisterName]:
+    """Get all registers for configuration update coordinator."""
+    return (
+        get_number_registers(device)
+        | get_select_registers(device)
+        | get_switch_registers(device)
+        | get_configuration_sensor_registers(
+            device, has_write_permission=has_write_permission
+        )
+    )
+
+
 async def _setup_inverter_device_data(
     hass: HomeAssistant,
     entry: ConfigEntry,
@@ -381,13 +405,26 @@ async def _setup_inverter_device_data(
         via_device_id=via_device_id,
     )
 
+    has_write_permission = False
+    if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
+        try:
+            has_write_permission = await device.has_write_permission()
+        except HuaweiSolarException:
+            _LOGGER.debug(
+                "Failed to check write permission for %s", device.serial_number
+            )
+
     update_coordinator = HuaweiSolarUpdateCoordinator(
         hass,
         _LOGGER,
+        config_entry=entry,
         device=device,
         name=f"{device.serial_number}_data_update_coordinator",
         update_interval=INVERTER_UPDATE_INTERVAL,
+        initial_registers=get_inverter_sensor_registers(device)
+        | get_inverter_switch_registers(),
     )
+    await update_coordinator.async_config_entry_first_refresh()
 
     # Add power meter device if a power meter is detected
     if device.power_meter_type is not None:
@@ -401,10 +438,13 @@ async def _setup_inverter_device_data(
         power_meter_update_coordinator = HuaweiSolarUpdateCoordinator(
             hass,
             _LOGGER,
+            config_entry=entry,
             device=device,
             name=f"{device.serial_number}_power_meter_data_update_coordinator",
             update_interval=POWER_METER_UPDATE_INTERVAL,
+            initial_registers=get_power_meter_sensor_registers(device),
         )
+        await power_meter_update_coordinator.async_config_entry_first_refresh()
     else:
         power_meter_device_info = None
         power_meter_update_coordinator = None
@@ -424,10 +464,13 @@ async def _setup_inverter_device_data(
         energy_storage_update_coordinator = HuaweiSolarUpdateCoordinator(
             hass,
             _LOGGER,
+            config_entry=entry,
             device=device,
             name=f"{device.serial_number}_battery_data_update_coordinator",
             update_interval=ENERGY_STORAGE_UPDATE_INTERVAL,
+            initial_registers=get_energy_storage_sensor_registers(device),
         )
+        await energy_storage_update_coordinator.async_config_entry_first_refresh()
     else:
         battery_device_info = None
         energy_storage_update_coordinator = None
@@ -486,6 +529,7 @@ async def _setup_inverter_device_data(
             optimizer_update_coordinator = await create_optimizer_update_coordinator(
                 hass,
                 device,
+                entry,
                 optimizers_device_infos,
                 OPTIMIZER_UPDATE_INTERVAL,
             )
@@ -528,10 +572,15 @@ async def _setup_inverter_device_data(
         configuration_update_coordinator = HuaweiSolarUpdateCoordinator(
             hass,
             _LOGGER,
+            config_entry=entry,
             device=device,
             name=f"{device.serial_number}_config_data_update_coordinator",
             update_interval=CONFIGURATION_UPDATE_INTERVAL,
+            initial_registers=_get_configuration_registers(
+                device, has_write_permission=has_write_permission
+            ),
         )
+        await configuration_update_coordinator.async_config_entry_first_refresh()
     else:
         configuration_update_coordinator = None
 
@@ -549,6 +598,7 @@ async def _setup_inverter_device_data(
         battery_1=battery_1_device_info,
         battery_2=battery_2_device_info,
         configuration_update_coordinator=configuration_update_coordinator,
+        has_write_permission=has_write_permission,
     )
 
 
@@ -601,22 +651,39 @@ async def _setup_device_data(
         via_device_id=via_device_id,
     )
 
+    has_write_permission = False
+    if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
+        try:
+            has_write_permission = await device.has_write_permission()
+        except HuaweiSolarException:
+            _LOGGER.debug(
+                "Failed to check write permission for %s", device.serial_number
+            )
+
     update_coordinator = HuaweiSolarUpdateCoordinator(
         hass,
         _LOGGER,
+        config_entry=entry,
         device=device,
         name=f"{device.serial_number}_data_update_coordinator",
         update_interval=INVERTER_UPDATE_INTERVAL,
+        initial_registers=get_device_sensor_registers(device),
     )
+    await update_coordinator.async_config_entry_first_refresh()
 
     if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
         configuration_update_coordinator = HuaweiSolarUpdateCoordinator(
             hass,
             _LOGGER,
+            config_entry=entry,
             device=device,
             name=f"{device.serial_number}_config_data_update_coordinator",
             update_interval=CONFIGURATION_UPDATE_INTERVAL,
+            initial_registers=_get_configuration_registers(
+                device, has_write_permission=has_write_permission
+            ),
         )
+        await configuration_update_coordinator.async_config_entry_first_refresh()
     else:
         configuration_update_coordinator = None
 
@@ -626,4 +693,5 @@ async def _setup_device_data(
         device_info=device_info,
         update_coordinator=update_coordinator,
         configuration_update_coordinator=configuration_update_coordinator,
+        has_write_permission=has_write_permission,
     )

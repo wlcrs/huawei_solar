@@ -1,6 +1,6 @@
 """Specialized DataUpdateCoordinators for Huawei Solar entities."""
 
-from collections.abc import Awaitable, Callable
+from collections.abc import Awaitable, Callable, Iterable
 from datetime import timedelta
 from itertools import chain
 import logging
@@ -20,7 +20,7 @@ from huawei_solar.files import OptimizerRealTimeData
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.debounce import Debouncer
-from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.device_registry import ConfigEntry, DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 _LOGGER = logging.getLogger(__name__)
@@ -32,33 +32,47 @@ class HuaweiSolarUpdateCoordinator(
     """A specialised DataUpdateCoordinator for Huawei Solar entities."""
 
     device: HuaweiSolarDevice
+    initial_registers: set[RegisterName]
 
     def __init__(
         self,
         hass: HomeAssistant,
         logger: logging.Logger,
+        *,
+        config_entry: ConfigEntry,
         device: HuaweiSolarDevice,
         name: str,
         update_interval: timedelta | None = None,
         update_method: Callable[[], Awaitable[dict[RegisterName, Result[Any]]]]
         | None = None,
         request_refresh_debouncer: Debouncer | None = None,
+        initial_registers: Iterable[RegisterName] | None = None,
     ) -> None:
         """Create a HuaweiSolarUpdateCoordinator."""
         super().__init__(
             hass,
             logger,
+            config_entry=config_entry,
             name=name,
             update_interval=update_interval,
             update_method=update_method,
             request_refresh_debouncer=request_refresh_debouncer,
         )
         self.device = device
+        self.initial_registers = set(initial_registers or [])
 
     async def _async_update_data(self) -> dict[RegisterName, Result[Any]]:
-        register_names_set = set(
-            chain.from_iterable(ctx["register_names"] for ctx in self.async_contexts())
-        )
+        contexts = list(self.async_contexts())
+        if contexts:
+            register_names_set = set(
+                chain.from_iterable(ctx["register_names"] for ctx in contexts)
+            )
+        else:
+            register_names_set = self.initial_registers
+
+        if not register_names_set:
+            return {}
+
         try:
             return await self.device.batch_update(list(register_names_set))
         except TimeoutError as err:
@@ -107,8 +121,10 @@ class HuaweiSolarOptimizerUpdateCoordinator(
         self,
         hass: HomeAssistant,
         logger: logging.Logger,
+        *,
         device: SUN2000Device,
         optimizer_device_infos: dict[int, DeviceInfo],
+        config_entry: ConfigEntry,
         name: str,
         update_interval: timedelta | None = None,
         request_refresh_debouncer: Debouncer | None = None,
@@ -117,6 +133,7 @@ class HuaweiSolarOptimizerUpdateCoordinator(
         super().__init__(
             hass,
             logger,
+            config_entry=config_entry,
             name=name,
             update_interval=update_interval,
             request_refresh_debouncer=request_refresh_debouncer,
@@ -160,6 +177,7 @@ class HuaweiSolarOptimizerUpdateCoordinator(
 async def create_optimizer_update_coordinator(
     hass: HomeAssistant,
     device: SUN2000Device,
+    config_entry: ConfigEntry,
     optimizer_device_infos: dict[int, DeviceInfo],
     update_interval: timedelta | None,
 ) -> HuaweiSolarOptimizerUpdateCoordinator:
@@ -169,11 +187,12 @@ async def create_optimizer_update_coordinator(
         hass,
         _LOGGER,
         device=device,
+        config_entry=config_entry,
         optimizer_device_infos=optimizer_device_infos,
         name=f"{device.serial_number}_optimizer_data_update_coordinator",
         update_interval=update_interval,
     )
 
-    await coordinator.async_refresh()
+    await coordinator.async_config_entry_first_refresh()
 
     return coordinator

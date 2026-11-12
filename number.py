@@ -1,6 +1,7 @@
 """Number entities for Huawei Solar."""
 
 from dataclasses import dataclass
+from itertools import chain
 import logging
 
 from huawei_solar import (
@@ -9,7 +10,9 @@ from huawei_solar import (
     RegisterName,
     SChargerDevice,
     SmartAcGunDevice,
+    SUN2000Device,
     register_names as rn,
+    register_values as rv,
 )
 
 from homeassistant.components.number import (
@@ -27,13 +30,12 @@ from homeassistant.const import (
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_DEVICE_DATAS
 from .types import (
     HuaweiSolarConfigEntry,
+    HuaweiSolarCoordinatorEntity,
     HuaweiSolarDeviceData,
-    HuaweiSolarEntity,
     HuaweiSolarEntityContext,
     HuaweiSolarEntityDescription,
     HuaweiSolarInverterData,
@@ -49,13 +51,8 @@ class HuaweiSolarNumberEntityDescription(
 ):
     """Huawei Solar Number Entity Description."""
 
-    # Used when the min/max cannot dynamically change
-    static_minimum_key: RegisterName | None = None
-    static_maximum_key: RegisterName | None = None
-
-    # Used when the min/max is influenced by other parameters
-    dynamic_minimum_key: RegisterName | None = None
-    dynamic_maximum_key: RegisterName | None = None
+    minimum_key: RegisterName | None = None
+    maximum_key: RegisterName | None = None
 
     def __post_init__(self) -> None:
         """Defaults the translation_key to the number key."""
@@ -73,10 +70,10 @@ class HuaweiSolarNumberEntityDescription(
         """Context used by DataUpdateCoordinator."""
 
         registers = [self.register_name]
-        if self.dynamic_minimum_key:
-            registers.append(self.dynamic_minimum_key)
-        if self.dynamic_maximum_key:
-            registers.append(self.dynamic_maximum_key)
+        if self.minimum_key:
+            registers.append(self.minimum_key)
+        if self.maximum_key:
+            registers.append(self.maximum_key)
         return HuaweiSolarEntityContext(register_names=registers)
 
 
@@ -106,7 +103,7 @@ INVERTER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.ACTIVE_POWER_FIXED_VALUE_DERATING,
-        static_maximum_key=rn.P_MAX,
+        maximum_key=rn.P_MAX,
         native_step=1,
         native_min_value=0,
         icon="mdi:transmission-tower-off",
@@ -197,7 +194,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_MAXIMUM_CHARGING_POWER,
         native_min_value=0,
-        static_maximum_key=rn.STORAGE_MAXIMUM_CHARGE_POWER,
+        maximum_key=rn.STORAGE_MAXIMUM_CHARGE_POWER,
         icon="mdi:battery-positive",
         native_unit_of_measurement=UnitOfPower.WATT,
         entity_category=EntityCategory.CONFIG,
@@ -205,7 +202,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_MAXIMUM_DISCHARGING_POWER,
         native_min_value=0,
-        static_maximum_key=rn.STORAGE_MAXIMUM_DISCHARGE_POWER,
+        maximum_key=rn.STORAGE_MAXIMUM_DISCHARGE_POWER,
         icon="mdi:battery-negative",
         native_unit_of_measurement=UnitOfPower.WATT,
         entity_category=EntityCategory.CONFIG,
@@ -241,7 +238,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_POWER_OF_CHARGE_FROM_GRID,
         native_min_value=0,
-        dynamic_maximum_key=rn.STORAGE_MAXIMUM_POWER_OF_CHARGE_FROM_GRID,
+        maximum_key=rn.STORAGE_MAXIMUM_POWER_OF_CHARGE_FROM_GRID,
         icon="mdi:battery-negative",
         native_unit_of_measurement=UnitOfPower.WATT,
         entity_category=EntityCategory.CONFIG,
@@ -251,7 +248,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
 CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_CAPACITY_CONTROL_SOC_PEAK_SHAVING,
-        dynamic_minimum_key=rn.STORAGE_DISCHARGING_CUTOFF_CAPACITY,
+        minimum_key=rn.STORAGE_DISCHARGING_CUTOFF_CAPACITY,
         native_max_value=100,
         native_step=0.1,
         icon="mdi:battery-arrow-up",
@@ -263,7 +260,7 @@ CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, 
         key=rn.STORAGE_DISCHARGING_CUTOFF_CAPACITY,
         native_min_value=0,
         native_max_value=20,
-        dynamic_maximum_key=rn.STORAGE_CAPACITY_CONTROL_SOC_PEAK_SHAVING,
+        maximum_key=rn.STORAGE_CAPACITY_CONTROL_SOC_PEAK_SHAVING,
         native_step=0.1,
         icon="mdi:battery-negative",
         native_unit_of_measurement=PERCENTAGE,
@@ -291,8 +288,8 @@ NON_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[
 CHARGER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.CHARGER_DYNAMIC_POWER_THRESHOLD,
-        dynamic_minimum_key=rn.CHARGER_MIN_CHARGING_POWER,
-        dynamic_maximum_key=rn.CHARGER_MAX_FIXED_POWER,
+        minimum_key=rn.CHARGER_MIN_CHARGING_POWER,
+        maximum_key=rn.CHARGER_MAX_FIXED_POWER,
         native_step=0.1,
         icon="mdi:gauge",
         native_unit_of_measurement=UnitOfPower.KILO_WATT,
@@ -300,8 +297,8 @@ CHARGER_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     ),
     HuaweiSolarNumberEntityDescription(
         key=rn.CHARGER_ORDERLY_CHARGING_POWER,
-        dynamic_minimum_key=rn.CHARGER_MIN_CHARGING_POWER,
-        dynamic_maximum_key=rn.CHARGER_MAX_CHARGING_POWER,
+        minimum_key=rn.CHARGER_MIN_CHARGING_POWER,
+        maximum_key=rn.CHARGER_MAX_CHARGING_POWER,
         native_step=0.1,
         icon="mdi:calendar-clock",
         native_unit_of_measurement=UnitOfPower.KILO_WATT,
@@ -315,7 +312,7 @@ SMART_AC_GUN_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...]
         key=rn.CHARGER_GUN_MAX_CURRENT,
         native_min_value=6.0,
         native_max_value=32.0,
-        dynamic_maximum_key=rn.CHARGER_CABLE_MAX_CURRENT,
+        maximum_key=rn.CHARGER_CABLE_MAX_CURRENT,
         native_step=0.1,
         icon="mdi:current-ac",
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
@@ -361,8 +358,8 @@ async def async_setup_entry(
         slave_entities: list[HuaweiSolarNumberEntity] = []
         if isinstance(ucs.device, EMMADevice):
             for entity_description in EMMA_NUMBER_DESCRIPTIONS:
-                slave_entities.append(  # noqa: PERF401
-                    await HuaweiSolarNumberEntity.create(
+                slave_entities.append(
+                    HuaweiSolarNumberEntity(
                         ucs.configuration_update_coordinator,
                         ucs.device,
                         entity_description,
@@ -372,8 +369,8 @@ async def async_setup_entry(
 
         if isinstance(ucs.device, SChargerDevice):
             for entity_description in CHARGER_NUMBER_DESCRIPTIONS:
-                slave_entities.append(  # noqa: PERF401
-                    await HuaweiSolarNumberEntity.create(
+                slave_entities.append(
+                    HuaweiSolarNumberEntity(
                         ucs.configuration_update_coordinator,
                         ucs.device,
                         entity_description,
@@ -383,8 +380,8 @@ async def async_setup_entry(
 
         if isinstance(ucs.device, SmartAcGunDevice):
             for entity_description in SMART_AC_GUN_NUMBER_DESCRIPTIONS:
-                slave_entities.append(  # noqa: PERF401
-                    await HuaweiSolarNumberEntity.create(
+                slave_entities.append(
+                    HuaweiSolarNumberEntity(
                         ucs.configuration_update_coordinator,
                         ucs.device,
                         entity_description,
@@ -394,8 +391,8 @@ async def async_setup_entry(
 
         if isinstance(ucs, HuaweiSolarInverterData):
             for entity_description in INVERTER_NUMBER_DESCRIPTIONS:
-                slave_entities.append(  # noqa: PERF401
-                    await HuaweiSolarNumberEntity.create(
+                slave_entities.append(
+                    HuaweiSolarNumberEntity(
                         ucs.configuration_update_coordinator,
                         ucs.device,
                         entity_description,
@@ -405,7 +402,7 @@ async def async_setup_entry(
 
             if ucs.device.supports_active_power_fail_safe:
                 slave_entities.append(
-                    await HuaweiSolarNumberEntity.create(
+                    HuaweiSolarNumberEntity(
                         ucs.configuration_update_coordinator,
                         ucs.device,
                         ACTIVE_POWER_FAIL_SAFE_THRESHOLD_NUMBER_DESCRIPTION,
@@ -415,8 +412,8 @@ async def async_setup_entry(
 
             if ucs.connected_energy_storage:
                 for entity_description in ENERGY_STORAGE_NUMBER_DESCRIPTIONS:
-                    slave_entities.append(  # noqa: PERF401
-                        await HuaweiSolarNumberEntity.create(
+                    slave_entities.append(
+                        HuaweiSolarNumberEntity(
                             ucs.configuration_update_coordinator,
                             ucs.device,
                             entity_description,
@@ -426,7 +423,7 @@ async def async_setup_entry(
 
                 if ucs.device.supports_dongle_charge_power_limit:
                     slave_entities.append(
-                        await HuaweiSolarNumberEntity.create(
+                        HuaweiSolarNumberEntity(
                             ucs.configuration_update_coordinator,
                             ucs.device,
                             DONGLE_PLANT_MAXIMUM_CHARGE_FROM_GRID_POWER_NUMBER_DESCRIPTION,
@@ -436,7 +433,7 @@ async def async_setup_entry(
 
                 if ucs.device.supports_discharge_power_adjustment:
                     slave_entities.append(
-                        await HuaweiSolarNumberEntity.create(
+                        HuaweiSolarNumberEntity(
                             ucs.configuration_update_coordinator,
                             ucs.device,
                             STORAGE_MAXIMUM_GRID_POWER_DURING_DISCHARGE_NUMBER_DESCRIPTION,
@@ -444,7 +441,7 @@ async def async_setup_entry(
                         )
                     )
                     slave_entities.append(
-                        await HuaweiSolarNumberEntity.create(
+                        HuaweiSolarNumberEntity(
                             ucs.configuration_update_coordinator,
                             ucs.device,
                             STORAGE_ADJUSTMENT_DEADBAND_NUMBER_DESCRIPTION,
@@ -458,8 +455,8 @@ async def async_setup_entry(
                         ucs.device.serial_number,
                     )
                     for entity_description in CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
-                        slave_entities.append(  # noqa: PERF401
-                            await HuaweiSolarNumberEntity.create(
+                        slave_entities.append(
+                            HuaweiSolarNumberEntity(
                                 ucs.configuration_update_coordinator,
                                 ucs.device,
                                 entity_description,
@@ -473,8 +470,8 @@ async def async_setup_entry(
                         ucs.device.serial_number,
                     )
                     for entity_description in NON_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
-                        slave_entities.append(  # noqa: PERF401
-                            await HuaweiSolarNumberEntity.create(
+                        slave_entities.append(
+                            HuaweiSolarNumberEntity(
                                 ucs.configuration_update_coordinator,
                                 ucs.device,
                                 entity_description,
@@ -493,19 +490,14 @@ async def async_setup_entry(
     async_add_entities(entities_to_add)
 
 
-class HuaweiSolarNumberEntity(
-    CoordinatorEntity[HuaweiSolarUpdateCoordinator], HuaweiSolarEntity, NumberEntity
-):
+class HuaweiSolarNumberEntity(HuaweiSolarCoordinatorEntity, NumberEntity):
     """Huawei Solar Number Entity."""
 
     entity_description: HuaweiSolarNumberEntityDescription
     _attr_mode = NumberMode.BOX  # Always allow a precise number
 
-    _static_min_value: float | None = None
-    _static_max_value: float | None = None
-
-    _dynamic_min_value: float | None = None
-    _dynamic_max_value: float | None = None
+    _minimum_value: float | None = None
+    _maximum_value: float | None = None
 
     def __init__(
         self,
@@ -513,13 +505,8 @@ class HuaweiSolarNumberEntity(
         device: HuaweiSolarDevice,
         description: HuaweiSolarNumberEntityDescription,
         device_info: DeviceInfo,
-        static_max_value: float | None = None,
-        static_min_value: float | None = None,
     ) -> None:
-        """Huawei Solar Number Entity constructor.
-
-        Do not use directly. Use `.create` instead!
-        """
+        """Huawei Solar Number Entity constructor."""
         super().__init__(coordinator, description.context)
         self.coordinator = coordinator
 
@@ -529,9 +516,6 @@ class HuaweiSolarNumberEntity(
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{description.key}"
 
-        self._static_max_value = static_max_value
-        self._static_min_value = static_min_value
-
     @classmethod
     async def create(
         cls,
@@ -540,31 +524,8 @@ class HuaweiSolarNumberEntity(
         description: HuaweiSolarNumberEntityDescription,
         device_info: DeviceInfo,
     ) -> "HuaweiSolarNumberEntity":
-        """Huawei Solar Number Entity constructor.
-
-        This async constructor fills in the necessary min/max values
-        """
-
-        static_max_value = None
-        if description.static_maximum_key:
-            static_max_value = (
-                await device.client.get(description.static_maximum_key)
-            ).value
-
-        static_min_value = None
-        if description.static_minimum_key:
-            static_min_value = (
-                await device.client.get(description.static_minimum_key)
-            ).value
-
-        return cls(
-            coordinator,
-            device,
-            description,
-            device_info,
-            static_max_value,
-            static_min_value,
-        )
+        """Huawei Solar Number Entity constructor."""
+        return cls(coordinator, device, description, device_info)
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -577,21 +538,21 @@ class HuaweiSolarNumberEntity(
                 self.entity_description.register_name
             ].value
 
-            if self.entity_description.dynamic_minimum_key:
+            if self.entity_description.minimum_key:
                 min_register = self.coordinator.data.get(
-                    self.entity_description.dynamic_minimum_key
+                    self.entity_description.minimum_key
                 )
-
                 if min_register:
-                    self._dynamic_min_value = min_register.value
+                    self._minimum_value = min_register.value
 
-            if self.entity_description.dynamic_maximum_key:
+            if self.entity_description.maximum_key:
                 max_register = self.coordinator.data.get(
-                    self.entity_description.dynamic_maximum_key
+                    self.entity_description.maximum_key
                 )
-
                 if max_register:
-                    self._dynamic_max_value = max_register.value
+                    self._maximum_value = max_register.value
+
+            self._attr_available = True
         else:
             self._attr_available = False
             self._attr_native_value = None
@@ -607,32 +568,62 @@ class HuaweiSolarNumberEntity(
 
     @property
     def native_max_value(self) -> float:
-        """Maximum value, possibly determined dynamically using _dynamic_max_value."""
-        native_max_value = (
-            self._static_max_value or self.entity_description.native_max_value
-        )
+        """Maximum value, possibly determined dynamically using maximum_key."""
+        if self._maximum_value is not None:
+            if self.entity_description.native_max_value is not None:
+                return min(self._maximum_value, self.entity_description.native_max_value)
+            return self._maximum_value
 
-        if self._dynamic_max_value:
-            if native_max_value:
-                return min(self._dynamic_max_value, native_max_value)
-            return self._dynamic_max_value
+        if self.entity_description.native_max_value is not None:
+            return self.entity_description.native_max_value
 
-        if native_max_value:
-            return native_max_value
         return DEFAULT_MAX_VALUE
 
     @property
     def native_min_value(self) -> float:
-        """Minimum value, possibly determined dynamically using _dynamic_min_value."""
-        native_min_value = (
-            self._static_min_value or self.entity_description.native_min_value
-        )
+        """Minimum value, possibly determined dynamically using minimum_key."""
+        if self._minimum_value is not None:
+            if self.entity_description.native_min_value is not None:
+                return max(self._minimum_value, self.entity_description.native_min_value)
+            return self._minimum_value
 
-        if self._dynamic_min_value:
-            if native_min_value:
-                return max(self._dynamic_min_value, native_min_value)
-            return self._dynamic_min_value
+        if self.entity_description.native_min_value is not None:
+            return self.entity_description.native_min_value
 
-        if native_min_value:
-            return native_min_value
         return DEFAULT_MIN_VALUE
+
+
+def get_number_registers(device: HuaweiSolarDevice) -> set[RegisterName]:
+    """Get registers needed for number entities."""
+    descriptions: list[HuaweiSolarNumberEntityDescription] = []
+    if isinstance(device, EMMADevice):
+        descriptions.extend(EMMA_NUMBER_DESCRIPTIONS)
+    elif isinstance(device, SChargerDevice):
+        descriptions.extend(CHARGER_NUMBER_DESCRIPTIONS)
+    elif isinstance(device, SmartAcGunDevice):
+        descriptions.extend(SMART_AC_GUN_NUMBER_DESCRIPTIONS)
+    elif isinstance(device, SUN2000Device):
+        descriptions.extend(INVERTER_NUMBER_DESCRIPTIONS)
+        if device.supports_active_power_fail_safe:
+            descriptions.append(ACTIVE_POWER_FAIL_SAFE_THRESHOLD_NUMBER_DESCRIPTION)
+        if device.battery_type != rv.StorageProductModel.NONE:
+            descriptions.extend(ENERGY_STORAGE_NUMBER_DESCRIPTIONS)
+            if device.supports_dongle_charge_power_limit:
+                descriptions.append(
+                    DONGLE_PLANT_MAXIMUM_CHARGE_FROM_GRID_POWER_NUMBER_DESCRIPTION
+                )
+            if device.supports_discharge_power_adjustment:
+                descriptions.append(
+                    STORAGE_MAXIMUM_GRID_POWER_DURING_DISCHARGE_NUMBER_DESCRIPTION
+                )
+                descriptions.append(
+                    STORAGE_ADJUSTMENT_DEADBAND_NUMBER_DESCRIPTION
+                )
+            if device.supports_capacity_control:
+                descriptions.extend(CAPACITY_CONTROL_NUMBER_DESCRIPTIONS)
+            else:
+                descriptions.extend(NON_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS)
+
+    return set(
+        chain.from_iterable(desc.context["register_names"] for desc in descriptions)
+    )

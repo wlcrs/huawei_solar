@@ -1,13 +1,17 @@
 """Typing for the Huawei Solar integration."""
 
 from dataclasses import dataclass
-from typing import TypedDict, cast
+from typing import Any, TypedDict, cast
 
 from huawei_solar import HuaweiSolarDevice, RegisterName, SUN2000Device
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import Entity, EntityDescription
+from homeassistant.helpers.update_coordinator import (
+    CoordinatorEntity,
+    DataUpdateCoordinator,
+)
 
 from .update_coordinator import (
     HuaweiSolarOptimizerUpdateCoordinator,
@@ -24,6 +28,7 @@ class HuaweiSolarDeviceData:
     device_info: DeviceInfo
     update_coordinator: HuaweiSolarUpdateCoordinator
     configuration_update_coordinator: HuaweiSolarUpdateCoordinator | None
+    has_write_permission: bool = False
 
 
 @dataclass
@@ -71,3 +76,14 @@ class HuaweiSolarEntityContext(TypedDict):
     """Context for Huawei Solar Entities."""
 
     register_names: list[RegisterName]
+
+
+class HuaweiSolarCoordinatorEntity[
+    CoordinatorT: DataUpdateCoordinator[Any] = HuaweiSolarUpdateCoordinator
+](CoordinatorEntity[CoordinatorT], HuaweiSolarEntity):
+    """Huawei Solar Coordinator Entity."""
+
+    async def async_added_to_hass(self) -> None:
+        """When entity is added to hass update state from existing coordinator data."""
+        await super().async_added_to_hass()
+        self._handle_coordinator_update()

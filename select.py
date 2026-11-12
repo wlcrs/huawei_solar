@@ -3,12 +3,14 @@
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import IntEnum
+from itertools import chain
 import logging
 from typing import Any, TypeVar, cast
 
 from huawei_solar import (
     EMMADevice,
     HuaweiSolarDevice,
+    RegisterName,
     SChargerDevice,
     SmartAcGunDevice,
     SUN2000Device,
@@ -28,6 +30,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_DEVICE_DATAS
 from .types import (
     HuaweiSolarConfigEntry,
+    HuaweiSolarCoordinatorEntity,
     HuaweiSolarDeviceData,
     HuaweiSolarEntity,
     HuaweiSolarEntityContext,
@@ -240,9 +243,7 @@ async def async_setup_entry(
     async_add_entities(entities_to_add)
 
 
-class HuaweiSolarSelectEntity(
-    CoordinatorEntity[HuaweiSolarUpdateCoordinator], HuaweiSolarEntity, SelectEntity
-):
+class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
     """Huawei Solar Select Entity."""
 
     entity_description: HuaweiSolarSelectEntityDescription
@@ -333,9 +334,7 @@ class HuaweiSolarSelectEntity(
         return available
 
 
-class StorageModeSelectEntity(
-    CoordinatorEntity[HuaweiSolarUpdateCoordinator], HuaweiSolarEntity, SelectEntity
-):
+class StorageModeSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
     """Huawei Solar Storage Mode Select Entity.
 
     The available options depend on the type of battery used, so it needs
@@ -401,3 +400,32 @@ class StorageModeSelectEntity(
         self._attr_current_option = option
 
         await self.coordinator.async_request_refresh()
+
+
+def get_select_registers(device: HuaweiSolarDevice) -> set[RegisterName]:
+    """Get registers needed for select entities."""
+    descriptions: list[HuaweiSolarSelectEntityDescription] = []
+    extra_registers: set[RegisterName] = set()
+
+    if isinstance(device, EMMADevice):
+        descriptions.extend(EMMA_SELECT_DESCRIPTIONS)
+    elif isinstance(device, SmartAcGunDevice):
+        descriptions.extend(SMART_AC_GUN_SELECT_DESCRIPTIONS)
+    elif isinstance(device, SUN2000Device):
+        if device.supports_backup_voltage:
+            descriptions.append(
+                BACKUP_VOLTAGE_INDEPENDENT_OPERATION_SELECT_DESCRIPTION
+            )
+        if device.supports_active_power_limitation_mode:
+            descriptions.append(ACTIVE_POWER_LIMITATION_MODE_SELECT_DESCRIPTION)
+        if device.battery_type != rv.StorageProductModel.NONE:
+            descriptions.extend(ENERGY_STORAGE_SWITCH_DESCRIPTIONS)
+            extra_registers.add(rn.STORAGE_WORKING_MODE_SETTINGS)
+            if device.supports_capacity_control:
+                descriptions.extend(CAPACITY_CONTROL_SWITCH_DESCRIPTIONS)
+
+    registers = set(
+        chain.from_iterable(desc.context["register_names"] for desc in descriptions)
+    )
+    registers.update(extra_registers)
+    return registers

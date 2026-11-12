@@ -5,13 +5,16 @@ from __future__ import annotations
 import asyncio
 from collections.abc import Callable
 from dataclasses import dataclass
+from itertools import chain
 import logging
 from typing import Any, TypeVar
 
 from huawei_solar import (
     HuaweiSolarDevice,
+    RegisterName,
     SChargerDevice,
     SmartAcGunDevice,
+    SUN2000Device,
     register_names as rn,
     register_values as rv,
 )
@@ -21,13 +24,12 @@ from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_DEVICE_DATAS
 from .types import (
     HuaweiSolarConfigEntry,
+    HuaweiSolarCoordinatorEntity,
     HuaweiSolarDeviceData,
-    HuaweiSolarEntity,
     HuaweiSolarEntityContext,
     HuaweiSolarEntityDescription,
     HuaweiSolarInverterData,
@@ -256,9 +258,7 @@ DEVICE_STATUS_OFF_RANGE_START = 0x3000
 DEVICE_STATUS_OFF_RANGE_END = 0x3FFF
 
 
-class HuaweiSolarSwitchEntity(
-    CoordinatorEntity[HuaweiSolarUpdateCoordinator], HuaweiSolarEntity, SwitchEntity
-):
+class HuaweiSolarSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
     """Huawei Solar Switch Entity."""
 
     entity_description: HuaweiSolarSwitchEntityDescription
@@ -339,9 +339,7 @@ class HuaweiSolarSwitchEntity(
         return available
 
 
-class HuaweiSolarOnOffSwitchEntity(
-    CoordinatorEntity[HuaweiSolarUpdateCoordinator], HuaweiSolarEntity, SwitchEntity
-):
+class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
     """Huawei Solar Switch Entity."""
 
     POLL_FREQUENCY_SECONDS = 15
@@ -427,3 +425,43 @@ class HuaweiSolarOnOffSwitchEntity(
                     break
 
         await self.coordinator.async_request_refresh()
+
+
+def get_inverter_switch_registers() -> set[RegisterName]:
+    """Get registers needed for inverter update coordinator from switch platform."""
+    registers = {rn.DEVICE_STATUS}
+    registers.update(
+        chain.from_iterable(
+            desc.context["register_names"] for desc in INVERTER_SWITCH_DESCRIPTIONS
+        )
+    )
+    return registers
+
+
+def get_switch_registers(device: HuaweiSolarDevice) -> set[RegisterName]:
+    """Get registers needed for configuration update coordinator from switch platform."""
+    descriptions: list[HuaweiSolarSwitchEntityDescription] = []
+    if isinstance(device, SUN2000Device):
+        if device.supports_off_grid_switch:
+            descriptions.append(BACKUP_SWITCH_TO_OFF_GRID_SWITCH_DESCRIPTION)
+        if device.battery_type != rv.StorageProductModel.NONE:
+            if device.supports_capacity_control:
+                descriptions.extend(
+                    ENERGY_STORAGE_WITH_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS
+                )
+            else:
+                descriptions.extend(
+                    ENERGY_STORAGE_WITHOUT_CAPACITY_CONTROL_SWITCH_DESCRIPTIONS
+                )
+            if device.supports_ess_low_power:
+                descriptions.append(
+                    ENERGY_STORAGE_ESS_LOW_POWER_SWITCH_DESCRIPTION
+                )
+    elif isinstance(device, SChargerDevice):
+        descriptions.extend(CHARGER_SWITCH_DESCRIPTIONS)
+    elif isinstance(device, SmartAcGunDevice):
+        descriptions.extend(SMART_AC_GUN_SWITCH_DESCRIPTIONS)
+
+    return set(
+        chain.from_iterable(desc.context["register_names"] for desc in descriptions)
+    )

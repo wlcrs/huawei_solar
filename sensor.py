@@ -12,6 +12,7 @@ from huawei_solar import (
     SDongleDevice,
     SmartAcGunDevice,
     SmartLoggerDevice,
+    SUN2000Device,
     register_names as rn,
     register_values as rv,
 )
@@ -50,6 +51,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import DATA_DEVICE_DATAS
 from .types import (
     HuaweiSolarConfigEntry,
+    HuaweiSolarCoordinatorEntity,
     HuaweiSolarDeviceData,
     HuaweiSolarEntity,
     HuaweiSolarEntityContext,
@@ -1158,7 +1160,7 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
 )
 
 
-async def create_sun2000_entities(
+def create_sun2000_entities(
     ucs: HuaweiSolarInverterData, *, has_emma: bool = False
 ) -> list[SensorEntity]:
     """Create SUN2000 sensor entities."""
@@ -1218,7 +1220,7 @@ async def create_sun2000_entities(
     if (
         not isinstance(ucs.device.primary_device, (EMMADevice, SmartLoggerDevice))
         and ucs.configuration_update_coordinator
-        and await ucs.device.has_write_permission()
+        and ucs.has_write_permission
     ):
         entities_to_add.append(
             HuaweiSolarActivePowerControlModeEntity(
@@ -2414,7 +2416,7 @@ async def async_setup_entry(
     for ucs in device_datas:
         if isinstance(ucs, HuaweiSolarInverterData):
             entities_to_add.extend(
-                await create_sun2000_entities(ucs, has_emma=has_emma)
+                create_sun2000_entities(ucs, has_emma=has_emma)
             )
         elif isinstance(ucs.device, EMMADevice):
             entities_to_add.extend(create_emma_entities(ucs))
@@ -2429,12 +2431,10 @@ async def async_setup_entry(
         elif isinstance(ucs.device, SmartLoggerDevice):
             entities_to_add.extend(create_smartlogger_entities(ucs))
 
-    async_add_entities(entities_to_add, True)
+    async_add_entities(entities_to_add)
 
 
-class HuaweiSolarSensorEntity(
-    CoordinatorEntity[HuaweiSolarUpdateCoordinator], HuaweiSolarEntity, SensorEntity
-):
+class HuaweiSolarSensorEntity(HuaweiSolarCoordinatorEntity, SensorEntity):
     """Huawei Solar Sensor which receives its data via an DataUpdateCoordinator."""
 
     entity_description: HuaweiSolarSensorEntityDescription
@@ -2605,9 +2605,7 @@ def _time_int_to_str(time: int) -> str:
     return f"{time // 60:02d}:{time % 60:02d}"
 
 
-class HuaweiSolarTOUSensorEntity(
-    CoordinatorEntity[HuaweiSolarUpdateCoordinator], HuaweiSolarEntity, SensorEntity
-):
+class HuaweiSolarTOUSensorEntity(HuaweiSolarCoordinatorEntity, SensorEntity):
     """Huawei Solar Sensor for configured TOU periods.
 
     It shows the number of configured TOU periods, and has the
@@ -2685,7 +2683,7 @@ def _lg_resu_period_to_text(period: LG_RESU_TimeOfUsePeriod) -> str:
 
 
 class HuaweiSolarPricePeriodsSensorEntity(
-    CoordinatorEntity[HuaweiSolarUpdateCoordinator], HuaweiSolarEntity, SensorEntity
+    HuaweiSolarCoordinatorEntity, SensorEntity
 ):
     """Huawei Solar Sensor for configured TOU periods.
 
@@ -2748,7 +2746,7 @@ class HuaweiSolarPricePeriodsSensorEntity(
 
 
 class HuaweiSolarCapacityControlPeriodsSensorEntity(
-    CoordinatorEntity[HuaweiSolarUpdateCoordinator], HuaweiSolarEntity, SensorEntity
+    HuaweiSolarCoordinatorEntity, SensorEntity
 ):
     """Huawei Solar Sensor for configured Capacity Control periods.
 
@@ -2814,7 +2812,7 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
 
 
 class HuaweiSolarForcibleChargeEntity(
-    CoordinatorEntity[HuaweiSolarUpdateCoordinator], HuaweiSolarEntity, SensorEntity
+    HuaweiSolarCoordinatorEntity, SensorEntity
 ):
     """Huawei Solar Sensor for the current forcible charge status."""
 
@@ -2906,7 +2904,7 @@ class HuaweiSolarForcibleChargeEntity(
 
 
 class HuaweiSolarActivePowerControlModeEntity(
-    CoordinatorEntity[HuaweiSolarUpdateCoordinator], HuaweiSolarEntity, SensorEntity
+    HuaweiSolarCoordinatorEntity, SensorEntity
 ):
     """Huawei Solar Sensor for the current forcible charge status."""
 
@@ -2986,8 +2984,7 @@ class HuaweiSolarActivePowerControlModeEntity(
 
 
 class HuaweiSolarOptimizerSensorEntity(
-    CoordinatorEntity[HuaweiSolarOptimizerUpdateCoordinator],
-    HuaweiSolarEntity,
+    HuaweiSolarCoordinatorEntity[HuaweiSolarOptimizerUpdateCoordinator],
     SensorEntity,
 ):
     """Huawei Solar Optimizer Sensor which receives its data via an DataUpdateCoordinator."""
@@ -3079,3 +3076,81 @@ def get_pv_entity_descriptions(count: int) -> list[HuaweiSolarSensorEntityDescri
         )
 
     return result
+
+
+def get_inverter_sensor_registers(device: SUN2000Device) -> set[rn.RegisterName]:
+    """Get registers needed for inverter update coordinator."""
+    registers = {desc.register_name for desc in INVERTER_SENSOR_DESCRIPTIONS}
+    registers.update(HuaweiSolarAlarmSensorEntity.ALARM_REGISTERS)
+    registers.update(
+        desc.register_name
+        for desc in get_pv_entity_descriptions(device.pv_string_count)
+    )
+    if device.has_optimizers:
+        registers.update(desc.register_name for desc in OPTIMIZER_SENSOR_DESCRIPTIONS)
+    return registers
+
+
+def get_power_meter_sensor_registers(device: SUN2000Device) -> set[rn.RegisterName]:
+    """Get registers needed for power meter update coordinator."""
+    if device.power_meter_type == rv.MeterType.THREE_PHASE:
+        return {desc.register_name for desc in THREE_PHASE_METER_ENTITY_DESCRIPTIONS}
+    if device.power_meter_type == rv.MeterType.SINGLE_PHASE:
+        return {desc.register_name for desc in SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS}
+    return set()
+
+
+def get_energy_storage_sensor_registers(device: SUN2000Device) -> set[rn.RegisterName]:
+    """Get registers needed for energy storage update coordinator."""
+    registers = {desc.register_name for desc in BATTERIES_SENSOR_DESCRIPTIONS}
+    if device.battery_1_type != rv.StorageProductModel.NONE:
+        registers.update(
+            desc.battery_1_key
+            for desc in BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS
+            if desc.battery_1_key
+        )
+    if device.battery_2_type != rv.StorageProductModel.NONE:
+        registers.update(
+            desc.battery_2_key
+            for desc in BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS
+            if desc.battery_2_key
+        )
+    return registers
+
+
+def get_device_sensor_registers(device: HuaweiSolarDevice) -> set[rn.RegisterName]:
+    """Get registers needed for non-inverter device update coordinator."""
+    if isinstance(device, EMMADevice):
+        return {desc.register_name for desc in EMMA_SENSOR_DESCRIPTIONS}
+    if isinstance(device, SChargerDevice):
+        return {desc.register_name for desc in CHARGER_SENSOR_DESCRIPTIONS}
+    if isinstance(device, SmartAcGunDevice):
+        return {desc.register_name for desc in SMART_AC_GUN_SENSOR_DESCRIPTIONS}
+    if isinstance(device, SDongleDevice):
+        return {desc.register_name for desc in SDONGLE_SENSOR_DESCRIPTIONS}
+    if isinstance(device, MeterDevice):
+        return {desc.register_name for desc in METER_SENSOR_DESCRIPTIONS}
+    if isinstance(device, SmartLoggerDevice):
+        registers = {desc.register_name for desc in SMARTLOGGER_SENSOR_DESCRIPTIONS}
+        registers.update(SmartLoggerAlarmSensorEntity.ALARM_REGISTERS)
+        return registers
+    return set()
+
+
+def get_configuration_sensor_registers(
+    device: HuaweiSolarDevice, *, has_write_permission: bool = False
+) -> set[rn.RegisterName]:
+    """Get registers for configuration sensor entities."""
+    registers: set[rn.RegisterName] = set()
+    if isinstance(device, SUN2000Device):
+        if (
+            not isinstance(device.primary_device, (EMMADevice, SmartLoggerDevice))
+            and has_write_permission
+        ):
+            registers.update(HuaweiSolarActivePowerControlModeEntity.REGISTER_NAMES)
+        if device.battery_type != rv.StorageProductModel.NONE:
+            registers.add(rn.STORAGE_TIME_OF_USE_PRICE_PERIODS)
+            registers.update(HuaweiSolarForcibleChargeEntity.REGISTER_NAMES)
+            if device.supports_capacity_control:
+                registers.add(rn.STORAGE_CAPACITY_CONTROL_PERIODS)
+    return registers
