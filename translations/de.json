@@ -3,7 +3,8 @@
         "abort": {
             "already_configured": "Das Gerät ist bereits konfiguriert",
             "reauth_successful": "Re-Authentifikation erfolgreich",
-            "reconfigure_successful": "Neukonfiguration war erfolgreich"
+            "reconfigure_successful": "Neukonfiguration war erfolgreich",
+            "unique_id_mismatch": "Die Seriennummer des Geräts stimmt nicht mit der vorherigen Seriennummer überein."
         },
         "error": {
             "cannot_connect": "Verbindungsversuch fehlgeschlagen",
@@ -1279,8 +1280,17 @@
         }
     },
     "exceptions": {
+        "battery_not_lg_resu": {
+            "message": "Feste Ladezeiten werden nur bei LG RESU-Batterien unterstützt."
+        },
+        "capacity_control_not_supported": {
+            "message": "Kapazitätssteuerung wird auf diesem Gerät nicht unterstützt: {device_id}"
+        },
         "config_entry_not_found": {
             "message": "Eintrag für Gerät nicht gefunden: {device_id}"
+        },
+        "emma_no_direct_battery_control": {
+            "message": "Direkte Batteriesteuerung wird nicht unterstützt, wenn eine EMMA vorhanden ist. Bitte TOU-Zeiten auf dem EMMA-Gerät konfigurieren."
         },
         "entry_not_loaded": {
             "message": "Eintrag nicht geladen: {entry}"
@@ -1290,6 +1300,15 @@
         },
         "invalid_device_id": {
             "message": "Ungültige Geräte-ID angegeben: {device_id}"
+        },
+        "no_battery_connected": {
+            "message": "Am Gerät {device_id} ist keine Batterie angeschlossen."
+        },
+        "parameter_configuration_not_enabled": {
+            "message": "Parameterkonfiguration ist für {entry} nicht aktiviert."
+        },
+        "unsupported_battery_type": {
+            "message": "Nicht unterstützter Batterietyp für Gerät {device_id}."
         },
         "wrong_device_type": {
             "message": "Fehler beim Huawei Solargerät Typ für ID- {device_id}: erwarteter {expected_type}, {actual_type} erhalten"

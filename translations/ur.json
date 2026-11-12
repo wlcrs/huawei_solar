@@ -3,7 +3,8 @@
         "abort": {
             "already_configured": "ڈیوائس پہلے سے تشکیل شدہ ہے",
             "reauth_successful": "دوبارہ توثیق کامیاب رہی",
-            "reconfigure_successful": "دوبارہ ترتیب کامیاب رہی"
+            "reconfigure_successful": "دوبارہ ترتیب کامیاب رہی",
+            "unique_id_mismatch": "ڈیوائس کا سیریل نمبر پچھلے سیریل نمبر سے مماثل نہیں ہے۔"
         },
         "error": {
             "cannot_connect": "رابطہ قائم کرنے میں ناکام",
@@ -1280,8 +1281,17 @@
         }
     },
     "exceptions": {
+        "battery_not_lg_resu": {
+            "message": "مقررہ چارجنگ کے اوقات صرف LG RESU بیٹریوں پر تعاون یافتہ ہیں۔"
+        },
+        "capacity_control_not_supported": {
+            "message": "اس ڈیوائس پر کیپیسٹی کنٹرول کی سہولت دستیاب نہیں ہے: {device_id}"
+        },
         "config_entry_not_found": {
             "message": "ڈیوائس کے لیے اندراج نہیں ملا: {device_id}"
+        },
+        "emma_no_direct_battery_control": {
+            "message": "جب EMMA موجود ہو تو براہ راست بیٹری کنٹرول کی سہولت دستیاب نہیں ہے۔ براہ کرم EMMA ڈیوائس پر TOU اوقات ترتیب دیں۔"
         },
         "entry_not_loaded": {
             "message": "اندراج لوڈ نہیں ہوا: {entry}"
@@ -1291,6 +1301,15 @@
         },
         "invalid_device_id": {
             "message": "غلط ڈیوائس آئی ڈی بتائی گئی: {device_id}"
+        },
+        "no_battery_connected": {
+            "message": "ڈیوائس {device_id} سے کوئی بیٹری منسلک نہیں ہے۔"
+        },
+        "parameter_configuration_not_enabled": {
+            "message": "{entry} کے لیے پیرامیٹر کنفیگریشن فعال نہیں ہے۔"
+        },
+        "unsupported_battery_type": {
+            "message": "ڈیوائس {device_id} کے لیے غیر تعاون یافتہ بیٹری کی قسم۔"
         },
         "wrong_device_type": {
             "message": "آئی ڈی {device_id} کے لیے غلط ہواوے سولر ڈیوائس کی قسم: متوقع {expected_type}، ملا {actual_type}"

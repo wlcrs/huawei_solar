@@ -3,7 +3,8 @@
         "abort": {
             "already_configured": "Apparaat is al geconfigureerd",
             "reauth_successful": "Herauthenticatie was succesvol",
-            "reconfigure_successful": "Herconfiguratie was succesvol"
+            "reconfigure_successful": "Herconfiguratie was succesvol",
+            "unique_id_mismatch": "Het serienummer van het apparaat komt niet overeen met het vorige serienummer."
         },
         "error": {
             "cannot_connect": "Verbinden mislukt",
@@ -1292,8 +1293,17 @@
         }
     },
     "exceptions": {
+        "battery_not_lg_resu": {
+            "message": "Vaste laadperiodes worden alleen ondersteund op LG RESU-batterijen."
+        },
+        "capacity_control_not_supported": {
+            "message": "Capaciteitsregeling wordt niet ondersteund op dit apparaat: {device_id}"
+        },
         "config_entry_not_found": {
             "message": "Item niet gevonden voor apparaat: {device_id}"
+        },
+        "emma_no_direct_battery_control": {
+            "message": "Directe batterijbediening wordt niet ondersteund als er een EMMA aanwezig is. Configureer TOU-periodes op het EMMA-apparaat."
         },
         "entry_not_loaded": {
             "message": "Item niet geladen: {entry}"
@@ -1303,6 +1313,15 @@
         },
         "invalid_device_id": {
             "message": "Ongeldige apparaat-ID opgegeven: {device_id}"
+        },
+        "no_battery_connected": {
+            "message": "Apparaat {device_id} heeft geen aangesloten batterij."
+        },
+        "parameter_configuration_not_enabled": {
+            "message": "Parameterconfiguratie is niet ingeschakeld voor {entry}."
+        },
+        "unsupported_battery_type": {
+            "message": "Niet-ondersteund batterijtype voor apparaat {device_id}."
         },
         "wrong_device_type": {
             "message": "Verkeerd type Huawei Solar-apparaat voor ID {device_id}: verwachtte {expected_type}, kreeg {actual_type}"

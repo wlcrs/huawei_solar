@@ -19,7 +19,10 @@ forcible_charge:
       required: true
       default: 1000
       selector:
-        text:
+        number:
+          min: 1
+          unit_of_measurement: "W"
+          mode: box
 
 forcible_discharge:
   fields:
@@ -42,7 +45,10 @@ forcible_discharge:
       required: true
       default: 1000
       selector:
-        text:
+        number:
+          min: 1
+          unit_of_measurement: "W"
+          mode: box
 
 forcible_charge_soc:
   fields:
@@ -64,7 +70,10 @@ forcible_charge_soc:
       required: true
       default: 1000
       selector:
-        text:
+        number:
+          min: 1
+          unit_of_measurement: "W"
+          mode: box
 
 forcible_discharge_soc:
   fields:
@@ -86,7 +95,10 @@ forcible_discharge_soc:
       required: true
       default: 1000
       selector:
-        text:
+        number:
+          min: 1
+          unit_of_measurement: "W"
+          mode: box
 
 stop_forcible_charge:
   fields:
@@ -132,7 +144,10 @@ set_maximum_feed_grid_power:
       required: true
       default: 0
       selector:
-        text:
+        number:
+          min: -1000
+          unit_of_measurement: "W"
+          mode: box
 
 set_maximum_feed_grid_power_percent:
   fields:
@@ -159,6 +174,7 @@ set_tou_periods:
           integration: huawei_solar
     periods:
       required: true
+      example: "00:00-06:00/1234567/+\n06:00-24:00/1234567/-"
       selector:
         text:
           multiline: true
@@ -170,8 +186,10 @@ set_capacity_control_periods:
       selector:
         device:
           integration: huawei_solar
+          model: "Batteries"
     periods:
       required: true
+      example: "00:00-06:00/1234567/5000W\n06:00-24:00/1234567/0W"
       selector:
         text:
           multiline: true
@@ -183,8 +201,10 @@ set_fixed_charge_periods:
       selector:
         device:
           integration: huawei_solar
+          model: "Batteries"
     periods:
       required: true
+      example: "00:00-06:00/1000W\n12:00-14:00/500W"
       selector:
         text:
           multiline: true

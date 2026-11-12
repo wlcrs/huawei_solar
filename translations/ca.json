@@ -3,7 +3,8 @@
         "abort": {
             "already_configured": "Dispositiu ja configurat",
             "reauth_successful": "La reautenticació ha estat correcta",
-            "reconfigure_successful": "La reconfiguració ha estat correcta"
+            "reconfigure_successful": "La reconfiguració ha estat correcta",
+            "unique_id_mismatch": "El número de sèrie del dispositiu no coincideix amb el número de sèrie anterior."
         },
         "error": {
             "cannot_connect": "Error de connexió",
@@ -1281,8 +1282,17 @@
         }
     },
     "exceptions": {
+        "battery_not_lg_resu": {
+            "message": "Els períodes de càrrega fixa només són compatibles amb bateries LG RESU."
+        },
+        "capacity_control_not_supported": {
+            "message": "El control de capacitat no és compatible amb aquest dispositiu: {device_id}"
+        },
         "config_entry_not_found": {
             "message": "Entrada no trobada per al dispositiu: {device_id}"
+        },
+        "emma_no_direct_battery_control": {
+            "message": "El control directe de la bateria no és compatible quan hi ha un EMMA present. Si us plau, configura els períodes TOU al dispositiu EMMA."
         },
         "entry_not_loaded": {
             "message": "Entrada no carregada: {entry}"
@@ -1292,6 +1302,15 @@
         },
         "invalid_device_id": {
             "message": "S'ha especificat un ID de dispositiu no vàlid: {device_id}"
+        },
+        "no_battery_connected": {
+            "message": "El dispositiu {device_id} no té cap bateria connectada."
+        },
+        "parameter_configuration_not_enabled": {
+            "message": "La configuració de paràmetres no està activada per a {entry}."
+        },
+        "unsupported_battery_type": {
+            "message": "Tipus de bateria no compatible per al dispositiu {device_id}."
         },
         "wrong_device_type": {
             "message": "S'ha obtingut un tipus de dispositiu Huawei Solar incorrecte per a l'ID {device_id}: s'esperava {expected_type}, s'ha obtingut {actual_type}"

@@ -1280,8 +1280,17 @@
         }
     },
     "exceptions": {
+        "battery_not_lg_resu": {
+            "message": "Fixed charge periods are only supported on LG RESU batteries."
+        },
+        "capacity_control_not_supported": {
+            "message": "Capacity control is not supported on this device: {device_id}"
+        },
         "config_entry_not_found": {
             "message": "Entry not found for device: {device_id}"
+        },
+        "emma_no_direct_battery_control": {
+            "message": "Direct battery control is not supported when an EMMA is present. Please configure TOU periods on the EMMA device."
         },
         "entry_not_loaded": {
             "message": "Entry not loaded: {entry}"
@@ -1291,6 +1300,15 @@
         },
         "invalid_device_id": {
             "message": "Invalid device ID specified: {device_id}"
+        },
+        "no_battery_connected": {
+            "message": "Device {device_id} has no battery connected."
+        },
+        "parameter_configuration_not_enabled": {
+            "message": "Parameter configuration is not enabled for {entry}."
+        },
+        "unsupported_battery_type": {
+            "message": "Unsupported battery type for device {device_id}."
         },
         "wrong_device_type": {
             "message": "Got wrong Huawei Solar device type for ID {device_id}: expected {expected_type}, got {actual_type}"

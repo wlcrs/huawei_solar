@@ -3,7 +3,8 @@
         "abort": {
             "already_configured": "Dispozitivul este deja configurat",
             "reauth_successful": "Re-autentificarea a reușit",
-            "reconfigure_successful": "Reconfigurarea a reușit"
+            "reconfigure_successful": "Reconfigurarea a reușit",
+            "unique_id_mismatch": "Numărul de serie al dispozitivului nu se potrivește cu numărul de serie anterior."
         },
         "error": {
             "cannot_connect": "Conectarea a eșuat",
@@ -1279,8 +1280,17 @@
         }
     },
     "exceptions": {
+        "battery_not_lg_resu": {
+            "message": "Perioadele fixe de încărcare sunt acceptate doar pe bateriile LG RESU."
+        },
+        "capacity_control_not_supported": {
+            "message": "Controlul capacității nu este acceptat pe acest dispozitiv: {device_id}"
+        },
         "config_entry_not_found": {
             "message": "Înregistrarea nu a fost găsită pentru dispozitiv: {device_id}"
+        },
+        "emma_no_direct_battery_control": {
+            "message": "Controlul direct al bateriei nu este acceptat când este prezent un EMMA. Vă rugăm să configurați perioadele TOU pe dispozitivul EMMA."
         },
         "entry_not_loaded": {
             "message": "Înregistrarea nu este încărcată: {entry}"
@@ -1290,6 +1300,15 @@
         },
         "invalid_device_id": {
             "message": "ID dispozitiv invalid specificat: {device_id}"
+        },
+        "no_battery_connected": {
+            "message": "Dispozitivul {device_id} nu are nicio baterie conectată."
+        },
+        "parameter_configuration_not_enabled": {
+            "message": "Configurarea parametrilor nu este activată pentru {entry}."
+        },
+        "unsupported_battery_type": {
+            "message": "Tip de baterie neacceptat pentru dispozitivul {device_id}."
         },
         "wrong_device_type": {
             "message": "Tip greșit de dispozitiv Huawei Solar pentru ID-ul {device_id}: se aștepta {expected_type}, s-a obținut {actual_type}"

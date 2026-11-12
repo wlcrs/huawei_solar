@@ -3,7 +3,8 @@
         "abort": {
             "already_configured": "Az eszköz már konfigurálva van",
             "reauth_successful": "Az újrahitelesítés sikeres volt",
-            "reconfigure_successful": "Az újrakonfigurálás sikeres volt"
+            "reconfigure_successful": "Az újrakonfigurálás sikeres volt",
+            "unique_id_mismatch": "Az eszköz sorozatszáma nem egyezik az előző sorozatszámmal."
         },
         "error": {
             "cannot_connect": "Sikertelen kapcsolódás",
@@ -1279,8 +1280,17 @@
         }
     },
     "exceptions": {
+        "battery_not_lg_resu": {
+            "message": "A fix töltési időszakok csak LG RESU akkumulátorokon támogatottak."
+        },
+        "capacity_control_not_supported": {
+            "message": "A kapacitásszabályozás nem támogatott ezen az eszközön: {device_id}"
+        },
         "config_entry_not_found": {
             "message": "A bejegyzés nem található az eszközhöz: {device_id}"
+        },
+        "emma_no_direct_battery_control": {
+            "message": "A közvetlen akkumulátorvezérlés nem támogatott, ha EMMA van jelen. Kérjük, konfigurálja a TOU időszakokat az EMMA eszközön."
         },
         "entry_not_loaded": {
             "message": "A bejegyzés nincs betöltve: {entry}"
@@ -1290,6 +1300,15 @@
         },
         "invalid_device_id": {
             "message": "Érvénytelen eszközazonosító lett megadva: {device_id}"
+        },
+        "no_battery_connected": {
+            "message": "A(z) {device_id} eszközhöz nincs akkumulátor csatlakoztatva."
+        },
+        "parameter_configuration_not_enabled": {
+            "message": "A paraméterkonfiguráció nincs engedélyezve a következőhöz: {entry}."
+        },
+        "unsupported_battery_type": {
+            "message": "Nem támogatott akkumulátortípus a(z) {device_id} eszközhöz."
         },
         "wrong_device_type": {
             "message": "Helytelen Huawei Solar eszköztípus a(z) {device_id} azonosítóhoz: várt típus: {expected_type}, kapott típus: {actual_type}"

@@ -3,7 +3,8 @@
         "abort": {
             "already_configured": "Устройство уже настроено",
             "reauth_successful": "Повторная аутентификация прошла успешно",
-            "reconfigure_successful": "Перенастройка прошла успешно"
+            "reconfigure_successful": "Перенастройка прошла успешно",
+            "unique_id_mismatch": "Серийный номер устройства не совпадает с предыдущим серийным номером."
         },
         "error": {
             "cannot_connect": "Не удалось подключиться",
@@ -1279,8 +1280,17 @@
         }
     },
     "exceptions": {
+        "battery_not_lg_resu": {
+            "message": "Фиксированные периоды зарядки поддерживаются только для аккумуляторов LG RESU."
+        },
+        "capacity_control_not_supported": {
+            "message": "Управление емкостью не поддерживается на этом устройстве: {device_id}"
+        },
         "config_entry_not_found": {
             "message": "Запись не найдена для устройства: {device_id}"
+        },
+        "emma_no_direct_battery_control": {
+            "message": "Прямое управление аккумулятором не поддерживается при наличии EMMA. Настройте периоды TOU на устройстве EMMA."
         },
         "entry_not_loaded": {
             "message": "Запись не загружена: {entry}"
@@ -1290,6 +1300,15 @@
         },
         "invalid_device_id": {
             "message": "Указан неверный ID устройства: {device_id}"
+        },
+        "no_battery_connected": {
+            "message": "К устройству {device_id} не подключен аккумулятор."
+        },
+        "parameter_configuration_not_enabled": {
+            "message": "Конфигурация параметров не включена для {entry}."
+        },
+        "unsupported_battery_type": {
+            "message": "Неподдерживаемый тип аккумулятора для устройства {device_id}."
         },
         "wrong_device_type": {
             "message": "Неверный тип устройства Huawei Solar для ID {device_id}: ожидался {expected_type}, получен {actual_type}"

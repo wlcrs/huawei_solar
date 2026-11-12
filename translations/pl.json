@@ -3,7 +3,8 @@
         "abort": {
             "already_configured": "Urządzenie jest już skonfigurowane",
             "reauth_successful": "Ponowne uwierzytelnienie powiodło się",
-            "reconfigure_successful": "Ponowna konfiguracja powiodła się"
+            "reconfigure_successful": "Ponowna konfiguracja powiodła się",
+            "unique_id_mismatch": "Numer seryjny urządzenia nie zgadza się z poprzednim numerem seryjnym."
         },
         "error": {
             "cannot_connect": "Połączenie nie powiodło się",
@@ -1279,8 +1280,17 @@
         }
     },
     "exceptions": {
+        "battery_not_lg_resu": {
+            "message": "Stałe okresy ładowania są obsługiwane tylko w akumulatorach LG RESU."
+        },
+        "capacity_control_not_supported": {
+            "message": "Kontrola pojemności nie jest obsługiwana na tym urządzeniu: {device_id}"
+        },
         "config_entry_not_found": {
             "message": "Nie znaleziono wpisu dla urządzenia: {device_id}"
+        },
+        "emma_no_direct_battery_control": {
+            "message": "Bezpośrednia kontrola akumulatora nie jest obsługiwana, gdy obecny jest EMMA. Skonfiguruj okresy TOU na urządzeniu EMMA."
         },
         "entry_not_loaded": {
             "message": "Wpis nie został załadowany: {entry}"
@@ -1290,6 +1300,15 @@
         },
         "invalid_device_id": {
             "message": "Podano nieprawidłowy identyfikator urządzenia: {device_id}"
+        },
+        "no_battery_connected": {
+            "message": "Urządzenie {device_id} nie ma podłączonego akumulatora."
+        },
+        "parameter_configuration_not_enabled": {
+            "message": "Konfiguracja parametrów nie jest włączona dla {entry}."
+        },
+        "unsupported_battery_type": {
+            "message": "Nieobsługiwany typ akumulatora dla urządzenia {device_id}."
         },
         "wrong_device_type": {
             "message": "Nieprawidłowy typ urządzenia Huawei Solar dla ID {device_id}: oczekiwano {expected_type}, otrzymano {actual_type}"

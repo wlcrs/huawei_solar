@@ -3,7 +3,8 @@
         "abort": {
             "already_configured": "El dispositivo ya está configurado",
             "reauth_successful": "La reautenticación se realizó con éxito",
-            "reconfigure_successful": "La reconfiguración se realizó con éxito"
+            "reconfigure_successful": "La reconfiguración se realizó con éxito",
+            "unique_id_mismatch": "El número de serie del dispositivo no coincide con el número de serie anterior."
         },
         "error": {
             "cannot_connect": "Error de conexión",
@@ -1279,8 +1280,17 @@
         }
     },
     "exceptions": {
+        "battery_not_lg_resu": {
+            "message": "Los periodos de carga fija solo son compatibles con baterías LG RESU."
+        },
+        "capacity_control_not_supported": {
+            "message": "El control de capacidad no es compatible con este dispositivo: {device_id}"
+        },
         "config_entry_not_found": {
             "message": "Entrada no encontrada para el dispositivo: {device_id}"
+        },
+        "emma_no_direct_battery_control": {
+            "message": "El control directo de la batería no es compatible cuando hay un EMMA presente. Por favor, configura los periodos TOU en el dispositivo EMMA."
         },
         "entry_not_loaded": {
             "message": "Entrada no cargada: {entry}"
@@ -1290,6 +1300,15 @@
         },
         "invalid_device_id": {
             "message": "ID de dispositivo especificado no válido: {device_id}"
+        },
+        "no_battery_connected": {
+            "message": "El dispositivo {device_id} no tiene ninguna batería conectada."
+        },
+        "parameter_configuration_not_enabled": {
+            "message": "La configuración de parámetros no está habilitada para {entry}."
+        },
+        "unsupported_battery_type": {
+            "message": "Tipo de batería no compatible para el dispositivo {device_id}."
         },
         "wrong_device_type": {
             "message": "Tipo de dispositivo Huawei Solar incorrecto para el ID {device_id}: se esperaba {expected_type}, se obtuvo {actual_type}"

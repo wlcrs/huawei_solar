@@ -3,7 +3,8 @@
         "abort": {
             "already_configured": "Le périphérique est déjà configuré",
             "reauth_successful": "La ré-authentification a réussi",
-            "reconfigure_successful": "La reconfiguration a réussi"
+            "reconfigure_successful": "La reconfiguration a réussi",
+            "unique_id_mismatch": "Le numéro de série de l'appareil ne correspond pas au numéro de série précédent."
         },
         "error": {
             "cannot_connect": "Échec de la connexion",
@@ -1279,8 +1280,17 @@
         }
     },
     "exceptions": {
+        "battery_not_lg_resu": {
+            "message": "Les périodes de charge fixe ne sont prises en charge que sur les batteries LG RESU."
+        },
+        "capacity_control_not_supported": {
+            "message": "Le contrôle de capacité n'est pas pris en charge sur cet appareil : {device_id}"
+        },
         "config_entry_not_found": {
             "message": "Entrée introuvable pour l'appareil : {device_id}"
+        },
+        "emma_no_direct_battery_control": {
+            "message": "Le contrôle direct de la batterie n'est pas pris en charge lorsqu'une EMMA est présente. Veuillez configurer les périodes TOU sur l'appareil EMMA."
         },
         "entry_not_loaded": {
             "message": "Entrée non chargée : {entry}"
@@ -1290,6 +1300,15 @@
         },
         "invalid_device_id": {
             "message": "ID d'appareil non valide spécifié : {device_id}"
+        },
+        "no_battery_connected": {
+            "message": "L'appareil {device_id} n'a pas de batterie connectée."
+        },
+        "parameter_configuration_not_enabled": {
+            "message": "La configuration des paramètres n'est pas activée pour {entry}."
+        },
+        "unsupported_battery_type": {
+            "message": "Type de batterie non pris en charge pour l'appareil {device_id}."
         },
         "wrong_device_type": {
             "message": "Type d'appareil Huawei Solar incorrect pour l'ID {device_id} : {expected_type} attendu, {actual_type} obtenu"
