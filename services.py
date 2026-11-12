@@ -355,13 +355,13 @@ def _parse_days_effective(
 
 
 def _parse_time(value: str) -> int:
-    hours, minutes = value.split(":")
+    hours_str, minutes_str = value.split(":")
+    hours = int(hours_str)
+    minutes = int(minutes_str)
 
-    minutes_since_midnight = int(hours) * 60 + int(minutes)
-
-    if not 0 <= minutes_since_midnight <= 1440:
+    if not (0 <= hours <= 23 and 0 <= minutes <= 59):
         raise ValueError(f"Invalid time '{value}': must be between 00:00 and 23:59")
-    return minutes_since_midnight
+    return hours * 60 + minutes
 
 
 async def _validate_power_value(
