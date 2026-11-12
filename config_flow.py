@@ -565,13 +565,11 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_reauth(
         self, config: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Perform reauth upon an login error."""
-        assert config is not None
-        assert "entry_id" in self.context
-        self._reauth_entry = self.hass.config_entries.async_get_known_entry(
-            self.context["entry_id"]
+        """Perform reauth upon a login error."""
+        self._reauth_entry = self._get_reauth_entry()
+        self._update_config_data_from_entry_data(
+            config if config is not None else dict(self._reauth_entry.data)
         )
-        self._update_config_data_from_entry_data(config)
         return await self.async_step_network_login()
 
     async def async_step_setup_connection_type(
@@ -1235,7 +1233,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         assert self._host is not None
         assert self._port is not None
         assert self._slave_ids is not None
-        assert self._inverter_info is not None
+        if self._reauth_entry is None:
+            assert self._inverter_info is not None
 
         errors = {}
 
@@ -1304,9 +1303,13 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         }
 
         if self._reauth_entry:
-            self.hass.config_entries.async_update_entry(self._reauth_entry, data=data)
-            await self.hass.config_entries.async_reload(self._reauth_entry.entry_id)
-            return self.async_abort(reason="reauth_successful")
+            return self.async_update_reload_and_abort(
+                self._reauth_entry,
+                data_updates={
+                    CONF_USERNAME: self._username,
+                    CONF_PASSWORD: self._password,
+                },
+            )
 
         assert inverter_info
         self.context["title_placeholders"] = {"name": inverter_info["model_name"]}
