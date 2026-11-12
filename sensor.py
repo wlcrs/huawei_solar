@@ -3143,14 +3143,28 @@ def get_configuration_sensor_registers(
     """Get registers for configuration sensor entities."""
     registers: set[rn.RegisterName] = set()
     if isinstance(device, SUN2000Device):
+        has_emma = isinstance(device.primary_device, EMMADevice)
         if (
             not isinstance(device.primary_device, (EMMADevice, SmartLoggerDevice))
             and has_write_permission
         ):
             registers.update(HuaweiSolarActivePowerControlModeEntity.REGISTER_NAMES)
         if device.battery_type != rv.StorageProductModel.NONE:
-            registers.add(rn.STORAGE_TIME_OF_USE_PRICE_PERIODS)
+            if (
+                not has_emma
+                and device.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000
+            ):
+                registers.add(
+                    rn.STORAGE_HUAWEI_LUNA2000_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS
+                )
+            elif (
+                not has_emma
+                and device.battery_type == rv.StorageProductModel.LG_RESU
+            ):
+                registers.add(rn.STORAGE_LG_RESU_TIME_OF_USE_PRICE_PERIODS)
             registers.update(HuaweiSolarForcibleChargeEntity.REGISTER_NAMES)
             if device.supports_capacity_control:
                 registers.add(rn.STORAGE_CAPACITY_CONTROL_PERIODS)
+    elif isinstance(device, EMMADevice):
+        registers.add(rn.EMMA_TOU_PERIODS)
     return registers
