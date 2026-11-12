@@ -542,14 +542,14 @@ class HuaweiSolarNumberEntity(HuaweiSolarCoordinatorEntity, NumberEntity):
                 min_register = self.coordinator.data.get(
                     self.entity_description.minimum_key
                 )
-                if min_register:
+                if min_register is not None and min_register.value is not None:
                     self._minimum_value = min_register.value
 
             if self.entity_description.maximum_key:
                 max_register = self.coordinator.data.get(
                     self.entity_description.maximum_key
                 )
-                if max_register:
+                if max_register is not None and max_register.value is not None:
                     self._maximum_value = max_register.value
 
             self._attr_available = True
