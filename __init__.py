@@ -330,7 +330,7 @@ async def async_unload_entry(
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data["device_datas"]
         primary_device = device_datas[0].device
-        await primary_device.client.disconnect()
+        await primary_device.stop()
 
     return unload_ok
 
