@@ -345,7 +345,7 @@ class HuaweiSolarOnOffSwitchEntity(
     """Huawei Solar Switch Entity."""
 
     POLL_FREQUENCY_SECONDS = 15
-    MAX_STATUS_CHANGE_TIME_SECONDS = 3000  # Maximum status change time is 5 minutes
+    MAX_STATUS_CHANGE_TIME_SECONDS = 300  # Maximum status change time is 5 minutes
 
     def __init__(
         self,
