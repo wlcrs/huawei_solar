@@ -455,6 +455,7 @@ async def validate_network_setup_login(
         port=port,
         unit_id=unit_id,
     )
+    bridge: HuaweiSolarDeviceWithLogin | None = None
     try:
         # these parameters have already been tested in validate_input, so this should work fine!
         await client.connect()
