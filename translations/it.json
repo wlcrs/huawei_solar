@@ -1289,6 +1289,24 @@
         "config_entry_not_found": {
             "message": "Voce non trovata per il dispositivo: {device_id}"
         },
+        "device_authentication_failed": {
+            "message": "Autenticazione con il dispositivo Huawei Solar non riuscita. Autentica nuovamente l'integrazione."
+        },
+        "device_communication_error": {
+            "message": "Impossibile comunicare con il dispositivo Huawei Solar: {error}"
+        },
+        "device_connection_interrupted": {
+            "message": "Connessione al dispositivo Huawei Solar interrotta. L'inverter supporta una sola connessione Modbus alla volta."
+        },
+        "device_permission_denied": {
+            "message": "Autorizzazione negata dal dispositivo Huawei Solar. Verifica che la configurazione dei parametri sia abilitata e che le credenziali di installatore siano valide."
+        },
+        "device_timeout": {
+            "message": "Tempo scaduto in attesa di risposta dal dispositivo Huawei Solar."
+        },
+        "duration_exceeds_maximum": {
+            "message": "La durata massima è di {max_duration} minuti."
+        },
         "emma_no_direct_battery_control": {
             "message": "Il controllo diretto della batteria non è supportato quando è presente un EMMA. Configura i periodi TOU sul dispositivo EMMA."
         },
@@ -1301,6 +1319,15 @@
         "invalid_device_id": {
             "message": "ID dispositivo non valido specificato: {device_id}"
         },
+        "invalid_device_value": {
+            "message": "Valore non valido per il dispositivo Huawei Solar: {error}"
+        },
+        "invalid_periods_format": {
+            "message": "Formato dei periodi non valido: convalida non riuscita per '{periods}'."
+        },
+        "invalid_time": {
+            "message": "Orario non valido '{time}': deve essere compreso tra 00:00 e 23:59."
+        },
         "inverter_status_change_in_progress": {
             "message": "L'inverter sta ancora elaborando il comando di avvio o spegnimento precedente. Attendi prima di commutare nuovamente."
         },
@@ -1309,6 +1336,9 @@
         },
         "parameter_configuration_not_enabled": {
             "message": "La configurazione dei parametri non è abilitata per {entry}."
+        },
+        "power_exceeds_maximum": {
+            "message": "La potenza non può superare {max_power} W."
         },
         "unsupported_battery_type": {
             "message": "Tipo di batteria non supportato per il dispositivo {device_id}."

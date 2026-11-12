@@ -1290,6 +1290,24 @@
         "config_entry_not_found": {
             "message": "ڈیوائس کے لیے اندراج نہیں ملا: {device_id}"
         },
+        "device_authentication_failed": {
+            "message": "Huawei Solar ڈیوائس کے ساتھ تصدیق ناکام ہو گئی۔ براہ کرم انٹیگریشن کی دوبارہ تصدیق کریں۔"
+        },
+        "device_communication_error": {
+            "message": "Huawei Solar ڈیوائس سے رابطہ کرنے میں ناکامی: {error}"
+        },
+        "device_connection_interrupted": {
+            "message": "Huawei Solar ڈیوائس سے کنکشن منقطع ہو گیا۔ انورٹر ایک وقت میں صرف ایک Modbus کنکشن کی حمایت کرتا ہے۔"
+        },
+        "device_permission_denied": {
+            "message": "Huawei Solar ڈیوائس نے اجازت مسترد کر دی۔ تصدیق کریں کہ پیرامیٹر کنفیگریشن فعال ہے اور انسٹالر کی اسناد درست ہیں۔"
+        },
+        "device_timeout": {
+            "message": "Huawei Solar ڈیوائس سے جواب کے انتظار کا وقت ختم ہو گیا۔"
+        },
+        "duration_exceeds_maximum": {
+            "message": "زیادہ سے زیادہ دورانیہ {max_duration} منٹ ہے۔"
+        },
         "emma_no_direct_battery_control": {
             "message": "جب EMMA موجود ہو تو براہ راست بیٹری کنٹرول کی سہولت دستیاب نہیں ہے۔ براہ کرم EMMA ڈیوائس پر TOU اوقات ترتیب دیں۔"
         },
@@ -1302,6 +1320,15 @@
         "invalid_device_id": {
             "message": "غلط ڈیوائس آئی ڈی بتائی گئی: {device_id}"
         },
+        "invalid_device_value": {
+            "message": "Huawei Solar ڈیوائس کے لیے غلط قدر: {error}"
+        },
+        "invalid_periods_format": {
+            "message": "ادوار کا غلط فارمیٹ: '{periods}' کی توثیق ناکام ہو گئی۔"
+        },
+        "invalid_time": {
+            "message": "غلط وقت '{time}': 00:00 اور 23:59 کے درمیان ہونا ضروری ہے۔"
+        },
         "inverter_status_change_in_progress": {
             "message": "انورٹر ابھی بھی پچھلے اسٹارٹ اپ یا شٹ ڈاؤن کمانڈ پر کارروائی کر رہا ہے۔ براہ کرم دوبارہ ٹوگل کرنے سے پہلے انتظار کریں۔"
         },
@@ -1310,6 +1337,9 @@
         },
         "parameter_configuration_not_enabled": {
             "message": "{entry} کے لیے پیرامیٹر کنفیگریشن فعال نہیں ہے۔"
+        },
+        "power_exceeds_maximum": {
+            "message": "طاقت {max_power} W سے زیادہ نہیں ہو سکتی۔"
         },
         "unsupported_battery_type": {
             "message": "ڈیوائس {device_id} کے لیے غیر تعاون یافتہ بیٹری کی قسم۔"

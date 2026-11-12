@@ -1289,6 +1289,24 @@
         "config_entry_not_found": {
             "message": "Запись не найдена для устройства: {device_id}"
         },
+        "device_authentication_failed": {
+            "message": "Ошибка аутентификации с устройством Huawei Solar. Пожалуйста, выполните повторную аутентификацию интеграции."
+        },
+        "device_communication_error": {
+            "message": "Не удалось связаться с устройством Huawei Solar: {error}"
+        },
+        "device_connection_interrupted": {
+            "message": "Соединение с устройством Huawei Solar было прервано. Инвертор поддерживает только одно Modbus-подключение одновременно."
+        },
+        "device_permission_denied": {
+            "message": "Устройство Huawei Solar отклонило запрос из-за нехватки прав. Проверьте, что настройка параметров включена, а учётные данные установщика действительны."
+        },
+        "device_timeout": {
+            "message": "Превышено время ожидания ответа от устройства Huawei Solar."
+        },
+        "duration_exceeds_maximum": {
+            "message": "Максимальная длительность — {max_duration} минут."
+        },
         "emma_no_direct_battery_control": {
             "message": "Прямое управление аккумулятором не поддерживается при наличии EMMA. Настройте периоды TOU на устройстве EMMA."
         },
@@ -1301,6 +1319,15 @@
         "invalid_device_id": {
             "message": "Указан неверный ID устройства: {device_id}"
         },
+        "invalid_device_value": {
+            "message": "Недопустимое значение для устройства Huawei Solar: {error}"
+        },
+        "invalid_periods_format": {
+            "message": "Недопустимый формат периодов: ошибка проверки для '{periods}'."
+        },
+        "invalid_time": {
+            "message": "Недопустимое время '{time}': должно быть между 00:00 и 23:59."
+        },
         "inverter_status_change_in_progress": {
             "message": "Инвертор всё ещё обрабатывает предыдущую команду запуска или остановки. Пожалуйста, подождите перед повторным переключением."
         },
@@ -1309,6 +1336,9 @@
         },
         "parameter_configuration_not_enabled": {
             "message": "Конфигурация параметров не включена для {entry}."
+        },
+        "power_exceeds_maximum": {
+            "message": "Мощность не может превышать {max_power} Вт."
         },
         "unsupported_battery_type": {
             "message": "Неподдерживаемый тип аккумулятора для устройства {device_id}."

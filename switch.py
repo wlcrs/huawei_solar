@@ -314,14 +314,14 @@ class HuaweiSolarSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the setting on."""
-        if await self.device.set(self.entity_description.register_name, True):
+        if await self._async_set_register(self.entity_description.register_name, True):
             self._attr_is_on = True
 
         await self.coordinator.async_request_refresh()
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the setting off."""
-        if await self.device.set(self.entity_description.register_name, False):
+        if await self._async_set_register(self.entity_description.register_name, False):
             self._attr_is_on = False
 
         await self.coordinator.async_request_refresh()
@@ -396,7 +396,7 @@ class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
                 )
             self._pending_state = None
 
-        await self.device.set(register, 0)
+        await self._async_set_register(register, 0)
         self._pending_state = (
             target_is_on,
             time.monotonic() + self.MAX_STATUS_CHANGE_TIME_SECONDS,

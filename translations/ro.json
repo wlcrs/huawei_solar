@@ -1289,6 +1289,24 @@
         "config_entry_not_found": {
             "message": "Înregistrarea nu a fost găsită pentru dispozitiv: {device_id}"
         },
+        "device_authentication_failed": {
+            "message": "Autentificarea cu dispozitivul Huawei Solar a eșuat. Vă rugăm să reautentificați integrarea."
+        },
+        "device_communication_error": {
+            "message": "Comunicarea cu dispozitivul Huawei Solar a eșuat: {error}"
+        },
+        "device_connection_interrupted": {
+            "message": "Conexiunea la dispozitivul Huawei Solar a fost întreruptă. Invertorul acceptă o singură conexiune Modbus simultan."
+        },
+        "device_permission_denied": {
+            "message": "Permisiune refuzată de dispozitivul Huawei Solar. Verificați dacă configurarea parametrilor este activată și datele de instalator sunt valide."
+        },
+        "device_timeout": {
+            "message": "Timpul de așteptare pentru un răspuns de la dispozitivul Huawei Solar a expirat."
+        },
+        "duration_exceeds_maximum": {
+            "message": "Durata maximă este de {max_duration} minute."
+        },
         "emma_no_direct_battery_control": {
             "message": "Controlul direct al bateriei nu este acceptat când este prezent un EMMA. Vă rugăm să configurați perioadele TOU pe dispozitivul EMMA."
         },
@@ -1301,6 +1319,15 @@
         "invalid_device_id": {
             "message": "ID dispozitiv invalid specificat: {device_id}"
         },
+        "invalid_device_value": {
+            "message": "Valoare invalidă pentru dispozitivul Huawei Solar: {error}"
+        },
+        "invalid_periods_format": {
+            "message": "Format invalid al perioadelor: validarea a eșuat pentru '{periods}'."
+        },
+        "invalid_time": {
+            "message": "Oră invalidă '{time}': trebuie să fie între 00:00 și 23:59."
+        },
         "inverter_status_change_in_progress": {
             "message": "Invertorul procesează încă comanda anterioară de pornire sau oprire. Vă rugăm să așteptați înainte de a comuta din nou."
         },
@@ -1309,6 +1336,9 @@
         },
         "parameter_configuration_not_enabled": {
             "message": "Configurarea parametrilor nu este activată pentru {entry}."
+        },
+        "power_exceeds_maximum": {
+            "message": "Puterea nu poate depăși {max_power} W."
         },
         "unsupported_battery_type": {
             "message": "Tip de baterie neacceptat pentru dispozitivul {device_id}."

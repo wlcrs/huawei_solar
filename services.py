@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
+import functools
 import logging
 import re
 from typing import Any, Literal, TypedDict, TypeVar
@@ -53,6 +55,7 @@ from .types import (
     HuaweiSolarConfigEntry,
     HuaweiSolarDeviceData,
     HuaweiSolarInverterData,
+    async_call_with_device_error_handling,
 )
 
 ALL_SERVICES = list(SERVICES)
@@ -360,7 +363,11 @@ def _parse_time(value: str) -> int:
     minutes = int(minutes_str)
 
     if not (0 <= hours <= 23 and 0 <= minutes <= 59):
-        raise ValueError(f"Invalid time '{value}': must be between 00:00 and 23:59")
+        raise ServiceValidationError(
+            translation_domain=DOMAIN,
+            translation_key="invalid_time",
+            translation_placeholders={"time": value},
+        )
     return hours * 60 + minutes
 
 
@@ -373,7 +380,11 @@ async def _validate_power_value(
     maximum_active_power = (await dd.device.get(max_value_key)).value
 
     if not power <= maximum_active_power:
-        raise ValueError(f"Power cannot be more than {maximum_active_power}W")
+        raise ServiceValidationError(
+            translation_domain=DOMAIN,
+            translation_key="power_exceeds_maximum",
+            translation_placeholders={"max_power": str(maximum_active_power)},
+        )
 
     return power
 
@@ -442,7 +453,11 @@ async def forcible_charge(service_call: ServiceCall) -> None:
 
     duration = service_call.data[DATA_DURATION]
     if duration > 1440:
-        raise ValueError("Maximum duration is 1440 minutes")
+        raise ServiceValidationError(
+            translation_domain=DOMAIN,
+            translation_key="duration_exceeds_maximum",
+            translation_placeholders={"max_duration": "1440"},
+        )
 
     await dd.device.set(rn.STORAGE_FORCIBLE_CHARGE_POWER, power)
     await dd.device.set(
@@ -473,7 +488,11 @@ async def forcible_discharge(service_call: ServiceCall) -> None:
 
     duration = service_call.data[DATA_DURATION]
     if duration > 1440:
-        raise ValueError("Maximum duration is 1440 minutes")
+        raise ServiceValidationError(
+            translation_domain=DOMAIN,
+            translation_key="duration_exceeds_maximum",
+            translation_placeholders={"max_duration": "1440"},
+        )
 
     await dd.device.set(rn.STORAGE_FORCIBLE_DISCHARGE_POWER, power)
     await dd.device.set(
@@ -726,8 +745,12 @@ async def set_battery_tou_periods(
         if not re.fullmatch(
             HUAWEI_LUNA2000_TOU_PATTERN, service_call.data[DATA_PERIODS]
         ):
-            raise ValueError(
-                f"Invalid periods: validation failed for '{service_call.data[DATA_PERIODS]}' as LUNA2000 TOU periods"
+            raise ServiceValidationError(
+                translation_domain=DOMAIN,
+                translation_key="invalid_periods_format",
+                translation_placeholders={
+                    "periods": str(service_call.data[DATA_PERIODS]),
+                },
             )
         await dd.device.set(
             rn.STORAGE_HUAWEI_LUNA2000_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS,
@@ -735,8 +758,12 @@ async def set_battery_tou_periods(
         )
     elif dd.device.battery_type == rv.StorageProductModel.LG_RESU:
         if not re.fullmatch(LG_RESU_TOU_PATTERN, service_call.data[DATA_PERIODS]):
-            raise ValueError(
-                f"Invalid periods: validation failed for '{service_call.data[DATA_PERIODS]}' as LG RESU TOU periods"
+            raise ServiceValidationError(
+                translation_domain=DOMAIN,
+                translation_key="invalid_periods_format",
+                translation_placeholders={
+                    "periods": str(service_call.data[DATA_PERIODS]),
+                },
             )
         await dd.device.set(
             rn.STORAGE_LG_RESU_TIME_OF_USE_PRICE_PERIODS,
@@ -762,8 +789,12 @@ async def set_emma_tou_periods(
     dd = get_emma_device(service_call)
 
     if not re.fullmatch(HUAWEI_LUNA2000_TOU_PATTERN, service_call.data[DATA_PERIODS]):
-        raise ValueError(
-            f"Invalid periods: validation failed for '{service_call.data[DATA_PERIODS]}' as TOU periods"
+        raise ServiceValidationError(
+            translation_domain=DOMAIN,
+            translation_key="invalid_periods_format",
+            translation_placeholders={
+                "periods": str(service_call.data[DATA_PERIODS]),
+            },
         )
     await dd.device.set(
         rn.EMMA_TOU_PERIODS,
@@ -807,8 +838,12 @@ async def set_capacity_control_periods(service_call: ServiceCall) -> None:
     if not re.fullmatch(
         CAPACITY_CONTROL_PERIODS_PATTERN, service_call.data[DATA_PERIODS]
     ):
-        raise ValueError(
-            f"Invalid periods: could not validate '{service_call.data[DATA_PERIODS]}' as capacity control periods"
+        raise ServiceValidationError(
+            translation_domain=DOMAIN,
+            translation_key="invalid_periods_format",
+            translation_placeholders={
+                "periods": str(service_call.data[DATA_PERIODS]),
+            },
         )
 
     await dd.device.set(
@@ -849,8 +884,12 @@ async def set_fixed_charge_periods(service_call: ServiceCall) -> None:
         )
 
     if not re.fullmatch(FIXED_CHARGE_PERIODS_PATTERN, service_call.data[DATA_PERIODS]):
-        raise ValueError(
-            f"Invalid periods: could not validate '{service_call.data[DATA_PERIODS]}' as fixed charging periods"
+        raise ServiceValidationError(
+            translation_domain=DOMAIN,
+            translation_key="invalid_periods_format",
+            translation_placeholders={
+                "periods": str(service_call.data[DATA_PERIODS]),
+            },
         )
 
     await dd.device.set(
@@ -861,6 +900,18 @@ async def set_fixed_charge_periods(service_call: ServiceCall) -> None:
     _request_configuration_refresh(service_call, dd)
 
 
+def _wrap_device_errors(
+    func: Callable[[ServiceCall], Awaitable[None]],
+) -> Callable[[ServiceCall], Awaitable[None]]:
+    """Translate device communication errors to HomeAssistantError."""
+
+    @functools.wraps(func)
+    async def _wrapper(service_call: ServiceCall) -> None:
+        await async_call_with_device_error_handling(func(service_call))
+
+    return _wrapper
+
+
 def async_setup_services(
     hass: HomeAssistant,
 ) -> None:
@@ -868,81 +919,56 @@ def async_setup_services(
     if hass.services.has_service(DOMAIN, SERVICE_RESET_MAXIMUM_FEED_GRID_POWER):
         return
 
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
-        reset_maximum_feed_grid_power,
-        schema=DEVICE_SCHEMA,
+    service_registrations: tuple[
+        tuple[str, Callable[[ServiceCall], Awaitable[None]], vol.Schema], ...
+    ] = (
+        (
+            SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
+            reset_maximum_feed_grid_power,
+            DEVICE_SCHEMA,
+        ),
+        (
+            SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
+            set_zero_power_grid_connection,
+            DEVICE_SCHEMA,
+        ),
+        (
+            SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
+            set_maximum_feed_grid_power,
+            DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_SCHEMA),
+        ),
+        (
+            SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
+            set_maximum_feed_grid_power_percentage,
+            DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA),
+        ),
+        (
+            SERVICE_SET_DI_ACTIVE_POWER_SCHEDULING,
+            set_di_active_power_scheduling,
+            DEVICE_SCHEMA,
+        ),
+        (SERVICE_SET_TOU_PERIODS, set_tou_periods, SET_TOU_PERIODS_SCHEMA),
+        (SERVICE_FORCIBLE_CHARGE, forcible_charge, DURATION_SCHEMA),
+        (SERVICE_FORCIBLE_DISCHARGE, forcible_discharge, DURATION_SCHEMA),
+        (SERVICE_FORCIBLE_CHARGE_SOC, forcible_charge_soc, SOC_SCHEMA),
+        (SERVICE_FORCIBLE_DISCHARGE_SOC, forcible_discharge_soc, SOC_SCHEMA),
+        (SERVICE_STOP_FORCIBLE_CHARGE, stop_forcible_charge, DEVICE_SCHEMA),
+        (
+            SERVICE_SET_FIXED_CHARGE_PERIODS,
+            set_fixed_charge_periods,
+            FIXED_CHARGE_PERIODS_SCHEMA,
+        ),
+        (
+            SERVICE_SET_CAPACITY_CONTROL_PERIODS,
+            set_capacity_control_periods,
+            CAPACITY_CONTROL_PERIODS_SCHEMA,
+        ),
     )
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
-        set_zero_power_grid_connection,
-        schema=DEVICE_SCHEMA,
-    )
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
-        set_maximum_feed_grid_power,
-        schema=DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_SCHEMA),
-    )
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
-        set_maximum_feed_grid_power_percentage,
-        schema=DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA),
-    )
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_SET_DI_ACTIVE_POWER_SCHEDULING,
-        set_di_active_power_scheduling,
-        schema=DEVICE_SCHEMA,
-    )
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_SET_TOU_PERIODS,
-        set_tou_periods,
-        schema=SET_TOU_PERIODS_SCHEMA,
-    )
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_FORCIBLE_CHARGE,
-        forcible_charge,
-        schema=DURATION_SCHEMA,
-    )
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_FORCIBLE_DISCHARGE,
-        forcible_discharge,
-        schema=DURATION_SCHEMA,
-    )
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_FORCIBLE_CHARGE_SOC,
-        forcible_charge_soc,
-        schema=SOC_SCHEMA,
-    )
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_FORCIBLE_DISCHARGE_SOC,
-        forcible_discharge_soc,
-        schema=SOC_SCHEMA,
-    )
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_STOP_FORCIBLE_CHARGE,
-        stop_forcible_charge,
-        schema=DEVICE_SCHEMA,
-    )
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_SET_FIXED_CHARGE_PERIODS,
-        set_fixed_charge_periods,
-        schema=FIXED_CHARGE_PERIODS_SCHEMA,
-    )
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_SET_CAPACITY_CONTROL_PERIODS,
-        set_capacity_control_periods,
-        schema=CAPACITY_CONTROL_PERIODS_SCHEMA,
-    )
+
+    for service_name, handler, schema in service_registrations:
+        hass.services.async_register(
+            DOMAIN,
+            service_name,
+            _wrap_device_errors(handler),
+            schema=schema,
+        )

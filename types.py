@@ -1,11 +1,24 @@
 """Typing for the Huawei Solar integration."""
 
+from collections.abc import Awaitable
 from dataclasses import dataclass
 from typing import Any, TypedDict, cast
 
-from huawei_solar import HuaweiSolarDevice, RegisterName, SUN2000Device
+from huawei_solar import (
+    ConnectionInterruptedException,
+    EncodeError,
+    HuaweiSolarDevice,
+    HuaweiSolarException,
+    InvalidCredentials,
+    PeakPeriodsValidationError,
+    RegisterName,
+    SUN2000Device,
+    TimeOfUsePeriodsException,
+)
+from huawei_solar.modbus_pdu import PermissionDeniedError
 
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import Entity, EntityDescription
 from homeassistant.helpers.update_coordinator import (
@@ -13,6 +26,7 @@ from homeassistant.helpers.update_coordinator import (
     DataUpdateCoordinator,
 )
 
+from .const import DOMAIN
 from .update_coordinator import (
     HuaweiSolarOptimizerUpdateCoordinator,
     HuaweiSolarUpdateCoordinator,
@@ -57,10 +71,63 @@ class HuaweiSolarData(TypedDict):
     device_datas: list[HuaweiSolarDeviceData]
 
 
+async def async_call_with_device_error_handling[T](coro: Awaitable[T]) -> T:
+    """Await a device operation and translate library errors to HA errors."""
+    try:
+        return await coro
+    except (
+        TimeOfUsePeriodsException,
+        PeakPeriodsValidationError,
+        EncodeError,
+    ) as err:
+        raise ServiceValidationError(
+            translation_domain=DOMAIN,
+            translation_key="invalid_device_value",
+            translation_placeholders={
+                "error": str(err) or type(err).__name__,
+            },
+        ) from err
+    except PermissionDeniedError as err:
+        raise HomeAssistantError(
+            translation_domain=DOMAIN,
+            translation_key="device_permission_denied",
+        ) from err
+    except InvalidCredentials as err:
+        raise HomeAssistantError(
+            translation_domain=DOMAIN,
+            translation_key="device_authentication_failed",
+        ) from err
+    except ConnectionInterruptedException as err:
+        raise HomeAssistantError(
+            translation_domain=DOMAIN,
+            translation_key="device_connection_interrupted",
+        ) from err
+    except TimeoutError as err:
+        raise HomeAssistantError(
+            translation_domain=DOMAIN,
+            translation_key="device_timeout",
+        ) from err
+    except HuaweiSolarException as err:
+        raise HomeAssistantError(
+            translation_domain=DOMAIN,
+            translation_key="device_communication_error",
+            translation_placeholders={
+                "error": str(err) or type(err).__name__,
+            },
+        ) from err
+
+
 class HuaweiSolarEntity(Entity):
     """Huawei Solar Entity."""
 
     _attr_has_entity_name = True
+    device: HuaweiSolarDevice
+
+    async def _async_set_register(self, register: RegisterName, value: Any) -> bool:
+        """Write a register and translate device communication errors."""
+        return await async_call_with_device_error_handling(
+            self.device.set(register, value)
+        )
 
 
 class HuaweiSolarEntityDescription(EntityDescription):

@@ -72,16 +72,16 @@ class StopForcibleChargeButtonEntity(HuaweiSolarEntity, ButtonEntity):
 
     async def async_press(self) -> None:
         """Stop the forcible charge or discharge."""
-        await self.device.set(
+        await self._async_set_register(
             rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
             rv.StorageForcibleChargeDischarge.STOP,
         )
-        await self.device.set(rn.STORAGE_FORCIBLE_DISCHARGE_POWER, 0)
-        await self.device.set(
+        await self._async_set_register(rn.STORAGE_FORCIBLE_DISCHARGE_POWER, 0)
+        await self._async_set_register(
             rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD,
             0,
         )
-        await self.device.set(
+        await self._async_set_register(
             rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,
             rv.StorageForcibleChargeDischargeTargetMode.TIME,
         )

@@ -1289,6 +1289,24 @@
         "config_entry_not_found": {
             "message": "Posten hittades inte för enhet: {device_id}"
         },
+        "device_authentication_failed": {
+            "message": "Autentisering med Huawei Solar-enheten misslyckades. Autentisera integrationen igen."
+        },
+        "device_communication_error": {
+            "message": "Det gick inte att kommunicera med Huawei Solar-enheten: {error}"
+        },
+        "device_connection_interrupted": {
+            "message": "Anslutningen till Huawei Solar-enheten avbröts. Växelriktaren stöder endast en Modbus-anslutning åt gången."
+        },
+        "device_permission_denied": {
+            "message": "Åtkomst nekades av Huawei Solar-enheten. Kontrollera att parameterkonfiguration är aktiverad och att installatörsuppgifterna är giltiga."
+        },
+        "device_timeout": {
+            "message": "Tidsgränsen överskreds i väntan på svar från Huawei Solar-enheten."
+        },
+        "duration_exceeds_maximum": {
+            "message": "Maximal varaktighet är {max_duration} minuter."
+        },
         "emma_no_direct_battery_control": {
             "message": "Direkt batteristyrning stöds inte när en EMMA är närvarande. Konfigurera TOU-perioder på EMMA-enheten."
         },
@@ -1301,6 +1319,15 @@
         "invalid_device_id": {
             "message": "Ogiltigt enhets-ID angivet: {device_id}"
         },
+        "invalid_device_value": {
+            "message": "Ogiltigt värde för Huawei Solar-enheten: {error}"
+        },
+        "invalid_periods_format": {
+            "message": "Ogiltigt periodformat: validering misslyckades för '{periods}'."
+        },
+        "invalid_time": {
+            "message": "Ogiltig tid '{time}': måste vara mellan 00:00 och 23:59."
+        },
         "inverter_status_change_in_progress": {
             "message": "Växelriktaren bearbetar fortfarande föregående start- eller avstängningskommando. Vänta innan du växlar igen."
         },
@@ -1309,6 +1336,9 @@
         },
         "parameter_configuration_not_enabled": {
             "message": "Parameterkonfiguration är inte aktiverad för {entry}."
+        },
+        "power_exceeds_maximum": {
+            "message": "Effekten får inte överstiga {max_power} W."
         },
         "unsupported_battery_type": {
             "message": "Batterityp stöds inte för enhet {device_id}."

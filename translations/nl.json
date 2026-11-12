@@ -1302,6 +1302,24 @@
         "config_entry_not_found": {
             "message": "Item niet gevonden voor apparaat: {device_id}"
         },
+        "device_authentication_failed": {
+            "message": "Authenticatie met het Huawei Solar-apparaat is mislukt. Authenticeer de integratie opnieuw."
+        },
+        "device_communication_error": {
+            "message": "Kan niet communiceren met het Huawei Solar-apparaat: {error}"
+        },
+        "device_connection_interrupted": {
+            "message": "De verbinding met het Huawei Solar-apparaat is onderbroken. De omvormer ondersteunt slechts één Modbus-verbinding tegelijk."
+        },
+        "device_permission_denied": {
+            "message": "Toegang geweigerd door het Huawei Solar-apparaat. Controleer of parameterconfiguratie is ingeschakeld en de installateursgegevens geldig zijn."
+        },
+        "device_timeout": {
+            "message": "Time-out bij het wachten op een reactie van het Huawei Solar-apparaat."
+        },
+        "duration_exceeds_maximum": {
+            "message": "De maximale duur is {max_duration} minuten."
+        },
         "emma_no_direct_battery_control": {
             "message": "Directe batterijbediening wordt niet ondersteund als er een EMMA aanwezig is. Configureer TOU-periodes op het EMMA-apparaat."
         },
@@ -1314,6 +1332,15 @@
         "invalid_device_id": {
             "message": "Ongeldige apparaat-ID opgegeven: {device_id}"
         },
+        "invalid_device_value": {
+            "message": "Ongeldige waarde voor Huawei Solar-apparaat: {error}"
+        },
+        "invalid_periods_format": {
+            "message": "Ongeldig periodeformaat: validatie mislukt voor '{periods}'."
+        },
+        "invalid_time": {
+            "message": "Ongeldige tijd '{time}': moet tussen 00:00 en 23:59 liggen."
+        },
         "inverter_status_change_in_progress": {
             "message": "De omvormer verwerkt nog steeds de vorige opstart- of uitschakelopdracht. Wacht even voordat u opnieuw schakelt."
         },
@@ -1322,6 +1349,9 @@
         },
         "parameter_configuration_not_enabled": {
             "message": "Parameterconfiguratie is niet ingeschakeld voor {entry}."
+        },
+        "power_exceeds_maximum": {
+            "message": "Het vermogen mag niet hoger zijn dan {max_power} W."
         },
         "unsupported_battery_type": {
             "message": "Niet-ondersteund batterijtype voor apparaat {device_id}."

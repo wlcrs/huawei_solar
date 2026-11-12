@@ -561,7 +561,9 @@ class HuaweiSolarNumberEntity(HuaweiSolarCoordinatorEntity, NumberEntity):
 
     async def async_set_native_value(self, value: float) -> None:
         """Set a new value."""
-        if await self.device.set(self.entity_description.register_name, float(value)):
+        if await self._async_set_register(
+            self.entity_description.register_name, float(value)
+        ):
             self._attr_native_value = float(value)
 
         await self.coordinator.async_request_refresh()

@@ -322,7 +322,7 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
 
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
-        await self.device.set(
+        await self._async_set_register(
             self.entity_description.register_name, self._to_enum(option)
         )
         self._attr_current_option = option
@@ -391,7 +391,7 @@ class StorageModeSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
 
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
-        await self.device.set(
+        await self._async_set_register(
             rn.STORAGE_WORKING_MODE_SETTINGS,
             getattr(rv.StorageWorkingModesC, option.upper()),
         )
