@@ -100,9 +100,17 @@ async def validate_serial_setup(
                     slave_bridge.model_name,
                     slave_bridge.serial_number,
                 )
-            except HuaweiSolarException as err:
+            except (
+                HuaweiSolarException,
+                ConnectionException,
+                ModbusConnectionError,
+                TimeoutError,
+            ) as err:
                 _LOGGER.error("Could not connect to slave %s", slave_id)
-                raise DeviceException(f"Could not connect to slave {slave_id}") from err
+                raise DeviceException(
+                    f"Could not connect to slave {slave_id}",
+                    unit_id=slave_id,
+                ) from err
 
         # Return info that you want to store in the config entry.
         return result
