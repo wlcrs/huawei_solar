@@ -1575,5 +1575,13 @@
                 "periods": {}
             }
         }
+    },
+    "selector": {
+        "connection_type": {
+            "options": {
+                "serial": "Сериен",
+                "network": "Мрежов"
+            }
+        }
     }
 }

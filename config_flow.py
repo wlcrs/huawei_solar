@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Coroutine
 from typing import Any
 
 from huawei_solar import (
@@ -535,8 +535,31 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Step when user initializes a integration."""
-        return await self.async_step_setup_connection_type(user_input)
+        """Step when user initializes an integration."""
+        if user_input is not None:
+            if user_input[CONF_TYPE] == "serial":
+                return await self.async_step_setup_serial()
+
+            return await self.async_step_setup_network()
+
+        # In case of a reconfigure flow, we already know the current choice.
+        current_conn_type = None
+        if self._host:
+            current_conn_type = "network"
+        elif self._serial_port or self._port:
+            current_conn_type = "serial"
+        schema = vol.Schema(
+            {
+                vol.Required(CONF_TYPE, default=current_conn_type): SelectSelector(
+                    SelectSelectorConfig(
+                        options=["serial", "network"],
+                        mode=SelectSelectorMode.DROPDOWN,
+                        translation_key="connection_type",
+                    )
+                )
+            }
+        )
+        return self.async_show_form(step_id="user", data_schema=schema)
 
     def _update_config_data_from_entry_data(self, entry_data: dict[str, Any]) -> None:
         self._host = entry_data.get(CONF_HOST)
@@ -563,12 +586,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Step when user reconfigures the integration."""
-        assert "entry_id" in self.context
-        self._reconfigure_entry = self.hass.config_entries.async_get_known_entry(
-            self.context["entry_id"]
-        )
-        self._update_config_data_from_entry_data(self._reconfigure_entry.data)  # type: ignore[arg-type]
-        return await self.async_step_setup_connection_type()
+        self._reconfigure_entry = self._get_reconfigure_entry()
+        self._update_config_data_from_entry_data(dict(self._reconfigure_entry.data))
+        return await self.async_step_user()
 
     async def async_step_reauth(
         self, config: dict[str, Any] | None = None
@@ -579,30 +599,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             config if config is not None else dict(self._reauth_entry.data)
         )
         return await self.async_step_network_login()
-
-    async def async_step_setup_connection_type(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
-        """Step to let the user choose the connection type."""
-        if user_input is not None:
-            user_selection = user_input[CONF_TYPE]
-            if user_selection == "Serial":
-                return await self.async_step_setup_serial()
-
-            return await self.async_step_setup_network()
-
-        list_of_types = ["Serial", "Network"]
-
-        # In case of a reconfigure flow, we already know the current choice.
-        current_conn_type = None
-        if self._host:
-            current_conn_type = "Network"
-        elif self._serial_port or self._port:
-            current_conn_type = "Serial"
-        schema = vol.Schema(
-            {vol.Required(CONF_TYPE, default=current_conn_type): vol.In(list_of_types)}
-        )
-        return self.async_show_form(step_id="user", data_schema=schema)
 
     async def async_step_setup_serial(
         self, user_input: dict[str, Any] | None = None
@@ -673,103 +669,138 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
+    def _connection_placeholders(self, *, is_serial: bool) -> dict[str, str]:
+        """Return description placeholders for the active connection type."""
+        if is_serial:
+            return {"serial_port": self._serial_port or ""}
+        return {"host": self._host or "", "port": str(self._port or "")}
+
+    async def _async_run_discovery_step(
+        self,
+        *,
+        step_id: str,
+        coro_factory: Callable[
+            [], Coroutine[Any, Any, tuple[int, list[int]] | None]
+        ],
+        is_serial: bool,
+        fallback_step_id: str | None = None,
+    ) -> ConfigFlowResult:
+        """Run a background discovery task with progress and shared error routing."""
+        if is_serial:
+            assert self._serial_port is not None
+            target_desc = self._serial_port
+        else:
+            assert self._host is not None
+            assert self._port is not None
+            target_desc = f"{self._host}:{self._port}"
+
+        if self._discovery_task is None:
+            self._discovery_task = self.hass.async_create_background_task(
+                coro_factory(),
+                f"huawei_solar_{step_id}",
+            )
+
+        if not self._discovery_task.done():
+            return self.async_show_progress(
+                step_id=step_id,
+                progress_action=step_id,
+                progress_task=self._discovery_task,
+                description_placeholders=self._connection_placeholders(
+                    is_serial=is_serial
+                ),
+            )
+
+        suffix = "_serial" if is_serial else ""
+        finish_step = "serial_finish_setup" if is_serial else "finish_network_setup"
+        task, self._discovery_task = self._discovery_task, None
+        try:
+            result = task.result()
+        except ConnectionInterruptedException:
+            _LOGGER.warning("%s: connection interrupted on %s", step_id, target_desc)
+            return self.async_show_progress_done(
+                next_step_id=f"connection_interrupted{suffix}"
+            )
+        except (ConnectionException, ModbusConnectionError, TimeoutError):
+            _LOGGER.warning("%s: could not connect to %s", step_id, target_desc)
+            return self.async_show_progress_done(next_step_id=f"cannot_connect{suffix}")
+        except DeviceException:
+            _LOGGER.warning("%s: no devices found on %s", step_id, target_desc)
+            return self.async_show_progress_done(
+                next_step_id=f"no_device_found{suffix}"
+            )
+        except Exception:  # allowed in config flow
+            _LOGGER.exception("Unexpected exception during %s", step_id)
+            return self.async_show_progress_done(next_step_id=f"cannot_connect{suffix}")
+
+        if result is None:
+            assert fallback_step_id is not None
+            _LOGGER.warning(
+                "%s: no devices found on %s. Falling back to %s",
+                step_id,
+                target_desc,
+                fallback_step_id,
+            )
+            return self.async_show_progress_done(next_step_id=fallback_step_id)
+
+        self._discovered_primary_unit_id, self._discovered_sub_unit_ids = result
+        return self.async_show_progress_done(next_step_id=finish_step)
+
+    async def _async_error_retry_step(
+        self,
+        step_id: str,
+        user_input: dict[str, Any] | None,
+        *,
+        is_serial: bool,
+        include_slave_id: bool = False,
+    ) -> ConfigFlowResult:
+        """Show an error screen and return to the serial or network setup form."""
+        if user_input is None:
+            placeholders = self._connection_placeholders(is_serial=is_serial)
+            if include_slave_id:
+                placeholders["slave_id"] = (
+                    str(self._failed_slave_id)
+                    if self._failed_slave_id is not None
+                    else "unknown"
+                )
+            return self.async_show_form(
+                step_id=step_id,
+                description_placeholders=placeholders,
+            )
+        self._reset_discovery_state()
+        if is_serial:
+            return await self.async_step_setup_serial()
+        return await self.async_step_setup_network()
+
     async def async_step_serial_auto_discovery(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Show a progress screen while auto-discovering over serial."""
         assert self._serial_port is not None
-
-        if self._discovery_task is None:
-            self._discovery_task = self.hass.async_create_background_task(
-                _rtu_auto_slave_discovery(
-                    serial_port=self._serial_port,
-                    baudrate=self._baudrate or DEFAULT_BAUDRATE,
-                    on_progress=self.async_update_progress,
-                ),
-                "huawei_solar_serial_auto_discovery",
-            )
-
-        if not self._discovery_task.done():
-            return self.async_show_progress(
-                step_id="serial_auto_discovery",
-                progress_action="serial_auto_discovery",
-                progress_task=self._discovery_task,
-                description_placeholders={"serial_port": self._serial_port},
-            )
-
-        task, self._discovery_task = self._discovery_task, None
-        try:
-            result = task.result()
-        except ConnectionInterruptedException:
-            _LOGGER.warning(
-                "AUTO/serial: connection interrupted on %s", self._serial_port
-            )
-            return self.async_show_progress_done(
-                next_step_id="connection_interrupted_serial"
-            )
-        except (ConnectionException, ModbusConnectionError, TimeoutError):
-            _LOGGER.warning("AUTO/serial: could not open %s", self._serial_port)
-            return self.async_show_progress_done(next_step_id="cannot_connect_serial")
-        except Exception:
-            _LOGGER.exception("Unexpected exception during serial auto discovery")
-            return self.async_show_progress_done(next_step_id="cannot_connect_serial")
-
-        if result is None:
-            _LOGGER.warning(
-                "AUTO/serial: no devices found on %s. Falling back to SCAN method",
-                self._serial_port,
-            )
-            return self.async_show_progress_done(next_step_id="serial_scan_discovery")
-
-        self._discovered_primary_unit_id, self._discovered_sub_unit_ids = result
-        return self.async_show_progress_done(next_step_id="serial_finish_setup")
+        return await self._async_run_discovery_step(
+            step_id="serial_auto_discovery",
+            coro_factory=lambda: _rtu_auto_slave_discovery(
+                serial_port=self._serial_port,  # type: ignore[arg-type]
+                baudrate=self._baudrate or DEFAULT_BAUDRATE,
+                on_progress=self.async_update_progress,
+            ),
+            is_serial=True,
+            fallback_step_id="serial_scan_discovery",
+        )
 
     async def async_step_serial_scan_discovery(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Show a progress screen while scan-discovering over serial."""
         assert self._serial_port is not None
-
-        if self._discovery_task is None:
-            self._discovery_task = self.hass.async_create_background_task(
-                _rtu_scan_slave_discovery(
-                    serial_port=self._serial_port,
-                    baudrate=self._baudrate or DEFAULT_BAUDRATE,
-                    on_progress=self.async_update_progress,
-                ),
-                "huawei_solar_serial_scan_discovery",
-            )
-
-        if not self._discovery_task.done():
-            return self.async_show_progress(
-                step_id="serial_scan_discovery",
-                progress_action="serial_scan_discovery",
-                progress_task=self._discovery_task,
-                description_placeholders={"serial_port": self._serial_port},
-            )
-
-        task, self._discovery_task = self._discovery_task, None
-        try:
-            result = task.result()
-        except ConnectionInterruptedException:
-            _LOGGER.warning(
-                "SCAN/serial: connection interrupted on %s", self._serial_port
-            )
-            return self.async_show_progress_done(
-                next_step_id="connection_interrupted_serial"
-            )
-        except (ConnectionException, ModbusConnectionError, TimeoutError):
-            _LOGGER.warning("SCAN/serial: could not open %s", self._serial_port)
-            return self.async_show_progress_done(next_step_id="cannot_connect_serial")
-        except DeviceException:
-            _LOGGER.warning("SCAN/serial: no devices found on %s", self._serial_port)
-            return self.async_show_progress_done(next_step_id="no_device_found_serial")
-        except Exception:
-            _LOGGER.exception("Unexpected exception during serial scan discovery")
-            return self.async_show_progress_done(next_step_id="cannot_connect_serial")
-
-        self._discovered_primary_unit_id, self._discovered_sub_unit_ids = result
-        return self.async_show_progress_done(next_step_id="serial_finish_setup")
+        return await self._async_run_discovery_step(
+            step_id="serial_scan_discovery",
+            coro_factory=lambda: _rtu_scan_slave_discovery(
+                serial_port=self._serial_port,  # type: ignore[arg-type]
+                baudrate=self._baudrate or DEFAULT_BAUDRATE,
+                on_progress=self.async_update_progress,
+            ),
+            is_serial=True,
+        )
 
     async def async_step_serial_finish_setup(
         self, user_input: dict[str, Any] | None = None
@@ -834,43 +865,28 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Inform the user the serial port could not be opened, offer to retry."""
-        if user_input is None:
-            return self.async_show_form(
-                step_id="cannot_connect_serial",
-                description_placeholders={"serial_port": self._serial_port or ""},
-            )
-        self._reset_discovery_state()
-        return await self.async_step_setup_serial()
+        return await self._async_error_retry_step(
+            "cannot_connect_serial", user_input, is_serial=True
+        )
 
     async def async_step_connection_interrupted_serial(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Inform the user the connection was interrupted by another device, offer to retry."""
-        if user_input is None:
-            return self.async_show_form(
-                step_id="connection_interrupted_serial",
-                description_placeholders={"serial_port": self._serial_port or ""},
-            )
-        self._reset_discovery_state()
-        return await self.async_step_setup_serial()
+        return await self._async_error_retry_step(
+            "connection_interrupted_serial", user_input, is_serial=True
+        )
 
     async def async_step_no_device_found_serial(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Inform the user no device responded on the serial port, offer to retry."""
-        if user_input is None:
-            placeholders: dict[str, str] = {
-                "serial_port": self._serial_port or "",
-                "slave_id": str(self._failed_slave_id)
-                if self._failed_slave_id is not None
-                else "unknown",
-            }
-            return self.async_show_form(
-                step_id="no_device_found_serial",
-                description_placeholders=placeholders,
-            )
-        self._reset_discovery_state()
-        return await self.async_step_setup_serial()
+        return await self._async_error_retry_step(
+            "no_device_found_serial",
+            user_input,
+            is_serial=True,
+            include_slave_id=True,
+        )
 
     async def async_step_setup_network(
         self, user_input: dict[str, Any] | None = None
@@ -997,52 +1013,16 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Show a progress screen while probing via Huawei get_device_infos messages."""
         assert self._host is not None
         assert self._port is not None
-
-        if self._discovery_task is None:
-            self._discovery_task = self.hass.async_create_background_task(
-                _tcp_auto_slave_discovery(
-                    host=self._host,
-                    port=self._port,
-                    on_progress=self.async_update_progress,
-                ),
-                "huawei_solar_auto_discovery",
-            )
-
-        if not self._discovery_task.done():
-            return self.async_show_progress(
-                step_id="auto_discovery",
-                progress_action="auto_discovery",
-                progress_task=self._discovery_task,
-                description_placeholders={
-                    "host": self._host,
-                    "port": str(self._port),
-                },
-            )
-
-        task, self._discovery_task = self._discovery_task, None
-        try:
-            result = task.result()
-        except ConnectionInterruptedException:
-            _LOGGER.warning(
-                "AUTO: connection interrupted on %s:%s", self._host, self._port
-            )
-            return self.async_show_progress_done(next_step_id="connection_interrupted")
-        except (ConnectionException, ModbusConnectionError, TimeoutError):
-            _LOGGER.warning("AUTO: could not connect to %s:%s", self._host, self._port)
-            return self.async_show_progress_done(next_step_id="cannot_connect")
-        except Exception:  # allowed in config flow
-            _LOGGER.exception("Unexpected exception during auto discovery")
-            return self.async_show_progress_done(next_step_id="cannot_connect")
-
-        if result is None:
-            _LOGGER.warning(
-                "AUTO: no devices found via Huawei discovery messages. "
-                "Falling back to SCAN method"
-            )
-            return self.async_show_progress_done(next_step_id="scan_discovery")
-
-        self._discovered_primary_unit_id, self._discovered_sub_unit_ids = result
-        return self.async_show_progress_done(next_step_id="finish_network_setup")
+        return await self._async_run_discovery_step(
+            step_id="auto_discovery",
+            coro_factory=lambda: _tcp_auto_slave_discovery(
+                host=self._host,  # type: ignore[arg-type]
+                port=self._port,  # type: ignore[arg-type]
+                on_progress=self.async_update_progress,
+            ),
+            is_serial=False,
+            fallback_step_id="scan_discovery",
+        )
 
     async def async_step_scan_discovery(
         self, user_input: dict[str, Any] | None = None
@@ -1050,48 +1030,15 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Show a progress screen while probing via detect_device_type."""
         assert self._host is not None
         assert self._port is not None
-
-        if self._discovery_task is None:
-            self._discovery_task = self.hass.async_create_background_task(
-                _tcp_scan_slave_discovery(
-                    host=self._host,
-                    port=self._port,
-                    on_progress=self.async_update_progress,
-                ),
-                "huawei_solar_scan_discovery",
-            )
-
-        if not self._discovery_task.done():
-            return self.async_show_progress(
-                step_id="scan_discovery",
-                progress_action="scan_discovery",
-                progress_task=self._discovery_task,
-                description_placeholders={
-                    "host": self._host,
-                    "port": str(self._port),
-                },
-            )
-
-        task, self._discovery_task = self._discovery_task, None
-        try:
-            result = task.result()
-        except ConnectionInterruptedException:
-            _LOGGER.warning(
-                "SCAN: connection interrupted on %s:%s", self._host, self._port
-            )
-            return self.async_show_progress_done(next_step_id="connection_interrupted")
-        except (ConnectionException, ModbusConnectionError, TimeoutError):
-            _LOGGER.warning("SCAN: could not connect to %s:%s", self._host, self._port)
-            return self.async_show_progress_done(next_step_id="cannot_connect")
-        except DeviceException:
-            _LOGGER.warning("SCAN: no devices found on %s:%s", self._host, self._port)
-            return self.async_show_progress_done(next_step_id="no_device_found")
-        except Exception:  # allowed in config flow
-            _LOGGER.exception("Unexpected exception during scan discovery")
-            return self.async_show_progress_done(next_step_id="cannot_connect")
-
-        self._discovered_primary_unit_id, self._discovered_sub_unit_ids = result
-        return self.async_show_progress_done(next_step_id="finish_network_setup")
+        return await self._async_run_discovery_step(
+            step_id="scan_discovery",
+            coro_factory=lambda: _tcp_scan_slave_discovery(
+                host=self._host,  # type: ignore[arg-type]
+                port=self._port,  # type: ignore[arg-type]
+                on_progress=self.async_update_progress,
+            ),
+            is_serial=False,
+        )
 
     async def async_step_finish_network_setup(
         self, user_input: dict[str, Any] | None = None
@@ -1189,50 +1136,28 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Inform the user that the device could not be reached, offer to retry."""
-        if user_input is None:
-            return self.async_show_form(
-                step_id="cannot_connect",
-                description_placeholders={
-                    "host": self._host or "",
-                    "port": str(self._port or ""),
-                },
-            )
-        self._reset_discovery_state()
-        return await self.async_step_setup_network()
+        return await self._async_error_retry_step(
+            "cannot_connect", user_input, is_serial=False
+        )
 
     async def async_step_connection_interrupted(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Inform the user the connection was interrupted by another device, offer to retry."""
-        if user_input is None:
-            return self.async_show_form(
-                step_id="connection_interrupted",
-                description_placeholders={
-                    "host": self._host or "",
-                    "port": str(self._port or ""),
-                },
-            )
-        self._reset_discovery_state()
-        return await self.async_step_setup_network()
+        return await self._async_error_retry_step(
+            "connection_interrupted", user_input, is_serial=False
+        )
 
     async def async_step_no_device_found(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Inform the user that no Huawei Solar device responded, offer to retry."""
-        if user_input is None:
-            placeholders: dict[str, str] = {
-                "host": self._host or "",
-                "port": str(self._port or ""),
-                "slave_id": str(self._failed_slave_id)
-                if self._failed_slave_id is not None
-                else "unknown",
-            }
-            return self.async_show_form(
-                step_id="no_device_found",
-                description_placeholders=placeholders,
-            )
-        self._reset_discovery_state()
-        return await self.async_step_setup_network()
+        return await self._async_error_retry_step(
+            "no_device_found",
+            user_input,
+            is_serial=False,
+            include_slave_id=True,
+        )
 
     async def async_step_network_login(
         self, user_input: dict[str, Any] | None = None

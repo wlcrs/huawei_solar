@@ -1569,5 +1569,13 @@
             },
             "name": "Arrêter la charge ou la décharge forcée"
         }
+    },
+    "selector": {
+        "connection_type": {
+            "options": {
+                "serial": "Série",
+                "network": "Réseau"
+            }
+        }
     }
 }

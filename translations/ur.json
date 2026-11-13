@@ -1570,5 +1570,13 @@
             },
             "name": "زبردستی چارج یا ڈسچارج کو روکیں۔"
         }
+    },
+    "selector": {
+        "connection_type": {
+            "options": {
+                "serial": "سیریل",
+                "network": "نیٹ ورک"
+            }
+        }
     }
 }

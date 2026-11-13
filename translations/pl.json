@@ -1569,5 +1569,13 @@
             },
             "name": "Zatrzymaj wymuszenie ładowania / rozładowania"
         }
+    },
+    "selector": {
+        "connection_type": {
+            "options": {
+                "serial": "Szeregowe",
+                "network": "Sieciowe"
+            }
+        }
     }
 }

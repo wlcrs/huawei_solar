@@ -1571,5 +1571,13 @@
             },
             "name": "Aturar la càrrega o descàrrega forçada"
         }
+    },
+    "selector": {
+        "connection_type": {
+            "options": {
+                "serial": "Sèrie",
+                "network": "Xarxa"
+            }
+        }
     }
 }

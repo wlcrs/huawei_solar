@@ -1569,5 +1569,13 @@
             },
             "name": "Ferma la carica e scarica forzata"
         }
+    },
+    "selector": {
+        "connection_type": {
+            "options": {
+                "serial": "Seriale",
+                "network": "Rete"
+            }
+        }
     }
 }

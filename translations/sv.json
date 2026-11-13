@@ -1569,5 +1569,13 @@
             },
             "name": "Stoppa forcerad laddning eller urladdning"
         }
+    },
+    "selector": {
+        "connection_type": {
+            "options": {
+                "serial": "Seriell",
+                "network": "Nätverk"
+            }
+        }
     }
 }

@@ -1569,5 +1569,13 @@
             },
             "name": "Kényszerített töltés vagy kisütés leállítása"
         }
+    },
+    "selector": {
+        "connection_type": {
+            "options": {
+                "serial": "Soros",
+                "network": "Hálózati"
+            }
+        }
     }
 }

@@ -1582,5 +1582,13 @@
             },
             "name": "Stop geforceerd laden"
         }
+    },
+    "selector": {
+        "connection_type": {
+            "options": {
+                "serial": "Serieel",
+                "network": "Netwerk"
+            }
+        }
     }
 }

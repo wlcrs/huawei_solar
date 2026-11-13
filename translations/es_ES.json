@@ -1569,5 +1569,13 @@
             },
             "name": "Detener la carga o descarga forzada"
         }
+    },
+    "selector": {
+        "connection_type": {
+            "options": {
+                "serial": "Serie",
+                "network": "Red"
+            }
+        }
     }
 }

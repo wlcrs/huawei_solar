@@ -1569,5 +1569,13 @@
             },
             "name": "Zwangs-Ladung oder -Entladung stoppen"
         }
+    },
+    "selector": {
+        "connection_type": {
+            "options": {
+                "serial": "Seriell",
+                "network": "Netzwerk"
+            }
+        }
     }
 }

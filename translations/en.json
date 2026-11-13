@@ -1569,5 +1569,13 @@
             },
             "name": "Stop the forcible charge or discharge"
         }
+    },
+    "selector": {
+        "connection_type": {
+            "options": {
+                "serial": "Serial",
+                "network": "Network"
+            }
+        }
     }
 }

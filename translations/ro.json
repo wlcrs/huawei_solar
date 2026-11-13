@@ -1569,5 +1569,13 @@
             },
             "name": "Oprire încărcare sau descărcare forțată"
         }
+    },
+    "selector": {
+        "connection_type": {
+            "options": {
+                "serial": "Serial",
+                "network": "Rețea"
+            }
+        }
     }
 }
