@@ -2,7 +2,7 @@
 
 import logging
 
-from huawei_solar import SUN2000Device, register_names as rn, register_values as rv
+from huawei_solar import SUN2000Device
 
 from homeassistant.components.button import ButtonEntity
 from homeassistant.const import EntityCategory
@@ -11,11 +11,13 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION
+from .services import async_stop_forcible_charge
 from .types import (
     HuaweiSolarConfigEntry,
+    HuaweiSolarCoordinatorEntity,
     HuaweiSolarDeviceData,
-    HuaweiSolarEntity,
     HuaweiSolarInverterData,
+    async_call_with_device_error_handling,
 )
 from .update_coordinator import HuaweiSolarUpdateCoordinator
 
@@ -39,21 +41,21 @@ async def async_setup_entry(
     for ucs in device_datas:
         if not isinstance(ucs, HuaweiSolarInverterData):
             continue
-        if not ucs.connected_energy_storage:
+        if not ucs.connected_energy_storage or not ucs.configuration_update_coordinator:
             continue
 
         entities_to_add.append(
             StopForcibleChargeButtonEntity(
+                ucs.configuration_update_coordinator,
                 ucs.device,
                 ucs.connected_energy_storage,
-                ucs.configuration_update_coordinator,
             )
         )
 
     async_add_entities(entities_to_add)
 
 
-class StopForcibleChargeButtonEntity(HuaweiSolarEntity, ButtonEntity):
+class StopForcibleChargeButtonEntity(HuaweiSolarCoordinatorEntity, ButtonEntity):
     """Button to stop a running forcible charge or discharge."""
 
     _attr_entity_category = EntityCategory.CONFIG
@@ -61,31 +63,19 @@ class StopForcibleChargeButtonEntity(HuaweiSolarEntity, ButtonEntity):
 
     def __init__(
         self,
+        coordinator: HuaweiSolarUpdateCoordinator,
         device: SUN2000Device,
         device_info: DeviceInfo,
-        configuration_update_coordinator: HuaweiSolarUpdateCoordinator | None,
     ) -> None:
         """Initialize the button entity."""
+        super().__init__(coordinator, {"register_names": []})
         self.device = device
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_stop_forcible_charge"
-        self._configuration_update_coordinator = configuration_update_coordinator
 
     async def async_press(self) -> None:
         """Stop the forcible charge or discharge."""
-        await self._async_set_register(
-            rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
-            rv.StorageForcibleChargeDischarge.STOP,
+        await async_call_with_device_error_handling(
+            async_stop_forcible_charge(self.device)
         )
-        await self._async_set_register(rn.STORAGE_FORCIBLE_DISCHARGE_POWER, 0)
-        await self._async_set_register(
-            rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD,
-            0,
-        )
-        await self._async_set_register(
-            rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,
-            rv.StorageForcibleChargeDischargeTargetMode.TIME,
-        )
-
-        if self._configuration_update_coordinator:
-            await self._configuration_update_coordinator.async_request_refresh()
+        await self.coordinator.async_request_refresh()

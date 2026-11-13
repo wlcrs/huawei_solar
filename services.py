@@ -553,22 +553,27 @@ async def forcible_discharge_soc(service_call: ServiceCall) -> None:
     _request_configuration_refresh(service_call, dd)
 
 
-async def stop_forcible_charge(service_call: ServiceCall) -> None:
-    """Stop a forcible charge or discharge."""
-    dd = get_battery_device_data(service_call)
-    await dd.device.set(
+async def async_stop_forcible_charge(device: HuaweiSolarDevice) -> None:
+    """Stop a forcible charge or discharge on the given device."""
+    await device.set(
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
         rv.StorageForcibleChargeDischarge.STOP,
     )
-    await dd.device.set(rn.STORAGE_FORCIBLE_DISCHARGE_POWER, 0)
-    await dd.device.set(
+    await device.set(rn.STORAGE_FORCIBLE_DISCHARGE_POWER, 0)
+    await device.set(
         rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD,
         0,
     )
-    await dd.device.set(
+    await device.set(
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,
         rv.StorageForcibleChargeDischargeTargetMode.TIME,
     )
+
+
+async def stop_forcible_charge(service_call: ServiceCall) -> None:
+    """Stop a forcible charge or discharge."""
+    dd = get_battery_device_data(service_call)
+    await async_stop_forcible_charge(dd.device)
 
     _request_configuration_refresh(service_call, dd)
 
