@@ -645,12 +645,15 @@ async def _setup_device_data(
 
     has_write_permission = False
     if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
-        try:
-            has_write_permission = await device.has_write_permission()
-        except HuaweiSolarException:
-            _LOGGER.debug(
-                "Failed to check write permission for %s", device.serial_number
-            )
+        if isinstance(device, HuaweiSolarDeviceWithLogin):
+            try:
+                has_write_permission = await device.has_write_permission()
+            except HuaweiSolarException:
+                _LOGGER.debug(
+                    "Failed to check write permission for %s", device.serial_number
+                )
+        else:
+            has_write_permission = True
 
     update_coordinator = HuaweiSolarUpdateCoordinator(
         hass,
