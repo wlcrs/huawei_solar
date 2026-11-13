@@ -18,19 +18,19 @@
         "step": {
             "auto_discovery": {
                 "title": "Upptäck enheter automatiskt",
-                "description": "Söker igenom {host}:{port} efter Huawei Solar-enheter med hjälp av Huaweis upptäckarprotokoll. Detta kan ta upp till en minut."
+                "description": "Skannar {host}:{port} efter Huawei Solar-enheter med Huaweis upptäcktsprotokoll (kontrollerar slav-ID {slave_id}). Detta kan ta upp till en minut."
             },
             "scan_discovery": {
                 "title": "Söker efter enheter",
-                "description": "Automatisk upptäckt hittade inga enheter på {host}:{port}. Skannar vanliga slav-ID individuellt. Detta kan ta upp till en minut."
+                "description": "Automatisk upptäckt hittade inga enheter på {host}:{port}. Skannar vanliga slav-ID:n individuellt (kontrollerar slav-ID {slave_id}). Detta kan ta upp till en minut."
             },
             "serial_auto_discovery": {
                 "title": "Upptäck enheter automatiskt",
-                "description": "Söker igenom {serial_port} efter Huawei Solar-enheter med hjälp av Huaweis upptäckarprotokoll. Detta kan ta upp till en minut."
+                "description": "Skannar {serial_port} efter Huawei Solar-enheter med Huaweis upptäcktsprotokoll (kontrollerar slav-ID {slave_id}). Detta kan ta upp till en minut."
             },
             "serial_scan_discovery": {
                 "title": "Söker efter enheter",
-                "description": "Automatisk upptäckt hittade inga enheter på {serial_port}. Skannar vanliga slav-ID individuellt. Detta kan ta upp till en minut."
+                "description": "Automatisk upptäckt hittade inga enheter på {serial_port}. Skannar vanliga slav-ID:n individuellt (kontrollerar slav-ID {slave_id}). Detta kan ta upp till en minut."
             },
             "serial_finish_setup": {
                 "title": "Ansluter",

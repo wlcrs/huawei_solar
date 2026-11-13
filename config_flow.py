@@ -123,7 +123,7 @@ async def validate_serial_setup(
 async def _auto_slave_discovery(
     client: Any,
     *,
-    on_progress: Callable[[float], None] | None = None,
+    on_progress: Callable[[float, int], None] | None = None,
 ) -> tuple[int, list[int]] | None:
     """Probe unit_ids 0-16 and 100 sequentially via Huawei get_device_infos messages.
 
@@ -153,6 +153,8 @@ async def _auto_slave_discovery(
 
     _LOGGER.debug("AUTO: scanning unit_ids %s sequentially", unit_ids_to_scan)
     for i, unit_id in enumerate(unit_ids_to_scan):
+        if on_progress:
+            on_progress(i / len(unit_ids_to_scan), unit_id)
         try:
             primary_unit_id, found_device_infos = await _probe(unit_id)
             _LOGGER.info(
@@ -177,7 +179,7 @@ async def _auto_slave_discovery(
                         di.software_version,
                     )
             if on_progress:
-                on_progress(1.0)
+                on_progress(1.0, unit_id)
         except (
             HuaweiSolarException,
             ReadException,
@@ -187,8 +189,6 @@ async def _auto_slave_discovery(
             pass
         else:
             return primary_unit_id, sub_unit_ids
-        if on_progress:
-            on_progress((i + 1) / len(unit_ids_to_scan))
 
     return None
 
@@ -197,7 +197,7 @@ async def _tcp_auto_slave_discovery(
     *,
     host: str,
     port: int,
-    on_progress: Callable[[float], None] | None = None,
+    on_progress: Callable[[float, int], None] | None = None,
 ) -> tuple[int, list[int]] | None:
     """Auto-discovery over TCP. Opens/closes its own connection."""
     client = create_scan_tcp_client(host=host, port=port, unit_id=0)
@@ -213,7 +213,7 @@ async def _rtu_auto_slave_discovery(
     *,
     serial_port: str,
     baudrate: int = DEFAULT_BAUDRATE,
-    on_progress: Callable[[float], None] | None = None,
+    on_progress: Callable[[float, int], None] | None = None,
 ) -> tuple[int, list[int]] | None:
     """Auto-discovery over RTU (serial). Opens/closes its own connection."""
     client = create_scan_rtu_client(serial_port, baudrate=baudrate, unit_id=0)
@@ -228,7 +228,7 @@ async def _rtu_auto_slave_discovery(
 async def _scan_slave_discovery(
     client: Any,
     *,
-    on_progress: Callable[[float], None] | None = None,
+    on_progress: Callable[[float, int], None] | None = None,
 ) -> tuple[int, list[int]]:
     """Probe unit_ids 0-16 and 100 sequentially via detect_device_type.
 
@@ -260,11 +260,13 @@ async def _scan_slave_discovery(
     found: list[tuple[int, str]] = []
     _LOGGER.debug("SCAN: scanning unit_ids %s sequentially", unit_ids_to_scan)
     for i, unit_id in enumerate(unit_ids_to_scan):
+        if on_progress:
+            on_progress(i / len(unit_ids_to_scan), unit_id)
         result = await _probe(unit_id)
         if result is not None:
             found.append(result)
-        if on_progress:
-            on_progress((i + 1) / len(unit_ids_to_scan))
+    if on_progress:
+        on_progress(1.0, unit_ids_to_scan[-1])
 
     if not found:
         _LOGGER.warning(
@@ -283,7 +285,7 @@ async def _tcp_scan_slave_discovery(
     *,
     host: str,
     port: int,
-    on_progress: Callable[[float], None] | None = None,
+    on_progress: Callable[[float, int], None] | None = None,
 ) -> tuple[int, list[int]]:
     """Scan-discovery over TCP. Opens/closes its own connection."""
     client = create_scan_tcp_client(host=host, port=port, unit_id=0)
@@ -299,7 +301,7 @@ async def _rtu_scan_slave_discovery(
     *,
     serial_port: str,
     baudrate: int = DEFAULT_BAUDRATE,
-    on_progress: Callable[[float], None] | None = None,
+    on_progress: Callable[[float, int], None] | None = None,
 ) -> tuple[int, list[int]]:
     """Scan-discovery over RTU (serial). Opens/closes its own connection."""
     client = create_scan_rtu_client(serial_port, baudrate=baudrate, unit_id=0)
@@ -521,6 +523,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     _discovered_primary_unit_id: int | None = None
     _discovered_sub_unit_ids: list[int] = []
     _failed_slave_id: int | None = None
+    _scanning_slave_id: int | None = None
 
     def _reset_discovery_state(self) -> None:
         """Clear all state used by the discovery progress steps."""
@@ -528,6 +531,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._discovered_primary_unit_id = None
         self._discovered_sub_unit_ids = []
         self._failed_slave_id = None
+        self._scanning_slave_id = None
 
     VERSION = 1
     MINOR_VERSION = 2
@@ -669,6 +673,13 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
+    def _on_discovery_progress(self, progress: float, unit_id: int) -> None:
+        """Update discovery progress bar and currently scanned slave ID."""
+        self.async_update_progress(progress)
+        if self._scanning_slave_id != unit_id:
+            self._scanning_slave_id = unit_id
+            self.async_notify_flow_changed()
+
     def _connection_placeholders(self, *, is_serial: bool) -> dict[str, str]:
         """Return description placeholders for the active connection type."""
         if is_serial:
@@ -701,18 +712,23 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
 
         if not self._discovery_task.done():
+            placeholders = self._connection_placeholders(is_serial=is_serial)
+            placeholders["slave_id"] = (
+                str(self._scanning_slave_id)
+                if self._scanning_slave_id is not None
+                else "..."
+            )
             return self.async_show_progress(
                 step_id=step_id,
                 progress_action=step_id,
                 progress_task=self._discovery_task,
-                description_placeholders=self._connection_placeholders(
-                    is_serial=is_serial
-                ),
+                description_placeholders=placeholders,
             )
 
         suffix = "_serial" if is_serial else ""
         finish_step = "serial_finish_setup" if is_serial else "finish_network_setup"
         task, self._discovery_task = self._discovery_task, None
+        self._scanning_slave_id = None
         try:
             result = task.result()
         except ConnectionInterruptedException:
@@ -781,7 +797,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             coro_factory=lambda: _rtu_auto_slave_discovery(
                 serial_port=self._serial_port,  # type: ignore[arg-type]
                 baudrate=self._baudrate or DEFAULT_BAUDRATE,
-                on_progress=self.async_update_progress,
+                on_progress=self._on_discovery_progress,
             ),
             is_serial=True,
             fallback_step_id="serial_scan_discovery",
@@ -797,7 +813,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             coro_factory=lambda: _rtu_scan_slave_discovery(
                 serial_port=self._serial_port,  # type: ignore[arg-type]
                 baudrate=self._baudrate or DEFAULT_BAUDRATE,
-                on_progress=self.async_update_progress,
+                on_progress=self._on_discovery_progress,
             ),
             is_serial=True,
         )
@@ -1018,7 +1034,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             coro_factory=lambda: _tcp_auto_slave_discovery(
                 host=self._host,  # type: ignore[arg-type]
                 port=self._port,  # type: ignore[arg-type]
-                on_progress=self.async_update_progress,
+                on_progress=self._on_discovery_progress,
             ),
             is_serial=False,
             fallback_step_id="scan_discovery",
@@ -1035,7 +1051,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             coro_factory=lambda: _tcp_scan_slave_discovery(
                 host=self._host,  # type: ignore[arg-type]
                 port=self._port,  # type: ignore[arg-type]
-                on_progress=self.async_update_progress,
+                on_progress=self._on_discovery_progress,
             ),
             is_serial=False,
         )

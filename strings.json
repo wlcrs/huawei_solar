@@ -18,19 +18,19 @@
         "step": {
             "auto_discovery": {
                 "title": "Auto-discovering devices",
-                "description": "Scanning {host}:{port} for Huawei Solar devices using the Huawei discovery protocol. This may take up to a minute."
+                "description": "Scanning {host}:{port} for Huawei Solar devices using the Huawei discovery protocol (currently checking slave ID {slave_id}). This may take up to a minute."
             },
             "scan_discovery": {
                 "title": "Scanning for devices",
-                "description": "Auto-discovery found no devices on {host}:{port}. Scanning frequently used slave IDs individually. This may take up to a minute."
+                "description": "Auto-discovery found no devices on {host}:{port}. Scanning frequently used slave IDs individually (currently checking slave ID {slave_id}). This may take up to a minute."
             },
             "serial_auto_discovery": {
                 "title": "Auto-discovering devices",
-                "description": "Scanning {serial_port} for Huawei Solar devices using the Huawei discovery protocol. This may take up to a minute."
+                "description": "Scanning {serial_port} for Huawei Solar devices using the Huawei discovery protocol (currently checking slave ID {slave_id}). This may take up to a minute."
             },
             "serial_scan_discovery": {
                 "title": "Scanning for devices",
-                "description": "Auto-discovery found no devices on {serial_port}. Scanning frequently used slave IDs individually. This may take up to a minute."
+                "description": "Auto-discovery found no devices on {serial_port}. Scanning frequently used slave IDs individually (currently checking slave ID {slave_id}). This may take up to a minute."
             },
             "serial_finish_setup": {
                 "title": "Connecting",

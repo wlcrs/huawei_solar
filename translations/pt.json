@@ -18,19 +18,19 @@
         "step": {
             "auto_discovery": {
                 "title": "Descoberta automática de dispositivos",
-                "description": "Procurando dispositivos Huawei Solar em {host}:{port} usando o protocolo de descoberta da Huawei. Isso pode levar até um minuto."
+                "description": "A procurar dispositivos Huawei Solar em {host}:{port} através do protocolo de descoberta Huawei (a verificar o ID de escravo {slave_id}). Isto pode demorar até um minuto."
             },
             "scan_discovery": {
                 "title": "Procurando dispositivos",
-                "description": "A descoberta automática não encontrou dispositivos em {host}:{port}. Verificando IDs de escravo comuns individualmente. Isso pode levar até um minuto."
+                "description": "A descoberta automática não encontrou dispositivos em {host}:{port}. A procurar individualmente os IDs de escravo mais comuns (a verificar o ID de escravo {slave_id}). Isto pode demorar até um minuto."
             },
             "serial_auto_discovery": {
                 "title": "Descoberta automática de dispositivos",
-                "description": "Procurando dispositivos Huawei Solar em {serial_port} usando o protocolo de descoberta da Huawei. Isso может levar até um minuto."
+                "description": "A procurar dispositivos Huawei Solar em {serial_port} através do protocolo de descoberta Huawei (a verificar o ID de escravo {slave_id}). Isto pode demorar até um minuto."
             },
             "serial_scan_discovery": {
                 "title": "Procurando dispositivos",
-                "description": "A descoberta automática não encontrou dispositivos em {serial_port}. Verificando IDs de escravo comuns individualmente. Isso pode levar até um minuto."
+                "description": "A descoberta automática não encontrou dispositivos em {serial_port}. A procurar individualmente os IDs de escravo mais comuns (a verificar o ID de escravo {slave_id}). Isto pode demorar até um minuto."
             },
             "serial_finish_setup": {
                 "title": "Conectando",

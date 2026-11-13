@@ -18,19 +18,19 @@
         "step": {
             "auto_discovery": {
                 "title": "Automatyczne wykrywanie urządzeń",
-                "description": "Skanowanie {host}:{port} w poszukiwaniu urządzeń Huawei Solar za pomocą protokołu wykrywania Huawei. Może to potrwać do minuty."
+                "description": "Skanowanie {host}:{port} w poszukiwaniu urządzeń Huawei Solar za pomocą protokołu wykrywania Huawei (sprawdzanie slave ID {slave_id}). Może to potrwać do minuty."
             },
             "scan_discovery": {
                 "title": "Skanowanie w poszukiwaniu urządzeń",
-                "description": "Automatyczne wykrywanie nie znalazło żadnych urządzeń na {host}:{port}. Indywidualne skanowanie często używanych identyfikatorów slave ID. Może to potrwać do minuty."
+                "description": "Automatyczne wykrywanie nie znalazło urządzeń na {host}:{port}. Indywidualne skanowanie często używanych slave ID (sprawdzanie slave ID {slave_id}). Może to potrwać do minuty."
             },
             "serial_auto_discovery": {
                 "title": "Automatyczne wykrywanie urządzeń",
-                "description": "Skanowanie {serial_port} w poszukiwaniu urządzeń Huawei Solar za pomocą protokołu wykrywania Huawei. Może to potrwać do minuty."
+                "description": "Skanowanie {serial_port} w poszukiwaniu urządzeń Huawei Solar za pomocą protokołu wykrywania Huawei (sprawdzanie slave ID {slave_id}). Może to potrwać do minuty."
             },
             "serial_scan_discovery": {
                 "title": "Skanowanie w poszukiwaniu urządzeń",
-                "description": "Automatyczne wykrywanie nie znalazło żadnych urządzeń na {serial_port}. Indywidualne skanowanie często używanych identyfikatorów slave ID. Może to potrwać do minuty."
+                "description": "Automatyczne wykrywanie nie znalazło urządzeń na {serial_port}. Indywidualne skanowanie często używanych slave ID (sprawdzanie slave ID {slave_id}). Może to potrwać do minuty."
             },
             "serial_finish_setup": {
                 "title": "Łączenie",

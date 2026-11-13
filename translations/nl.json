@@ -18,19 +18,19 @@
         "step": {
             "auto_discovery": {
                 "title": "Apparaten automatisch detecteren",
-                "description": "Scannen van {host}:{port} naar Huawei Solar-apparaten via het Huawei-detectieprotocol. Dit kan tot een minuut duren."
+                "description": "Scannen van {host}:{port} naar Huawei Solar-apparaten via het Huawei-detectieprotocol (momenteel slave-ID {slave_id} aan het controleren). Dit kan tot een minuut duren."
             },
             "scan_discovery": {
                 "title": "Scannen naar apparaten",
-                "description": "Automatische detectie heeft geen apparaten gevonden op {host}:{port}. Veelgebruikte slave-ID's worden individueel gescand. Dit kan tot een minuut duren."
+                "description": "Automatische detectie heeft geen apparaten gevonden op {host}:{port}. Veelgebruikte slave-ID's worden afzonderlijk gescand (momenteel slave-ID {slave_id} aan het controleren). Dit kan tot een minuut duren."
             },
             "serial_auto_discovery": {
                 "title": "Apparaten automatisch detecteren",
-                "description": "Scannen van {serial_port} naar Huawei Solar-apparaten via het Huawei-detectieprotocol. Dit kan tot een minuut duren."
+                "description": "Scannen van {serial_port} naar Huawei Solar-apparaten via het Huawei-detectieprotocol (momenteel slave-ID {slave_id} aan het controleren). Dit kan tot een minuut duren."
             },
             "serial_scan_discovery": {
                 "title": "Scannen naar apparaten",
-                "description": "Automatische detectie heeft geen apparaten gevonden op {serial_port}. Veelgebruikte slave-ID's worden individueel gescand. Dit kan tot een minuut duren."
+                "description": "Automatische detectie heeft geen apparaten gevonden op {serial_port}. Veelgebruikte slave-ID's worden afzonderlijk gescand (momenteel slave-ID {slave_id} aan het controleren). Dit kan tot een minuut duren."
             },
             "serial_finish_setup": {
                 "title": "Verbinden",

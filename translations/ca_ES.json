@@ -18,19 +18,19 @@
         "step": {
             "auto_discovery": {
                 "title": "Detecció automàtica de dispositius",
-                "description": "Cercant dispositius Huawei Solar a {host}:{port} mitjançant el protocol de descobriment de Huawei. Això pot trigar fins a un minut."
+                "description": "S'està escanejant {host}:{port} cercant dispositius Huawei Solar mitjançant el protocol de descobriment de Huawei (comprovant l'ID d'esclau {slave_id}). Això pot trigar fins a un minut."
             },
             "scan_discovery": {
                 "title": "Cercant dispositius",
-                "description": "La detecció automàtica no ha trobat cap dispositiu a {host}:{port}. Escanejant individualment els ID d'esclau habituals. Això pot trigar fins a un minut."
+                "description": "El descobriment automàtic no ha trobat cap dispositiu a {host}:{port}. S'estan escanejant individualment els ID d'esclau més freqüents (comprovant l'ID d'esclau {slave_id}). Això pot trigar fins a un minut."
             },
             "serial_auto_discovery": {
                 "title": "Detecció automàtica de dispositius",
-                "description": "Cercant dispositius Huawei Solar a {serial_port} mitjançant el protocol de descobriment de Huawei. Això pot trigar fins a un minut."
+                "description": "S'està escanejant {serial_port} cercant dispositius Huawei Solar mitjançant el protocol de descobriment de Huawei (comprovant l'ID d'esclau {slave_id}). Això pot trigar fins a un minut."
             },
             "serial_scan_discovery": {
                 "title": "Cercant dispositius",
-                "description": "La detecció automàtica no ha trobat cap dispositiu a {serial_port}. Escanejant individualment els ID d'esclau habituals. Això pot trigar fins a un minut."
+                "description": "El descobriment automàtic no ha trobat cap dispositiu a {serial_port}. S'estan escanejant individualment els ID d'esclau més freqüents (comprovant l'ID d'esclau {slave_id}). Això pot trigar fins a un minut."
             },
             "serial_finish_setup": {
                 "title": "Connectant",

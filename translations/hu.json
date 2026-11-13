@@ -18,19 +18,19 @@
         "step": {
             "auto_discovery": {
                 "title": "Eszközök automatikus felderítése",
-                "description": "Huawei Solar eszközök keresése a(z) {host}:{port} címen a Huawei felderítési protokoll segítségével. Ez akár egy percig is eltarthat."
+                "description": "A(z) {host}:{port} keresése Huawei Solar eszközökre a Huawei felderítési protokoll segítségével (jelenleg vizsgált slave ID: {slave_id}). Ez akár egy percig is eltarthat."
             },
             "scan_discovery": {
                 "title": "Eszközök keresése",
-                "description": "Az automatikus felderítés nem talált eszközt a(z) {host}:{port} címen. A gyakran használt slave azonosítók egyenkénti keresése folyamatban. Ez akár egy percig is eltarthat."
+                "description": "Az automatikus felderítés nem talált eszközöket a(z) {host}:{port} címen. Gyakran használt slave ID-k egyenkénti vizsgálata (jelenleg vizsgált slave ID: {slave_id}). Ez akár egy percig is eltarthat."
             },
             "serial_auto_discovery": {
                 "title": "Eszközök automatikus felderítése",
-                "description": "Huawei Solar eszközök keresése a(z) {serial_port} porton a Huawei felderítési protokoll segítségével. Ez akár egy percig is eltarthat."
+                "description": "A(z) {serial_port} keresése Huawei Solar eszközökre a Huawei felderítési protokoll segítségével (jelenleg vizsgált slave ID: {slave_id}). Ez akár egy percig is eltarthat."
             },
             "serial_scan_discovery": {
                 "title": "Eszközök keresése",
-                "description": "Az automatikus felderítés nem talált eszközt a(z) {serial_port} porton. A gyakran használt slave azonosítók egyenkénti keresése folyamatban. Ez akár egy percig is eltarthat."
+                "description": "Az automatikus felderítés nem talált eszközöket a(z) {serial_port} porton. Gyakran használt slave ID-k egyenkénti vizsgálata (jelenleg vizsgált slave ID: {slave_id}). Ez akár egy percig is eltarthat."
             },
             "serial_finish_setup": {
                 "title": "Csatlakozás",

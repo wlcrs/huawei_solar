@@ -18,19 +18,19 @@
         "step": {
             "auto_discovery": {
                 "title": "Descoperire automată dispozitive",
-                "description": "Se caută dispozitive Huawei Solar pe {host}:{port} folosind protocolul de descoperire Huawei. Aceasta poate dura până la un minut."
+                "description": "Scanare {host}:{port} pentru dispozitive Huawei Solar folosind protocolul de descoperire Huawei (se verifică slave ID {slave_id}). Aceasta poate dura până la un minut."
             },
             "scan_discovery": {
                 "title": "Scanare după dispozitive",
-                "description": "Descoperirea automată nu a găsit dispozitive pe {host}:{port}. Se scanează individual ID-urile slave frecvente. Aceasta poate dura până la un minut."
+                "description": "Descoperirea automată nu a găsit dispozitive pe {host}:{port}. Scanare individuală a slave ID-urilor frecvent utilizate (se verifică slave ID {slave_id}). Aceasta poate dura până la un minut."
             },
             "serial_auto_discovery": {
                 "title": "Descoperire automată dispozitive",
-                "description": "Se caută dispozitive Huawei Solar pe {serial_port} folosind protocolul de descoperire Huawei. Aceasta poate dura până la un minut."
+                "description": "Scanare {serial_port} pentru dispozitive Huawei Solar folosind protocolul de descoperire Huawei (se verifică slave ID {slave_id}). Aceasta poate dura până la un minut."
             },
             "serial_scan_discovery": {
                 "title": "Scanare după dispozitive",
-                "description": "Descoperirea automată nu a găsit dispozitive pe {serial_port}. Se scanează individual ID-urile slave frecvente. Aceasta poate dura până la un minut."
+                "description": "Descoperirea automată nu a găsit dispozitive pe {serial_port}. Scanare individuală a slave ID-urilor frecvent utilizate (se verifică slave ID {slave_id}). Aceasta poate dura până la un minut."
             },
             "serial_finish_setup": {
                 "title": "Se conectează",

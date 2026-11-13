@@ -18,19 +18,19 @@
         "step": {
             "auto_discovery": {
                 "title": "Detección automática de dispositivos",
-                "description": "Buscando dispositivos Huawei Solar en {host}:{port} usando el protocolo de descubrimiento de Huawei. Esto puede tardar hasta un minuto."
+                "description": "Escaneando {host}:{port} en busca de dispositivos Huawei Solar mediante el protocolo de descubrimiento de Huawei (comprobando el ID de esclavo {slave_id}). Esto puede tardar hasta un minuto."
             },
             "scan_discovery": {
                 "title": "Buscando dispositivos",
-                "description": "La detección automática no encontró dispositivos en {host}:{port}. Escaneando individualmente los ID de esclavos frecuentes. Esto puede tardar hasta un minuto."
+                "description": "El descubrimiento automático no encontró dispositivos en {host}:{port}. Escaneando los ID de esclavo más frecuentes individualmente (comprobando el ID de esclavo {slave_id}). Esto puede tardar hasta un minuto."
             },
             "serial_auto_discovery": {
                 "title": "Detección automática de dispositivos",
-                "description": "Buscando dispositivos Huawei Solar en {serial_port} usando el protocolo de descubrimiento de Huawei. Esto puede tardar hasta un minuto."
+                "description": "Escaneando {serial_port} en busca de dispositivos Huawei Solar mediante el protocolo de descubrimiento de Huawei (comprobando el ID de esclavo {slave_id}). Esto puede tardar hasta un minuto."
             },
             "serial_scan_discovery": {
                 "title": "Buscando dispositivos",
-                "description": "La detección automática no encontró dispositivos en {serial_port}. Escaneando individualmente los ID de esclavos frecuentes. Esto puede tardar hasta un minuto."
+                "description": "El descubrimiento automático no encontró dispositivos en {serial_port}. Escaneando los ID de esclavo más frecuentes individualmente (comprobando el ID de esclavo {slave_id}). Esto puede tardar hasta un minuto."
             },
             "serial_finish_setup": {
                 "title": "Conectando",

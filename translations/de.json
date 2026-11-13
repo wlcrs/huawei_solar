@@ -18,19 +18,19 @@
         "step": {
             "auto_discovery": {
                 "title": "Geräte automatisch entdecken",
-                "description": "Scanne {host}:{port} für Huawei Solargeräte mit Hilfe des Huawei Entdeckungsprotokolls. Dies kann bis zu einer Minute dauern."
+                "description": "{host}:{port} wird über das Huawei-Erkennungsprotokoll nach Huawei-Solar-Geräten durchsucht (aktuell geprüfte Slave-ID: {slave_id}). Dies kann bis zu einer Minute dauern."
             },
             "scan_discovery": {
                 "title": "Suche nach Geräten",
-                "description": "Automatische Erkennung fand keine Geräte auf {host}:{port}. Häufig verwendete Slave-IDs einzeln scannen. Dies kann bis zu einer Minute dauern."
+                "description": "Die automatische Erkennung hat auf {host}:{port} keine Geräte gefunden. Häufig verwendete Slave-IDs werden einzeln gescannt (aktuell geprüfte Slave-ID: {slave_id}). Dies kann bis zu einer Minute dauern."
             },
             "serial_auto_discovery": {
                 "title": "Geräte automatisch entdecken",
-                "description": "Scanne {serial_port} nach Huawei Solar-Geräten mit Hilfe des Huawei Entdeckungsprotokolls. Dies kann bis zu einer Minute dauern."
+                "description": "{serial_port} wird über das Huawei-Erkennungsprotokoll nach Huawei-Solar-Geräten durchsucht (aktuell geprüfte Slave-ID: {slave_id}). Dies kann bis zu einer Minute dauern."
             },
             "serial_scan_discovery": {
                 "title": "Suche nach Geräten",
-                "description": "Automatische Entdeckung fand keine Geräte auf {serial_port}. Häufig verwendete Slave-IDs einzeln scannen. Dies kann bis zu einer Minute dauern."
+                "description": "Die automatische Erkennung hat auf {serial_port} keine Geräte gefunden. Häufig verwendete Slave-IDs werden einzeln gescannt (aktuell geprüfte Slave-ID: {slave_id}). Dies kann bis zu einer Minute dauern."
             },
             "serial_finish_setup": {
                 "title": "Verbinde",

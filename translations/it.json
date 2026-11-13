@@ -18,19 +18,19 @@
         "step": {
             "auto_discovery": {
                 "title": "Rilevamento automatico dispositivi",
-                "description": "Scansione di {host}:{port} per dispositivi Huawei Solar tramite il protocollo di rilevamento Huawei. L'operazione potrebbe richiedere fino a un minuto."
+                "description": "Scansione di {host}:{port} per dispositivi Huawei Solar tramite il protocollo di rilevamento Huawei (controllo dello slave ID {slave_id} in corso). Potrebbe richiedere fino a un minuto."
             },
             "scan_discovery": {
                 "title": "Scansione dispositivi",
-                "description": "Nessun dispositivo trovato su {host}:{port} tramite rilevamento automatico. Scansione dei singoli ID slave utilizzati di frequente. L'operazione potrebbe richiedere fino a un minuto."
+                "description": "Il rilevamento automatico non ha trovato dispositivi su {host}:{port}. Scansione individuale degli slave ID più comuni (controllo dello slave ID {slave_id} in corso). Potrebbe richiedere fino a un minuto."
             },
             "serial_auto_discovery": {
                 "title": "Rilevamento automatico dispositivi",
-                "description": "Scansione di {serial_port} per dispositivi Huawei Solar tramite il protocollo di rilevamento Huawei. L'operazione potrebbe richiedere fino a un minuto."
+                "description": "Scansione di {serial_port} per dispositivi Huawei Solar tramite il protocollo di rilevamento Huawei (controllo dello slave ID {slave_id} in corso). Potrebbe richiedere fino a un minuto."
             },
             "serial_scan_discovery": {
                 "title": "Scansione dispositivi",
-                "description": "Nessun dispositivo trovato su {serial_port} tramite rilevamento automatico. Scansione dei singoli ID slave utilizzati di frequente. L'operazione potrebbe richiedere fino a un minuto."
+                "description": "Il rilevamento automatico non ha trovato dispositivi su {serial_port}. Scansione individuale degli slave ID più comuni (controllo dello slave ID {slave_id} in corso). Potrebbe richiedere fino a un minuto."
             },
             "serial_finish_setup": {
                 "title": "Connessione in corso",

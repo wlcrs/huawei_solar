@@ -18,19 +18,19 @@
         "step": {
             "auto_discovery": {
                 "title": "Découverte automatique des appareils",
-                "description": "Recherche d'appareils Huawei Solar sur {host}:{port} à l'aide du protocole de découverte Huawei. Cela peut prendre jusqu'à une minute."
+                "description": "Analyse de {host}:{port} à la recherche d'appareils Huawei Solar via le protocole de découverte Huawei (vérification de l'ID esclave {slave_id}). Cela peut prendre jusqu'à une minute."
             },
             "scan_discovery": {
                 "title": "Recherche d'appareils",
-                "description": "La découverte automatique n'a trouvé aucun appareil sur {host}:{port}. Analyse individuelle des identifiants esclaves fréquemment utilisés. Cela peut prendre jusqu'à une minute."
+                "description": "La découverte automatique n'a trouvé aucun appareil sur {host}:{port}. Analyse individuelle des ID esclaves fréquemment utilisés (vérification de l'ID esclave {slave_id}). Cela peut prendre jusqu'à une minute."
             },
             "serial_auto_discovery": {
                 "title": "Découverte automatique des appareils",
-                "description": "Recherche d'appareils Huawei Solar sur {serial_port} à l'aide du protocole de découverte Huawei. Cela peut prendre jusqu'à une minute."
+                "description": "Analyse de {serial_port} à la recherche d'appareils Huawei Solar via le protocole de découverte Huawei (vérification de l'ID esclave {slave_id}). Cela peut prendre jusqu'à une minute."
             },
             "serial_scan_discovery": {
                 "title": "Recherche d'appareils",
-                "description": "La découverte automatique n'a trouvé aucun appareil sur {serial_port}. Analyse individuelle des identifiants esclaves fréquemment utilisés. Cela peut prendre jusqu'à une minute."
+                "description": "La découverte automatique n'a trouvé aucun appareil sur {serial_port}. Analyse individuelle des ID esclaves fréquemment utilisés (vérification de l'ID esclave {slave_id}). Cela peut prendre jusqu'à une minute."
             },
             "serial_finish_setup": {
                 "title": "Connexion en cours",
