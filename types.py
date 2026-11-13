@@ -34,7 +34,7 @@ from .update_coordinator import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class HuaweiSolarDeviceData:
     """Runtime data for the Huawei Solar integration."""
 
@@ -46,7 +46,7 @@ class HuaweiSolarDeviceData:
     has_write_permission: bool = False
 
 
-@dataclass
+@dataclass(kw_only=True)
 class HuaweiSolarInverterData(HuaweiSolarDeviceData):
     """Runtime data for the Huawei Solar integration for SUN2000 inverter devices."""
 
