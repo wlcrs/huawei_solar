@@ -1012,6 +1012,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             assert self._host is not None
             self._port = user_input[CONF_PORT]
             assert self._port is not None
+            self._serial_port = None
+            self._baudrate = None
             self._elevated_permissions = user_input[CONF_ENABLE_PARAMETER_CONFIGURATION]
 
             slave_ids_input = user_input[CONF_SLAVE_IDS].strip().upper()
@@ -1338,9 +1340,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         data = {
             CONF_HOST: self._host,
-            CONF_PORT: self._serial_port
-            if self._serial_port is not None
-            else self._port,
+            CONF_PORT: self._port if self._host is not None else self._serial_port,
             CONF_BAUDRATE: self._baudrate or DEFAULT_BAUDRATE,
             CONF_SLAVE_IDS: self._slave_ids,
             CONF_ENABLE_PARAMETER_CONFIGURATION: self._elevated_permissions,
