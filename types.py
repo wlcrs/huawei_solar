@@ -1,8 +1,8 @@
 """Typing for the Huawei Solar integration."""
 
-from collections.abc import Awaitable
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
-from typing import Any, TypedDict, cast
+from typing import Any, TypedDict
 
 from huawei_solar import (
     ConnectionInterruptedException,
@@ -125,13 +125,33 @@ class HuaweiSolarEntity(Entity):
         )
 
 
+@dataclass(frozen=True)
 class HuaweiSolarEntityDescription(EntityDescription):
     """Huawei Solar Entity Description."""
+
+    is_available_key: RegisterName | None = None
+    check_is_available_func: Callable[[Any], bool] | None = None
+
+    def __post_init__(self) -> None:
+        """Defaults the translation_key to the entity key."""
+        object.__setattr__(
+            self,
+            "translation_key",
+            self.translation_key or self.key.replace("#", "_").lower(),
+        )
 
     @property
     def register_name(self) -> RegisterName:
         """Return the register name."""
-        return cast("RegisterName", self.key)
+        return RegisterName(self.key.split("#")[0])
+
+    @property
+    def context(self) -> HuaweiSolarEntityContext:
+        """Context used by DataUpdateCoordinator."""
+        registers = [self.register_name]
+        if self.is_available_key:
+            registers.append(self.is_available_key)
+        return {"register_names": registers}
 
 
 class HuaweiSolarEntityContext(TypedDict):
@@ -149,6 +169,20 @@ class HuaweiSolarCoordinatorEntity[
     def available(self) -> bool:
         """Return if entity is available."""
         return super().available and self._attr_available
+
+    def _is_available_from_description(
+        self, description: HuaweiSolarEntityDescription
+    ) -> bool:
+        """Return availability evaluated from description's check_is_available_func."""
+        if description.check_is_available_func:
+            assert description.is_available_key
+            is_available_register = self.coordinator.data.get(
+                description.is_available_key
+            )
+            return description.check_is_available_func(
+                is_available_register.value if is_available_register else None
+            )
+        return True
 
     @callback
     def _async_update_attrs(self) -> None:

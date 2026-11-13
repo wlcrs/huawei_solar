@@ -1,11 +1,10 @@
 """Switch entities for Huawei Solar."""
 
-from collections.abc import Callable
 from dataclasses import dataclass
 from enum import IntEnum
 from itertools import chain
 import logging
-from typing import Any, TypeVar, cast, overload
+from typing import Any, cast, overload
 
 from huawei_solar import (
     EMMADevice,
@@ -33,7 +32,6 @@ from .types import (
     HuaweiSolarCoordinatorEntity,
     HuaweiSolarDeviceData,
     HuaweiSolarEntity,
-    HuaweiSolarEntityContext,
     HuaweiSolarEntityDescription,
     HuaweiSolarInverterData,
 )
@@ -44,38 +42,11 @@ _LOGGER = logging.getLogger(__name__)
 PARALLEL_UPDATES = 1
 
 
-T = TypeVar("T")
-
-
 @dataclass(frozen=True)
-class HuaweiSolarSelectEntityDescription[T](
+class HuaweiSolarSelectEntityDescription(
     HuaweiSolarEntityDescription, SelectEntityDescription
 ):
     """Huawei Solar Select Entity Description."""
-
-    is_available_key: rn.RegisterName | None = None
-    check_is_available_func: Callable[[Any], bool] | None = None
-
-    def __post_init__(self) -> None:
-        """Defaults the translation_key to the select key."""
-
-        # We use this special setter to be able to set/update the translation_key
-        # in this frozen dataclass.
-        # cfr. https://docs.python.org/3/library/dataclasses.html#frozen-instances
-        object.__setattr__(
-            self,
-            "translation_key",
-            self.translation_key or self.key.replace("#", "_").lower(),
-        )
-
-    @property
-    def context(self) -> HuaweiSolarEntityContext:
-        """Context used by DataUpdateCoordinator."""
-        registers = [self.register_name]
-        if self.is_available_key:
-            registers.append(self.is_available_key)
-
-        return {"register_names": registers}
 
 
 ENERGY_STORAGE_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
@@ -267,7 +238,6 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
     ) -> None:
         """Huawei Solar Select Entity constructor."""
         super().__init__(coordinator, description.context)
-        self.coordinator = coordinator
 
         self.device = device
         self.entity_description = description
@@ -300,16 +270,9 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
                 self.coordinator.data[self.entity_description.register_name].value
             )
 
-            if self.entity_description.check_is_available_func:
-                assert self.entity_description.is_available_key
-                is_available_register = self.coordinator.data.get(
-                    self.entity_description.is_available_key
-                )
-                self._attr_available = self.entity_description.check_is_available_func(
-                    is_available_register.value if is_available_register else None
-                )
-            else:
-                self._attr_available = True
+            self._attr_available = self._is_available_from_description(
+                self.entity_description
+            )
         else:
             self._attr_current_option = None
             self._attr_available = False
@@ -343,7 +306,6 @@ class StorageModeSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
         super().__init__(
             coordinator, {"register_names": [rn.STORAGE_WORKING_MODE_SETTINGS]}
         )
-        self.coordinator = coordinator
 
         self.device = device
         self.entity_description = HuaweiSolarSelectEntityDescription(

@@ -57,27 +57,15 @@ class HuaweiSolarNumberEntityDescription(
     minimum_key: RegisterName | None = None
     maximum_key: RegisterName | None = None
 
-    def __post_init__(self) -> None:
-        """Defaults the translation_key to the number key."""
-        # We use this special setter to be able to set/update the translation_key
-        # in this frozen dataclass.
-        # cfr. https://docs.python.org/3/library/dataclasses.html#frozen-instances
-        object.__setattr__(
-            self,
-            "translation_key",
-            self.translation_key or self.key.replace("#", "_").lower(),
-        )
-
     @property
     def context(self) -> HuaweiSolarEntityContext:
         """Context used by DataUpdateCoordinator."""
-
-        registers = [self.register_name]
+        context = super().context
         if self.minimum_key:
-            registers.append(self.minimum_key)
+            context["register_names"].append(self.minimum_key)
         if self.maximum_key:
-            registers.append(self.maximum_key)
-        return HuaweiSolarEntityContext(register_names=registers)
+            context["register_names"].append(self.maximum_key)
+        return context
 
 
 ACTIVE_POWER_FAIL_SAFE_THRESHOLD_NUMBER_DESCRIPTION = HuaweiSolarNumberEntityDescription(
@@ -487,7 +475,6 @@ class HuaweiSolarNumberEntity(HuaweiSolarCoordinatorEntity, NumberEntity):
     ) -> None:
         """Huawei Solar Number Entity constructor."""
         super().__init__(coordinator, description.context)
-        self.coordinator = coordinator
 
         self.device = device
         self.entity_description = description

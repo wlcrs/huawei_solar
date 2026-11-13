@@ -55,7 +55,6 @@ from .types import (
     HuaweiSolarCoordinatorEntity,
     HuaweiSolarDeviceData,
     HuaweiSolarEntity,
-    HuaweiSolarEntityContext,
     HuaweiSolarEntityDescription,
     HuaweiSolarInverterData,
 )
@@ -74,23 +73,6 @@ class HuaweiSolarSensorEntityDescription(
     """Huawei Solar Sensor Entity."""
 
     value_conversion_function: Callable[[Any], str] | None = None
-
-    def __post_init__(self) -> None:
-        """Defaults the translation_key to the sensor key."""
-
-        # We use this special setter to be able to set/update the translation_key
-        # in this frozen dataclass.
-        # cfr. https://docs.python.org/3/library/dataclasses.html#frozen-instances
-        object.__setattr__(
-            self,
-            "translation_key",
-            self.translation_key or self.key.replace("#", "_").lower(),
-        )
-
-    @property
-    def context(self) -> HuaweiSolarEntityContext:
-        """Context used by DataUpdateCoordinator."""
-        return {"register_names": [rn.RegisterName(self.key.split("#")[0])]}
 
 
 # Every list in this file describes a group of entities which are related to each other.
@@ -2406,23 +2388,19 @@ class HuaweiSolarSensorEntity(HuaweiSolarCoordinatorEntity, SensorEntity):
         """Batched Huawei Solar Sensor Entity constructor."""
         super().__init__(coordinator, context or description.context)
 
-        self.coordinator = coordinator
         self.entity_description = description
 
         self._attr_device_info = device_info
         self._attr_unique_id = f"{coordinator.device.serial_number}_{description.key}"
 
-        register_key = self.entity_description.key
-        if "#" in register_key:
-            register_key = register_key[0 : register_key.find("#")]
-
-        self._register_key = rn.RegisterName(register_key)
-
     @callback
     def _async_update_attrs(self) -> None:
         """Update entity attributes from coordinator data."""
-        if self.coordinator.data and self._register_key in self.coordinator.data:
-            value = self.coordinator.data[self._register_key].value
+        if (
+            self.coordinator.data
+            and self.entity_description.register_name in self.coordinator.data
+        ):
+            value = self.coordinator.data[self.entity_description.register_name].value
 
             if self.entity_description.value_conversion_function:
                 value = self.entity_description.value_conversion_function(value)
@@ -2587,7 +2565,6 @@ class HuaweiSolarTOUSensorEntity(HuaweiSolarCoordinatorEntity, SensorEntity):
             coordinator,
             {"register_names": [register_name]},
         )
-        self.coordinator = coordinator
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
             key=register_name,
@@ -2595,7 +2572,6 @@ class HuaweiSolarTOUSensorEntity(HuaweiSolarCoordinatorEntity, SensorEntity):
             entity_registry_enabled_default=entity_registry_enabled_default,
         )
 
-        self._bridge = device
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
 
@@ -2663,7 +2639,6 @@ class HuaweiSolarPricePeriodsSensorEntity(
             coordinator,
             {"register_names": [register_name]},
         )
-        self.coordinator = coordinator
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
             key=register_name,
@@ -2671,7 +2646,6 @@ class HuaweiSolarPricePeriodsSensorEntity(
             entity_registry_enabled_default=entity_registry_enabled_default,
         )
 
-        self._bridge = device
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
 
@@ -2719,14 +2693,12 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
         super().__init__(
             coordinator, {"register_names": [rn.STORAGE_CAPACITY_CONTROL_PERIODS]}
         )
-        self.coordinator = coordinator
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
             key=rn.STORAGE_CAPACITY_CONTROL_PERIODS,
             translation_key="storage_capacity_control_periods",
         )
 
-        self._device = device
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
 
@@ -2786,7 +2758,6 @@ class HuaweiSolarForcibleChargeEntity(
             coordinator,
             {"register_names": self.REGISTER_NAMES},
         )
-        self.coordinator = coordinator
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
             key=rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
@@ -2801,7 +2772,6 @@ class HuaweiSolarForcibleChargeEntity(
             ],
         )
 
-        self._device = device
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
 
@@ -2882,7 +2852,6 @@ class HuaweiSolarActivePowerControlModeEntity(
             coordinator,
             {"register_names": self.REGISTER_NAMES},
         )
-        self.coordinator = coordinator
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
             key=rn.ACTIVE_POWER_CONTROL_MODE,
@@ -2899,7 +2868,6 @@ class HuaweiSolarActivePowerControlModeEntity(
             entity_registry_enabled_default=False,
         )
 
-        self._device = device
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
 
@@ -2965,7 +2933,6 @@ class HuaweiSolarOptimizerSensorEntity(
         """Batched Huawei Solar Sensor Entity constructor."""
         super().__init__(coordinator)
 
-        self.coordinator = coordinator
         self.entity_description = description
         self.optimizer_id = optimizer_id
 
