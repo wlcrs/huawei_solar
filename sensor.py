@@ -418,6 +418,8 @@ OPTIMIZER_DETAIL_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, 
     ),
     HuaweiSolarSensorEntityDescription(
         key="running_status",
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in OptimizerRunningStatus],
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HuaweiSolarSensorEntityDescription(
@@ -736,6 +738,7 @@ class BatteryTemplateEntityDescription:
 
     translation_key: str
     device_class: SensorDeviceClass | None = None
+    options: list[str] | None = None
     state_class: SensorStateClass | str | None = None
     native_unit_of_measurement: str | None = None
     icon: str | None = None
@@ -747,6 +750,8 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         battery_1_key=rn.STORAGE_UNIT_1_WORKING_MODE_B,
         battery_2_key=None,
         translation_key="battery_working_mode",
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.StorageWorkingModesB],
     ),
     BatteryTemplateEntityDescription(
         battery_1_key=rn.STORAGE_UNIT_1_CURRENT_DAY_CHARGE_CAPACITY,
@@ -823,6 +828,8 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         battery_1_key=rn.STORAGE_UNIT_1_RUNNING_STATUS,
         battery_2_key=rn.STORAGE_UNIT_2_RUNNING_STATUS,
         translation_key="running_status",
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.StorageStatus],
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     BatteryTemplateEntityDescription(
@@ -837,6 +844,8 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         battery_1_key=rn.STORAGE_UNIT_SOH_CALIBRATION_STATUS,
         battery_2_key=None,
         translation_key="soh_calibration_status",
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.BatterySohCalibrationStatus],
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     BatteryTemplateEntityDescription(
@@ -953,6 +962,8 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_1_SOH_CALIBRATION_STATUS,
         battery_2_key=rn.STORAGE_UNIT_2_BATTERY_PACK_1_SOH_CALIBRATION_STATUS,
         translation_key="pack_1_soh_calibration_status",
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.BatterySohCalibrationStatus],
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     BatteryTemplateEntityDescription(
@@ -1020,6 +1031,8 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_2_SOH_CALIBRATION_STATUS,
         battery_2_key=rn.STORAGE_UNIT_2_BATTERY_PACK_2_SOH_CALIBRATION_STATUS,
         translation_key="pack_2_soh_calibration_status",
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.BatterySohCalibrationStatus],
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     BatteryTemplateEntityDescription(
@@ -1087,6 +1100,8 @@ BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[BatteryTemplateEntityDescription, ..
         battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_3_SOH_CALIBRATION_STATUS,
         battery_2_key=rn.STORAGE_UNIT_2_BATTERY_PACK_3_SOH_CALIBRATION_STATUS,
         translation_key="pack_3_soh_calibration_status",
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.BatterySohCalibrationStatus],
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     BatteryTemplateEntityDescription(
@@ -1240,6 +1255,7 @@ def create_sun2000_entities(
                         key=entity_description_template.battery_1_key,
                         translation_key=entity_description_template.translation_key,
                         device_class=entity_description_template.device_class,
+                        options=entity_description_template.options,
                         state_class=entity_description_template.state_class,
                         native_unit_of_measurement=entity_description_template.native_unit_of_measurement,
                         entity_category=entity_description_template.entity_category,
@@ -1259,6 +1275,7 @@ def create_sun2000_entities(
                         key=entity_description_template.battery_2_key,
                         translation_key=entity_description_template.translation_key,
                         device_class=entity_description_template.device_class,
+                        options=entity_description_template.options,
                         state_class=entity_description_template.state_class,
                         native_unit_of_measurement=entity_description_template.native_unit_of_measurement,
                         entity_category=entity_description_template.entity_category,
@@ -1804,9 +1821,13 @@ CHARGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_CHARGING_WAIT_REASON,
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.ChargerChargingWaitReason],
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_INDICATOR_LIGHT_STATUS,
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.ChargerIndicatorLightStatus],
     ),
 )
 
@@ -1819,6 +1840,8 @@ SMART_AC_GUN_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...]
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_OUTPUT_RELAY_STATUS,
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.ChargerOutputRelayStatus],
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HuaweiSolarSensorEntityDescription(
@@ -1878,6 +1901,8 @@ SMART_AC_GUN_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...]
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_GUN_LOCK_STATUS,
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.ChargerGunLockStatus],
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_CABLE_MAX_CURRENT,
@@ -1887,6 +1912,8 @@ SMART_AC_GUN_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...]
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_REPORTED_WORK_MODE,
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.ChargerReportedWorkMode],
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_PLANNED_DEPARTURE_TIME,
@@ -1899,6 +1926,8 @@ SMART_AC_GUN_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...]
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_CHARGING_METHOD,
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.ChargerChargingMethod],
     ),
 )
 
@@ -2039,6 +2068,8 @@ SMARTLOGGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] 
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.SMARTLOGGER_ARRAY_IN_OPERATION,
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.SmartLoggerInOperation],
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HuaweiSolarSensorEntityDescription(
