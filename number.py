@@ -396,7 +396,7 @@ async def async_setup_entry(
                             ucs.configuration_update_coordinator,
                             ucs.device,
                             entity_description,
-                            ucs.device_info,
+                            ucs.connected_energy_storage,
                         )
                     )
 
@@ -406,7 +406,7 @@ async def async_setup_entry(
                             ucs.configuration_update_coordinator,
                             ucs.device,
                             DONGLE_PLANT_MAXIMUM_CHARGE_FROM_GRID_POWER_NUMBER_DESCRIPTION,
-                            ucs.device_info,
+                            ucs.connected_energy_storage,
                         )
                     )
 
@@ -416,7 +416,7 @@ async def async_setup_entry(
                             ucs.configuration_update_coordinator,
                             ucs.device,
                             STORAGE_MAXIMUM_GRID_POWER_DURING_DISCHARGE_NUMBER_DESCRIPTION,
-                            ucs.device_info,
+                            ucs.connected_energy_storage,
                         )
                     )
                     slave_entities.append(
@@ -424,7 +424,7 @@ async def async_setup_entry(
                             ucs.configuration_update_coordinator,
                             ucs.device,
                             STORAGE_ADJUSTMENT_DEADBAND_NUMBER_DESCRIPTION,
-                            ucs.device_info,
+                            ucs.connected_energy_storage,
                         )
                     )
 
@@ -458,11 +458,11 @@ async def async_setup_entry(
                             )
                         )
 
-        else:
-            _LOGGER.debug(
-                "No battery detected on slave %s. Skipping energy storage number entities",
-                ucs.device.client.unit_id,
-            )
+            else:
+                _LOGGER.debug(
+                    "No battery detected on slave %s. Skipping energy storage number entities",
+                    ucs.device.client.unit_id,
+                )
 
         entities_to_add.extend(slave_entities)
 
