@@ -182,153 +182,148 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) -> bool:
     """Set up Huawei Solar from a config entry."""
 
+    client = None
     primary_device = None
     try:
-        # Multiple inverters can be connected to each other via a daisy chain,
-        # via an internal modbus-network (ie. not the same modbus network that we are
-        # using to talk to the inverter).
-        #
-        # Each inverter receives it's own 'slave id' in that case.
-        # The inverter that we use as 'gateway' will then forward the request to
-        # the proper inverter.
+        try:
+            # Multiple inverters can be connected to each other via a daisy chain,
+            # via an internal modbus-network (ie. not the same modbus network that we are
+            # using to talk to the inverter).
+            #
+            # Each inverter receives it's own 'slave id' in that case.
+            # The inverter that we use as 'gateway' will then forward the request to
+            # the proper inverter.
 
-        #               ┌─────────────┐
-        #               │  EXTERNAL   │
-        #               │ APPLICATION │
-        #               └──────┬──────┘
-        #                      │
-        #                 ┌────┴────┐
-        #                 │PRIMARY  │
-        #                 │INVERTER │
-        #                 └────┬────┘
-        #       ┌──────────────┼───────────────┐
-        #       │              │               │
-        #  ┌────┴────┐     ┌───┴─────┐    ┌────┴────┐
-        #  │ SLAVE X │     │ SLAVE Y │    │SLAVE ...│
-        #  └─────────┘     └─────────┘    └─────────┘
+            #               ┌─────────────┐
+            #               │  EXTERNAL   │
+            #               │ APPLICATION │
+            #               └──────┬──────┘
+            #                      │
+            #                 ┌────┴────┐
+            #                 │PRIMARY  │
+            #                 │INVERTER │
+            #                 └────┬────┘
+            #       ┌──────────────┼───────────────┐
+            #       │              │               │
+            #  ┌────┴────┐     ┌───┴─────┐    ┌────┴────┐
+            #  │ SLAVE X │     │ SLAVE Y │    │SLAVE ...│
+            #  └─────────┘     └─────────┘    └─────────┘
 
-        if entry.data[CONF_HOST] is None:
-            client = create_rtu_client(
-                port=entry.data[CONF_PORT],
-                baudrate=entry.data.get(CONF_BAUDRATE, DEFAULT_BAUDRATE),
-                unit_id=entry.data[CONF_SLAVE_IDS][0],
-            )
-        else:
-            client = create_tcp_client(
-                host=entry.data[CONF_HOST],
-                port=entry.data[CONF_PORT],
-                unit_id=entry.data[CONF_SLAVE_IDS][0],
-            )
-
-        primary_device = await create_device_instance(client)
-
-        if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION) and (
-            isinstance(primary_device, HuaweiSolarDeviceWithLogin)
-            and entry.data.get(CONF_USERNAME)
-            and entry.data.get(CONF_PASSWORD)
-        ):
-            try:
-                await primary_device.login(
-                    entry.data[CONF_USERNAME], entry.data[CONF_PASSWORD]
+            if entry.data[CONF_HOST] is None:
+                client = create_rtu_client(
+                    port=entry.data[CONF_PORT],
+                    baudrate=entry.data.get(CONF_BAUDRATE, DEFAULT_BAUDRATE),
+                    unit_id=entry.data[CONF_SLAVE_IDS][0],
                 )
-            except InvalidCredentials as err:
-                raise ConfigEntryAuthFailed from err
+            else:
+                client = create_tcp_client(
+                    host=entry.data[CONF_HOST],
+                    port=entry.data[CONF_PORT],
+                    unit_id=entry.data[CONF_SLAVE_IDS][0],
+                )
 
-        primary_device_data = await _setup_device_data(
-            hass,
-            entry,
-            primary_device,
-        )
+            primary_device = await create_device_instance(client)
 
-        device_datas: list[HuaweiSolarDeviceData] = [primary_device_data]
-
-        for extra_unit_id in entry.data[CONF_SLAVE_IDS][1:]:
-            sub_device = await create_sub_device_instance(primary_device, extra_unit_id)
-            if isinstance(sub_device, MeterDevice) and not isinstance(
-                primary_device, SmartLoggerDevice
+            if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION) and (
+                isinstance(primary_device, HuaweiSolarDeviceWithLogin)
+                and entry.data.get(CONF_USERNAME)
+                and entry.data.get(CONF_PASSWORD)
             ):
-                _LOGGER.warning(
-                    "Skipping meter device at unit_id %s: meters are only supported when connected via a SmartLogger",
-                    extra_unit_id,
-                )
-                continue
-            parent_ha_device_id = primary_device_data.ha_device_id
-            if isinstance(sub_device, SmartAcGunDevice):
-                for dd in device_datas:
-                    if isinstance(dd.device, SChargerDevice):
-                        parent_ha_device_id = dd.ha_device_id
-                        break
+                try:
+                    await primary_device.login(
+                        entry.data[CONF_USERNAME], entry.data[CONF_PASSWORD]
+                    )
+                except InvalidCredentials as err:
+                    raise ConfigEntryAuthFailed from err
 
-            sub_device_data = await _setup_device_data(
+            primary_device_data = await _setup_device_data(
                 hass,
                 entry,
-                sub_device,
-                via_device_id=parent_ha_device_id,
+                primary_device,
             )
 
-            device_datas.append(sub_device_data)
+            device_datas: list[HuaweiSolarDeviceData] = [primary_device_data]
 
-        entry.runtime_data = device_datas
-    except ConnectionInterruptedException as err:
-        if primary_device is not None:
-            await primary_device.stop()
-        host = entry.data.get(CONF_HOST) or entry.data.get(CONF_PORT)
-        _LOGGER.warning(
-            "Connection to the inverter at %s was interrupted during setup. "
-            "The inverter only supports one Modbus connection at a time. "
-            "Check whether another device is currently connected to the inverter",
-            host,
-        )
-        raise ConfigEntryNotReady(
-            f"Connection to the inverter at {host} was interrupted, probably by another device. "
-            "The inverter only supports one Modbus connection at a time."
-        ) from err
-    except ConnectionException as err:
-        if primary_device is not None:
-            await primary_device.stop()
-        host = entry.data.get(CONF_HOST) or entry.data.get(CONF_PORT)
-        _LOGGER.warning(
-            "Cannot connect to the inverter at %s. "
-            "Verify the address and that the device is reachable on the network. "
-            "If the inverter's IP address has changed, reconfigure the integration",
-            host,
-        )
-        raise ConfigEntryNotReady(
-            f"Cannot connect to the inverter at {host}. "
-            "Verify the address and that the device is reachable. "
-            "If the IP address has changed, reconfigure the integration."
-        ) from err
+            for extra_unit_id in entry.data[CONF_SLAVE_IDS][1:]:
+                sub_device = await create_sub_device_instance(
+                    primary_device, extra_unit_id
+                )
+                if isinstance(sub_device, MeterDevice) and not isinstance(
+                    primary_device, SmartLoggerDevice
+                ):
+                    _LOGGER.warning(
+                        "Skipping meter device at unit_id %s: meters are only supported when connected via a SmartLogger",
+                        extra_unit_id,
+                    )
+                    continue
+                parent_ha_device_id = primary_device_data.ha_device_id
+                if isinstance(sub_device, SmartAcGunDevice):
+                    for dd in device_datas:
+                        if isinstance(dd.device, SChargerDevice):
+                            parent_ha_device_id = dd.ha_device_id
+                            break
 
-    except TimeoutError as err:
-        if primary_device is not None:
-            await primary_device.stop()
-        _LOGGER.warning(
-            "The inverter is not responding to requests. "
-            "The connection was established but no data was received. "
-            "The device may be starting up, overloaded, or blocking Modbus requests"
-        )
-        raise ConfigEntryNotReady(
-            "The inverter is not responding to requests. "
-            "It may be starting up or temporarily busy."
-        ) from err
+                sub_device_data = await _setup_device_data(
+                    hass,
+                    entry,
+                    sub_device,
+                    via_device_id=parent_ha_device_id,
+                )
 
-    except HuaweiSolarException as err:
-        if primary_device is not None:
-            await primary_device.stop()
-        _LOGGER.warning(
-            "Failed to communicate with the inverter during setup: %s. ",
-            err,
-            exc_info=err,
-        )
-        raise ConfigEntryNotReady(
-            f"Failed to communicate with the inverter: {err}"
-        ) from err
+                device_datas.append(sub_device_data)
 
-    except Exception:
-        # always try to stop the bridge, as it will keep retrying
-        # in the background otherwise!
+            entry.runtime_data = device_datas
+        except ConnectionInterruptedException as err:
+            host = entry.data.get(CONF_HOST) or entry.data.get(CONF_PORT)
+            _LOGGER.warning(
+                "Connection to the inverter at %s was interrupted during setup. "
+                "The inverter only supports one Modbus connection at a time. "
+                "Check whether another device is currently connected to the inverter",
+                host,
+            )
+            raise ConfigEntryNotReady(
+                f"Connection to the inverter at {host} was interrupted, probably by another device. "
+                "The inverter only supports one Modbus connection at a time."
+            ) from err
+        except ConnectionException as err:
+            host = entry.data.get(CONF_HOST) or entry.data.get(CONF_PORT)
+            _LOGGER.warning(
+                "Cannot connect to the inverter at %s. "
+                "Verify the address and that the device is reachable on the network. "
+                "If the inverter's IP address has changed, reconfigure the integration",
+                host,
+            )
+            raise ConfigEntryNotReady(
+                f"Cannot connect to the inverter at {host}. "
+                "Verify the address and that the device is reachable. "
+                "If the IP address has changed, reconfigure the integration."
+            ) from err
+        except TimeoutError as err:
+            _LOGGER.warning(
+                "The inverter is not responding to requests. "
+                "The connection was established but no data was received. "
+                "The device may be starting up, overloaded, or blocking Modbus requests"
+            )
+            raise ConfigEntryNotReady(
+                "The inverter is not responding to requests. "
+                "It may be starting up or temporarily busy."
+            ) from err
+        except HuaweiSolarException as err:
+            _LOGGER.warning(
+                "Failed to communicate with the inverter during setup: %s. ",
+                err,
+                exc_info=err,
+            )
+            raise ConfigEntryNotReady(
+                f"Failed to communicate with the inverter: {err}"
+            ) from err
+    except BaseException:
+        # Always try to stop the device/client, as it may otherwise keep
+        # background connections or retry loops alive.
         if primary_device is not None:
             await primary_device.stop()
+        elif client is not None:
+            await client.disconnect()
         raise
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
