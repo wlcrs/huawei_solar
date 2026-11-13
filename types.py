@@ -63,13 +63,7 @@ class HuaweiSolarInverterData(HuaweiSolarDeviceData):
     optimizer_update_coordinator: HuaweiSolarOptimizerUpdateCoordinator | None
 
 
-type HuaweiSolarConfigEntry = ConfigEntry[HuaweiSolarData]
-
-
-class HuaweiSolarData(TypedDict):
-    """Data for each Huawei Solar config entry."""
-
-    device_datas: list[HuaweiSolarDeviceData]
+type HuaweiSolarConfigEntry = ConfigEntry[list[HuaweiSolarDeviceData]]
 
 
 async def async_call_with_device_error_handling[T](coro: Awaitable[T]) -> T:

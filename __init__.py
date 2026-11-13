@@ -45,7 +45,6 @@ from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
     CONF_SLAVE_IDS,
     CONFIGURATION_UPDATE_INTERVAL,
-    DATA_DEVICE_DATAS,
     DEFAULT_BAUDRATE,
     DOMAIN,
     ENERGY_STORAGE_UPDATE_INTERVAL,
@@ -269,9 +268,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
 
             device_datas.append(sub_device_data)
 
-        entry.runtime_data = {
-            DATA_DEVICE_DATAS: device_datas,
-        }
+        entry.runtime_data = device_datas
     except ConnectionInterruptedException as err:
         if primary_device is not None:
             await primary_device.stop()
@@ -344,7 +341,7 @@ async def async_unload_entry(
 ) -> bool:
     """Unload a config entry."""
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
-        device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
+        device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data
         for device_data in reversed(device_datas):
             await device_data.device.stop()
 

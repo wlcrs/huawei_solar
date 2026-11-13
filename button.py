@@ -10,7 +10,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_DEVICE_DATAS
+from .const import CONF_ENABLE_PARAMETER_CONFIGURATION
 from .types import (
     HuaweiSolarConfigEntry,
     HuaweiSolarDeviceData,
@@ -33,7 +33,7 @@ async def async_setup_entry(
     if not entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION):
         return
 
-    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
+    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data
 
     entities_to_add: list[ButtonEntity] = []
     for ucs in device_datas:

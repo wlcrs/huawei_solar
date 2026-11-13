@@ -50,7 +50,6 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DATA_DEVICE_DATAS
 from .types import (
     HuaweiSolarConfigEntry,
     HuaweiSolarCoordinatorEntity,
@@ -2334,7 +2333,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Add Huawei Solar entry."""
-    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
+    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data
     has_emma = any(
         isinstance(device_data.device, EMMADevice) for device_data in device_datas
     )

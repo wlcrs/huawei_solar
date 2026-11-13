@@ -34,7 +34,6 @@ import homeassistant.helpers.config_validation as cv
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
-    DATA_DEVICE_DATAS,
     DOMAIN,
     SERVICES,
     SERVICE_FORCIBLE_CHARGE,
@@ -151,7 +150,7 @@ def _get_device_data(
     """Return the HuaweiSolarDeviceData associated with the device_id in the service call."""
     device_entry, entry = async_get_entry_id_for_service_call(call)
 
-    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
+    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data
     for dd in device_datas:
         assert "identifiers" in dd.device_info
         for identifier in dd.device_info["identifiers"]:
@@ -202,7 +201,7 @@ def _get_battery_device_data(call: ServiceCall) -> HuaweiSolarInverterData:
     """Return the HuaweiSolarDeviceData associated with the device_id in the service call."""
     device_entry, entry = async_get_entry_id_for_service_call(call)
 
-    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
+    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data
     for dd in device_datas:
         if not isinstance(dd, HuaweiSolarInverterData):
             continue
@@ -714,7 +713,7 @@ async def set_maximum_feed_grid_power_percentage(
 def _is_emma_device(call: ServiceCall) -> bool:
     """Check if the service call targets an EMMA device."""
     device_entry, entry = async_get_entry_id_for_service_call(call)
-    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
+    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data
     for dd in device_datas:
         if isinstance(dd.device, EMMADevice):
             assert "identifiers" in dd.device_info

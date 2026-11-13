@@ -27,7 +27,7 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_DEVICE_DATAS, DOMAIN
+from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DOMAIN
 from .types import (
     HuaweiSolarConfigEntry,
     HuaweiSolarCoordinatorEntity,
@@ -150,7 +150,7 @@ async def async_setup_entry(
         _LOGGER.info("Skipping switch setup, as parameter configuration is not enabled")
         return
 
-    device_data: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
+    device_data: list[HuaweiSolarDeviceData] = entry.runtime_data
 
     entities_to_add: list[SwitchEntity] = []
     for ucs in device_data:

@@ -32,7 +32,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DATA_DEVICE_DATAS
+from .const import CONF_ENABLE_PARAMETER_CONFIGURATION
 from .types import (
     HuaweiSolarConfigEntry,
     HuaweiSolarCoordinatorEntity,
@@ -328,7 +328,7 @@ async def async_setup_entry(
         _LOGGER.info("Skipping number setup, as parameter configuration is not enabled")
         return
 
-    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
+    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data
 
     entities_to_add: list[NumberEntity] = []
     for ucs in device_datas:

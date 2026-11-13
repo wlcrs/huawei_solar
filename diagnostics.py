@@ -11,7 +11,6 @@ from homeassistant.const import CONF_PASSWORD, CONF_UNIQUE_ID, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 
-from .const import DATA_DEVICE_DATAS
 from .types import (
     HuaweiSolarConfigEntry,
     HuaweiSolarDeviceData,
@@ -49,7 +48,7 @@ async def async_get_config_entry_diagnostics(
     hass: HomeAssistant, entry: HuaweiSolarConfigEntry
 ) -> dict[str, Any]:
     """Return diagnostics for a config entry."""
-    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
+    device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data
 
     diagnostics_data = {
         "config_entry_data": dict(entry.data),

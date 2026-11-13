@@ -14,9 +14,6 @@ CONF_SLAVE_IDS = "slave_ids"
 CONF_ENABLE_PARAMETER_CONFIGURATION = "enable_parameter_configuration"
 CONF_BAUDRATE = "baudrate"
 
-DATA_DEVICE_DATAS = "device_datas"
-DATA_UPDATE_COORDINATORS = "update_coordinators"
-
 INVERTER_UPDATE_INTERVAL = timedelta(seconds=30)
 POWER_METER_UPDATE_INTERVAL = timedelta(seconds=30)
 ENERGY_STORAGE_UPDATE_INTERVAL = timedelta(seconds=30)
