@@ -413,7 +413,11 @@ def get_select_registers(device: HuaweiSolarDevice) -> set[RegisterName]:
                 descriptions.extend(CAPACITY_CONTROL_SWITCH_DESCRIPTIONS)
 
     registers = set(
-        chain.from_iterable(desc.context["register_names"] for desc in descriptions)
+        chain.from_iterable(
+            desc.context["register_names"]
+            for desc in descriptions
+            if desc.entity_registry_enabled_default
+        )
     )
     registers.update(extra_registers)
     return registers

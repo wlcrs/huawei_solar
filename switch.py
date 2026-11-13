@@ -426,5 +426,9 @@ def get_switch_registers(device: HuaweiSolarDevice) -> set[RegisterName]:
         descriptions.extend(SMART_AC_GUN_SWITCH_DESCRIPTIONS)
 
     return set(
-        chain.from_iterable(desc.context["register_names"] for desc in descriptions)
+        chain.from_iterable(
+            desc.context["register_names"]
+            for desc in descriptions
+            if desc.entity_registry_enabled_default
+        )
     )

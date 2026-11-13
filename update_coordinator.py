@@ -62,6 +62,7 @@ class HuaweiSolarUpdateCoordinator(
         )
         self.device = device
         self.initial_registers = set(initial_registers or [])
+        self._initial_refresh_done = False
 
     async def _async_update_data(self) -> dict[RegisterName, Result[Any]]:
         contexts = list(self.async_contexts())
@@ -69,14 +70,19 @@ class HuaweiSolarUpdateCoordinator(
             register_names_set = set(
                 chain.from_iterable(ctx["register_names"] for ctx in contexts)
             )
-        else:
+        elif not self._initial_refresh_done:
             register_names_set = self.initial_registers
+        else:
+            register_names_set = set()
 
         if not register_names_set:
+            self._initial_refresh_done = True
             return {}
 
         try:
-            return await self.device.batch_update(list(register_names_set))
+            data = await self.device.batch_update(list(register_names_set))
+            self._initial_refresh_done = True
+            return data
         except TimeoutError as err:
             raise UpdateFailed(
                 f"Timeout communicating with {self.device.serial_number}: "

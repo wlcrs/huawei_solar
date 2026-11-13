@@ -3006,58 +3006,90 @@ def get_pv_entity_descriptions(count: int) -> list[HuaweiSolarSensorEntityDescri
 
 def get_inverter_sensor_registers(device: SUN2000Device) -> set[rn.RegisterName]:
     """Get registers needed for inverter update coordinator."""
-    registers = {desc.register_name for desc in INVERTER_SENSOR_DESCRIPTIONS}
+    registers = {
+        desc.register_name
+        for desc in INVERTER_SENSOR_DESCRIPTIONS
+        if desc.entity_registry_enabled_default
+    }
     registers.update(HuaweiSolarAlarmSensorEntity.ALARM_REGISTERS)
     registers.update(
         desc.register_name
         for desc in get_pv_entity_descriptions(device.pv_string_count)
+        if desc.entity_registry_enabled_default
     )
     if device.has_optimizers:
-        registers.update(desc.register_name for desc in OPTIMIZER_SENSOR_DESCRIPTIONS)
+        registers.update(
+            desc.register_name
+            for desc in OPTIMIZER_SENSOR_DESCRIPTIONS
+            if desc.entity_registry_enabled_default
+        )
     return registers
 
 
 def get_power_meter_sensor_registers(device: SUN2000Device) -> set[rn.RegisterName]:
     """Get registers needed for power meter update coordinator."""
     if device.power_meter_type == rv.MeterType.THREE_PHASE:
-        return {desc.register_name for desc in THREE_PHASE_METER_ENTITY_DESCRIPTIONS}
+        return {
+            desc.register_name
+            for desc in THREE_PHASE_METER_ENTITY_DESCRIPTIONS
+            if desc.entity_registry_enabled_default
+        }
     if device.power_meter_type == rv.MeterType.SINGLE_PHASE:
-        return {desc.register_name for desc in SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS}
+        return {
+            desc.register_name
+            for desc in SINGLE_PHASE_METER_ENTITY_DESCRIPTIONS
+            if desc.entity_registry_enabled_default
+        }
     return set()
 
 
 def get_energy_storage_sensor_registers(device: SUN2000Device) -> set[rn.RegisterName]:
     """Get registers needed for energy storage update coordinator."""
-    registers = {desc.register_name for desc in BATTERIES_SENSOR_DESCRIPTIONS}
-    if device.battery_1_type != rv.StorageProductModel.NONE:
-        registers.update(
-            desc.battery_1_key
-            for desc in BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS
-            if desc.battery_1_key
-        )
-    if device.battery_2_type != rv.StorageProductModel.NONE:
-        registers.update(
-            desc.battery_2_key
-            for desc in BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS
-            if desc.battery_2_key
-        )
-    return registers
+    return {
+        desc.register_name
+        for desc in BATTERIES_SENSOR_DESCRIPTIONS
+        if desc.entity_registry_enabled_default
+    }
 
 
 def get_device_sensor_registers(device: HuaweiSolarDevice) -> set[rn.RegisterName]:
     """Get registers needed for non-inverter device update coordinator."""
     if isinstance(device, EMMADevice):
-        return {desc.register_name for desc in EMMA_SENSOR_DESCRIPTIONS}
+        return {
+            desc.register_name
+            for desc in EMMA_SENSOR_DESCRIPTIONS
+            if desc.entity_registry_enabled_default
+        }
     if isinstance(device, SChargerDevice):
-        return {desc.register_name for desc in CHARGER_SENSOR_DESCRIPTIONS}
+        return {
+            desc.register_name
+            for desc in CHARGER_SENSOR_DESCRIPTIONS
+            if desc.entity_registry_enabled_default
+        }
     if isinstance(device, SmartAcGunDevice):
-        return {desc.register_name for desc in SMART_AC_GUN_SENSOR_DESCRIPTIONS}
+        return {
+            desc.register_name
+            for desc in SMART_AC_GUN_SENSOR_DESCRIPTIONS
+            if desc.entity_registry_enabled_default
+        }
     if isinstance(device, SDongleDevice):
-        return {desc.register_name for desc in SDONGLE_SENSOR_DESCRIPTIONS}
+        return {
+            desc.register_name
+            for desc in SDONGLE_SENSOR_DESCRIPTIONS
+            if desc.entity_registry_enabled_default
+        }
     if isinstance(device, MeterDevice):
-        return {desc.register_name for desc in METER_SENSOR_DESCRIPTIONS}
+        return {
+            desc.register_name
+            for desc in METER_SENSOR_DESCRIPTIONS
+            if desc.entity_registry_enabled_default
+        }
     if isinstance(device, SmartLoggerDevice):
-        registers = {desc.register_name for desc in SMARTLOGGER_SENSOR_DESCRIPTIONS}
+        registers = {
+            desc.register_name
+            for desc in SMARTLOGGER_SENSOR_DESCRIPTIONS
+            if desc.entity_registry_enabled_default
+        }
         registers.update(SmartLoggerAlarmSensorEntity.ALARM_REGISTERS)
         return registers
     return set()
@@ -3070,11 +3102,6 @@ def get_configuration_sensor_registers(
     registers: set[rn.RegisterName] = set()
     if isinstance(device, SUN2000Device):
         has_emma = isinstance(device.primary_device, EMMADevice)
-        if (
-            not isinstance(device.primary_device, (EMMADevice, SmartLoggerDevice))
-            and has_write_permission
-        ):
-            registers.update(HuaweiSolarActivePowerControlModeEntity.REGISTER_NAMES)
         if device.battery_type != rv.StorageProductModel.NONE:
             if (
                 not has_emma
@@ -3091,6 +3118,4 @@ def get_configuration_sensor_registers(
             registers.update(HuaweiSolarForcibleChargeEntity.REGISTER_NAMES)
             if device.supports_capacity_control:
                 registers.add(rn.STORAGE_CAPACITY_CONTROL_PERIODS)
-    elif isinstance(device, EMMADevice):
-        registers.add(rn.EMMA_TOU_PERIODS)
     return registers

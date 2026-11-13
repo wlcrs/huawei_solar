@@ -593,5 +593,9 @@ def get_number_registers(device: HuaweiSolarDevice) -> set[RegisterName]:
                 descriptions.extend(NON_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS)
 
     return set(
-        chain.from_iterable(desc.context["register_names"] for desc in descriptions)
+        chain.from_iterable(
+            desc.context["register_names"]
+            for desc in descriptions
+            if desc.entity_registry_enabled_default
+        )
     )
