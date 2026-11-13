@@ -288,8 +288,8 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
         ]
 
     @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
+    def _async_update_attrs(self) -> None:
+        """Update entity attributes from coordinator data."""
         if (
             self.coordinator.data
             and self.entity_description.key in self.coordinator.data
@@ -313,8 +313,6 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
         else:
             self._attr_current_option = None
             self._attr_available = False
-
-        self.async_write_ha_state()
 
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
@@ -368,8 +366,8 @@ class StorageModeSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
         self._attr_options = [option.lower() for option in available_options]
 
     @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
+    def _async_update_attrs(self) -> None:
+        """Update entity attributes from coordinator data."""
         if (
             self.coordinator.data
             and self.entity_description.key in self.coordinator.data
@@ -383,7 +381,6 @@ class StorageModeSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
         else:
             self._attr_current_option = None
             self._attr_available = False
-        self.async_write_ha_state()
 
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""

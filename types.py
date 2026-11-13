@@ -18,6 +18,7 @@ from huawei_solar import (
 from huawei_solar.modbus_pdu import PermissionDeniedError
 
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import callback
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import Entity, EntityDescription
@@ -155,7 +156,17 @@ class HuaweiSolarCoordinatorEntity[
         """Return if entity is available."""
         return super().available and self._attr_available
 
+    @callback
+    def _async_update_attrs(self) -> None:
+        """Update entity attributes from coordinator data."""
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self._async_update_attrs()
+        super()._handle_coordinator_update()
+
     async def async_added_to_hass(self) -> None:
         """When entity is added to hass update state from existing coordinator data."""
         await super().async_added_to_hass()
-        self._handle_coordinator_update()
+        self._async_update_attrs()

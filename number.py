@@ -507,8 +507,8 @@ class HuaweiSolarNumberEntity(HuaweiSolarCoordinatorEntity, NumberEntity):
         return cls(coordinator, device, description, device_info)
 
     @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
+    def _async_update_attrs(self) -> None:
+        """Update entity attributes from coordinator data."""
         if (
             self.coordinator.data
             and self.entity_description.key in self.coordinator.data
@@ -535,8 +535,6 @@ class HuaweiSolarNumberEntity(HuaweiSolarCoordinatorEntity, NumberEntity):
         else:
             self._attr_available = False
             self._attr_native_value = None
-
-        self.async_write_ha_state()
 
     async def async_set_native_value(self, value: float) -> None:
         """Set a new value."""

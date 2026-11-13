@@ -2389,8 +2389,8 @@ class HuaweiSolarSensorEntity(HuaweiSolarCoordinatorEntity, SensorEntity):
         self._register_key = rn.RegisterName(register_key)
 
     @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
+    def _async_update_attrs(self) -> None:
+        """Update entity attributes from coordinator data."""
         if self.coordinator.data and self._register_key in self.coordinator.data:
             value = self.coordinator.data[self._register_key].value
 
@@ -2408,8 +2408,6 @@ class HuaweiSolarSensorEntity(HuaweiSolarCoordinatorEntity, SensorEntity):
         else:
             self._attr_available = False
             self._attr_native_value = None
-
-        self.async_write_ha_state()
 
 
 class HuaweiSolarAlarmSensorEntity(HuaweiSolarSensorEntity):
@@ -2440,8 +2438,8 @@ class HuaweiSolarAlarmSensorEntity(HuaweiSolarSensorEntity):
         )
 
     @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
+    def _async_update_attrs(self) -> None:
+        """Update entity attributes from coordinator data."""
         available = False
 
         if self.coordinator.data:
@@ -2461,7 +2459,6 @@ class HuaweiSolarAlarmSensorEntity(HuaweiSolarSensorEntity):
             self._attr_native_value = None
 
         self._attr_available = available
-        self.async_write_ha_state()
 
 
 class SmartLoggerAlarmSensorEntity(HuaweiSolarSensorEntity):
@@ -2499,8 +2496,8 @@ class SmartLoggerAlarmSensorEntity(HuaweiSolarSensorEntity):
         )
 
     @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
+    def _async_update_attrs(self) -> None:
+        """Update entity attributes from coordinator data."""
         available = False
 
         if self.coordinator.data:
@@ -2520,7 +2517,6 @@ class SmartLoggerAlarmSensorEntity(HuaweiSolarSensorEntity):
             self._attr_native_value = None
 
         self._attr_available = available
-        self.async_write_ha_state()
 
 
 def _days_effective_to_str(
@@ -2583,8 +2579,8 @@ class HuaweiSolarTOUSensorEntity(HuaweiSolarCoordinatorEntity, SensorEntity):
         )
 
     @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
+    def _async_update_attrs(self) -> None:
+        """Update entity attributes from coordinator data."""
         if (
             self.coordinator.data
             and self.entity_description.register_name in self.coordinator.data
@@ -2603,8 +2599,6 @@ class HuaweiSolarTOUSensorEntity(HuaweiSolarCoordinatorEntity, SensorEntity):
         else:
             self._attr_available = False
             self._attr_native_value = None
-
-        self.async_write_ha_state()
 
 
 def _lg_resu_period_to_text(period: LG_RESU_TimeOfUsePeriod) -> str:
@@ -2652,8 +2646,8 @@ class HuaweiSolarPricePeriodsSensorEntity(
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
 
     @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
+    def _async_update_attrs(self) -> None:
+        """Update entity attributes from coordinator data."""
         if (
             self.coordinator.data
             and self.entity_description.register_name in self.coordinator.data
@@ -2672,8 +2666,6 @@ class HuaweiSolarPricePeriodsSensorEntity(
         else:
             self._attr_available = False
             self._attr_native_value = None
-
-        self.async_write_ha_state()
 
 
 class HuaweiSolarCapacityControlPeriodsSensorEntity(
@@ -2717,8 +2709,8 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
         )
 
     @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
+    def _async_update_attrs(self) -> None:
+        """Update entity attributes from coordinator data."""
         if (
             self.coordinator.data
             and self.entity_description.key in self.coordinator.data
@@ -2737,8 +2729,6 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
             self._attr_available = False
             self._attr_native_value = None
             self._attr_extra_state_attributes = {}
-
-        self.async_write_ha_state()
 
 
 class HuaweiSolarForcibleChargeEntity(
@@ -2786,8 +2776,8 @@ class HuaweiSolarForcibleChargeEntity(
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
 
     @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
+    def _async_update_attrs(self) -> None:
+        """Update entity attributes from coordinator data."""
         if (
             self.coordinator.data
             and set(self.REGISTER_NAMES) <= self.coordinator.data.keys()
@@ -2837,7 +2827,6 @@ class HuaweiSolarForcibleChargeEntity(
             self._attr_available = False
             self._attr_native_value = None
             self._attr_extra_state_attributes = {}
-        self.async_write_ha_state()
 
 
 class HuaweiSolarActivePowerControlModeEntity(
@@ -2884,8 +2873,8 @@ class HuaweiSolarActivePowerControlModeEntity(
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
 
     @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
+    def _async_update_attrs(self) -> None:
+        """Update entity attributes from coordinator data."""
         if (
             self.coordinator.data
             and set(self.REGISTER_NAMES) <= self.coordinator.data.keys()
@@ -2925,7 +2914,6 @@ class HuaweiSolarActivePowerControlModeEntity(
             self._attr_available = False
             self._attr_native_value = None
             self._attr_extra_state_attributes = {}
-        self.async_write_ha_state()
 
 
 class HuaweiSolarOptimizerSensorEntity(
@@ -2954,19 +2942,9 @@ class HuaweiSolarOptimizerSensorEntity(
         self._attr_unique_id = f"{device_info['name']}_{description.key}"
         self._attr_available = False
 
-    @property
-    def available(self) -> bool:
-        """Return if entity is available.
-
-        An optimizer entity is unavailable if the coordinator failed, or if the
-        specific optimizer is offline (except for the running_status entity, which
-        should always show the actual status).
-        """
-        return super().available and self._attr_available
-
     @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
+    def _async_update_attrs(self) -> None:
+        """Update entity attributes from coordinator data."""
         self._attr_available = (
             self.coordinator.data is not None
             and self.optimizer_id in self.coordinator.data
@@ -2999,8 +2977,6 @@ class HuaweiSolarOptimizerSensorEntity(
 
         else:
             self._attr_native_value = None
-
-        self.async_write_ha_state()
 
 
 def get_pv_entity_descriptions(count: int) -> list[HuaweiSolarSensorEntityDescription]:
