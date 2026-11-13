@@ -490,9 +490,18 @@ async def validate_network_setup_login(
 def parse_unit_ids(unit_ids: str) -> list[int]:
     """Parse unit ids string into list of ints."""
     try:
-        return list(map(int, unit_ids.split(",")))
+        parsed = list(map(int, unit_ids.split(",")))
     except ValueError as err:
         raise UnitIdsParseException from err
+
+    if (
+        not parsed
+        or any(not 0 <= uid <= 247 for uid in parsed)
+        or len(set(parsed)) != len(parsed)
+    ):
+        raise UnitIdsParseException
+
+    return parsed
 
 
 async def _async_probe_modbus_port(
@@ -669,12 +678,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 ):
                     return self.async_abort(reason="already_configured")
 
-        # If a discovery is already in progress for this host, abort to avoid multiple flows racing.
-        if self._async_in_progress(match_context={CONF_HOST: discovery_info.ip}):
-            return self.async_abort(reason="already_in_progress")
-
-        self.context[CONF_HOST] = discovery_info.ip
-
         # Probe the host for an open port and try to read device info. If we can't connect, abort the flow.
         open_port = await _async_probe_modbus_port(discovery_info.ip)
         if open_port is None:
@@ -684,13 +687,15 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         esn, model, unit_ids = await _async_probe_dhcp_device(
             discovery_info.ip, open_port
         )
-        if esn is not None:
-            existing_entry = await self.async_set_unique_id(esn)
-            if existing_entry is not None and existing_entry.data.get(CONF_HOST) is not None:
-                self._abort_if_unique_id_configured(
-                    updates={CONF_HOST: discovery_info.ip}
-                )
-            self._abort_if_unique_id_configured()
+        if esn is None:
+            return self.async_abort(reason="cannot_connect")
+
+        existing_entry = await self.async_set_unique_id(esn)
+        if existing_entry is not None and existing_entry.data.get(CONF_HOST) is not None:
+            self._abort_if_unique_id_configured(
+                updates={CONF_HOST: discovery_info.ip}
+            )
+        self._abort_if_unique_id_configured()
 
         self.context["title_placeholders"] = {
             "name": model or discovery_info.hostname or discovery_info.ip
@@ -836,7 +841,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         except (ConnectionException, ModbusConnectionError, TimeoutError):
             _LOGGER.warning("%s: could not connect to %s", step_id, target_desc)
             return self.async_show_progress_done(next_step_id=f"cannot_connect{suffix}")
-        except DeviceException:
+        except DeviceException as err:
+            self._failed_slave_id = err.unit_id
             _LOGGER.warning("%s: no devices found on %s", step_id, target_desc)
             return self.async_show_progress_done(
                 next_step_id=f"no_device_found{suffix}"
@@ -955,7 +961,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "Could not connect to discovered serial device on %s", self._serial_port
             )
             return self.async_show_progress_done(next_step_id="cannot_connect_serial")
-        except DeviceException:
+        except DeviceException as err:
+            self._failed_slave_id = err.unit_id
             _LOGGER.exception(
                 "Error while connecting to discovered serial device on %s",
                 self._serial_port,
@@ -1021,8 +1028,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return await self.async_step_auto_discovery()
 
             try:
-                self._slave_ids = list(map(int, user_input[CONF_SLAVE_IDS].split(",")))
-            except ValueError:
+                self._slave_ids = parse_unit_ids(user_input[CONF_SLAVE_IDS])
+            except UnitIdsParseException:
                 errors["base"] = "invalid_slave_ids"
             else:
                 return await self.async_step_manual_connect()
@@ -1206,7 +1213,12 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 self._port,
             )
             return self.async_show_progress_done(next_step_id="connection_interrupted")
-        except (HuaweiSolarException, DeviceException):
+        except (HuaweiSolarException, DeviceException) as err:
+            self._failed_slave_id = (
+                err.unit_id
+                if isinstance(err, DeviceException) and err.unit_id is not None
+                else self._discovered_primary_unit_id
+            )
             _LOGGER.exception(
                 "Error while connecting to discovered device at %s:%s unit_id %s",
                 self._host,
