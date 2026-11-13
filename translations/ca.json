@@ -4,7 +4,9 @@
             "already_configured": "Dispositiu ja configurat",
             "reauth_successful": "La reautenticació ha estat correcta",
             "reconfigure_successful": "La reconfiguració ha estat correcta",
-            "unique_id_mismatch": "El número de sèrie del dispositiu no coincideix amb el número de sèrie anterior."
+            "unique_id_mismatch": "El número de sèrie del dispositiu no coincideix amb el número de sèrie anterior.",
+            "already_in_progress": "El flux de configuració ja està en curs",
+            "cannot_connect": "Error de connexió"
         },
         "error": {
             "cannot_connect": "Error de connexió",
@@ -104,7 +106,8 @@
                 },
                 "title": "Selecciona el tipus de connexió"
             }
-        }
+        },
+        "flow_title": "{name}"
     },
     "device": {
         "battery_1": {

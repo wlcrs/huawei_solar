@@ -43,6 +43,7 @@ from homeassistant.helpers.selector import (
     SelectSelectorMode,
     SerialPortSelector,
 )
+from homeassistant.helpers.service_info.dhcp import DhcpServiceInfo
 
 from .const import (
     CONF_BAUDRATE,
@@ -494,6 +495,55 @@ def parse_unit_ids(unit_ids: str) -> list[int]:
         raise UnitIdsParseException from err
 
 
+async def _async_probe_modbus_port(
+    host: str,
+    ports: tuple[int, ...] = (DEFAULT_PORT, 6607),
+    timeout: float = 2.0,
+) -> int | None:
+    """Return the first reachable TCP port from ``ports``, or None if none respond."""
+    for port in ports:
+        try:
+            _, writer = await asyncio.wait_for(
+                asyncio.open_connection(host, port), timeout=timeout
+            )
+        except OSError, TimeoutError:
+            continue
+        writer.close()
+        with contextlib.suppress(OSError):
+            await writer.wait_closed()
+        return port
+    return None
+
+
+async def _async_probe_dhcp_device(
+    host: str, port: int
+) -> tuple[str | None, str | None, list[int] | None]:
+    """Try reading device info via get_device_infos on common unit IDs.
+
+    Returns (esn, model, unit_ids), or (None, None, None) if unresponsive.
+    """
+    client = create_scan_tcp_client(host=host, port=port, unit_id=0)
+    try:
+        await asyncio.wait_for(client.connect(), timeout=2.0)
+        for unit_id in (0, 1, 100):
+            try:
+                device_infos = await get_device_infos(client.for_unit_id(unit_id))
+            except HuaweiSolarException, ReadException, TimeoutError:
+                continue
+            if not device_infos or device_infos[0].device_id is None:
+                continue
+            unit_ids = [
+                di.device_id for di in device_infos if di.device_id is not None
+            ]
+            return device_infos[0].esn, device_infos[0].model, unit_ids or None
+    except OSError, ConnectionException, ModbusConnectionError, TimeoutError:
+        pass
+    finally:
+        with contextlib.suppress(Exception):
+            await client.disconnect()
+    return None, None, None
+
+
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Huawei Solar."""
 
@@ -603,6 +653,53 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             config if config is not None else dict(self._reauth_entry.data)
         )
         return await self.async_step_network_login()
+
+    async def async_step_dhcp(
+        self, discovery_info: DhcpServiceInfo
+    ) -> ConfigFlowResult:
+        """Handle DHCP discovery."""
+        # Abort if the host is already configured, or if the hostname matches an existing entry.
+        self._async_abort_entries_match({CONF_HOST: discovery_info.ip})
+        if discovery_info.hostname:
+            for entry in self._async_current_entries(include_ignore=False):
+                entry_host = entry.data.get(CONF_HOST)
+                if (
+                    isinstance(entry_host, str)
+                    and entry_host.lower() == discovery_info.hostname.lower()
+                ):
+                    return self.async_abort(reason="already_configured")
+
+        # If a discovery is already in progress for this host, abort to avoid multiple flows racing.
+        if self._async_in_progress(match_context={CONF_HOST: discovery_info.ip}):
+            return self.async_abort(reason="already_in_progress")
+
+        self.context[CONF_HOST] = discovery_info.ip
+
+        # Probe the host for an open port and try to read device info. If we can't connect, abort the flow.
+        open_port = await _async_probe_modbus_port(discovery_info.ip)
+        if open_port is None:
+            return self.async_abort(reason="cannot_connect")
+
+        # If we can connect, try to read the device info. If we can't read it, abort the flow.
+        esn, model, unit_ids = await _async_probe_dhcp_device(
+            discovery_info.ip, open_port
+        )
+        if esn is not None:
+            existing_entry = await self.async_set_unique_id(esn)
+            if existing_entry is not None and existing_entry.data.get(CONF_HOST) is not None:
+                self._abort_if_unique_id_configured(
+                    updates={CONF_HOST: discovery_info.ip}
+                )
+            self._abort_if_unique_id_configured()
+
+        self.context["title_placeholders"] = {
+            "name": model or discovery_info.hostname or discovery_info.ip
+        }
+        self._host = discovery_info.ip
+        self._port = open_port
+        if unit_ids is not None:
+            self._slave_ids = unit_ids
+        return await self.async_step_setup_network()
 
     async def async_step_setup_serial(
         self, user_input: dict[str, Any] | None = None

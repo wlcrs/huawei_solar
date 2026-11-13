@@ -4,7 +4,9 @@
             "already_configured": "ڈیوائس پہلے سے تشکیل شدہ ہے",
             "reauth_successful": "دوبارہ توثیق کامیاب رہی",
             "reconfigure_successful": "دوبارہ ترتیب کامیاب رہی",
-            "unique_id_mismatch": "ڈیوائس کا سیریل نمبر پچھلے سیریل نمبر سے مماثل نہیں ہے۔"
+            "unique_id_mismatch": "ڈیوائس کا سیریل نمبر پچھلے سیریل نمبر سے مماثل نہیں ہے۔",
+            "already_in_progress": "کنفیگریشن فلو پہلے ہی جاری ہے",
+            "cannot_connect": "رابطہ قائم کرنے میں ناکام"
         },
         "error": {
             "cannot_connect": "رابطہ قائم کرنے میں ناکام",
@@ -104,7 +106,8 @@
                 },
                 "title": "کنکشن کی قسم منتخب کریں۔"
             }
-        }
+        },
+        "flow_title": "{name}"
     },
     "device": {
         "battery_1": {

@@ -1,7 +1,10 @@
 {
     "config": {
+        "flow_title": "{name}",
         "abort": {
             "already_configured": "Device is already configured",
+            "already_in_progress": "Configuration flow is already in progress",
+            "cannot_connect": "Failed to connect",
             "reauth_successful": "Re-authentication was successful",
             "reconfigure_successful": "Re-configuration was successful",
             "unique_id_mismatch": "The serial number of the device does not match the previous serial number."

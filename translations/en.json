@@ -4,7 +4,9 @@
             "already_configured": "Device is already configured",
             "reauth_successful": "Re-authentication was successful",
             "reconfigure_successful": "Re-configuration was successful",
-            "unique_id_mismatch": "The serial number of the device does not match the previous serial number."
+            "unique_id_mismatch": "The serial number of the device does not match the previous serial number.",
+            "already_in_progress": "Configuration flow is already in progress",
+            "cannot_connect": "Failed to connect"
         },
         "error": {
             "cannot_connect": "Failed to connect",
@@ -104,7 +106,8 @@
                 },
                 "title": "Select connection type"
             }
-        }
+        },
+        "flow_title": "{name}"
     },
     "device": {
         "battery_1": {

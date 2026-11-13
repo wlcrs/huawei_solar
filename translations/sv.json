@@ -4,7 +4,9 @@
             "already_configured": "Enheten är redan konfigurerad",
             "reauth_successful": "Återautentisering lyckades",
             "reconfigure_successful": "Omkonfiguration lyckades",
-            "unique_id_mismatch": "Enhetens serienummer stämmer inte överens med det tidigare serienumret."
+            "unique_id_mismatch": "Enhetens serienummer stämmer inte överens med det tidigare serienumret.",
+            "already_in_progress": "Konfigurationsflödet pågår redan",
+            "cannot_connect": "Kunde inte ansluta"
         },
         "error": {
             "cannot_connect": "Kunde inte ansluta",
@@ -104,7 +106,8 @@
                 },
                 "title": "Välj anslutningstyp"
             }
-        }
+        },
+        "flow_title": "{name}"
     },
     "device": {
         "battery_1": {

@@ -4,6 +4,20 @@
     "after_dependencies": [
         "usb"
     ],
+    "dhcp": [
+        {
+            "hostname": "sdongle*"
+        },
+        {
+            "hostname": "smartlogger*"
+        },
+        {
+            "hostname": "emma*"
+        },
+        {
+            "hostname": "sun2000*"
+        }
+    ],
     "config_flow": true,
     "documentation": "https://github.com/wlcrs/huawei_solar/wiki",
     "issue_tracker": "https://github.com/wlcrs/huawei_solar/issues",

@@ -4,7 +4,9 @@
             "already_configured": "Le périphérique est déjà configuré",
             "reauth_successful": "La ré-authentification a réussi",
             "reconfigure_successful": "La reconfiguration a réussi",
-            "unique_id_mismatch": "Le numéro de série de l'appareil ne correspond pas au numéro de série précédent."
+            "unique_id_mismatch": "Le numéro de série de l'appareil ne correspond pas au numéro de série précédent.",
+            "already_in_progress": "Le flux de configuration est déjà en cours",
+            "cannot_connect": "Échec de la connexion"
         },
         "error": {
             "cannot_connect": "Échec de la connexion",
@@ -104,7 +106,8 @@
                 },
                 "title": "Sélectionner le type de connexion"
             }
-        }
+        },
+        "flow_title": "{name}"
     },
     "device": {
         "battery_1": {

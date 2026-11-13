@@ -4,7 +4,9 @@
             "already_configured": "Apparaat is al geconfigureerd",
             "reauth_successful": "Herauthenticatie was succesvol",
             "reconfigure_successful": "Herconfiguratie was succesvol",
-            "unique_id_mismatch": "Het serienummer van het apparaat komt niet overeen met het vorige serienummer."
+            "unique_id_mismatch": "Het serienummer van het apparaat komt niet overeen met het vorige serienummer.",
+            "already_in_progress": "Configuratieflow is al bezig",
+            "cannot_connect": "Verbinden mislukt"
         },
         "error": {
             "cannot_connect": "Verbinden mislukt",
@@ -104,7 +106,8 @@
                 },
                 "title": "Selecteer verbindingstype"
             }
-        }
+        },
+        "flow_title": "{name}"
     },
     "device": {
         "battery_1": {

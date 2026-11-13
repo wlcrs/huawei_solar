@@ -4,7 +4,9 @@
             "already_configured": "Urządzenie jest już skonfigurowane",
             "reauth_successful": "Ponowne uwierzytelnienie powiodło się",
             "reconfigure_successful": "Ponowna konfiguracja powiodła się",
-            "unique_id_mismatch": "Numer seryjny urządzenia nie zgadza się z poprzednim numerem seryjnym."
+            "unique_id_mismatch": "Numer seryjny urządzenia nie zgadza się z poprzednim numerem seryjnym.",
+            "already_in_progress": "Przepływ konfiguracji jest już w toku",
+            "cannot_connect": "Połączenie nie powiodło się"
         },
         "error": {
             "cannot_connect": "Połączenie nie powiodło się",
@@ -104,7 +106,8 @@
                 },
                 "title": "Wybierz typ urządzenia"
             }
-        }
+        },
+        "flow_title": "{name}"
     },
     "device": {
         "battery_1": {

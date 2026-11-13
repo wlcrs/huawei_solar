@@ -4,7 +4,9 @@
             "already_configured": "Dispozitivul este deja configurat",
             "reauth_successful": "Re-autentificarea a reușit",
             "reconfigure_successful": "Reconfigurarea a reușit",
-            "unique_id_mismatch": "Numărul de serie al dispozitivului nu se potrivește cu numărul de serie anterior."
+            "unique_id_mismatch": "Numărul de serie al dispozitivului nu se potrivește cu numărul de serie anterior.",
+            "already_in_progress": "Fluxul de configurare este deja în curs",
+            "cannot_connect": "Conectarea a eșuat"
         },
         "error": {
             "cannot_connect": "Conectarea a eșuat",
@@ -104,7 +106,8 @@
                 },
                 "title": "Alegeți tipul de conexiune"
             }
-        }
+        },
+        "flow_title": "{name}"
     },
     "device": {
         "battery_1": {

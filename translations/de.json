@@ -4,7 +4,9 @@
             "already_configured": "Das Gerät ist bereits konfiguriert",
             "reauth_successful": "Re-Authentifikation erfolgreich",
             "reconfigure_successful": "Neukonfiguration war erfolgreich",
-            "unique_id_mismatch": "Die Seriennummer des Geräts stimmt nicht mit der vorherigen Seriennummer überein."
+            "unique_id_mismatch": "Die Seriennummer des Geräts stimmt nicht mit der vorherigen Seriennummer überein.",
+            "already_in_progress": "Der Konfigurationsablauf wird bereits ausgeführt",
+            "cannot_connect": "Verbindungsversuch fehlgeschlagen"
         },
         "error": {
             "cannot_connect": "Verbindungsversuch fehlgeschlagen",
@@ -104,7 +106,8 @@
                 },
                 "title": "Verbindungstyp auswählen"
             }
-        }
+        },
+        "flow_title": "{name}"
     },
     "device": {
         "battery_1": {

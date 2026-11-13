@@ -4,7 +4,9 @@
             "already_configured": "Az eszköz már konfigurálva van",
             "reauth_successful": "Az újrahitelesítés sikeres volt",
             "reconfigure_successful": "Az újrakonfigurálás sikeres volt",
-            "unique_id_mismatch": "Az eszköz sorozatszáma nem egyezik az előző sorozatszámmal."
+            "unique_id_mismatch": "Az eszköz sorozatszáma nem egyezik az előző sorozatszámmal.",
+            "already_in_progress": "A konfigurációs folyamat már folyamatban van",
+            "cannot_connect": "Sikertelen kapcsolódás"
         },
         "error": {
             "cannot_connect": "Sikertelen kapcsolódás",
@@ -104,7 +106,8 @@
                 },
                 "title": "Válasszon kapcsolattípust"
             }
-        }
+        },
+        "flow_title": "{name}"
     },
     "device": {
         "battery_1": {
