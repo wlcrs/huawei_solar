@@ -374,7 +374,21 @@
                 "name": "Timp rămas de încărcare/descărcare"
             },
             "battery_working_mode": {
-                "name": "Mod de funcționare"
+                "name": "Mod de funcționare",
+                "state": {
+                    "none": "Niciunul",
+                    "forcible_charge_discharge": "Încărcare/descărcare forțată",
+                    "time_of_use_lg": "Timp de utilizare (LG)",
+                    "fixed_charge_discharge": "Încărcare/descărcare fixă",
+                    "maximise_self_consumption": "Maximizare autoconsum",
+                    "fully_fed_to_grid": "Injecție totală în rețea",
+                    "time_of_use_luna2000": "Timp de utilizare (LUNA2000)",
+                    "remote_scheduling_maximum_self_use": "Programare la distanță (autoconsum maxim)",
+                    "remote_scheduling_full_internet_access": "Programare la distanță (acces complet la internet)",
+                    "remote_scheduling_tou": "Programare la distanță (TOU)",
+                    "ai_energy_management_and_scheduling": "Gestionare și programare energetică IA",
+                    "remote_scheduling_ai_control": "Programare la distanță (control IA)"
+                }
             },
             "bms_temperature": {
                 "name": "Temperatură BMS"
@@ -383,13 +397,29 @@
                 "name": "Curent maxim cablu"
             },
             "charger_charging_method": {
-                "name": "Metodă de încărcare"
+                "name": "Metodă de încărcare",
+                "state": {
+                    "immediate_charging": "Încărcare imediată",
+                    "scheduled_charging": "Încărcare programată",
+                    "next_trip_charging": "Încărcare pentru următoarea călătorie"
+                }
             },
             "charger_charging_wait_reason": {
-                "name": "Motiv așteptare încărcare"
+                "name": "Motiv așteptare încărcare",
+                "state": {
+                    "unknown": "Necunoscut",
+                    "waiting_for_ev": "Se așteaptă vehiculul electric",
+                    "household_power_excessive": "Putere casnică excesivă",
+                    "insufficient_green_power": "Energie verde insuficientă",
+                    "phase_switching": "Comutare fază"
+                }
             },
             "charger_gun_lock_status": {
-                "name": "Stare blocare conector"
+                "name": "Stare blocare conector",
+                "state": {
+                    "locked": "Blocat",
+                    "unlocked": "Deblocat"
+                }
             },
             "charger_gun_output_power": {
                 "name": "Putere de încărcare"
@@ -436,7 +466,17 @@
                 }
             },
             "charger_indicator_light_status": {
-                "name": "Stare indicator luminos"
+                "name": "Stare indicator luminos",
+                "state": {
+                    "standby": "În așteptare",
+                    "authentication_waiting": "Se așteaptă autentificarea",
+                    "scheduled_waiting": "Se așteaptă programarea",
+                    "charging": "Se încarcă",
+                    "charging_completed": "Încărcare finalizată",
+                    "green_power_charging": "Încărcare cu energie verde",
+                    "fault_alarm": "Alarmă de defecțiune",
+                    "upgrading": "Actualizare"
+                }
             },
             "charger_max_charging_power": {
                 "name": "Putere maximă de încărcare"
@@ -445,7 +485,11 @@
                 "name": "Putere minimă de încărcare"
             },
             "charger_output_relay_status": {
-                "name": "Stare releu de ieșire"
+                "name": "Stare releu de ieșire",
+                "state": {
+                    "disconnected": "Deconectat",
+                    "connected": "Conectat"
+                }
             },
             "charger_phase_a_voltage": {
                 "name": "Tensiune încărcător faza A"
@@ -463,7 +507,12 @@
                 "name": "Putere nominală încărcător"
             },
             "charger_reported_work_mode": {
-                "name": "Mod de lucru raportat"
+                "name": "Mod de lucru raportat",
+                "state": {
+                    "fast_charging": "Încărcare rapidă",
+                    "green_power": "Energie verde",
+                    "next_trip": "Următoarea călătorie"
+                }
             },
             "charger_target_charged_energy": {
                 "name": "Energie țintă de încărcat"
@@ -714,7 +763,13 @@
                 "name": "Număr de serie modul 1"
             },
             "pack_1_soh_calibration_status": {
-                "name": "Stare calibrare SOH modul 1"
+                "name": "Stare calibrare SOH modul 1",
+                "state": {
+                    "idle": "Inactiv",
+                    "required": "Necesar",
+                    "in_progress": "În curs",
+                    "completed": "Finalizat"
+                }
             },
             "pack_1_state_of_capacity": {
                 "name": "Stare capacitate modul 1"
@@ -750,7 +805,13 @@
                 "name": "Număr de serie modul 2"
             },
             "pack_2_soh_calibration_status": {
-                "name": "Stare calibrare SOH modul 2"
+                "name": "Stare calibrare SOH modul 2",
+                "state": {
+                    "idle": "Inactiv",
+                    "required": "Necesar",
+                    "in_progress": "În curs",
+                    "completed": "Finalizat"
+                }
             },
             "pack_2_state_of_capacity": {
                 "name": "Stare capacitate modul 2"
@@ -786,7 +847,13 @@
                 "name": "Număr de serie modul 3"
             },
             "pack_3_soh_calibration_status": {
-                "name": "Stare calibrare SOH modul 3"
+                "name": "Stare calibrare SOH modul 3",
+                "state": {
+                    "idle": "Inactiv",
+                    "required": "Necesar",
+                    "in_progress": "În curs",
+                    "completed": "Finalizat"
+                }
             },
             "pack_3_state_of_capacity": {
                 "name": "Stare capacitate modul 3"
@@ -1050,7 +1117,16 @@
                 "name": "Putere reactivă"
             },
             "running_status": {
-                "name": "Stare de funcționare"
+                "name": "Stare de funcționare",
+                "state": {
+                    "offline": "Offline",
+                    "standby": "În așteptare",
+                    "running": "În funcțiune",
+                    "fault": "Defecțiune",
+                    "sleep_mode": "Mod repaus",
+                    "faulty": "Defect",
+                    "power_off": "Oprit"
+                }
             },
             "sdongle_grid_power": {
                 "name": "Putere rețea"
@@ -1092,7 +1168,11 @@
                 "name": "Alarme"
             },
             "smartlogger_array_in_operation": {
-                "name": "Șir fotovoltaic în funcțiune"
+                "name": "Șir fotovoltaic în funcțiune",
+                "state": {
+                    "invalid": "Invalid",
+                    "in_operation": "În funcțiune"
+                }
             },
             "smartlogger_b_c_line_voltage_of_grid": {
                 "name": "Tensiune de linie a rețelei B-C"
@@ -1158,7 +1238,13 @@
                 "name": "Producție zilnică"
             },
             "soh_calibration_status": {
-                "name": "Stare calibrare SOH"
+                "name": "Stare calibrare SOH",
+                "state": {
+                    "idle": "Inactiv",
+                    "required": "Necesar",
+                    "in_progress": "În curs",
+                    "completed": "Finalizat"
+                }
             },
             "startup_time": {
                 "name": "Ora pornirii"

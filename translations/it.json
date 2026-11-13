@@ -374,7 +374,21 @@
                 "name": "Tempo di carica/scarica rimasto"
             },
             "battery_working_mode": {
-                "name": "Modo di funzionamento"
+                "name": "Modo di funzionamento",
+                "state": {
+                    "none": "Nessuno",
+                    "forcible_charge_discharge": "Carica/scarica forzata",
+                    "time_of_use_lg": "Fasce orarie (LG)",
+                    "fixed_charge_discharge": "Carica/scarica fissa",
+                    "maximise_self_consumption": "Massimizza autoconsumo",
+                    "fully_fed_to_grid": "Immissione totale in rete",
+                    "time_of_use_luna2000": "Fasce orarie (LUNA2000)",
+                    "remote_scheduling_maximum_self_use": "Programmazione remota (massimo autoconsumo)",
+                    "remote_scheduling_full_internet_access": "Programmazione remota (accesso internet completo)",
+                    "remote_scheduling_tou": "Programmazione remota (TOU)",
+                    "ai_energy_management_and_scheduling": "Gestione e programmazione energetica IA",
+                    "remote_scheduling_ai_control": "Programmazione remota (controllo IA)"
+                }
             },
             "bms_temperature": {
                 "name": "Temperatura BMS"
@@ -383,13 +397,29 @@
                 "name": "Corrente massima del cavo"
             },
             "charger_charging_method": {
-                "name": "Metodo di ricarica"
+                "name": "Metodo di ricarica",
+                "state": {
+                    "immediate_charging": "Ricarica immediata",
+                    "scheduled_charging": "Ricarica programmata",
+                    "next_trip_charging": "Ricarica per il prossimo viaggio"
+                }
             },
             "charger_charging_wait_reason": {
-                "name": "Motivo di attesa ricarica"
+                "name": "Motivo di attesa ricarica",
+                "state": {
+                    "unknown": "Sconosciuto",
+                    "waiting_for_ev": "In attesa del veicolo elettrico",
+                    "household_power_excessive": "Potenza domestica eccessiva",
+                    "insufficient_green_power": "Energia verde insufficiente",
+                    "phase_switching": "Cambio di fase"
+                }
             },
             "charger_gun_lock_status": {
-                "name": "Stato di blocco del connettore"
+                "name": "Stato di blocco del connettore",
+                "state": {
+                    "locked": "Bloccato",
+                    "unlocked": "Sbloccato"
+                }
             },
             "charger_gun_output_power": {
                 "name": "Potenza di ricarica"
@@ -436,7 +466,17 @@
                 }
             },
             "charger_indicator_light_status": {
-                "name": "Stato spia indicatrice"
+                "name": "Stato spia indicatrice",
+                "state": {
+                    "standby": "In attesa",
+                    "authentication_waiting": "In attesa di autenticazione",
+                    "scheduled_waiting": "In attesa di programmazione",
+                    "charging": "In carica",
+                    "charging_completed": "Carica completata",
+                    "green_power_charging": "Carica con energia verde",
+                    "fault_alarm": "Allarme guasto",
+                    "upgrading": "Aggiornamento"
+                }
             },
             "charger_max_charging_power": {
                 "name": "Massima potenza di carica"
@@ -445,7 +485,11 @@
                 "name": "Minima potenza di carica"
             },
             "charger_output_relay_status": {
-                "name": "Stato contattore di uscita"
+                "name": "Stato contattore di uscita",
+                "state": {
+                    "disconnected": "Disconnesso",
+                    "connected": "Connesso"
+                }
             },
             "charger_phase_a_voltage": {
                 "name": "Tensione caricatore fase A"
@@ -463,7 +507,12 @@
                 "name": "Potenza nominale caricatore"
             },
             "charger_reported_work_mode": {
-                "name": "Modalità di funzionamento segnalata"
+                "name": "Modalità di funzionamento segnalata",
+                "state": {
+                    "fast_charging": "Ricarica rapida",
+                    "green_power": "Energia verde",
+                    "next_trip": "Prossimo viaggio"
+                }
             },
             "charger_target_charged_energy": {
                 "name": "Energia di carica obiettivo"
@@ -714,7 +763,13 @@
                 "name": "Pacco 1 numero di serie"
             },
             "pack_1_soh_calibration_status": {
-                "name": "Pacco 1 stato calibrazione SOH"
+                "name": "Pacco 1 stato calibrazione SOH",
+                "state": {
+                    "idle": "Inattivo",
+                    "required": "Richiesto",
+                    "in_progress": "In corso",
+                    "completed": "Completato"
+                }
             },
             "pack_1_state_of_capacity": {
                 "name": "Pacco 1 stato capacità"
@@ -750,7 +805,13 @@
                 "name": "Numero di serie pacco 2"
             },
             "pack_2_soh_calibration_status": {
-                "name": "Stato calibrazione SOH pacco 2"
+                "name": "Stato calibrazione SOH pacco 2",
+                "state": {
+                    "idle": "Inattivo",
+                    "required": "Richiesto",
+                    "in_progress": "In corso",
+                    "completed": "Completato"
+                }
             },
             "pack_2_state_of_capacity": {
                 "name": "Stato di capacità pacco 2"
@@ -786,7 +847,13 @@
                 "name": "Numero di serie pacco 3"
             },
             "pack_3_soh_calibration_status": {
-                "name": "Stato calibrazione SOH pacco 3"
+                "name": "Stato calibrazione SOH pacco 3",
+                "state": {
+                    "idle": "Inattivo",
+                    "required": "Richiesto",
+                    "in_progress": "In corso",
+                    "completed": "Completato"
+                }
             },
             "pack_3_state_of_capacity": {
                 "name": "Pacco 3 SOC"
@@ -1050,7 +1117,16 @@
                 "name": "Potenza reattiva"
             },
             "running_status": {
-                "name": "Stato di funzionamento"
+                "name": "Stato di funzionamento",
+                "state": {
+                    "offline": "Offline",
+                    "standby": "In attesa",
+                    "running": "In funzione",
+                    "fault": "Guasto",
+                    "sleep_mode": "Modalità sospensione",
+                    "faulty": "Guasto",
+                    "power_off": "Spento"
+                }
             },
             "sdongle_grid_power": {
                 "name": "Potenza di rete"
@@ -1092,7 +1168,11 @@
                 "name": "Allarmi"
             },
             "smartlogger_array_in_operation": {
-                "name": "Stringa in funzione"
+                "name": "Stringa in funzione",
+                "state": {
+                    "invalid": "Non valido",
+                    "in_operation": "In funzione"
+                }
             },
             "smartlogger_b_c_line_voltage_of_grid": {
                 "name": "Tensione di rete concatenata B-C"
@@ -1158,7 +1238,13 @@
                 "name": "Rendimento giornaliero"
             },
             "soh_calibration_status": {
-                "name": "Stato calibrazione SOH"
+                "name": "Stato calibrazione SOH",
+                "state": {
+                    "idle": "Inattivo",
+                    "required": "Richiesto",
+                    "in_progress": "In corso",
+                    "completed": "Completato"
+                }
             },
             "startup_time": {
                 "name": "Orario di avvio"

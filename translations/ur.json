@@ -374,7 +374,21 @@
                 "name": "باقی چارج/ڈسچارج وقت"
             },
             "battery_working_mode": {
-                "name": "ورکنگ موڈ"
+                "name": "ورکنگ موڈ",
+                "state": {
+                    "none": "کوئی نہیں",
+                    "forcible_charge_discharge": "جبری چارج/ڈسچارج",
+                    "time_of_use_lg": "استعمال کا وقت (LG)",
+                    "fixed_charge_discharge": "مقررہ چارج/ڈسچارج",
+                    "maximise_self_consumption": "خود استعمال کو زیادہ سے زیادہ کریں",
+                    "fully_fed_to_grid": "گرڈ کو مکمل فراہمی",
+                    "time_of_use_luna2000": "استعمال کا وقت (LUNA2000)",
+                    "remote_scheduling_maximum_self_use": "ریموٹ شیڈولنگ (زیادہ سے زیادہ خود استعمال)",
+                    "remote_scheduling_full_internet_access": "ریموٹ شیڈولنگ (مکمل انٹرنیٹ رسائی)",
+                    "remote_scheduling_tou": "ریموٹ شیڈولنگ (TOU)",
+                    "ai_energy_management_and_scheduling": "AI توانائی کا انتظام اور شیڈولنگ",
+                    "remote_scheduling_ai_control": "ریموٹ شیڈولنگ (AI کنٹرول)"
+                }
             },
             "bms_temperature": {
                 "name": "BMS درجہ حرارت"
@@ -383,13 +397,29 @@
                 "name": "کیبل کا زیادہ سے زیادہ کرنٹ"
             },
             "charger_charging_method": {
-                "name": "چارجنگ کا طریقہ"
+                "name": "چارجنگ کا طریقہ",
+                "state": {
+                    "immediate_charging": "فوری چارجنگ",
+                    "scheduled_charging": "شیڈول شدہ چارجنگ",
+                    "next_trip_charging": "اگلے سفر کے لیے چارجنگ"
+                }
             },
             "charger_charging_wait_reason": {
-                "name": "چارجنگ انتظار کی وجہ"
+                "name": "چارجنگ انتظار کی وجہ",
+                "state": {
+                    "unknown": "نامعلوم",
+                    "waiting_for_ev": "ای وی کا انتظار",
+                    "household_power_excessive": "گھریلو بجلی زیادہ ہے",
+                    "insufficient_green_power": "ناکافی سبز توانائی",
+                    "phase_switching": "فیز سوئچنگ"
+                }
             },
             "charger_gun_lock_status": {
-                "name": "کنیکٹر لاک کی حالت"
+                "name": "کنیکٹر لاک کی حالت",
+                "state": {
+                    "locked": "لاک",
+                    "unlocked": "ان لاک"
+                }
             },
             "charger_gun_output_power": {
                 "name": "چارجنگ پاور"
@@ -436,7 +466,17 @@
                 }
             },
             "charger_indicator_light_status": {
-                "name": "اشارے والی روشنی کی حالت"
+                "name": "اشارے والی روشنی کی حالت",
+                "state": {
+                    "standby": "اسٹینڈ بائی",
+                    "authentication_waiting": "تصدیق کا انتظار",
+                    "scheduled_waiting": "شیڈول کا انتظار",
+                    "charging": "چارج ہو رہا ہے",
+                    "charging_completed": "چارجنگ مکمل",
+                    "green_power_charging": "سبز توانائی سے چارجنگ",
+                    "fault_alarm": "خرابی کا الارم",
+                    "upgrading": "اپ گریڈ ہو رہا ہے"
+                }
             },
             "charger_max_charging_power": {
                 "name": "زیادہ سے زیادہ چارجنگ پاور"
@@ -445,7 +485,11 @@
                 "name": "کم از کم چارجنگ پاور"
             },
             "charger_output_relay_status": {
-                "name": "آؤٹ پٹ ریلے کی حالت"
+                "name": "آؤٹ پٹ ریلے کی حالت",
+                "state": {
+                    "disconnected": "منقطع",
+                    "connected": "جڑا ہوا"
+                }
             },
             "charger_phase_a_voltage": {
                 "name": "چارجر فیز A وولٹیج"
@@ -463,7 +507,12 @@
                 "name": "چارجر کی ریٹیڈ پاور"
             },
             "charger_reported_work_mode": {
-                "name": "رپورٹ کردہ ورکنگ موڈ"
+                "name": "رپورٹ کردہ ورکنگ موڈ",
+                "state": {
+                    "fast_charging": "تیز چارجنگ",
+                    "green_power": "سبز توانائی",
+                    "next_trip": "اگلا سفر"
+                }
             },
             "charger_target_charged_energy": {
                 "name": "ہدف چارج شدہ توانائی"
@@ -714,7 +763,13 @@
                 "name": "پیک 1 سیریل نمبر"
             },
             "pack_1_soh_calibration_status": {
-                "name": "پیک 1 SOH انشانکن حالت"
+                "name": "پیک 1 SOH انشانکن حالت",
+                "state": {
+                    "idle": "بیکار",
+                    "required": "درکار",
+                    "in_progress": "جاری ہے",
+                    "completed": "مکمل"
+                }
             },
             "pack_1_state_of_capacity": {
                 "name": "پیک 1 صلاحیت کی حالت"
@@ -750,7 +805,13 @@
                 "name": "پیک 2 سیریل نمبر"
             },
             "pack_2_soh_calibration_status": {
-                "name": "پیک 2 SOH انشانکن حالت"
+                "name": "پیک 2 SOH انشانکن حالت",
+                "state": {
+                    "idle": "بیکار",
+                    "required": "درکار",
+                    "in_progress": "جاری ہے",
+                    "completed": "مکمل"
+                }
             },
             "pack_2_state_of_capacity": {
                 "name": "پیک 2 صلاحیت کی حالت"
@@ -786,7 +847,13 @@
                 "name": "پیک 3 سیریل نمبر"
             },
             "pack_3_soh_calibration_status": {
-                "name": "پیک 3 SOH انشانکن حالت"
+                "name": "پیک 3 SOH انشانکن حالت",
+                "state": {
+                    "idle": "بیکار",
+                    "required": "درکار",
+                    "in_progress": "جاری ہے",
+                    "completed": "مکمل"
+                }
             },
             "pack_3_state_of_capacity": {
                 "name": "پیک 3 صلاحیت کی حالت"
@@ -1050,7 +1117,16 @@
                 "name": "رد عمل کی طاقت"
             },
             "running_status": {
-                "name": "چلنے کی حیثیت"
+                "name": "چلنے کی حیثیت",
+                "state": {
+                    "offline": "آف لائن",
+                    "standby": "اسٹینڈ بائی",
+                    "running": "چل رہا ہے",
+                    "fault": "خرابی",
+                    "sleep_mode": "سلیپ موڈ",
+                    "faulty": "خراب",
+                    "power_off": "بند"
+                }
             },
             "sdongle_grid_power": {
                 "name": "گرڈ پاور"
@@ -1092,7 +1168,11 @@
                 "name": "الارم"
             },
             "smartlogger_array_in_operation": {
-                "name": "آپریشن میں اری"
+                "name": "آپریشن میں اری",
+                "state": {
+                    "invalid": "غلط",
+                    "in_operation": "زیر عمل"
+                }
             },
             "smartlogger_b_c_line_voltage_of_grid": {
                 "name": "گرڈ B-C لائن وولٹیج"
@@ -1158,7 +1238,13 @@
                 "name": "روزانہ کی پیداوار"
             },
             "soh_calibration_status": {
-                "name": "SOH انشانکن حالت"
+                "name": "SOH انشانکن حالت",
+                "state": {
+                    "idle": "بیکار",
+                    "required": "درکار",
+                    "in_progress": "جاری ہے",
+                    "completed": "مکمل"
+                }
             },
             "startup_time": {
                 "name": "آغاز کا وقت"

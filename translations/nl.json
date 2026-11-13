@@ -374,7 +374,21 @@
                 "name": "Resterende (ont)laadtijd"
             },
             "battery_working_mode": {
-                "name": "Werkmodus"
+                "name": "Werkmodus",
+                "state": {
+                    "none": "Geen",
+                    "forcible_charge_discharge": "Geforceerd laden/ontladen",
+                    "time_of_use_lg": "Gebruikstijd (LG)",
+                    "fixed_charge_discharge": "Vast laden/ontladen",
+                    "maximise_self_consumption": "Eigen verbruik maximaliseren",
+                    "fully_fed_to_grid": "Volledige teruglevering aan het net",
+                    "time_of_use_luna2000": "Gebruikstijd (LUNA2000)",
+                    "remote_scheduling_maximum_self_use": "Planning op afstand (maximaal eigen verbruik)",
+                    "remote_scheduling_full_internet_access": "Planning op afstand (volledige internettoegang)",
+                    "remote_scheduling_tou": "Planning op afstand (TOU)",
+                    "ai_energy_management_and_scheduling": "AI-energiebeheer en -planning",
+                    "remote_scheduling_ai_control": "Planning op afstand (AI-regeling)"
+                }
             },
             "bms_temperature": {
                 "name": "BMS-temperatuur"
@@ -383,13 +397,29 @@
                 "name": "Maximale kabelstroom"
             },
             "charger_charging_method": {
-                "name": "Laadmethode"
+                "name": "Laadmethode",
+                "state": {
+                    "immediate_charging": "Direct laden",
+                    "scheduled_charging": "Gepland laden",
+                    "next_trip_charging": "Laden voor volgende rit"
+                }
             },
             "charger_charging_wait_reason": {
-                "name": "Wachtreden laden"
+                "name": "Wachtreden laden",
+                "state": {
+                    "unknown": "Onbekend",
+                    "waiting_for_ev": "Wachten op voertuig",
+                    "household_power_excessive": "Huishoudelijk vermogen te hoog",
+                    "insufficient_green_power": "Onvoldoende groene stroom",
+                    "phase_switching": "Fasewisseling"
+                }
             },
             "charger_gun_lock_status": {
-                "name": "Vergrendelingsstatus connector"
+                "name": "Vergrendelingsstatus connector",
+                "state": {
+                    "locked": "Vergrendeld",
+                    "unlocked": "Ontgrendeld"
+                }
             },
             "charger_gun_output_power": {
                 "name": "Laadvermogen"
@@ -436,7 +466,17 @@
                 }
             },
             "charger_indicator_light_status": {
-                "name": "Status indicatielampje"
+                "name": "Status indicatielampje",
+                "state": {
+                    "standby": "Stand-by",
+                    "authentication_waiting": "Wachten op authenticatie",
+                    "scheduled_waiting": "Wachten op schema",
+                    "charging": "Laden",
+                    "charging_completed": "Laden voltooid",
+                    "green_power_charging": "Laden met groene stroom",
+                    "fault_alarm": "Storingsalarm",
+                    "upgrading": "Bijwerken"
+                }
             },
             "charger_max_charging_power": {
                 "name": "Maximaal laadvermogen"
@@ -445,7 +485,11 @@
                 "name": "Minimaal laadvermogen"
             },
             "charger_output_relay_status": {
-                "name": "Status uitgangsrelais"
+                "name": "Status uitgangsrelais",
+                "state": {
+                    "disconnected": "Losgekoppeld",
+                    "connected": "Verbonden"
+                }
             },
             "charger_phase_a_voltage": {
                 "name": "Lader fase A spanning"
@@ -463,7 +507,12 @@
                 "name": "Nominaal vermogen lader"
             },
             "charger_reported_work_mode": {
-                "name": "Gerapporteerde werkmodus"
+                "name": "Gerapporteerde werkmodus",
+                "state": {
+                    "fast_charging": "Snelladen",
+                    "green_power": "Groene stroom",
+                    "next_trip": "Volgende rit"
+                }
             },
             "charger_target_charged_energy": {
                 "name": "Doel geladen energie"
@@ -714,7 +763,13 @@
                 "name": "Pakket 1 serienummer"
             },
             "pack_1_soh_calibration_status": {
-                "name": "Pakket 1 SOH-kalibratiestatus"
+                "name": "Pakket 1 SOH-kalibratiestatus",
+                "state": {
+                    "idle": "Inactief",
+                    "required": "Vereist",
+                    "in_progress": "Bezig",
+                    "completed": "Voltooid"
+                }
             },
             "pack_1_state_of_capacity": {
                 "name": "Pakket 1 capaciteitsstatus"
@@ -750,7 +805,13 @@
                 "name": "Pakket 2 serienummer"
             },
             "pack_2_soh_calibration_status": {
-                "name": "Pakket 2 SOH-kalibratiestatus"
+                "name": "Pakket 2 SOH-kalibratiestatus",
+                "state": {
+                    "idle": "Inactief",
+                    "required": "Vereist",
+                    "in_progress": "Bezig",
+                    "completed": "Voltooid"
+                }
             },
             "pack_2_state_of_capacity": {
                 "name": "Pakket 2 capaciteitsstatus"
@@ -786,7 +847,13 @@
                 "name": "Pakket 3 serienummer"
             },
             "pack_3_soh_calibration_status": {
-                "name": "Pakket 3 SOH-kalibratiestatus"
+                "name": "Pakket 3 SOH-kalibratiestatus",
+                "state": {
+                    "idle": "Inactief",
+                    "required": "Vereist",
+                    "in_progress": "Bezig",
+                    "completed": "Voltooid"
+                }
             },
             "pack_3_state_of_capacity": {
                 "name": "Pakket 3 capaciteitsstatus"
@@ -1050,7 +1117,16 @@
                 "name": "Reactief vermogen"
             },
             "running_status": {
-                "name": "Operationele status"
+                "name": "Operationele status",
+                "state": {
+                    "offline": "Offline",
+                    "standby": "Stand-by",
+                    "running": "Actief",
+                    "fault": "Storing",
+                    "sleep_mode": "Slaapstand",
+                    "faulty": "Storing",
+                    "power_off": "Uitgeschakeld"
+                }
             },
             "sdongle_grid_power": {
                 "name": "Netvermogen"
@@ -1092,7 +1168,11 @@
                 "name": "Alarmen"
             },
             "smartlogger_array_in_operation": {
-                "name": "Zonnepaneelveld in werking"
+                "name": "Zonnepaneelveld in werking",
+                "state": {
+                    "invalid": "Ongeldig",
+                    "in_operation": "In bedrijf"
+                }
             },
             "smartlogger_b_c_line_voltage_of_grid": {
                 "name": "Net lijnspanning B-C"
@@ -1158,7 +1238,13 @@
                 "name": "Dagelijkse opbrengst"
             },
             "soh_calibration_status": {
-                "name": "SOH-kalibratiestatus"
+                "name": "SOH-kalibratiestatus",
+                "state": {
+                    "idle": "Inactief",
+                    "required": "Vereist",
+                    "in_progress": "Bezig",
+                    "completed": "Voltooid"
+                }
             },
             "startup_time": {
                 "name": "Opstarttijd"

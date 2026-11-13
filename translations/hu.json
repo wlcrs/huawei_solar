@@ -374,7 +374,21 @@
                 "name": "Fennmaradó töltési/kisütési idő"
             },
             "battery_working_mode": {
-                "name": "Működési mód"
+                "name": "Működési mód",
+                "state": {
+                    "none": "Nincs",
+                    "forcible_charge_discharge": "Kényszerített töltés/kisütés",
+                    "time_of_use_lg": "Használati idő (LG)",
+                    "fixed_charge_discharge": "Fix töltés/kisütés",
+                    "maximise_self_consumption": "Önfogyasztás maximalizálása",
+                    "fully_fed_to_grid": "Teljes hálózati betáplálás",
+                    "time_of_use_luna2000": "Használati idő (LUNA2000)",
+                    "remote_scheduling_maximum_self_use": "Távoli ütemezés (maximális önfogyasztás)",
+                    "remote_scheduling_full_internet_access": "Távoli ütemezés (teljes internet-hozzáférés)",
+                    "remote_scheduling_tou": "Távoli ütemezés (TOU)",
+                    "ai_energy_management_and_scheduling": "AI energiagazdálkodás és ütemezés",
+                    "remote_scheduling_ai_control": "Távoli ütemezés (AI vezérlés)"
+                }
             },
             "bms_temperature": {
                 "name": "BMS hőmérséklet"
@@ -383,13 +397,29 @@
                 "name": "Kábel maximális áramerőssége"
             },
             "charger_charging_method": {
-                "name": "Töltési módszer"
+                "name": "Töltési módszer",
+                "state": {
+                    "immediate_charging": "Azonnali töltés",
+                    "scheduled_charging": "Ütemezett töltés",
+                    "next_trip_charging": "Töltés a következő úthoz"
+                }
             },
             "charger_charging_wait_reason": {
-                "name": "Töltési várakozás oka"
+                "name": "Töltési várakozás oka",
+                "state": {
+                    "unknown": "Ismeretlen",
+                    "waiting_for_ev": "Várakozás az elektromos járműre",
+                    "household_power_excessive": "Túl nagy háztartási teljesítmény",
+                    "insufficient_green_power": "Elégtelen zöld energia",
+                    "phase_switching": "Fázisváltás"
+                }
             },
             "charger_gun_lock_status": {
-                "name": "Csatlakozó reteszelési állapota"
+                "name": "Csatlakozó reteszelési állapota",
+                "state": {
+                    "locked": "Zárva",
+                    "unlocked": "Nyitva"
+                }
             },
             "charger_gun_output_power": {
                 "name": "Töltési teljesítmény"
@@ -436,7 +466,17 @@
                 }
             },
             "charger_indicator_light_status": {
-                "name": "Visszajelző lámpa állapota"
+                "name": "Visszajelző lámpa állapota",
+                "state": {
+                    "standby": "Készenlét",
+                    "authentication_waiting": "Várakozás hitelesítésre",
+                    "scheduled_waiting": "Várakozás ütemezésre",
+                    "charging": "Töltés",
+                    "charging_completed": "Töltés befejezve",
+                    "green_power_charging": "Töltés zöld energiával",
+                    "fault_alarm": "Hiba riasztás",
+                    "upgrading": "Frissítés"
+                }
             },
             "charger_max_charging_power": {
                 "name": "Maximális töltési teljesítmény"
@@ -445,7 +485,11 @@
                 "name": "Minimális töltési teljesítmény"
             },
             "charger_output_relay_status": {
-                "name": "Kimeneti relé állapota"
+                "name": "Kimeneti relé állapota",
+                "state": {
+                    "disconnected": "Leválasztva",
+                    "connected": "Csatlakoztatva"
+                }
             },
             "charger_phase_a_voltage": {
                 "name": "Töltő A fázis feszültség"
@@ -463,7 +507,12 @@
                 "name": "Töltő névleges teljesítménye"
             },
             "charger_reported_work_mode": {
-                "name": "Jelentett működési mód"
+                "name": "Jelentett működési mód",
+                "state": {
+                    "fast_charging": "Gyorstöltés",
+                    "green_power": "Zöld energia",
+                    "next_trip": "Következő út"
+                }
             },
             "charger_target_charged_energy": {
                 "name": "Cél betöltendő energia"
@@ -714,7 +763,13 @@
                 "name": "1. modul sorozatszám"
             },
             "pack_1_soh_calibration_status": {
-                "name": "1. modul SOH kalibrálási állapot"
+                "name": "1. modul SOH kalibrálási állapot",
+                "state": {
+                    "idle": "Tétlen",
+                    "required": "Szükséges",
+                    "in_progress": "Folyamatban",
+                    "completed": "Befejezve"
+                }
             },
             "pack_1_state_of_capacity": {
                 "name": "1. modul kapacitás állapota"
@@ -750,7 +805,13 @@
                 "name": "2. modul sorozatszám"
             },
             "pack_2_soh_calibration_status": {
-                "name": "2. modul SOH kalibrálási állapot"
+                "name": "2. modul SOH kalibrálási állapot",
+                "state": {
+                    "idle": "Tétlen",
+                    "required": "Szükséges",
+                    "in_progress": "Folyamatban",
+                    "completed": "Befejezve"
+                }
             },
             "pack_2_state_of_capacity": {
                 "name": "2. modul kapacitás állapota"
@@ -786,7 +847,13 @@
                 "name": "3. modul sorozatszám"
             },
             "pack_3_soh_calibration_status": {
-                "name": "3. modul SOH kalibrálási állapot"
+                "name": "3. modul SOH kalibrálási állapot",
+                "state": {
+                    "idle": "Tétlen",
+                    "required": "Szükséges",
+                    "in_progress": "Folyamatban",
+                    "completed": "Befejezve"
+                }
             },
             "pack_3_state_of_capacity": {
                 "name": "3. modul kapacitás állapota"
@@ -1050,7 +1117,16 @@
                 "name": "Meddő teljesítmény"
             },
             "running_status": {
-                "name": "Működési állapot"
+                "name": "Működési állapot",
+                "state": {
+                    "offline": "Offline",
+                    "standby": "Készenlét",
+                    "running": "Működik",
+                    "fault": "Hiba",
+                    "sleep_mode": "Alvó mód",
+                    "faulty": "Hibás",
+                    "power_off": "Kikapcsolva"
+                }
             },
             "sdongle_grid_power": {
                 "name": "Hálózati teljesítmény"
@@ -1092,7 +1168,11 @@
                 "name": "Riasztások"
             },
             "smartlogger_array_in_operation": {
-                "name": "Működő napelemes mező"
+                "name": "Működő napelemes mező",
+                "state": {
+                    "invalid": "Érvénytelen",
+                    "in_operation": "Működésben"
+                }
             },
             "smartlogger_b_c_line_voltage_of_grid": {
                 "name": "Hálózat B-C vonali feszültsége"
@@ -1158,7 +1238,13 @@
                 "name": "Napi hozam"
             },
             "soh_calibration_status": {
-                "name": "SOH kalibrálási állapot"
+                "name": "SOH kalibrálási állapot",
+                "state": {
+                    "idle": "Tétlen",
+                    "required": "Szükséges",
+                    "in_progress": "Folyamatban",
+                    "completed": "Befejezve"
+                }
             },
             "startup_time": {
                 "name": "Indítási idő"

@@ -374,7 +374,21 @@
                 "name": "Tiempo restante de carga/descarga"
             },
             "battery_working_mode": {
-                "name": "Modo de funcionamiento"
+                "name": "Modo de funcionamiento",
+                "state": {
+                    "none": "Ninguno",
+                    "forcible_charge_discharge": "Carga/descarga forzada",
+                    "time_of_use_lg": "Horario de uso (LG)",
+                    "fixed_charge_discharge": "Carga/descarga fija",
+                    "maximise_self_consumption": "Maximizar el autoconsumo",
+                    "fully_fed_to_grid": "Inyección total a la red",
+                    "time_of_use_luna2000": "Horario de uso (LUNA2000)",
+                    "remote_scheduling_maximum_self_use": "Programación remota (máximo autoconsumo)",
+                    "remote_scheduling_full_internet_access": "Programación remota (acceso completo a internet)",
+                    "remote_scheduling_tou": "Programación remota (TOU)",
+                    "ai_energy_management_and_scheduling": "Gestión y programación energética con IA",
+                    "remote_scheduling_ai_control": "Programación remota (control con IA)"
+                }
             },
             "bms_temperature": {
                 "name": "Temperatura de BMS"
@@ -383,13 +397,29 @@
                 "name": "Corriente máxima del cable"
             },
             "charger_charging_method": {
-                "name": "Método de carga"
+                "name": "Método de carga",
+                "state": {
+                    "immediate_charging": "Carga inmediata",
+                    "scheduled_charging": "Carga programada",
+                    "next_trip_charging": "Carga para el próximo viaje"
+                }
             },
             "charger_charging_wait_reason": {
-                "name": "Motivo de espera de carga"
+                "name": "Motivo de espera de carga",
+                "state": {
+                    "unknown": "Desconocido",
+                    "waiting_for_ev": "Esperando al vehículo eléctrico",
+                    "household_power_excessive": "Potencia doméstica excesiva",
+                    "insufficient_green_power": "Energía verde insuficiente",
+                    "phase_switching": "Cambio de fase"
+                }
             },
             "charger_gun_lock_status": {
-                "name": "Estado de bloqueo del conector"
+                "name": "Estado de bloqueo del conector",
+                "state": {
+                    "locked": "Bloqueado",
+                    "unlocked": "Desbloqueado"
+                }
             },
             "charger_gun_output_power": {
                 "name": "Potencia de carga"
@@ -436,7 +466,17 @@
                 }
             },
             "charger_indicator_light_status": {
-                "name": "Estado de la luz indicadora"
+                "name": "Estado de la luz indicadora",
+                "state": {
+                    "standby": "En espera",
+                    "authentication_waiting": "Esperando autenticación",
+                    "scheduled_waiting": "Esperando programación",
+                    "charging": "Cargando",
+                    "charging_completed": "Carga completada",
+                    "green_power_charging": "Carga con energía verde",
+                    "fault_alarm": "Alarma de fallo",
+                    "upgrading": "Actualizando"
+                }
             },
             "charger_max_charging_power": {
                 "name": "Potencia máxima de carga"
@@ -445,7 +485,11 @@
                 "name": "Potencia mínima de carga"
             },
             "charger_output_relay_status": {
-                "name": "Estado del contactor de salida"
+                "name": "Estado del contactor de salida",
+                "state": {
+                    "disconnected": "Desconectado",
+                    "connected": "Conectado"
+                }
             },
             "charger_phase_a_voltage": {
                 "name": "Tensión fase A del cargador"
@@ -463,7 +507,12 @@
                 "name": "Potencia nominal del cargador"
             },
             "charger_reported_work_mode": {
-                "name": "Modo de funcionamiento notificado"
+                "name": "Modo de funcionamiento notificado",
+                "state": {
+                    "fast_charging": "Carga rápida",
+                    "green_power": "Energía verde",
+                    "next_trip": "Próximo viaje"
+                }
             },
             "charger_target_charged_energy": {
                 "name": "Energía de carga objetivo"
@@ -714,7 +763,13 @@
                 "name": "Número de serie del módulo 1"
             },
             "pack_1_soh_calibration_status": {
-                "name": "Estado de calibración de SOH del módulo 1"
+                "name": "Estado de calibración de SOH del módulo 1",
+                "state": {
+                    "idle": "Inactivo",
+                    "required": "Requerido",
+                    "in_progress": "En curso",
+                    "completed": "Completado"
+                }
             },
             "pack_1_state_of_capacity": {
                 "name": "Estado de capacidad del módulo 1"
@@ -750,7 +805,13 @@
                 "name": "Número de serie del módulo 2"
             },
             "pack_2_soh_calibration_status": {
-                "name": "Estado de calibración de SOH del módulo 2"
+                "name": "Estado de calibración de SOH del módulo 2",
+                "state": {
+                    "idle": "Inactivo",
+                    "required": "Requerido",
+                    "in_progress": "En curso",
+                    "completed": "Completado"
+                }
             },
             "pack_2_state_of_capacity": {
                 "name": "Estado de capacidad del módulo 2"
@@ -786,7 +847,13 @@
                 "name": "Número de serie del módulo 3"
             },
             "pack_3_soh_calibration_status": {
-                "name": "Estado de calibración de SOH del módulo 3"
+                "name": "Estado de calibración de SOH del módulo 3",
+                "state": {
+                    "idle": "Inactivo",
+                    "required": "Requerido",
+                    "in_progress": "En curso",
+                    "completed": "Completado"
+                }
             },
             "pack_3_state_of_capacity": {
                 "name": "Estado de capacidad del módulo 3"
@@ -1050,7 +1117,16 @@
                 "name": "Potencia reactiva"
             },
             "running_status": {
-                "name": "Estado de funcionamiento"
+                "name": "Estado de funcionamiento",
+                "state": {
+                    "offline": "Desconectado",
+                    "standby": "En espera",
+                    "running": "En funcionamiento",
+                    "fault": "Fallo",
+                    "sleep_mode": "Modo de reposo",
+                    "faulty": "Con fallo",
+                    "power_off": "Apagado"
+                }
             },
             "sdongle_grid_power": {
                 "name": "Potencia de red"
@@ -1092,7 +1168,11 @@
                 "name": "Alarmas"
             },
             "smartlogger_array_in_operation": {
-                "name": "Generador FV en funcionamiento"
+                "name": "Generador FV en funcionamiento",
+                "state": {
+                    "invalid": "No válido",
+                    "in_operation": "En funcionamiento"
+                }
             },
             "smartlogger_b_c_line_voltage_of_grid": {
                 "name": "Tensión de red de línea B-C"
@@ -1158,7 +1238,13 @@
                 "name": "Rendimiento diario"
             },
             "soh_calibration_status": {
-                "name": "Estado de calibración de SOH"
+                "name": "Estado de calibración de SOH",
+                "state": {
+                    "idle": "Inactivo",
+                    "required": "Requerido",
+                    "in_progress": "En curso",
+                    "completed": "Completado"
+                }
             },
             "startup_time": {
                 "name": "Hora de arranque"

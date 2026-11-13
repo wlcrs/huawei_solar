@@ -374,7 +374,21 @@
                 "name": "Temps restant de càrrega/descàrrega"
             },
             "battery_working_mode": {
-                "name": "Mode de funcionament"
+                "name": "Mode de funcionament",
+                "state": {
+                    "none": "Cap",
+                    "forcible_charge_discharge": "Càrrega/descàrrega forçada",
+                    "time_of_use_lg": "Franges horàries (LG)",
+                    "fixed_charge_discharge": "Càrrega/descàrrega fixa",
+                    "maximise_self_consumption": "Maximitzar l'autoconsum",
+                    "fully_fed_to_grid": "Injecció total a la xarxa",
+                    "time_of_use_luna2000": "Franges horàries (LUNA2000)",
+                    "remote_scheduling_maximum_self_use": "Programació remota (autoconsum màxim)",
+                    "remote_scheduling_full_internet_access": "Programació remota (accés complet a internet)",
+                    "remote_scheduling_tou": "Programació remota (TOU)",
+                    "ai_energy_management_and_scheduling": "Gestió i programació energètica amb IA",
+                    "remote_scheduling_ai_control": "Programació remota (control amb IA)"
+                }
             },
             "bms_temperature": {
                 "name": "Temperatura del BMS"
@@ -383,13 +397,29 @@
                 "name": "Corrent màxim del cable"
             },
             "charger_charging_method": {
-                "name": "Mètode de càrrega"
+                "name": "Mètode de càrrega",
+                "state": {
+                    "immediate_charging": "Càrrega immediata",
+                    "scheduled_charging": "Càrrega programada",
+                    "next_trip_charging": "Càrrega per al pròxim viatge"
+                }
             },
             "charger_charging_wait_reason": {
-                "name": "Motiu d'espera de càrrega"
+                "name": "Motiu d'espera de càrrega",
+                "state": {
+                    "unknown": "Desconegut",
+                    "waiting_for_ev": "Esperant el vehicle elèctric",
+                    "household_power_excessive": "Potència domèstica excessiva",
+                    "insufficient_green_power": "Energia verda insuficient",
+                    "phase_switching": "Canvi de fase"
+                }
             },
             "charger_gun_lock_status": {
-                "name": "Estat de bloqueig del connector"
+                "name": "Estat de bloqueig del connector",
+                "state": {
+                    "locked": "Bloquejat",
+                    "unlocked": "Desbloquejat"
+                }
             },
             "charger_gun_output_power": {
                 "name": "Potència de càrrega"
@@ -436,7 +466,17 @@
                 }
             },
             "charger_indicator_light_status": {
-                "name": "Estat del llum indicador"
+                "name": "Estat del llum indicador",
+                "state": {
+                    "standby": "En espera",
+                    "authentication_waiting": "Esperant autenticació",
+                    "scheduled_waiting": "Esperant programació",
+                    "charging": "Carregant",
+                    "charging_completed": "Càrrega completada",
+                    "green_power_charging": "Càrrega amb energia verda",
+                    "fault_alarm": "Alarma d'avaria",
+                    "upgrading": "Actualitzant"
+                }
             },
             "charger_max_charging_power": {
                 "name": "Potència de càrrega màxima"
@@ -445,7 +485,11 @@
                 "name": "Potència de càrrega mínima"
             },
             "charger_output_relay_status": {
-                "name": "Estat del contactor de sortida"
+                "name": "Estat del contactor de sortida",
+                "state": {
+                    "disconnected": "Desconnectat",
+                    "connected": "Connectat"
+                }
             },
             "charger_phase_a_voltage": {
                 "name": "Tensió fase A del carregador"
@@ -463,7 +507,12 @@
                 "name": "Potència nominal del carregador"
             },
             "charger_reported_work_mode": {
-                "name": "Mode de funcionament notificat"
+                "name": "Mode de funcionament notificat",
+                "state": {
+                    "fast_charging": "Càrrega ràpida",
+                    "green_power": "Energia verda",
+                    "next_trip": "Pròxim viatge"
+                }
             },
             "charger_target_charged_energy": {
                 "name": "Energia carregada objectiu"
@@ -714,7 +763,13 @@
                 "name": "Número de sèrie del paquet 1"
             },
             "pack_1_soh_calibration_status": {
-                "name": "Estat de calibratge de SOH del paquet 1"
+                "name": "Estat de calibratge de SOH del paquet 1",
+                "state": {
+                    "idle": "Inactiu",
+                    "required": "Requerit",
+                    "in_progress": "En curs",
+                    "completed": "Completat"
+                }
             },
             "pack_1_state_of_capacity": {
                 "name": "Estat de capacitat del paquet 1"
@@ -750,7 +805,13 @@
                 "name": "Número de sèrie del paquet 2"
             },
             "pack_2_soh_calibration_status": {
-                "name": "Estat de calibratge de SOH del paquet 2"
+                "name": "Estat de calibratge de SOH del paquet 2",
+                "state": {
+                    "idle": "Inactiu",
+                    "required": "Requerit",
+                    "in_progress": "En curs",
+                    "completed": "Completat"
+                }
             },
             "pack_2_state_of_capacity": {
                 "name": "Estat de capacitat del paquet 2"
@@ -786,7 +847,13 @@
                 "name": "Número de sèrie del paquet 3"
             },
             "pack_3_soh_calibration_status": {
-                "name": "Estat de calibratge de SOH del paquet 3"
+                "name": "Estat de calibratge de SOH del paquet 3",
+                "state": {
+                    "idle": "Inactiu",
+                    "required": "Requerit",
+                    "in_progress": "En curs",
+                    "completed": "Completat"
+                }
             },
             "pack_3_state_of_capacity": {
                 "name": "Estat de capacitat del paquet 3"
@@ -1050,7 +1117,16 @@
                 "name": "Potència reactiva"
             },
             "running_status": {
-                "name": "Estat de funcionament"
+                "name": "Estat de funcionament",
+                "state": {
+                    "offline": "Fora de línia",
+                    "standby": "En espera",
+                    "running": "En funcionament",
+                    "fault": "Avaria",
+                    "sleep_mode": "Mode de repòs",
+                    "faulty": "Avariat",
+                    "power_off": "Apagat"
+                }
             },
             "sdongle_grid_power": {
                 "name": "Potència de xarxa"
@@ -1092,7 +1168,11 @@
                 "name": "Alarmes"
             },
             "smartlogger_array_in_operation": {
-                "name": "Camp FV en funcionament"
+                "name": "Camp FV en funcionament",
+                "state": {
+                    "invalid": "No vàlid",
+                    "in_operation": "En funcionament"
+                }
             },
             "smartlogger_b_c_line_voltage_of_grid": {
                 "name": "Tensió de xarxa de línia B-C"
@@ -1158,7 +1238,13 @@
                 "name": "Rendiment diari"
             },
             "soh_calibration_status": {
-                "name": "Estat de calibratge de SOH"
+                "name": "Estat de calibratge de SOH",
+                "state": {
+                    "idle": "Inactiu",
+                    "required": "Requerit",
+                    "in_progress": "En curs",
+                    "completed": "Completat"
+                }
             },
             "startup_time": {
                 "name": "Hora d'inici"

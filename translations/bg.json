@@ -374,7 +374,21 @@
                 "name": "Оставащо време за зареждане/разреждане"
             },
             "battery_working_mode": {
-                "name": "Работен режим на батерията"
+                "name": "Работен режим на батерията",
+                "state": {
+                    "none": "Няма",
+                    "forcible_charge_discharge": "Принудително зареждане/разреждане",
+                    "time_of_use_lg": "Време на използване (LG)",
+                    "fixed_charge_discharge": "Фиксирано зареждане/разреждане",
+                    "maximise_self_consumption": "Максимизиране на собственото потребление",
+                    "fully_fed_to_grid": "Пълно отдаване към мрежата",
+                    "time_of_use_luna2000": "Време на използване (LUNA2000)",
+                    "remote_scheduling_maximum_self_use": "Дистанционно планиране (максимално собствено потребление)",
+                    "remote_scheduling_full_internet_access": "Дистанционно планиране (пълен достъп до интернет)",
+                    "remote_scheduling_tou": "Дистанционно планиране (TOU)",
+                    "ai_energy_management_and_scheduling": "AI управление и планиране на енергията",
+                    "remote_scheduling_ai_control": "Дистанционно планиране (AI управление)"
+                }
             },
             "bms_temperature": {
                 "name": "Температура на BMS"
@@ -383,13 +397,29 @@
                 "name": "Максимален ток на кабела"
             },
             "charger_charging_method": {
-                "name": "Метод на зареждане"
+                "name": "Метод на зареждане",
+                "state": {
+                    "immediate_charging": "Незабавно зареждане",
+                    "scheduled_charging": "Планирано зареждане",
+                    "next_trip_charging": "Зареждане за следващо пътуване"
+                }
             },
             "charger_charging_wait_reason": {
-                "name": "Причина за изчакване на зареждането"
+                "name": "Причина за изчакване на зареждането",
+                "state": {
+                    "unknown": "Неизвестно",
+                    "waiting_for_ev": "Изчакване на ЕМ",
+                    "household_power_excessive": "Прекомерна битова мощност",
+                    "insufficient_green_power": "Недостатъчна зелена енергия",
+                    "phase_switching": "Превключване на фаза"
+                }
             },
             "charger_gun_lock_status": {
-                "name": "Състояние на заключване на конектора"
+                "name": "Състояние на заключване на конектора",
+                "state": {
+                    "locked": "Заключен",
+                    "unlocked": "Отключен"
+                }
             },
             "charger_gun_output_power": {
                 "name": "Мощност на зареждане"
@@ -436,7 +466,17 @@
                 }
             },
             "charger_indicator_light_status": {
-                "name": "Състояние на светлинния индикатор"
+                "name": "Състояние на светлинния индикатор",
+                "state": {
+                    "standby": "В готовност",
+                    "authentication_waiting": "Изчакване на удостоверяване",
+                    "scheduled_waiting": "Изчакване на график",
+                    "charging": "Зареждане",
+                    "charging_completed": "Зареждането завърши",
+                    "green_power_charging": "Зареждане със зелена енергия",
+                    "fault_alarm": "Аларма за неизправност",
+                    "upgrading": "Актуализиране"
+                }
             },
             "charger_max_charging_power": {
                 "name": "Максимална мощност на зареждане"
@@ -445,7 +485,11 @@
                 "name": "Минимална мощност на зареждане"
             },
             "charger_output_relay_status": {
-                "name": "Състояние на изходното реле"
+                "name": "Състояние на изходното реле",
+                "state": {
+                    "disconnected": "Изключен",
+                    "connected": "Свързан"
+                }
             },
             "charger_phase_a_voltage": {
                 "name": "Напрежение на зарядното фаза A"
@@ -463,7 +507,12 @@
                 "name": "Номинална мощност на зарядното"
             },
             "charger_reported_work_mode": {
-                "name": "Отчетен работен режим"
+                "name": "Отчетен работен режим",
+                "state": {
+                    "fast_charging": "Бързо зареждане",
+                    "green_power": "Зелена енергия",
+                    "next_trip": "Следващо пътуване"
+                }
             },
             "charger_target_charged_energy": {
                 "name": "Целева заредена енергия"
@@ -714,7 +763,13 @@
                 "name": "Сериен номер на модул 1"
             },
             "pack_1_soh_calibration_status": {
-                "name": "Статус на калибриране на SOH на модул 1"
+                "name": "Статус на калибриране на SOH на модул 1",
+                "state": {
+                    "idle": "В покой",
+                    "required": "Изисква се",
+                    "in_progress": "В процес",
+                    "completed": "Завършено"
+                }
             },
             "pack_1_state_of_capacity": {
                 "name": "Капацитивно състояние на модул 1"
@@ -750,7 +805,13 @@
                 "name": "Сериен номер на модул 2"
             },
             "pack_2_soh_calibration_status": {
-                "name": "Статус на калибриране на SOH на модул 2"
+                "name": "Статус на калибриране на SOH на модул 2",
+                "state": {
+                    "idle": "В покой",
+                    "required": "Изисква се",
+                    "in_progress": "В процес",
+                    "completed": "Завършено"
+                }
             },
             "pack_2_state_of_capacity": {
                 "name": "Капацитивно състояние на модул 2"
@@ -786,7 +847,13 @@
                 "name": "Сериен номер на модул 3"
             },
             "pack_3_soh_calibration_status": {
-                "name": "Статус на калибриране на SOH на модул 3"
+                "name": "Статус на калибриране на SOH на модул 3",
+                "state": {
+                    "idle": "В покой",
+                    "required": "Изисква се",
+                    "in_progress": "В процес",
+                    "completed": "Завършено"
+                }
             },
             "pack_3_state_of_capacity": {
                 "name": "Капацитивно състояние на модул 3"
@@ -1050,7 +1117,16 @@
                 "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
             },
             "running_status": {
-                "name": "Статус на работа"
+                "name": "Статус на работа",
+                "state": {
+                    "offline": "Офлайн",
+                    "standby": "В готовност",
+                    "running": "Работи",
+                    "fault": "Неизправност",
+                    "sleep_mode": "Режим на заспиване",
+                    "faulty": "Неизправен",
+                    "power_off": "Изключен"
+                }
             },
             "sdongle_grid_power": {
                 "name": "Мрежова мощност"
@@ -1092,7 +1168,11 @@
                 "name": "Аларми"
             },
             "smartlogger_array_in_operation": {
-                "name": "ФВ масив в експлоатация"
+                "name": "ФВ масив в експлоатация",
+                "state": {
+                    "invalid": "Невалидно",
+                    "in_operation": "В експлоатация"
+                }
             },
             "smartlogger_b_c_line_voltage_of_grid": {
                 "name": "Линейно напрежение на мрежата B-C"
@@ -1158,7 +1238,13 @@
                 "name": "Дневно производство"
             },
             "soh_calibration_status": {
-                "name": "Статус на калибриране на SOH"
+                "name": "Статус на калибриране на SOH",
+                "state": {
+                    "idle": "В покой",
+                    "required": "Изисква се",
+                    "in_progress": "В процес",
+                    "completed": "Завършено"
+                }
             },
             "startup_time": {
                 "name": "Време на включване"

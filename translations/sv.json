@@ -374,7 +374,21 @@
                 "name": "Återstående laddnings-/urladdningstid"
             },
             "battery_working_mode": {
-                "name": "Driftläge"
+                "name": "Driftläge",
+                "state": {
+                    "none": "Ingen",
+                    "forcible_charge_discharge": "Tvingad laddning/urladdning",
+                    "time_of_use_lg": "Användningstid (LG)",
+                    "fixed_charge_discharge": "Fast laddning/urladdning",
+                    "maximise_self_consumption": "Maximera egenförbrukning",
+                    "fully_fed_to_grid": "Full inmatning till nätet",
+                    "time_of_use_luna2000": "Användningstid (LUNA2000)",
+                    "remote_scheduling_maximum_self_use": "Fjärrschemaläggning (maximal egenförbrukning)",
+                    "remote_scheduling_full_internet_access": "Fjärrschemaläggning (full internetåtkomst)",
+                    "remote_scheduling_tou": "Fjärrschemaläggning (TOU)",
+                    "ai_energy_management_and_scheduling": "AI-energihantering och schemaläggning",
+                    "remote_scheduling_ai_control": "Fjärrschemaläggning (AI-styrning)"
+                }
             },
             "bms_temperature": {
                 "name": "BMS-temperatur"
@@ -383,13 +397,29 @@
                 "name": "Maximal kabelström"
             },
             "charger_charging_method": {
-                "name": "Laddningsmetod"
+                "name": "Laddningsmetod",
+                "state": {
+                    "immediate_charging": "Omedelbar laddning",
+                    "scheduled_charging": "Schemalagd laddning",
+                    "next_trip_charging": "Laddning inför nästa resa"
+                }
             },
             "charger_charging_wait_reason": {
-                "name": "Väntorsak för laddning"
+                "name": "Väntorsak för laddning",
+                "state": {
+                    "unknown": "Okänd",
+                    "waiting_for_ev": "Väntar på elfordon",
+                    "household_power_excessive": "För hög hushållseffekt",
+                    "insufficient_green_power": "Otillräcklig grön energi",
+                    "phase_switching": "Fasväxling"
+                }
             },
             "charger_gun_lock_status": {
-                "name": "Kontaktens låsstatus"
+                "name": "Kontaktens låsstatus",
+                "state": {
+                    "locked": "Låst",
+                    "unlocked": "Upplåst"
+                }
             },
             "charger_gun_output_power": {
                 "name": "Laddeffekt"
@@ -436,7 +466,17 @@
                 }
             },
             "charger_indicator_light_status": {
-                "name": "Indikatorlampans status"
+                "name": "Indikatorlampans status",
+                "state": {
+                    "standby": "Standby",
+                    "authentication_waiting": "Väntar på autentisering",
+                    "scheduled_waiting": "Väntar på schema",
+                    "charging": "Laddar",
+                    "charging_completed": "Laddning slutförd",
+                    "green_power_charging": "Laddar med grön energi",
+                    "fault_alarm": "Fellarm",
+                    "upgrading": "Uppdaterar"
+                }
             },
             "charger_max_charging_power": {
                 "name": "Maximal laddeffekt"
@@ -445,7 +485,11 @@
                 "name": "Minimal laddeffekt"
             },
             "charger_output_relay_status": {
-                "name": "Utgångsreläets status"
+                "name": "Utgångsreläets status",
+                "state": {
+                    "disconnected": "Frånkopplad",
+                    "connected": "Ansluten"
+                }
             },
             "charger_phase_a_voltage": {
                 "name": "Laddare fas A spänning"
@@ -463,7 +507,12 @@
                 "name": "Märkeffekt laddare"
             },
             "charger_reported_work_mode": {
-                "name": "Rapporterat driftläge"
+                "name": "Rapporterat driftläge",
+                "state": {
+                    "fast_charging": "Snabbladdning",
+                    "green_power": "Grön energi",
+                    "next_trip": "Nästa resa"
+                }
             },
             "charger_target_charged_energy": {
                 "name": "Målladdad energi"
@@ -714,7 +763,13 @@
                 "name": "Modul 1 serienummer"
             },
             "pack_1_soh_calibration_status": {
-                "name": "Modul 1 SOH-kalibreringsstatus"
+                "name": "Modul 1 SOH-kalibreringsstatus",
+                "state": {
+                    "idle": "Inaktiv",
+                    "required": "Krävs",
+                    "in_progress": "Pågår",
+                    "completed": "Slutförd"
+                }
             },
             "pack_1_state_of_capacity": {
                 "name": "Modul 1 kapacitetsstatus"
@@ -750,7 +805,13 @@
                 "name": "Modul 2 serienummer"
             },
             "pack_2_soh_calibration_status": {
-                "name": "Modul 2 SOH-kalibreringsstatus"
+                "name": "Modul 2 SOH-kalibreringsstatus",
+                "state": {
+                    "idle": "Inaktiv",
+                    "required": "Krävs",
+                    "in_progress": "Pågår",
+                    "completed": "Slutförd"
+                }
             },
             "pack_2_state_of_capacity": {
                 "name": "Modul 2 kapacitetsstatus"
@@ -786,7 +847,13 @@
                 "name": "Modul 3 serienummer"
             },
             "pack_3_soh_calibration_status": {
-                "name": "Modul 3 SOH-kalibreringsstatus"
+                "name": "Modul 3 SOH-kalibreringsstatus",
+                "state": {
+                    "idle": "Inaktiv",
+                    "required": "Krävs",
+                    "in_progress": "Pågår",
+                    "completed": "Slutförd"
+                }
             },
             "pack_3_state_of_capacity": {
                 "name": "Modul 3 kapacitetsstatus"
@@ -1050,7 +1117,16 @@
                 "name": "Reaktiv effekt"
             },
             "running_status": {
-                "name": "Driftstatus"
+                "name": "Driftstatus",
+                "state": {
+                    "offline": "Offline",
+                    "standby": "Standby",
+                    "running": "I drift",
+                    "fault": "Fel",
+                    "sleep_mode": "Viloläge",
+                    "faulty": "Felaktig",
+                    "power_off": "Avstängd"
+                }
             },
             "sdongle_grid_power": {
                 "name": "Näteffekt"
@@ -1092,7 +1168,11 @@
                 "name": "Larm"
             },
             "smartlogger_array_in_operation": {
-                "name": "Solcellssträngar i drift"
+                "name": "Solcellssträngar i drift",
+                "state": {
+                    "invalid": "Ogiltig",
+                    "in_operation": "I drift"
+                }
             },
             "smartlogger_b_c_line_voltage_of_grid": {
                 "name": "Nätets huvudspänning B-C"
@@ -1158,7 +1238,13 @@
                 "name": "Daglig avkastning"
             },
             "soh_calibration_status": {
-                "name": "SOH-kalibreringsstatus"
+                "name": "SOH-kalibreringsstatus",
+                "state": {
+                    "idle": "Inaktiv",
+                    "required": "Krävs",
+                    "in_progress": "Pågår",
+                    "completed": "Slutförd"
+                }
             },
             "startup_time": {
                 "name": "Starttid"

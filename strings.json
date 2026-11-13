@@ -135,7 +135,7 @@
             "name": "Power meter"
         },
         "sdongle": {
-            "name": "SmartDongle"
+            "name": "SDongle"
         },
         "smartguard": {
             "name": "SmartGuard"
@@ -377,7 +377,21 @@
                 "name": "Remaining charge/discharge time"
             },
             "battery_working_mode": {
-                "name": "Working mode"
+                "name": "Working mode",
+                "state": {
+                    "none": "None",
+                    "forcible_charge_discharge": "Forcible charge/discharge",
+                    "time_of_use_lg": "Time of use (LG)",
+                    "fixed_charge_discharge": "Fixed charge/discharge",
+                    "maximise_self_consumption": "Maximise self-consumption",
+                    "fully_fed_to_grid": "Fully fed to grid",
+                    "time_of_use_luna2000": "Time of use (LUNA2000)",
+                    "remote_scheduling_maximum_self_use": "Remote scheduling (maximum self-use)",
+                    "remote_scheduling_full_internet_access": "Remote scheduling (full internet access)",
+                    "remote_scheduling_tou": "Remote scheduling (TOU)",
+                    "ai_energy_management_and_scheduling": "AI energy management and scheduling",
+                    "remote_scheduling_ai_control": "Remote scheduling (AI control)"
+                }
             },
             "bms_temperature": {
                 "name": "BMS temperature"
@@ -386,13 +400,29 @@
                 "name": "Cable maximum current"
             },
             "charger_charging_method": {
-                "name": "Charging method"
+                "name": "Charging method",
+                "state": {
+                    "immediate_charging": "Immediate charging",
+                    "scheduled_charging": "Scheduled charging",
+                    "next_trip_charging": "Next trip charging"
+                }
             },
             "charger_charging_wait_reason": {
-                "name": "Charging wait reason"
+                "name": "Charging wait reason",
+                "state": {
+                    "unknown": "Unknown",
+                    "waiting_for_ev": "Waiting for EV",
+                    "household_power_excessive": "Household power excessive",
+                    "insufficient_green_power": "Insufficient green power",
+                    "phase_switching": "Phase switching"
+                }
             },
             "charger_gun_lock_status": {
-                "name": "Connector lock status"
+                "name": "Connector lock status",
+                "state": {
+                    "locked": "Locked",
+                    "unlocked": "Unlocked"
+                }
             },
             "charger_gun_output_power": {
                 "name": "Charging power"
@@ -439,7 +469,17 @@
                 }
             },
             "charger_indicator_light_status": {
-                "name": "Indicator light status"
+                "name": "Indicator light status",
+                "state": {
+                    "standby": "Standby",
+                    "authentication_waiting": "Waiting for authentication",
+                    "scheduled_waiting": "Waiting for schedule",
+                    "charging": "Charging",
+                    "charging_completed": "Charging completed",
+                    "green_power_charging": "Green power charging",
+                    "fault_alarm": "Fault alarm",
+                    "upgrading": "Upgrading"
+                }
             },
             "charger_max_charging_power": {
                 "name": "Maximum charging power"
@@ -448,7 +488,11 @@
                 "name": "Minimum charging power"
             },
             "charger_output_relay_status": {
-                "name": "Output contactor status"
+                "name": "Output contactor status",
+                "state": {
+                    "disconnected": "Disconnected",
+                    "connected": "Connected"
+                }
             },
             "charger_phase_a_voltage": {
                 "name": "Charger Phase A voltage"
@@ -466,7 +510,12 @@
                 "name": "Charger rated power"
             },
             "charger_reported_work_mode": {
-                "name": "Reported work mode"
+                "name": "Reported work mode",
+                "state": {
+                    "fast_charging": "Fast charging",
+                    "green_power": "Green power",
+                    "next_trip": "Next trip"
+                }
             },
             "charger_target_charged_energy": {
                 "name": "Target charged energy"
@@ -717,7 +766,13 @@
                 "name": "Pack 1 serial number"
             },
             "pack_1_soh_calibration_status": {
-                "name": "Pack 1 SOH calibration status"
+                "name": "Pack 1 SOH calibration status",
+                "state": {
+                    "idle": "Idle",
+                    "required": "Required",
+                    "in_progress": "In progress",
+                    "completed": "Completed"
+                }
             },
             "pack_1_state_of_capacity": {
                 "name": "Pack 1 state of capacity"
@@ -753,7 +808,13 @@
                 "name": "Pack 2 serial number"
             },
             "pack_2_soh_calibration_status": {
-                "name": "Pack 2 SOH calibration status"
+                "name": "Pack 2 SOH calibration status",
+                "state": {
+                    "idle": "Idle",
+                    "required": "Required",
+                    "in_progress": "In progress",
+                    "completed": "Completed"
+                }
             },
             "pack_2_state_of_capacity": {
                 "name": "Pack 2 state of capacity"
@@ -789,7 +850,13 @@
                 "name": "Pack 3 serial number"
             },
             "pack_3_soh_calibration_status": {
-                "name": "Pack 3 SOH calibration status"
+                "name": "Pack 3 SOH calibration status",
+                "state": {
+                    "idle": "Idle",
+                    "required": "Required",
+                    "in_progress": "In progress",
+                    "completed": "Completed"
+                }
             },
             "pack_3_state_of_capacity": {
                 "name": "Pack 3 state of capacity"
@@ -1053,7 +1120,16 @@
                 "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
             },
             "running_status": {
-                "name": "Running status"
+                "name": "Running status",
+                "state": {
+                    "offline": "Offline",
+                    "standby": "Standby",
+                    "running": "Running",
+                    "fault": "Fault",
+                    "faulty": "Faulty",
+                    "power_off": "Power off",
+                    "sleep_mode": "Sleep mode"
+                }
             },
             "sdongle_grid_power": {
                 "name": "Grid power"
@@ -1095,7 +1171,11 @@
                 "name": "Alarms"
             },
             "smartlogger_array_in_operation": {
-                "name": "Array in operation"
+                "name": "Array in operation",
+                "state": {
+                    "invalid": "Invalid",
+                    "in_operation": "In operation"
+                }
             },
             "smartlogger_b_c_line_voltage_of_grid": {
                 "name": "Grid B-C line voltage"
@@ -1161,7 +1241,13 @@
                 "name": "Daily yield"
             },
             "soh_calibration_status": {
-                "name": "SOH calibration status"
+                "name": "SOH calibration status",
+                "state": {
+                    "idle": "Idle",
+                    "required": "Required",
+                    "in_progress": "In progress",
+                    "completed": "Completed"
+                }
             },
             "startup_time": {
                 "name": "Startup time"

@@ -374,7 +374,21 @@
                 "name": "Оставшееся время заряда/разряда"
             },
             "battery_working_mode": {
-                "name": "Рабочий режим"
+                "name": "Рабочий режим",
+                "state": {
+                    "none": "Нет",
+                    "forcible_charge_discharge": "Принудительная зарядка/разрядка",
+                    "time_of_use_lg": "Время использования (LG)",
+                    "fixed_charge_discharge": "Фиксированная зарядка/разрядка",
+                    "maximise_self_consumption": "Максимизация собственного потребления",
+                    "fully_fed_to_grid": "Полная отдача в сеть",
+                    "time_of_use_luna2000": "Время использования (LUNA2000)",
+                    "remote_scheduling_maximum_self_use": "Удалённое планирование (максимальное собственное потребление)",
+                    "remote_scheduling_full_internet_access": "Удалённое планирование (полный доступ к интернету)",
+                    "remote_scheduling_tou": "Удалённое планирование (TOU)",
+                    "ai_energy_management_and_scheduling": "Управление и планирование энергии с ИИ",
+                    "remote_scheduling_ai_control": "Удалённое планирование (управление ИИ)"
+                }
             },
             "bms_temperature": {
                 "name": "Температура BMS"
@@ -383,13 +397,29 @@
                 "name": "Максимальный ток кабеля"
             },
             "charger_charging_method": {
-                "name": "Метод зарядки"
+                "name": "Метод зарядки",
+                "state": {
+                    "immediate_charging": "Немедленная зарядка",
+                    "scheduled_charging": "Зарядка по расписанию",
+                    "next_trip_charging": "Зарядка к следующей поездке"
+                }
             },
             "charger_charging_wait_reason": {
-                "name": "Причина ожидания зарядки"
+                "name": "Причина ожидания зарядки",
+                "state": {
+                    "unknown": "Неизвестно",
+                    "waiting_for_ev": "Ожидание электромобиля",
+                    "household_power_excessive": "Превышена бытовая мощность",
+                    "insufficient_green_power": "Недостаточно зелёной энергии",
+                    "phase_switching": "Переключение фаз"
+                }
             },
             "charger_gun_lock_status": {
-                "name": "Статус блокировки разъема"
+                "name": "Статус блокировки разъема",
+                "state": {
+                    "locked": "Заблокирован",
+                    "unlocked": "Разблокирован"
+                }
             },
             "charger_gun_output_power": {
                 "name": "Мощность зарядки"
@@ -436,7 +466,17 @@
                 }
             },
             "charger_indicator_light_status": {
-                "name": "Статус индикатора"
+                "name": "Статус индикатора",
+                "state": {
+                    "standby": "Ожидание",
+                    "authentication_waiting": "Ожидание аутентификации",
+                    "scheduled_waiting": "Ожидание расписания",
+                    "charging": "Зарядка",
+                    "charging_completed": "Зарядка завершена",
+                    "green_power_charging": "Зарядка зелёной энергией",
+                    "fault_alarm": "Сигнал неисправности",
+                    "upgrading": "Обновление"
+                }
             },
             "charger_max_charging_power": {
                 "name": "Максимальная мощность зарядки"
@@ -445,7 +485,11 @@
                 "name": "Минимальная мощность зарядки"
             },
             "charger_output_relay_status": {
-                "name": "Статус выходного контактора"
+                "name": "Статус выходного контактора",
+                "state": {
+                    "disconnected": "Отключён",
+                    "connected": "Подключён"
+                }
             },
             "charger_phase_a_voltage": {
                 "name": "Напряжение фазы A зарядного устройства"
@@ -463,7 +507,12 @@
                 "name": "Номинальная мощность зарядного устройства"
             },
             "charger_reported_work_mode": {
-                "name": "Сообщенный режим работы"
+                "name": "Сообщенный режим работы",
+                "state": {
+                    "fast_charging": "Быстрая зарядка",
+                    "green_power": "Зелёная энергия",
+                    "next_trip": "Следующая поездка"
+                }
             },
             "charger_target_charged_energy": {
                 "name": "Целевая энергия зарядки"
@@ -714,7 +763,13 @@
                 "name": "Серийный номер блока 1"
             },
             "pack_1_soh_calibration_status": {
-                "name": "Статус калибровки SOH блока 1"
+                "name": "Статус калибровки SOH блока 1",
+                "state": {
+                    "idle": "Ожидание",
+                    "required": "Требуется",
+                    "in_progress": "Выполняется",
+                    "completed": "Завершено"
+                }
             },
             "pack_1_state_of_capacity": {
                 "name": "Уровень заряда (SOC) блока 1"
@@ -750,7 +805,13 @@
                 "name": "Серийный номер блока 2"
             },
             "pack_2_soh_calibration_status": {
-                "name": "Статус калибровки SOH блока 2"
+                "name": "Статус калибровки SOH блока 2",
+                "state": {
+                    "idle": "Ожидание",
+                    "required": "Требуется",
+                    "in_progress": "Выполняется",
+                    "completed": "Завершено"
+                }
             },
             "pack_2_state_of_capacity": {
                 "name": "Уровень заряда (SOC) блока 2"
@@ -786,7 +847,13 @@
                 "name": "Серийный номер блока 3"
             },
             "pack_3_soh_calibration_status": {
-                "name": "Статус калибровки SOH блока 3"
+                "name": "Статус калибровки SOH блока 3",
+                "state": {
+                    "idle": "Ожидание",
+                    "required": "Требуется",
+                    "in_progress": "Выполняется",
+                    "completed": "Завершено"
+                }
             },
             "pack_3_state_of_capacity": {
                 "name": "Уровень заряда (SOC) блока 3"
@@ -1050,7 +1117,16 @@
                 "name": "[%key:component::sensor::entity_component::reactive_power::name%]"
             },
             "running_status": {
-                "name": "Рабочий статус"
+                "name": "Рабочий статус",
+                "state": {
+                    "offline": "Не в сети",
+                    "standby": "Ожидание",
+                    "running": "Работает",
+                    "fault": "Неисправность",
+                    "sleep_mode": "Спящий режим",
+                    "faulty": "Неисправен",
+                    "power_off": "Выключен"
+                }
             },
             "sdongle_grid_power": {
                 "name": "Мощность сети"
@@ -1092,7 +1168,11 @@
                 "name": "Тревоги"
             },
             "smartlogger_array_in_operation": {
-                "name": "Массив в работе"
+                "name": "Массив в работе",
+                "state": {
+                    "invalid": "Недействительно",
+                    "in_operation": "В работе"
+                }
             },
             "smartlogger_b_c_line_voltage_of_grid": {
                 "name": "Линейное напряжение сети B-C"
@@ -1158,7 +1238,13 @@
                 "name": "Дневная выработка"
             },
             "soh_calibration_status": {
-                "name": "Статус калибровки SOH"
+                "name": "Статус калибровки SOH",
+                "state": {
+                    "idle": "Ожидание",
+                    "required": "Требуется",
+                    "in_progress": "Выполняется",
+                    "completed": "Завершено"
+                }
             },
             "startup_time": {
                 "name": "Время запуска"

@@ -374,7 +374,21 @@
                 "name": "Verbleibende Lade-/Entladezeit"
             },
             "battery_working_mode": {
-                "name": "Arbeitsmodus"
+                "name": "Arbeitsmodus",
+                "state": {
+                    "none": "Keine",
+                    "forcible_charge_discharge": "Erzwungenes Laden/Entladen",
+                    "time_of_use_lg": "Nutzungszeit (LG)",
+                    "fixed_charge_discharge": "Festes Laden/Entladen",
+                    "maximise_self_consumption": "Eigenverbrauch maximieren",
+                    "fully_fed_to_grid": "Volle Netzeinspeisung",
+                    "time_of_use_luna2000": "Nutzungszeit (LUNA2000)",
+                    "remote_scheduling_maximum_self_use": "Fernplanung (maximaler Eigenverbrauch)",
+                    "remote_scheduling_full_internet_access": "Fernplanung (voller Internetzugang)",
+                    "remote_scheduling_tou": "Fernplanung (TOU)",
+                    "ai_energy_management_and_scheduling": "KI-Energiemanagement und -Planung",
+                    "remote_scheduling_ai_control": "Fernplanung (KI-Steuerung)"
+                }
             },
             "bms_temperature": {
                 "name": "BMS Temperatur"
@@ -383,13 +397,29 @@
                 "name": "Maximaler Kabelstrom"
             },
             "charger_charging_method": {
-                "name": "Lademethode"
+                "name": "Lademethode",
+                "state": {
+                    "immediate_charging": "Sofortiges Laden",
+                    "scheduled_charging": "Geplantes Laden",
+                    "next_trip_charging": "Laden für nächste Fahrt"
+                }
             },
             "charger_charging_wait_reason": {
-                "name": "Wartegrund für Laden"
+                "name": "Wartegrund für Laden",
+                "state": {
+                    "unknown": "Unbekannt",
+                    "waiting_for_ev": "Warten auf Elektrofahrzeug",
+                    "household_power_excessive": "Haushaltsleistung zu hoch",
+                    "insufficient_green_power": "Unzureichende grüne Energie",
+                    "phase_switching": "Phasenumschaltung"
+                }
             },
             "charger_gun_lock_status": {
-                "name": "Ladestecker-Verriegelungsstatus"
+                "name": "Ladestecker-Verriegelungsstatus",
+                "state": {
+                    "locked": "Verriegelt",
+                    "unlocked": "Entriegelt"
+                }
             },
             "charger_gun_output_power": {
                 "name": "Ladeleistung"
@@ -436,7 +466,17 @@
                 }
             },
             "charger_indicator_light_status": {
-                "name": "Status der Kontrollleuchte"
+                "name": "Status der Kontrollleuchte",
+                "state": {
+                    "standby": "Bereitschaft",
+                    "authentication_waiting": "Warten auf Authentifizierung",
+                    "scheduled_waiting": "Warten auf Zeitplan",
+                    "charging": "Lädt",
+                    "charging_completed": "Laden abgeschlossen",
+                    "green_power_charging": "Laden mit grüner Energie",
+                    "fault_alarm": "Störungsalarm",
+                    "upgrading": "Aktualisierung"
+                }
             },
             "charger_max_charging_power": {
                 "name": "Maximale Ladeleistung"
@@ -445,7 +485,11 @@
                 "name": "Minimale Ladeleistung"
             },
             "charger_output_relay_status": {
-                "name": "Status des Ausgangsschützes"
+                "name": "Status des Ausgangsschützes",
+                "state": {
+                    "disconnected": "Getrennt",
+                    "connected": "Verbunden"
+                }
             },
             "charger_phase_a_voltage": {
                 "name": "Phase A Spannung"
@@ -463,7 +507,12 @@
                 "name": "Nennleistung"
             },
             "charger_reported_work_mode": {
-                "name": "Gemeldeter Arbeitsmodus"
+                "name": "Gemeldeter Arbeitsmodus",
+                "state": {
+                    "fast_charging": "Schnellladen",
+                    "green_power": "Grüne Energie",
+                    "next_trip": "Nächste Fahrt"
+                }
             },
             "charger_target_charged_energy": {
                 "name": "Ziel-Ladeenergie"
@@ -714,7 +763,13 @@
                 "name": "Pack 1 Serienummer"
             },
             "pack_1_soh_calibration_status": {
-                "name": "Pack 1 SOH Kalibrationsstatus"
+                "name": "Pack 1 SOH Kalibrationsstatus",
+                "state": {
+                    "idle": "Leerlauf",
+                    "required": "Erforderlich",
+                    "in_progress": "In Bearbeitung",
+                    "completed": "Abgeschlossen"
+                }
             },
             "pack_1_state_of_capacity": {
                 "name": "Batterie Pack 1 Ladestand"
@@ -750,7 +805,13 @@
                 "name": "Pack 2 Serienummer"
             },
             "pack_2_soh_calibration_status": {
-                "name": "Pack 2 SOH Kalibrationsstatus"
+                "name": "Pack 2 SOH Kalibrationsstatus",
+                "state": {
+                    "idle": "Leerlauf",
+                    "required": "Erforderlich",
+                    "in_progress": "In Bearbeitung",
+                    "completed": "Abgeschlossen"
+                }
             },
             "pack_2_state_of_capacity": {
                 "name": "Batterie Pack 2 Ladestand"
@@ -786,7 +847,13 @@
                 "name": "Pack 3 Serienummer"
             },
             "pack_3_soh_calibration_status": {
-                "name": "Pack 3 SOH Kalibrationsstatus"
+                "name": "Pack 3 SOH Kalibrationsstatus",
+                "state": {
+                    "idle": "Leerlauf",
+                    "required": "Erforderlich",
+                    "in_progress": "In Bearbeitung",
+                    "completed": "Abgeschlossen"
+                }
             },
             "pack_3_state_of_capacity": {
                 "name": "Batterie Pack 3 Ladestand"
@@ -1050,7 +1117,16 @@
                 "name": "Blindleistung"
             },
             "running_status": {
-                "name": "Betriebsstatus"
+                "name": "Betriebsstatus",
+                "state": {
+                    "offline": "Offline",
+                    "standby": "Bereitschaft",
+                    "running": "In Betrieb",
+                    "fault": "Störung",
+                    "sleep_mode": "Ruhemodus",
+                    "faulty": "Fehlerhaft",
+                    "power_off": "Ausgeschaltet"
+                }
             },
             "sdongle_grid_power": {
                 "name": "Netzleistung"
@@ -1092,7 +1168,11 @@
                 "name": "Alarme"
             },
             "smartlogger_array_in_operation": {
-                "name": "Array im Betrieb"
+                "name": "Array im Betrieb",
+                "state": {
+                    "invalid": "Ungültig",
+                    "in_operation": "In Betrieb"
+                }
             },
             "smartlogger_b_c_line_voltage_of_grid": {
                 "name": "B-C Leitungsspannung"
@@ -1158,7 +1238,13 @@
                 "name": "Tagesertrag"
             },
             "soh_calibration_status": {
-                "name": "SOH Kalibrationsstatus"
+                "name": "SOH Kalibrationsstatus",
+                "state": {
+                    "idle": "Leerlauf",
+                    "required": "Erforderlich",
+                    "in_progress": "In Bearbeitung",
+                    "completed": "Abgeschlossen"
+                }
             },
             "startup_time": {
                 "name": "Startzeit"
