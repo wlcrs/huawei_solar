@@ -10,6 +10,7 @@ from huawei_solar import (
     ConnectionInterruptedException,
     DecodeError,
     HuaweiSolarException,
+    InvalidCredentials,
     ReadException,
     RegisterName,
     Result,
@@ -19,6 +20,7 @@ from huawei_solar.device.base import HuaweiSolarDevice
 from huawei_solar.files import OptimizerRealTimeData
 
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.debounce import Debouncer
 from homeassistant.helpers.device_registry import ConfigEntry, DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -96,16 +98,12 @@ class HuaweiSolarUpdateCoordinator(
                 f"Could not update {self.device.serial_number} values: {err}"
             ) from err
         except ConnectionInterruptedException as err:
-            _LOGGER.warning(
-                "Connection to %s was interrupted during update. "
-                "The inverter only supports one Modbus connection at a time - "
-                "check whether another device has connected to the inverter",
-                self.device.serial_number,
-            )
             raise UpdateFailed(
                 f"Connection to {self.device.serial_number} was interrupted, probably by another device. "
                 "The inverter only supports one Modbus connection at a time."
             ) from err
+        except InvalidCredentials as err:
+            raise ConfigEntryAuthFailed from err
         except HuaweiSolarException as err:
             raise UpdateFailed(
                 f"Could not update {self.device.serial_number} values: {err}"
@@ -151,16 +149,12 @@ class HuaweiSolarOptimizerUpdateCoordinator(
                 "the device did not respond in time"
             ) from err
         except ConnectionInterruptedException as err:
-            _LOGGER.warning(
-                "Connection to %s was interrupted during optimizer update. "
-                "The inverter only supports one Modbus connection at a time - "
-                "check whether another device has connected to the inverter",
-                self.device.serial_number,
-            )
             raise UpdateFailed(
                 f"Connection to {self.device.serial_number} was interrupted, probably by another device. "
                 "The inverter only supports one Modbus connection at a time."
             ) from err
+        except InvalidCredentials as err:
+            raise ConfigEntryAuthFailed from err
         except DecodeError as err:
             raise UpdateFailed(
                 f"Could not decode optimizer data from {self.device.serial_number}: {err}. "

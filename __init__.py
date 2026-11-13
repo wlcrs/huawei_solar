@@ -275,45 +275,23 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
             entry.runtime_data = device_datas
         except ConnectionInterruptedException as err:
             host = entry.data.get(CONF_HOST) or entry.data.get(CONF_PORT)
-            _LOGGER.warning(
-                "Connection to the inverter at %s was interrupted during setup. "
-                "The inverter only supports one Modbus connection at a time. "
-                "Check whether another device is currently connected to the inverter",
-                host,
-            )
             raise ConfigEntryNotReady(
                 f"Connection to the inverter at {host} was interrupted, probably by another device. "
                 "The inverter only supports one Modbus connection at a time."
             ) from err
         except ConnectionException as err:
             host = entry.data.get(CONF_HOST) or entry.data.get(CONF_PORT)
-            _LOGGER.warning(
-                "Cannot connect to the inverter at %s. "
-                "Verify the address and that the device is reachable on the network. "
-                "If the inverter's IP address has changed, reconfigure the integration",
-                host,
-            )
             raise ConfigEntryNotReady(
                 f"Cannot connect to the inverter at {host}. "
                 "Verify the address and that the device is reachable. "
                 "If the IP address has changed, reconfigure the integration."
             ) from err
         except TimeoutError as err:
-            _LOGGER.warning(
-                "The inverter is not responding to requests. "
-                "The connection was established but no data was received. "
-                "The device may be starting up, overloaded, or blocking Modbus requests"
-            )
             raise ConfigEntryNotReady(
                 "The inverter is not responding to requests. "
                 "It may be starting up or temporarily busy."
             ) from err
         except HuaweiSolarException as err:
-            _LOGGER.warning(
-                "Failed to communicate with the inverter during setup: %s. ",
-                err,
-                exc_info=err,
-            )
             raise ConfigEntryNotReady(
                 f"Failed to communicate with the inverter: {err}"
             ) from err
@@ -547,12 +525,8 @@ async def _setup_inverter_device_data(
                     exc_info=exception,
                 )
             else:
-                _LOGGER.exception(
-                    "Cannot create optimizer sensor entities due to a read error",
-                    exc_info=exception,
-                )
                 raise ConfigEntryNotReady(
-                    "Cannot create optimizer sensor entities due to a read error. "
+                    "Cannot create optimizer sensor entities due to a read error."
                 ) from exception
         except Exception as exc:  # pylint: disable=broad-except
             _LOGGER.exception(
