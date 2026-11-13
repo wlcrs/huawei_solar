@@ -62,7 +62,7 @@ from .sensor import (
     get_power_meter_sensor_registers,
 )
 from .services import async_setup_services
-from .switch import get_inverter_switch_registers, get_switch_registers
+from .switch import get_switch_registers
 from .types import (
     HuaweiSolarConfigEntry,
     HuaweiSolarDeviceData,
@@ -419,8 +419,7 @@ async def _setup_inverter_device_data(
         device=device,
         name=f"{device.serial_number}_data_update_coordinator",
         update_interval=INVERTER_UPDATE_INTERVAL,
-        initial_registers=get_inverter_sensor_registers(device)
-        | get_inverter_switch_registers(),
+        initial_registers=get_inverter_sensor_registers(device),
     )
     await update_coordinator.async_config_entry_first_refresh()
 

@@ -172,7 +172,7 @@ async def async_setup_entry(
             slave_entities.extend(
                 [
                     HuaweiSolarSwitchEntity(
-                        ucs.update_coordinator,
+                        ucs.configuration_update_coordinator,
                         ucs.device,
                         entity_description,
                         ucs.device_info,
@@ -266,10 +266,7 @@ class HuaweiSolarSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
         description: HuaweiSolarSwitchEntityDescription,
         device_info: DeviceInfo,
     ) -> None:
-        """Huawei Solar Switch Entity constructor.
-
-        Do not use directly. Use `.create` instead!
-        """
+        """Huawei Solar Switch Entity constructor."""
         super().__init__(coordinator, description.context)
         self.coordinator = coordinator
 
@@ -403,21 +400,11 @@ class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
         await self._async_set_power_state(False, rn.SHUTDOWN)
 
 
-def get_inverter_switch_registers() -> set[RegisterName]:
-    """Get registers needed for inverter update coordinator from switch platform."""
-    registers = {rn.DEVICE_STATUS}
-    registers.update(
-        chain.from_iterable(
-            desc.context["register_names"] for desc in INVERTER_SWITCH_DESCRIPTIONS
-        )
-    )
-    return registers
-
-
 def get_switch_registers(device: HuaweiSolarDevice) -> set[RegisterName]:
     """Get registers needed for configuration update coordinator from switch platform."""
     descriptions: list[HuaweiSolarSwitchEntityDescription] = []
     if isinstance(device, SUN2000Device):
+        descriptions.extend(INVERTER_SWITCH_DESCRIPTIONS)
         if device.supports_off_grid_switch:
             descriptions.append(BACKUP_SWITCH_TO_OFF_GRID_SWITCH_DESCRIPTION)
         if device.battery_type != rv.StorageProductModel.NONE:

@@ -339,10 +339,7 @@ class StorageModeSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
         device: SUN2000Device,
         device_info: DeviceInfo,
     ) -> None:
-        """Huawei Solar Storage Mode Select Entity constructor.
-
-        Do not use directly. Use `.create` instead!
-        """
+        """Huawei Solar Storage Mode Select Entity constructor."""
         super().__init__(
             coordinator, {"register_names": [rn.STORAGE_WORKING_MODE_SETTINGS]}
         )

@@ -495,17 +495,6 @@ class HuaweiSolarNumberEntity(HuaweiSolarCoordinatorEntity, NumberEntity):
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{description.key}"
 
-    @classmethod
-    async def create(
-        cls,
-        coordinator: HuaweiSolarUpdateCoordinator,
-        device: HuaweiSolarDevice,
-        description: HuaweiSolarNumberEntityDescription,
-        device_info: DeviceInfo,
-    ) -> "HuaweiSolarNumberEntity":
-        """Huawei Solar Number Entity constructor."""
-        return cls(coordinator, device, description, device_info)
-
     @callback
     def _async_update_attrs(self) -> None:
         """Update entity attributes from coordinator data."""
