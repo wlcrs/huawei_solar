@@ -2836,12 +2836,13 @@ class HuaweiSolarForcibleChargeEntity(
                     value = "charging_soc"
                 else:
                     value = "charging_time"
-            else:
-                assert mode == rv.StorageForcibleChargeDischarge.DISCHARGE
+            elif mode == rv.StorageForcibleChargeDischarge.DISCHARGE:
                 if setting == rv.StorageForcibleChargeDischargeTargetMode.SOC:
                     value = "discharging_soc"
                 else:
                     value = "discharging_time"
+            else:
+                value = None
 
             self._attr_available = True
             self._attr_native_value = value
