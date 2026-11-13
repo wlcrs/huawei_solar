@@ -124,7 +124,7 @@ async def async_setup_entry(
         if not ucs.configuration_update_coordinator:
             continue
 
-        slave_entities: list[HuaweiSolarSelectEntity | StorageModeSelectEntity] = []
+        slave_entities: list[HuaweiSolarSelectEntity] = []
         if isinstance(ucs.device, EMMADevice):
             for entity_description in EMMA_SELECT_DESCRIPTIONS:
                 slave_entities.append(  # noqa: PERF401
@@ -178,11 +178,25 @@ async def async_setup_entry(
                     )
                     for entity_description in ENERGY_STORAGE_SWITCH_DESCRIPTIONS
                 )
+                available_options = [swm.name for swm in rv.StorageWorkingModesC]
+                if ucs.device.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000:
+                    available_options.remove(
+                        rv.StorageWorkingModesC.TIME_OF_USE_LG.name
+                    )
+                elif ucs.device.battery_type == rv.StorageProductModel.LG_RESU:
+                    available_options.remove(
+                        rv.StorageWorkingModesC.TIME_OF_USE_LUNA2000.name
+                    )
                 slave_entities.append(
-                    StorageModeSelectEntity(
+                    HuaweiSolarSelectEntity(
                         ucs.configuration_update_coordinator,
                         ucs.device,
+                        HuaweiSolarSelectEntityDescription(
+                            key=rn.STORAGE_WORKING_MODE_SETTINGS,
+                            entity_category=EntityCategory.CONFIG,
+                        ),
                         ucs.connected_energy_storage,
+                        options=[option.lower() for option in available_options],
                     )
                 )
                 if ucs.device.supports_capacity_control:
@@ -235,6 +249,8 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
         device: HuaweiSolarDevice,
         description: HuaweiSolarSelectEntityDescription,
         device_info: DeviceInfo,
+        *,
+        options: list[str] | None = None,
     ) -> None:
         """Huawei Solar Select Entity constructor."""
         super().__init__(coordinator, description.context)
@@ -253,9 +269,11 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
         self._register_unit: type[IntEnum] = register.unit
 
         self._attr_current_option = None
-        self._attr_options = [
-            self._friendly_format(value) for value in self._register_unit
-        ]
+        self._attr_options = (
+            options
+            if options is not None
+            else [self._friendly_format(value) for value in self._register_unit]
+        )
 
     @callback
     def _async_update_attrs(self) -> None:
@@ -281,71 +299,6 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
         """Change the selected option."""
         await self._async_set_register(
             self.entity_description.register_name, self._to_enum(option)
-        )
-        self._attr_current_option = option
-
-        await self.coordinator.async_request_refresh()
-
-
-class StorageModeSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
-    """Huawei Solar Storage Mode Select Entity.
-
-    The available options depend on the type of battery used, so it needs
-    separate logic.
-    """
-
-    entity_description: HuaweiSolarSelectEntityDescription
-
-    def __init__(
-        self,
-        coordinator: HuaweiSolarUpdateCoordinator,
-        device: SUN2000Device,
-        device_info: DeviceInfo,
-    ) -> None:
-        """Huawei Solar Storage Mode Select Entity constructor."""
-        super().__init__(
-            coordinator, {"register_names": [rn.STORAGE_WORKING_MODE_SETTINGS]}
-        )
-
-        self.device = device
-        self.entity_description = HuaweiSolarSelectEntityDescription(
-            key=rn.STORAGE_WORKING_MODE_SETTINGS,
-            entity_category=EntityCategory.CONFIG,
-        )
-        self._attr_device_info = device_info
-        self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
-
-        self._attr_current_option = None
-        # The options depend on the type of battery
-        available_options = [swm.name for swm in rv.StorageWorkingModesC]
-        if device.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000:
-            available_options.remove(rv.StorageWorkingModesC.TIME_OF_USE_LG.name)
-        elif device.battery_type == rv.StorageProductModel.LG_RESU:
-            available_options.remove(rv.StorageWorkingModesC.TIME_OF_USE_LUNA2000.name)
-        self._attr_options = [option.lower() for option in available_options]
-
-    @callback
-    def _async_update_attrs(self) -> None:
-        """Update entity attributes from coordinator data."""
-        if (
-            self.coordinator.data
-            and self.entity_description.key in self.coordinator.data
-            and self.coordinator.data[self.entity_description.register_name].value
-            is not None
-        ):
-            self._attr_current_option = self.coordinator.data[
-                self.entity_description.register_name
-            ].value.name.lower()
-            self._attr_available = True
-        else:
-            self._attr_current_option = None
-            self._attr_available = False
-
-    async def async_select_option(self, option: str) -> None:
-        """Change the selected option."""
-        await self._async_set_register(
-            rn.STORAGE_WORKING_MODE_SETTINGS,
-            getattr(rv.StorageWorkingModesC, option.upper()),
         )
         self._attr_current_option = option
 

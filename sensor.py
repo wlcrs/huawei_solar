@@ -1194,10 +1194,12 @@ def create_sun2000_entities(
                 and ucs.device.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000
             ):
                 entities_to_add.append(
-                    HuaweiSolarTOUSensorEntity(
+                    HuaweiSolarPeriodsSensorEntity(
                         ucs.configuration_update_coordinator,
                         ucs.device,
                         ucs.connected_energy_storage,
+                        register_name=rn.STORAGE_HUAWEI_LUNA2000_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS,
+                        format_period=_huawei_luna2000_period_to_text,
                     ),
                 )
             elif (
@@ -1205,10 +1207,12 @@ def create_sun2000_entities(
                 and ucs.device.battery_type == rv.StorageProductModel.LG_RESU
             ):
                 entities_to_add.append(
-                    HuaweiSolarPricePeriodsSensorEntity(
+                    HuaweiSolarPeriodsSensorEntity(
                         ucs.configuration_update_coordinator,
                         ucs.device,
                         ucs.connected_energy_storage,
+                        register_name=rn.STORAGE_LG_RESU_TIME_OF_USE_PRICE_PERIODS,
+                        format_period=_lg_resu_period_to_text,
                         translation_key="storage_lg_resu_time_of_use_price_periods",
                     ),
                 )
@@ -1222,52 +1226,39 @@ def create_sun2000_entities(
 
             if ucs.device.supports_capacity_control:
                 entities_to_add.append(
-                    HuaweiSolarCapacityControlPeriodsSensorEntity(
+                    HuaweiSolarPeriodsSensorEntity(
                         ucs.configuration_update_coordinator,
                         ucs.device,
                         ucs.connected_energy_storage,
+                        register_name=rn.STORAGE_CAPACITY_CONTROL_PERIODS,
+                        format_period=_capacity_control_period_to_text,
+                        translation_key="storage_capacity_control_periods",
                     )
                 )
 
-        if ucs.battery_1:
-            entities_to_add.extend(
-                HuaweiSolarSensorEntity(
-                    ucs.energy_storage_update_coordinator,
-                    HuaweiSolarSensorEntityDescription(
-                        key=entity_description_template.battery_1_key,
-                        translation_key=entity_description_template.translation_key,
-                        device_class=entity_description_template.device_class,
-                        options=entity_description_template.options,
-                        state_class=entity_description_template.state_class,
-                        native_unit_of_measurement=entity_description_template.native_unit_of_measurement,
-                        entity_category=entity_description_template.entity_category,
-                        entity_registry_enabled_default=False,
-                    ),
-                    ucs.battery_1,
+        for battery_device_info, key_attr in (
+            (ucs.battery_1, "battery_1_key"),
+            (ucs.battery_2, "battery_2_key"),
+        ):
+            if battery_device_info:
+                entities_to_add.extend(
+                    HuaweiSolarSensorEntity(
+                        ucs.energy_storage_update_coordinator,
+                        HuaweiSolarSensorEntityDescription(
+                            key=key,
+                            translation_key=entity_description_template.translation_key,
+                            device_class=entity_description_template.device_class,
+                            options=entity_description_template.options,
+                            state_class=entity_description_template.state_class,
+                            native_unit_of_measurement=entity_description_template.native_unit_of_measurement,
+                            entity_category=entity_description_template.entity_category,
+                            entity_registry_enabled_default=False,
+                        ),
+                        battery_device_info,
+                    )
+                    for entity_description_template in BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS
+                    if (key := getattr(entity_description_template, key_attr))
                 )
-                for entity_description_template in BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS
-                if entity_description_template.battery_1_key
-            )
-
-        if ucs.battery_2:
-            entities_to_add.extend(
-                HuaweiSolarSensorEntity(
-                    ucs.energy_storage_update_coordinator,
-                    HuaweiSolarSensorEntityDescription(
-                        key=entity_description_template.battery_2_key,
-                        translation_key=entity_description_template.translation_key,
-                        device_class=entity_description_template.device_class,
-                        options=entity_description_template.options,
-                        state_class=entity_description_template.state_class,
-                        native_unit_of_measurement=entity_description_template.native_unit_of_measurement,
-                        entity_category=entity_description_template.entity_category,
-                        entity_registry_enabled_default=False,
-                    ),
-                    ucs.battery_2,
-                )
-                for entity_description_template in BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS
-                if entity_description_template.battery_2_key
-            )
     if ucs.optimizer_update_coordinator:
         optimizer_device_infos = ucs.optimizer_update_coordinator.optimizer_device_infos
 
@@ -1726,11 +1717,12 @@ def create_emma_entities(
 
     if ucs.configuration_update_coordinator:
         entities.append(
-            HuaweiSolarTOUSensorEntity(
+            HuaweiSolarPeriodsSensorEntity(
                 ucs.configuration_update_coordinator,
                 ucs.device,
                 ucs.device_info,
                 register_name=rn.EMMA_TOU_PERIODS,
+                format_period=_huawei_luna2000_period_to_text,
                 entity_registry_enabled_default=False,
                 translation_key="emma_tou_periods",
             )
@@ -2335,7 +2327,12 @@ def create_smartlogger_entities(
         for entity_description in SMARTLOGGER_SENSOR_DESCRIPTIONS
     ]
     entities.append(
-        SmartLoggerAlarmSensorEntity(ucs.update_coordinator, ucs.device_info)
+        HuaweiSolarAlarmSensorEntity(
+            ucs.update_coordinator,
+            ucs.device_info,
+            alarm_registers=HuaweiSolarAlarmSensorEntity.SMARTLOGGER_ALARM_REGISTERS,
+            description=HuaweiSolarAlarmSensorEntity.SMARTLOGGER_DESCRIPTION,
+        )
     )
     return entities
 
@@ -2421,61 +2418,11 @@ class HuaweiSolarSensorEntity(HuaweiSolarCoordinatorEntity, SensorEntity):
 class HuaweiSolarAlarmSensorEntity(HuaweiSolarSensorEntity):
     """Huawei Solar Sensor for Alarm values.
 
-    These are spread over three registers that are received by the DataUpdateCoordinator.
+    These are spread over multiple registers that are received by the DataUpdateCoordinator.
     """
 
     ALARM_REGISTERS: list[rn.RegisterName] = [rn.ALARM_1, rn.ALARM_2, rn.ALARM_3]
-
-    DESCRIPTION = HuaweiSolarSensorEntityDescription(
-        key="ALARMS",
-        translation_key="alarms",
-        entity_category=EntityCategory.DIAGNOSTIC,
-    )
-
-    def __init__(
-        self,
-        coordinator: HuaweiSolarUpdateCoordinator,
-        device_info: DeviceInfo,
-    ):
-        """Huawei Solar Alarm Sensor Entity constructor."""
-        super().__init__(
-            coordinator,
-            HuaweiSolarAlarmSensorEntity.DESCRIPTION,
-            device_info,
-            {"register_names": HuaweiSolarAlarmSensorEntity.ALARM_REGISTERS},
-        )
-
-    @callback
-    def _async_update_attrs(self) -> None:
-        """Update entity attributes from coordinator data."""
-        available = False
-
-        if self.coordinator.data:
-            alarms: list[rv.Alarm] = []
-            for alarm_register in HuaweiSolarAlarmSensorEntity.ALARM_REGISTERS:
-                alarm_result = self.coordinator.data.get(alarm_register)
-                if alarm_result:
-                    available = True
-                    alarms.extend(alarm_result.value)
-            if len(alarms) == 0:
-                self._attr_native_value = "None"
-            else:
-                self._attr_native_value = ", ".join(
-                    [f"[{alarm.level}] {alarm.id}: {alarm.name}" for alarm in alarms]
-                )
-        else:
-            self._attr_native_value = None
-
-        self._attr_available = available
-
-
-class SmartLoggerAlarmSensorEntity(HuaweiSolarSensorEntity):
-    """SmartLogger Sensor for Alarm values.
-
-    These are spread over six registers that are received by the DataUpdateCoordinator.
-    """
-
-    ALARM_REGISTERS: list[rn.RegisterName] = [
+    SMARTLOGGER_ALARM_REGISTERS: list[rn.RegisterName] = [
         rn.SMARTLOGGER_ALARM_1,
         rn.SMARTLOGGER_ALARM_2,
         rn.SMARTLOGGER_ALARM_3,
@@ -2485,6 +2432,11 @@ class SmartLoggerAlarmSensorEntity(HuaweiSolarSensorEntity):
     ]
 
     DESCRIPTION = HuaweiSolarSensorEntityDescription(
+        key="ALARMS",
+        translation_key="alarms",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    )
+    SMARTLOGGER_DESCRIPTION = HuaweiSolarSensorEntityDescription(
         key="SMARTLOGGER_ALARMS",
         translation_key="smartlogger_alarms",
         entity_category=EntityCategory.DIAGNOSTIC,
@@ -2494,13 +2446,17 @@ class SmartLoggerAlarmSensorEntity(HuaweiSolarSensorEntity):
         self,
         coordinator: HuaweiSolarUpdateCoordinator,
         device_info: DeviceInfo,
-    ):
-        """SmartLogger Alarm Sensor Entity constructor."""
+        *,
+        alarm_registers: list[rn.RegisterName] | None = None,
+        description: HuaweiSolarSensorEntityDescription | None = None,
+    ) -> None:
+        """Huawei Solar Alarm Sensor Entity constructor."""
+        self._alarm_registers = alarm_registers or self.ALARM_REGISTERS
         super().__init__(
             coordinator,
-            SmartLoggerAlarmSensorEntity.DESCRIPTION,
+            description or self.DESCRIPTION,
             device_info,
-            {"register_names": SmartLoggerAlarmSensorEntity.ALARM_REGISTERS},
+            {"register_names": self._alarm_registers},
         )
 
     @callback
@@ -2510,7 +2466,7 @@ class SmartLoggerAlarmSensorEntity(HuaweiSolarSensorEntity):
 
         if self.coordinator.data:
             alarms: list[rv.Alarm] = []
-            for alarm_register in SmartLoggerAlarmSensorEntity.ALARM_REGISTERS:
+            for alarm_register in self._alarm_registers:
                 alarm_result = self.coordinator.data.get(alarm_register)
                 if alarm_result:
                     available = True
@@ -2542,69 +2498,12 @@ def _time_int_to_str(time: int) -> str:
     return f"{time // 60:02d}:{time % 60:02d}"
 
 
-class HuaweiSolarTOUSensorEntity(HuaweiSolarCoordinatorEntity, SensorEntity):
-    """Huawei Solar Sensor for configured TOU periods.
-
-    It shows the number of configured TOU periods, and has the
-    contents of them as extended attributes
-    """
-
-    entity_description: HuaweiSolarSensorEntityDescription
-
-    def __init__(
-        self,
-        coordinator: HuaweiSolarUpdateCoordinator,
-        device: HuaweiSolarDevice,
-        device_info: DeviceInfo,
-        register_name: str = rn.STORAGE_HUAWEI_LUNA2000_TIME_OF_USE_CHARGING_AND_DISCHARGING_PERIODS,
-        entity_registry_enabled_default: bool = True,
-        translation_key: str | None = None,
-    ) -> None:
-        """Huawei Solar TOU Sensor Entity constructor."""
-        super().__init__(
-            coordinator,
-            {"register_names": [register_name]},
-        )
-
-        self.entity_description = HuaweiSolarSensorEntityDescription(
-            key=register_name,
-            translation_key=translation_key,
-            entity_registry_enabled_default=entity_registry_enabled_default,
-        )
-
-        self._attr_device_info = device_info
-        self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
-
-    def _huawei_luna2000_period_to_text(
-        self, period: HUAWEI_LUNA2000_TimeOfUsePeriod
-    ) -> str:
-        return (
-            f"{_time_int_to_str(period.start_time)}-{_time_int_to_str(period.end_time)}"
-            f"/{_days_effective_to_str(period.days_effective)}"
-            f"/{'+' if period.charge_flag == ChargeFlag.CHARGE else '-'}"
-        )
-
-    @callback
-    def _async_update_attrs(self) -> None:
-        """Update entity attributes from coordinator data."""
-        if (
-            self.coordinator.data
-            and self.entity_description.register_name in self.coordinator.data
-        ):
-            self._attr_available = True
-
-            data: list[HUAWEI_LUNA2000_TimeOfUsePeriod] = self.coordinator.data[
-                self.entity_description.register_name
-            ].value
-
-            self._attr_native_value = len(data)
-            self._attr_extra_state_attributes = {
-                f"Period {idx + 1}": self._huawei_luna2000_period_to_text(period)
-                for idx, period in enumerate(data)
-            }
-        else:
-            self._attr_available = False
-            self._attr_native_value = None
+def _huawei_luna2000_period_to_text(period: HUAWEI_LUNA2000_TimeOfUsePeriod) -> str:
+    return (
+        f"{_time_int_to_str(period.start_time)}-{_time_int_to_str(period.end_time)}"
+        f"/{_days_effective_to_str(period.days_effective)}"
+        f"/{'+' if period.charge_flag == ChargeFlag.CHARGE else '-'}"
+    )
 
 
 def _lg_resu_period_to_text(period: LG_RESU_TimeOfUsePeriod) -> str:
@@ -2614,13 +2513,22 @@ def _lg_resu_period_to_text(period: LG_RESU_TimeOfUsePeriod) -> str:
     )
 
 
-class HuaweiSolarPricePeriodsSensorEntity(
+def _capacity_control_period_to_text(period: PeakSettingPeriod) -> str:
+    return (
+        f"{_time_int_to_str(period.start_time)}"
+        f"-{_time_int_to_str(period.end_time)}"
+        f"/{_days_effective_to_str(period.days_effective)}"
+        f"/{period.power}W"
+    )
+
+
+class HuaweiSolarPeriodsSensorEntity[PeriodT](
     HuaweiSolarCoordinatorEntity, SensorEntity
 ):
-    """Huawei Solar Sensor for configured TOU periods.
+    """Huawei Solar Sensor for configured schedule periods.
 
-    It shows the number of configured TOU periods, and has the
-    contents of them as extended attributes
+    It shows the number of configured periods, and has the
+    contents of them as extended attributes.
     """
 
     entity_description: HuaweiSolarSensorEntityDescription
@@ -2630,11 +2538,13 @@ class HuaweiSolarPricePeriodsSensorEntity(
         coordinator: HuaweiSolarUpdateCoordinator,
         device: HuaweiSolarDevice,
         device_info: DeviceInfo,
-        register_name: str = rn.STORAGE_LG_RESU_TIME_OF_USE_PRICE_PERIODS,
+        *,
+        register_name: rn.RegisterName,
+        format_period: Callable[[PeriodT], str],
         entity_registry_enabled_default: bool = True,
         translation_key: str | None = None,
     ) -> None:
-        """Huawei Solar TOU Sensor Entity constructor."""
+        """Huawei Solar Periods Sensor Entity constructor."""
         super().__init__(
             coordinator,
             {"register_names": [register_name]},
@@ -2646,6 +2556,7 @@ class HuaweiSolarPricePeriodsSensorEntity(
             entity_registry_enabled_default=entity_registry_enabled_default,
         )
 
+        self._format_period = format_period
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
 
@@ -2656,75 +2567,14 @@ class HuaweiSolarPricePeriodsSensorEntity(
             self.coordinator.data
             and self.entity_description.register_name in self.coordinator.data
         ):
-            self._attr_available = True
-
-            data: list[LG_RESU_TimeOfUsePeriod] = self.coordinator.data[
-                self.entity_description.register_name
-            ].value
-
-            self._attr_native_value = len(data)
-            self._attr_extra_state_attributes = {
-                f"Period {idx + 1}": _lg_resu_period_to_text(period)
-                for idx, period in enumerate(data)
-            }
-        else:
-            self._attr_available = False
-            self._attr_native_value = None
-
-
-class HuaweiSolarCapacityControlPeriodsSensorEntity(
-    HuaweiSolarCoordinatorEntity, SensorEntity
-):
-    """Huawei Solar Sensor for configured Capacity Control periods.
-
-    It shows the number of configured capacity control periods, and has the
-    contents of them as extended attributes
-    """
-
-    entity_description: HuaweiSolarSensorEntityDescription
-
-    def __init__(
-        self,
-        coordinator: HuaweiSolarUpdateCoordinator,
-        device: HuaweiSolarDevice,
-        device_info: DeviceInfo,
-    ) -> None:
-        """Huawei Solar Capacity Control Periods Sensor Entity constructor."""
-        super().__init__(
-            coordinator, {"register_names": [rn.STORAGE_CAPACITY_CONTROL_PERIODS]}
-        )
-
-        self.entity_description = HuaweiSolarSensorEntityDescription(
-            key=rn.STORAGE_CAPACITY_CONTROL_PERIODS,
-            translation_key="storage_capacity_control_periods",
-        )
-
-        self._attr_device_info = device_info
-        self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
-
-    def _period_to_text(self, psp: PeakSettingPeriod) -> str:
-        return (
-            f"{_time_int_to_str(psp.start_time)}"
-            f"-{_time_int_to_str(psp.end_time)}"
-            f"/{_days_effective_to_str(psp.days_effective)}"
-            f"/{psp.power}W"
-        )
-
-    @callback
-    def _async_update_attrs(self) -> None:
-        """Update entity attributes from coordinator data."""
-        if (
-            self.coordinator.data
-            and self.entity_description.key in self.coordinator.data
-        ):
-            data: list[PeakSettingPeriod] = self.coordinator.data[
+            data: list[PeriodT] = self.coordinator.data[
                 self.entity_description.register_name
             ].value
 
             self._attr_available = True
             self._attr_native_value = len(data)
             self._attr_extra_state_attributes = {
-                f"Period {idx + 1}": self._period_to_text(period)
+                f"Period {idx + 1}": self._format_period(period)
                 for idx, period in enumerate(data)
             }
         else:
@@ -3089,7 +2939,7 @@ def get_device_sensor_registers(device: HuaweiSolarDevice) -> set[rn.RegisterNam
             for desc in SMARTLOGGER_SENSOR_DESCRIPTIONS
             if desc.entity_registry_enabled_default
         }
-        registers.update(SmartLoggerAlarmSensorEntity.ALARM_REGISTERS)
+        registers.update(HuaweiSolarAlarmSensorEntity.SMARTLOGGER_ALARM_REGISTERS)
         return registers
     return set()
 
