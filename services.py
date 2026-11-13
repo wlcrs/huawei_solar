@@ -361,7 +361,9 @@ def _parse_time(value: str) -> int:
     hours = int(hours_str)
     minutes = int(minutes_str)
 
-    if not (0 <= hours <= 23 and 0 <= minutes <= 59):
+    if not (
+        (0 <= hours <= 23 and 0 <= minutes <= 59) or (hours == 24 and minutes == 0)
+    ):
         raise ServiceValidationError(
             translation_domain=DOMAIN,
             translation_key="invalid_time",
@@ -390,7 +392,7 @@ async def _validate_power_value(
 
 def _parse_huawei_luna2000_periods(text: str) -> list[HUAWEI_LUNA2000_TimeOfUsePeriod]:
     result = []
-    for line in text.split("\n"):
+    for line in text.splitlines():
         start_end_time_str, days_effective_str, charge_flag_str = line.split("/")
         start_time_str, end_time_str = start_end_time_str.split("-")
 
@@ -408,7 +410,7 @@ def _parse_huawei_luna2000_periods(text: str) -> list[HUAWEI_LUNA2000_TimeOfUseP
 
 def _parse_lg_resu_periods(text: str) -> list[LG_RESU_TimeOfUsePeriod]:
     result = []
-    for line in text.split("\n"):
+    for line in text.splitlines():
         start_end_time_str, energy_price = line.split("/")
         start_time_str, end_time_str = start_end_time_str.split("-")
 
@@ -805,7 +807,7 @@ async def set_emma_tou_periods(
 
 def _parse_capacity_control_periods(text: str) -> list[PeakSettingPeriod]:
     result = []
-    for line in text.split("\n"):
+    for line in text.splitlines():
         start_end_time_str, days_str, wattage_str = line.split("/")
         start_time_str, end_time_str = start_end_time_str.split("-")
 
@@ -855,7 +857,7 @@ async def set_capacity_control_periods(service_call: ServiceCall) -> None:
 
 def _parse_fixed_charge_periods(text: str) -> list[ChargeDischargePeriod]:
     result = []
-    for line in text.split("\n"):
+    for line in text.splitlines():
         start_end_time_str, wattage_str = line.split("/")
         start_time_str, end_time_str = start_end_time_str.split("-")
 
