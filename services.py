@@ -313,7 +313,7 @@ SET_TOU_PERIODS_SCHEMA = DEVICE_SCHEMA.extend(
     {
         vol.Required(DATA_PERIODS): vol.All(
             cv.string,
-            vol.Match(HUAWEI_LUNA2000_TOU_PATTERN + r"|" + LG_RESU_TOU_PATTERN),
+            vol.Match(rf"\A({HUAWEI_LUNA2000_TOU_PATTERN}|{LG_RESU_TOU_PATTERN})\Z"),
         )
     }
 )
@@ -329,7 +329,7 @@ CAPACITY_CONTROL_PERIODS_SCHEMA = BATTERY_DEVICE_SCHEMA.extend(
     {
         vol.Required(DATA_PERIODS): vol.All(
             cv.string,
-            vol.Match(CAPACITY_CONTROL_PERIODS_PATTERN),
+            vol.Match(rf"\A{CAPACITY_CONTROL_PERIODS_PATTERN}\Z"),
         )
     }
 )
@@ -340,7 +340,7 @@ FIXED_CHARGE_PERIODS_SCHEMA = BATTERY_DEVICE_SCHEMA.extend(
     {
         vol.Required(DATA_PERIODS): vol.All(
             cv.string,
-            vol.Match(FIXED_CHARGE_PERIODS_PATTERN),
+            vol.Match(rf"\A{FIXED_CHARGE_PERIODS_PATTERN}\Z"),
         )
     }
 )

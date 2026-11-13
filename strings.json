@@ -1507,7 +1507,7 @@
                     "name": "Battery"
                 },
                 "periods": {
-                    "description": "One period per line. Format: '[start time]-[end time]/[power]W'. Example: '12:00-15:59/-1000W'.",
+                    "description": "One period per line. Format: '[start time]-[end time]/[power]W'. Example: '12:00-15:59/1000W'.",
                     "name": "Periods"
                 }
             },
