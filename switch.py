@@ -352,8 +352,12 @@ class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
     @callback
     def _async_update_attrs(self) -> None:
         """Update entity attributes from coordinator data."""
-        if self.coordinator.data and rn.DEVICE_STATUS in self.coordinator.data:
-            device_status = self.coordinator.data[rn.DEVICE_STATUS].value
+        if (
+            self.coordinator.data
+            and rn.DEVICE_STATUS in self.coordinator.data
+            and (device_status := self.coordinator.data[rn.DEVICE_STATUS].value)
+            is not None
+        ):
             actual_is_on = not self._is_off(device_status)
 
             if self._pending_state is not None:
@@ -369,6 +373,7 @@ class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
             self._attr_available = True
         else:
             self._attr_available = False
+            self._attr_is_on = None
 
     async def _async_set_power_state(
         self, target_is_on: bool, register: RegisterName
