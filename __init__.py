@@ -227,7 +227,26 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
         device_datas: list[HuaweiSolarDeviceData] = [primary_device_data]
 
         for extra_unit_id in entry.data[CONF_SLAVE_IDS][1:]:
-            sub_device = await create_sub_device_instance(primary_device, extra_unit_id)
+            try:
+                sub_device = await create_sub_device_instance(
+                    primary_device, extra_unit_id
+                )
+            except (ConnectionException, ConnectionInterruptedException):
+                # The connection to the primary device is broken: retry the whole setup.
+                raise
+            except (HuaweiSolarException, TimeoutError) as err:
+                # A sub-device that does not respond (e.g. an EV charger on a circuit
+                # without power) must not prevent the primary device and the other
+                # sub-devices from being set up.
+                _LOGGER.warning(
+                    "Cannot set up the device at unit_id %s, continuing without it. "
+                    "Its entities stay unavailable until the integration is reloaded. "
+                    "If the device was removed, reconfigure the integration without "
+                    "this unit_id. Error: %r",
+                    extra_unit_id,
+                    err,
+                )
+                continue
             if isinstance(sub_device, MeterDevice) and not isinstance(
                 primary_device, SmartLoggerDevice
             ):
