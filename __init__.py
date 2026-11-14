@@ -1,5 +1,6 @@
 """The Huawei Solar integration."""
 
+from datetime import datetime
 import logging
 
 from homeassistant.config_entries import ConfigEntry
@@ -10,10 +11,11 @@ from homeassistant.const import (
     CONF_USERNAME,
     Platform,
 )
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers import device_registry as dr, entity_registry as er
 from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.event import async_track_time_interval
 from huawei_solar import (
     ConnectionException,
     ConnectionInterruptedException,
@@ -50,6 +52,7 @@ from .const import (
     INVERTER_UPDATE_INTERVAL,
     OPTIMIZER_UPDATE_INTERVAL,
     POWER_METER_UPDATE_INTERVAL,
+    SUB_DEVICE_RETRY_INTERVAL,
 )
 from .services import async_setup_services
 from .types import (
@@ -225,6 +228,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
         )
 
         device_datas: list[HuaweiSolarDeviceData] = [primary_device_data]
+        skipped_unit_ids: list[int] = []
 
         for extra_unit_id in entry.data[CONF_SLAVE_IDS][1:]:
             try:
@@ -240,12 +244,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
                 # sub-devices from being set up.
                 _LOGGER.warning(
                     "Cannot set up the device at unit_id %s, continuing without it. "
-                    "Its entities stay unavailable until the integration is reloaded. "
+                    "The integration will be reloaded once the device responds again. "
                     "If the device was removed, reconfigure the integration without "
                     "this unit_id. Error: %r",
                     extra_unit_id,
                     err,
                 )
+                skipped_unit_ids.append(extra_unit_id)
                 continue
             if isinstance(sub_device, MeterDevice) and not isinstance(
                 primary_device, SmartLoggerDevice
@@ -274,6 +279,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
         entry.runtime_data = {
             DATA_DEVICE_DATAS: device_datas,
         }
+
+        if skipped_unit_ids:
+            _async_track_skipped_sub_devices(
+                hass, entry, primary_device, skipped_unit_ids
+            )
     except ConnectionInterruptedException as err:
         if primary_device is not None:
             await primary_device.stop()
@@ -340,6 +350,42 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
     await async_setup_services(hass, entry)
 
     return True
+
+
+@callback
+def _async_track_skipped_sub_devices(
+    hass: HomeAssistant,
+    entry: HuaweiSolarConfigEntry,
+    primary_device: HuaweiSolarDevice,
+    unit_ids: list[int],
+) -> None:
+    """Reload the config entry once a skipped sub-device responds again."""
+
+    async def _async_check_skipped_sub_devices(_now: datetime) -> None:
+        for unit_id in unit_ids:
+            try:
+                await create_sub_device_instance(primary_device, unit_id)
+            except (HuaweiSolarException, TimeoutError) as err:
+                _LOGGER.debug(
+                    "Device at unit_id %s still does not respond: %r", unit_id, err
+                )
+                continue
+            _LOGGER.info(
+                "Device at unit_id %s responds again, reloading the integration",
+                unit_id,
+            )
+            hass.config_entries.async_schedule_reload(entry.entry_id)
+            return
+
+    entry.async_on_unload(
+        async_track_time_interval(
+            hass,
+            _async_check_skipped_sub_devices,
+            SUB_DEVICE_RETRY_INTERVAL,
+            name="Huawei Solar skipped sub-device check",
+            cancel_on_shutdown=True,
+        )
+    )
 
 
 async def async_unload_entry(
