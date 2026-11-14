@@ -384,13 +384,29 @@
                 "name": "Cable maximum current"
             },
             "charger_charging_method": {
-                "name": "Charging method"
+                "name": "Charging method",
+                "state": {
+                    "immediate_charging": "Immediate",
+                    "scheduled_charging": "Scheduled",
+                    "next_trip_charging": "Next trip"
+                }
             },
             "charger_charging_wait_reason": {
-                "name": "Charging wait reason"
+                "name": "Charging wait reason",
+                "state": {
+                    "none": "None",
+                    "waiting_for_ev": "Waiting for vehicle",
+                    "household_power_excessive": "Household power too high",
+                    "insufficient_green_power": "Insufficient green power",
+                    "phase_switching": "Switching between single and three phase"
+                }
             },
             "charger_gun_lock_status": {
-                "name": "Connector lock status"
+                "name": "Connector lock status",
+                "state": {
+                    "locked": "Locked",
+                    "unlocked": "Unlocked"
+                }
             },
             "charger_gun_output_power": {
                 "name": "Charging power"
@@ -420,10 +436,34 @@
                 "name": "Connector total charged energy"
             },
             "charger_gun_work_status": {
-                "name": "Connector status"
+                "name": "Connector status",
+                "state": {
+                    "standby": "Standby",
+                    "standby_plugged": "Plugged in",
+                    "scheduled_waiting": "Waiting for schedule",
+                    "charging": "Charging",
+                    "charging_ended": "Charging finished",
+                    "fault": "Fault",
+                    "orderly_waiting": "Waiting (orderly charging)",
+                    "upgrading": "Upgrading",
+                    "charging_starting": "Starting",
+                    "alarm": "Alarm",
+                    "green_power_waiting": "Waiting for green power",
+                    "green_power_charging": "Green power charging"
+                }
             },
             "charger_indicator_light_status": {
-                "name": "Indicator light status"
+                "name": "Indicator light status",
+                "state": {
+                    "standby": "Standby",
+                    "authentication_waiting": "Waiting for authentication",
+                    "scheduled_waiting": "Waiting for schedule",
+                    "charging": "Charging",
+                    "charging_completed": "Charging finished",
+                    "green_power_charging": "Green power charging",
+                    "fault_alarm": "Fault or alarm",
+                    "upgrading": "Upgrading"
+                }
             },
             "charger_max_charging_power": {
                 "name": "Maximum charging power"
@@ -432,7 +472,11 @@
                 "name": "Minimum charging power"
             },
             "charger_output_relay_status": {
-                "name": "Output contactor status"
+                "name": "Output contactor status",
+                "state": {
+                    "disconnected": "Open",
+                    "connected": "Closed"
+                }
             },
             "charger_phase_a_voltage": {
                 "name": "Charger Phase A voltage"
@@ -450,7 +494,12 @@
                 "name": "Charger rated power"
             },
             "charger_reported_work_mode": {
-                "name": "Reported work mode"
+                "name": "Reported work mode",
+                "state": {
+                    "fast_charging": "Fast charging",
+                    "green_power": "Green power",
+                    "next_trip": "Next trip"
+                }
             },
             "charger_target_charged_energy": {
                 "name": "Target charged energy"

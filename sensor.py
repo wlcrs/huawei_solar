@@ -2,6 +2,7 @@
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from enum import IntEnum
 from typing import Any
 
 from huawei_solar import (
@@ -760,6 +761,22 @@ BATTERIES_ENERGY_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, 
         device_class=SensorDeviceClass.ENERGY,
     ),
 )
+
+
+def _enum_state(value: Any) -> str | None:
+    """Convert an IntEnum register value to its (translated) state key.
+
+    A member named UNKNOWN becomes "none": "unknown" is a reserved state in Home Assistant.
+    """
+    if value is None:
+        return None
+    name = value.name.lower()
+    return "none" if name == "unknown" else name
+
+
+def _enum_options(enum_class: type[IntEnum]) -> list[str]:
+    """Return the ENUM sensor options matching _enum_state."""
+    return [_enum_state(member) or "" for member in enum_class]
 
 
 @dataclass(frozen=True)
@@ -1888,6 +1905,11 @@ def create_emma_entities(
     return entities
 
 
+def _timestamp_or_none(value: Any) -> Any:
+    """Treat an all-zero timestamp (1970-01-01) as "not set"."""
+    return None if value is None or value.timestamp() == 0 else value
+
+
 CHARGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_RATED_POWER,
@@ -1952,10 +1974,16 @@ CHARGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_CHARGING_WAIT_REASON,
+        device_class=SensorDeviceClass.ENUM,
+        options=_enum_options(rv.ChargerChargingWaitReason),
+        value_conversion_function=_enum_state,
         icon="mdi:timer-sand",
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_INDICATOR_LIGHT_STATUS,
+        device_class=SensorDeviceClass.ENUM,
+        options=_enum_options(rv.ChargerIndicatorLightStatus),
+        value_conversion_function=_enum_state,
         icon="mdi:led-on",
     ),
 )
@@ -1964,10 +1992,16 @@ CHARGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
 SMART_AC_GUN_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_GUN_WORK_STATUS,
+        device_class=SensorDeviceClass.ENUM,
+        options=_enum_options(rv.ChargerGunWorkStatus),
+        value_conversion_function=_enum_state,
         icon="mdi:ev-station",
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_OUTPUT_RELAY_STATUS,
+        device_class=SensorDeviceClass.ENUM,
+        options=_enum_options(rv.ChargerOutputRelayStatus),
+        value_conversion_function=_enum_state,
         icon="mdi:electric-switch",
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
@@ -2028,6 +2062,9 @@ SMART_AC_GUN_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...]
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_GUN_LOCK_STATUS,
+        device_class=SensorDeviceClass.ENUM,
+        options=_enum_options(rv.ChargerGunLockStatus),
+        value_conversion_function=_enum_state,
         icon="mdi:lock",
     ),
     HuaweiSolarSensorEntityDescription(
@@ -2038,12 +2075,16 @@ SMART_AC_GUN_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...]
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_REPORTED_WORK_MODE,
+        device_class=SensorDeviceClass.ENUM,
+        options=_enum_options(rv.ChargerReportedWorkMode),
+        value_conversion_function=_enum_state,
         icon="mdi:tune",
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_PLANNED_DEPARTURE_TIME,
         icon="mdi:clock-outline",
         device_class=SensorDeviceClass.TIMESTAMP,
+        value_conversion_function=_timestamp_or_none,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_TARGET_CHARGED_ENERGY,
@@ -2052,6 +2093,9 @@ SMART_AC_GUN_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...]
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_CHARGING_METHOD,
+        device_class=SensorDeviceClass.ENUM,
+        options=_enum_options(rv.ChargerChargingMethod),
+        value_conversion_function=_enum_state,
         icon="mdi:calendar-clock",
     ),
 )
