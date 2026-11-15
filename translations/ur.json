@@ -580,6 +580,26 @@
             "efficiency": {
                 "name": "افادیت"
             },
+            "emma_active_alarms_critical": {
+                "name": "فعال اہم الارم"
+            },
+            "emma_active_alarms_major": {
+                "name": "فعال بڑے الارم"
+            },
+            "emma_active_alarms_minor": {
+                "name": "فعال معمولی الارم"
+            },
+            "emma_active_alarms_warning": {
+                "name": "فعال انتباہات"
+            },
+            "emma_system_state": {
+                "name": "سسٹم کی حالت",
+                "state": {
+                    "on_grid": "آن گرڈ",
+                    "off_grid": "آف گرڈ",
+                    "standby_or_exception": "اسٹینڈ بائی یا استثنا"
+                }
+            },
             "energy_charged_today": {
                 "name": "آج چارج کی گئی توانائی"
             },
@@ -789,6 +809,14 @@
             "pack_1_firmware_version": {
                 "name": "پیک 1 فرم ویئر ورژن"
             },
+            "pack_1_heating_status": {
+                "name": "پیک 1 حرارتی حالت",
+                "state": {
+                    "idle": "بیکار",
+                    "heating": "گرم ہو رہا ہے",
+                    "fault": "خرابی"
+                }
+            },
             "pack_1_max_temperature": {
                 "name": "پیک 1 زیادہ سے زیادہ درجہ حرارت"
             },
@@ -809,6 +837,9 @@
             },
             "pack_1_state_of_capacity": {
                 "name": "پیک 1 صلاحیت کی حالت"
+            },
+            "pack_1_state_of_health": {
+                "name": "پیک 1 صحت کی حالت"
             },
             "pack_1_total_charge": {
                 "name": "پیک 1 کل چارج"
@@ -831,6 +862,14 @@
             "pack_2_firmware_version": {
                 "name": "پیک 2 فرم ویئر ورژن"
             },
+            "pack_2_heating_status": {
+                "name": "پیک 2 حرارتی حالت",
+                "state": {
+                    "idle": "بیکار",
+                    "heating": "گرم ہو رہا ہے",
+                    "fault": "خرابی"
+                }
+            },
             "pack_2_max_temperature": {
                 "name": "پیک 2 زیادہ سے زیادہ درجہ حرارت"
             },
@@ -851,6 +890,9 @@
             },
             "pack_2_state_of_capacity": {
                 "name": "پیک 2 صلاحیت کی حالت"
+            },
+            "pack_2_state_of_health": {
+                "name": "پیک 2 صحت کی حالت"
             },
             "pack_2_total_charge": {
                 "name": "پیک 2 کل چارج"
@@ -873,6 +915,14 @@
             "pack_3_firmware_version": {
                 "name": "پیک 3 فرم ویئر ورژن"
             },
+            "pack_3_heating_status": {
+                "name": "پیک 3 حرارتی حالت",
+                "state": {
+                    "idle": "بیکار",
+                    "heating": "گرم ہو رہا ہے",
+                    "fault": "خرابی"
+                }
+            },
             "pack_3_max_temperature": {
                 "name": "پیک 3 زیادہ سے زیادہ درجہ حرارت"
             },
@@ -893,6 +943,9 @@
             },
             "pack_3_state_of_capacity": {
                 "name": "پیک 3 صلاحیت کی حالت"
+            },
+            "pack_3_state_of_health": {
+                "name": "پیک 3 صحت کی حالت"
             },
             "pack_3_total_charge": {
                 "name": "پیک 3 کل چارج"
@@ -1357,6 +1410,9 @@
             },
             "storage_current_day_discharge_capacity": {
                 "name": "دن کا اخراج"
+            },
+            "storage_estimated_backup_time": {
+                "name": "متوقع بیک اپ وقت"
             },
             "storage_forcible_charge_discharge_write": {
                 "name": "زبردستی چارج/ڈسچارج"

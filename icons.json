@@ -163,6 +163,21 @@
             "daily_yield_energy": {
                 "default": "mdi:solar-power"
             },
+            "emma_active_alarms_critical": {
+                "default": "mdi:alert"
+            },
+            "emma_active_alarms_major": {
+                "default": "mdi:alert"
+            },
+            "emma_active_alarms_minor": {
+                "default": "mdi:alert"
+            },
+            "emma_active_alarms_warning": {
+                "default": "mdi:alert"
+            },
+            "emma_system_state": {
+                "default": "mdi:transmission-tower"
+            },
             "emma_tou_periods": {
                 "default": "mdi:calendar-text"
             },
@@ -214,6 +229,12 @@
             "pack_1_current": {
                 "default": "mdi:home-lightning-bolt-outline"
             },
+            "pack_1_heating_status": {
+                "default": "mdi:heat-wave"
+            },
+            "pack_1_state_of_health": {
+                "default": "mdi:battery-heart-variant"
+            },
             "pack_1_total_charge": {
                 "default": "mdi:battery-plus-variant"
             },
@@ -229,6 +250,12 @@
             "pack_2_current": {
                 "default": "mdi:home-lightning-bolt-outline"
             },
+            "pack_2_heating_status": {
+                "default": "mdi:heat-wave"
+            },
+            "pack_2_state_of_health": {
+                "default": "mdi:battery-heart-variant"
+            },
             "pack_2_total_charge": {
                 "default": "mdi:battery-plus-variant"
             },
@@ -243,6 +270,12 @@
             },
             "pack_3_current": {
                 "default": "mdi:home-lightning-bolt-outline"
+            },
+            "pack_3_heating_status": {
+                "default": "mdi:heat-wave"
+            },
+            "pack_3_state_of_health": {
+                "default": "mdi:battery-heart-variant"
             },
             "pack_3_total_charge": {
                 "default": "mdi:battery-plus-variant"
@@ -306,6 +339,9 @@
             },
             "storage_current_day_discharge_capacity": {
                 "default": "mdi:battery-minus-variant"
+            },
+            "storage_estimated_backup_time": {
+                "default": "mdi:timer-outline"
             },
             "storage_huawei_luna2000_time_of_use_charging_and_discharging_periods": {
                 "default": "mdi:calendar-text"

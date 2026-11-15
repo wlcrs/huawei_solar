@@ -580,6 +580,26 @@
             "efficiency": {
                 "name": "Eficiència"
             },
+            "emma_active_alarms_critical": {
+                "name": "Alarmes crítiques actives"
+            },
+            "emma_active_alarms_major": {
+                "name": "Alarmes majors actives"
+            },
+            "emma_active_alarms_minor": {
+                "name": "Alarmes menors actives"
+            },
+            "emma_active_alarms_warning": {
+                "name": "Avisos actius"
+            },
+            "emma_system_state": {
+                "name": "Estat del sistema",
+                "state": {
+                    "on_grid": "Connectat a la xarxa",
+                    "off_grid": "Desconnectat de la xarxa",
+                    "standby_or_exception": "En espera o excepció"
+                }
+            },
             "energy_charged_today": {
                 "name": "Energia carregada avui"
             },
@@ -789,6 +809,14 @@
             "pack_1_firmware_version": {
                 "name": "Versió de microprogramari del paquet 1"
             },
+            "pack_1_heating_status": {
+                "name": "Estat d'escalfament del paquet 1",
+                "state": {
+                    "idle": "Inactiu",
+                    "heating": "Escalfant",
+                    "fault": "Avaria"
+                }
+            },
             "pack_1_max_temperature": {
                 "name": "Temperatura màxima del paquet 1"
             },
@@ -809,6 +837,9 @@
             },
             "pack_1_state_of_capacity": {
                 "name": "Estat de capacitat del paquet 1"
+            },
+            "pack_1_state_of_health": {
+                "name": "Estat de salut del paquet 1"
             },
             "pack_1_total_charge": {
                 "name": "Càrrega total del paquet 1"
@@ -831,6 +862,14 @@
             "pack_2_firmware_version": {
                 "name": "Versió de microprogramari del paquet 2"
             },
+            "pack_2_heating_status": {
+                "name": "Estat d'escalfament del paquet 2",
+                "state": {
+                    "idle": "Inactiu",
+                    "heating": "Escalfant",
+                    "fault": "Avaria"
+                }
+            },
             "pack_2_max_temperature": {
                 "name": "Temperatura màxima del paquet 2"
             },
@@ -851,6 +890,9 @@
             },
             "pack_2_state_of_capacity": {
                 "name": "Estat de capacitat del paquet 2"
+            },
+            "pack_2_state_of_health": {
+                "name": "Estat de salut del paquet 2"
             },
             "pack_2_total_charge": {
                 "name": "Càrrega total del paquet 2"
@@ -873,6 +915,14 @@
             "pack_3_firmware_version": {
                 "name": "Versió de microprogramari del paquet 3"
             },
+            "pack_3_heating_status": {
+                "name": "Estat d'escalfament del paquet 3",
+                "state": {
+                    "idle": "Inactiu",
+                    "heating": "Escalfant",
+                    "fault": "Avaria"
+                }
+            },
             "pack_3_max_temperature": {
                 "name": "Temperatura màxima del paquet 3"
             },
@@ -893,6 +943,9 @@
             },
             "pack_3_state_of_capacity": {
                 "name": "Estat de capacitat del paquet 3"
+            },
+            "pack_3_state_of_health": {
+                "name": "Estat de salut del paquet 3"
             },
             "pack_3_total_charge": {
                 "name": "Càrrega total del paquet 3"
@@ -1357,6 +1410,9 @@
             },
             "storage_current_day_discharge_capacity": {
                 "name": "Descàrrega diària"
+            },
+            "storage_estimated_backup_time": {
+                "name": "Temps estimat de reserva"
             },
             "storage_forcible_charge_discharge_write": {
                 "name": "Càrrega/descàrrega forçada"

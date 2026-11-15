@@ -580,6 +580,26 @@
             "efficiency": {
                 "name": "Rendement"
             },
+            "emma_active_alarms_critical": {
+                "name": "Actieve kritieke alarmen"
+            },
+            "emma_active_alarms_major": {
+                "name": "Actieve grote alarmen"
+            },
+            "emma_active_alarms_minor": {
+                "name": "Actieve kleine alarmen"
+            },
+            "emma_active_alarms_warning": {
+                "name": "Actieve waarschuwingen"
+            },
+            "emma_system_state": {
+                "name": "Systeemstatus",
+                "state": {
+                    "on_grid": "Netgekoppeld",
+                    "off_grid": "Eilandbedrijf",
+                    "standby_or_exception": "Stand-by of uitzondering"
+                }
+            },
             "energy_charged_today": {
                 "name": "Geladen energie vandaag"
             },
@@ -789,6 +809,14 @@
             "pack_1_firmware_version": {
                 "name": "Pakket 1 firmwareversie"
             },
+            "pack_1_heating_status": {
+                "name": "Pakket 1 verwarmingsstatus",
+                "state": {
+                    "idle": "Inactief",
+                    "heating": "Verwarmen",
+                    "fault": "Storing"
+                }
+            },
             "pack_1_max_temperature": {
                 "name": "Pakket 1 maximale temperatuur"
             },
@@ -809,6 +837,9 @@
             },
             "pack_1_state_of_capacity": {
                 "name": "Pakket 1 capaciteitsstatus"
+            },
+            "pack_1_state_of_health": {
+                "name": "Pakket 1 gezondheidstoestand (SOH)"
             },
             "pack_1_total_charge": {
                 "name": "Pakket 1 totale lading"
@@ -831,6 +862,14 @@
             "pack_2_firmware_version": {
                 "name": "Pakket 2 firmwareversie"
             },
+            "pack_2_heating_status": {
+                "name": "Pakket 2 verwarmingsstatus",
+                "state": {
+                    "idle": "Inactief",
+                    "heating": "Verwarmen",
+                    "fault": "Storing"
+                }
+            },
             "pack_2_max_temperature": {
                 "name": "Pakket 2 maximale temperatuur"
             },
@@ -851,6 +890,9 @@
             },
             "pack_2_state_of_capacity": {
                 "name": "Pakket 2 capaciteitsstatus"
+            },
+            "pack_2_state_of_health": {
+                "name": "Pakket 2 gezondheidstoestand (SOH)"
             },
             "pack_2_total_charge": {
                 "name": "Pakket 2 totale lading"
@@ -873,6 +915,14 @@
             "pack_3_firmware_version": {
                 "name": "Pakket 3 firmwareversie"
             },
+            "pack_3_heating_status": {
+                "name": "Pakket 3 verwarmingsstatus",
+                "state": {
+                    "idle": "Inactief",
+                    "heating": "Verwarmen",
+                    "fault": "Storing"
+                }
+            },
             "pack_3_max_temperature": {
                 "name": "Pakket 3 maximale temperatuur"
             },
@@ -893,6 +943,9 @@
             },
             "pack_3_state_of_capacity": {
                 "name": "Pakket 3 capaciteitsstatus"
+            },
+            "pack_3_state_of_health": {
+                "name": "Pakket 3 gezondheidstoestand (SOH)"
             },
             "pack_3_total_charge": {
                 "name": "Pakket 3 totale lading"
@@ -1357,6 +1410,9 @@
             },
             "storage_current_day_discharge_capacity": {
                 "name": "Batterijontlading vandaag"
+            },
+            "storage_estimated_backup_time": {
+                "name": "Geschatte back-uptijd"
             },
             "storage_forcible_charge_discharge_write": {
                 "name": "Geforceerd laden/ontladen"

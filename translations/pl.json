@@ -580,6 +580,26 @@
             "efficiency": {
                 "name": "Sprawność"
             },
+            "emma_active_alarms_critical": {
+                "name": "Aktywne alarmy krytyczne"
+            },
+            "emma_active_alarms_major": {
+                "name": "Aktywne alarmy poważne"
+            },
+            "emma_active_alarms_minor": {
+                "name": "Aktywne alarmy drobne"
+            },
+            "emma_active_alarms_warning": {
+                "name": "Aktywne ostrzeżenia"
+            },
+            "emma_system_state": {
+                "name": "Stan systemu",
+                "state": {
+                    "on_grid": "Praca sieciowa",
+                    "off_grid": "Praca wyspowa",
+                    "standby_or_exception": "Czuwanie lub wyjątek"
+                }
+            },
             "energy_charged_today": {
                 "name": "Energia naładowana dzisiaj"
             },
@@ -789,6 +809,14 @@
             "pack_1_firmware_version": {
                 "name": "Wersja oprogramowania modułu 1"
             },
+            "pack_1_heating_status": {
+                "name": "Stan grzania modułu 1",
+                "state": {
+                    "idle": "Bezczynny",
+                    "heating": "Grzanie",
+                    "fault": "Błąd"
+                }
+            },
             "pack_1_max_temperature": {
                 "name": "Maksymalna temperatura modułu 1"
             },
@@ -809,6 +837,9 @@
             },
             "pack_1_state_of_capacity": {
                 "name": "Stan pojemności modułu 1"
+            },
+            "pack_1_state_of_health": {
+                "name": "Kondycja modułu 1 (SOH)"
             },
             "pack_1_total_charge": {
                 "name": "Całkowite naładowanie modułu 1"
@@ -831,6 +862,14 @@
             "pack_2_firmware_version": {
                 "name": "Wersja oprogramowania modułu 2"
             },
+            "pack_2_heating_status": {
+                "name": "Stan grzania modułu 2",
+                "state": {
+                    "idle": "Bezczynny",
+                    "heating": "Grzanie",
+                    "fault": "Błąd"
+                }
+            },
             "pack_2_max_temperature": {
                 "name": "Maksymalna temperatura modułu 2"
             },
@@ -851,6 +890,9 @@
             },
             "pack_2_state_of_capacity": {
                 "name": "Stan pojemności modułu 2"
+            },
+            "pack_2_state_of_health": {
+                "name": "Kondycja modułu 2 (SOH)"
             },
             "pack_2_total_charge": {
                 "name": "Całkowite naładowanie modułu 2"
@@ -873,6 +915,14 @@
             "pack_3_firmware_version": {
                 "name": "Wersja oprogramowania modułu 3"
             },
+            "pack_3_heating_status": {
+                "name": "Stan grzania modułu 3",
+                "state": {
+                    "idle": "Bezczynny",
+                    "heating": "Grzanie",
+                    "fault": "Błąd"
+                }
+            },
             "pack_3_max_temperature": {
                 "name": "Maksymalna temperatura modułu 3"
             },
@@ -893,6 +943,9 @@
             },
             "pack_3_state_of_capacity": {
                 "name": "Stan pojemności modułu 3"
+            },
+            "pack_3_state_of_health": {
+                "name": "Kondycja modułu 3 (SOH)"
             },
             "pack_3_total_charge": {
                 "name": "Całkowite naładowanie modułu 3"
@@ -1357,6 +1410,9 @@
             },
             "storage_current_day_discharge_capacity": {
                 "name": "Rozładowanie dzienne"
+            },
+            "storage_estimated_backup_time": {
+                "name": "Szacowany czas zasilania awaryjnego"
             },
             "storage_forcible_charge_discharge_write": {
                 "name": "Wymuszone ładowanie/rozładowanie"

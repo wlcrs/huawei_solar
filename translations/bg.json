@@ -580,6 +580,26 @@
             "efficiency": {
                 "name": "Ефективност"
             },
+            "emma_active_alarms_critical": {
+                "name": "Активни критични аларми"
+            },
+            "emma_active_alarms_major": {
+                "name": "Активни основни аларми"
+            },
+            "emma_active_alarms_minor": {
+                "name": "Активни второстепенни аларми"
+            },
+            "emma_active_alarms_warning": {
+                "name": "Активни предупреждения"
+            },
+            "emma_system_state": {
+                "name": "Състояние на системата",
+                "state": {
+                    "on_grid": "В мрежата",
+                    "off_grid": "Извън мрежата",
+                    "standby_or_exception": "В готовност или изключение"
+                }
+            },
             "energy_charged_today": {
                 "name": "Енергия заредена днес"
             },
@@ -789,6 +809,14 @@
             "pack_1_firmware_version": {
                 "name": "Фърмуер версия на модул 1"
             },
+            "pack_1_heating_status": {
+                "name": "Статус на нагряване на модул 1",
+                "state": {
+                    "idle": "В покой",
+                    "heating": "Нагряване",
+                    "fault": "Неизправност"
+                }
+            },
             "pack_1_max_temperature": {
                 "name": "Макс. температура на модул 1"
             },
@@ -809,6 +837,9 @@
             },
             "pack_1_state_of_capacity": {
                 "name": "Капацитивно състояние на модул 1"
+            },
+            "pack_1_state_of_health": {
+                "name": "Здравословно състояние (SOH) на модул 1"
             },
             "pack_1_total_charge": {
                 "name": "Общ заряд на модул 1"
@@ -831,6 +862,14 @@
             "pack_2_firmware_version": {
                 "name": "Версия на фърмуера на модул 2"
             },
+            "pack_2_heating_status": {
+                "name": "Статус на нагряване на модул 2",
+                "state": {
+                    "idle": "В покой",
+                    "heating": "Нагряване",
+                    "fault": "Неизправност"
+                }
+            },
             "pack_2_max_temperature": {
                 "name": "Макс. температура на модул 2"
             },
@@ -851,6 +890,9 @@
             },
             "pack_2_state_of_capacity": {
                 "name": "Капацитивно състояние на модул 2"
+            },
+            "pack_2_state_of_health": {
+                "name": "Здравословно състояние (SOH) на модул 2"
             },
             "pack_2_total_charge": {
                 "name": "Общ заряд на модул 2"
@@ -873,6 +915,14 @@
             "pack_3_firmware_version": {
                 "name": "Версия на фърмуера на модул 3"
             },
+            "pack_3_heating_status": {
+                "name": "Статус на нагряване на модул 3",
+                "state": {
+                    "idle": "В покой",
+                    "heating": "Нагряване",
+                    "fault": "Неизправност"
+                }
+            },
             "pack_3_max_temperature": {
                 "name": "Макс. температура на модул 3"
             },
@@ -893,6 +943,9 @@
             },
             "pack_3_state_of_capacity": {
                 "name": "Капацитивно състояние на модул 3"
+            },
+            "pack_3_state_of_health": {
+                "name": "Здравословно състояние (SOH) на модул 3"
             },
             "pack_3_total_charge": {
                 "name": "Общ заряд на модул 3"
@@ -1357,6 +1410,9 @@
             },
             "storage_current_day_discharge_capacity": {
                 "name": "Разряд за текущия ден"
+            },
+            "storage_estimated_backup_time": {
+                "name": "Прогнозно време на резервно захранване"
             },
             "storage_forcible_charge_discharge_write": {
                 "name": "Принудително зареждане/разреждане"
