@@ -24,6 +24,9 @@ ENERGY_STORAGE_UPDATE_INTERVAL = timedelta(seconds=30)
 CONFIGURATION_UPDATE_INTERVAL = timedelta(minutes=15)
 # optimizer data is only refreshed every 5 minutes by the inverter.
 OPTIMIZER_UPDATE_INTERVAL = timedelta(minutes=5)
+# a sub-device that could not be set up is probed this often: each probe of a
+# device that does not answer at all can occupy the Modbus connection for a while
+SUB_DEVICE_RETRY_INTERVAL = timedelta(minutes=10)
 
 SERVICE_FORCIBLE_CHARGE = "forcible_charge"
 SERVICE_FORCIBLE_DISCHARGE = "forcible_discharge"
