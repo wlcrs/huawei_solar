@@ -116,7 +116,7 @@
             "name": "Caricabatterie"
         },
         "charger_connector": {
-            "name": "Connettore di ricarica {charger}"
+            "name": "Connettore di ricarica"
         },
         "connected_energy_storage": {
             "name": "Batterie"
