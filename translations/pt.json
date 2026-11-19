@@ -171,6 +171,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Potência máxima de carga da rede"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "SOC para corte de pico"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Potência máxima de injeção na rede (%)"
             },
@@ -244,6 +247,14 @@
                     "green_power_priority": "Prioridade de energia verde"
                 }
             },
+            "emma_capacity_control_mode": {
+                "name": "Modo de controle de capacidade",
+                "state": {
+                    "active_capacity_control": "Controle de capacidade ativo",
+                    "apparent_power_limit": "Limite de potência aparente",
+                    "disable": "Desativado"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "Modo de controle do ESS",
                 "state": {
@@ -284,6 +295,7 @@
                     "fixed_charge_discharge": "Carga/descarga fixa",
                     "fully_fed_to_grid": "Injeção total na rede",
                     "maximise_self_consumption": "Maximizar autoconsumo",
+                    "third_party_control": "Controlo de terceiros",
                     "time_of_use_lg": "Tarifa bi-horária (TOU)",
                     "time_of_use_luna2000": "Tarifa bi-horária (TOU)"
                 }
@@ -1190,6 +1202,9 @@
             "storage_state_of_capacity": {
                 "name": "Estado de carga da bateria"
             },
+            "storage_state_of_health": {
+                "name": "Estado de saúde (SOH)"
+            },
             "storage_total_charge": {
                 "name": "Carga total da bateria"
             },
@@ -1246,6 +1261,9 @@
             },
             "yearly_yield_energy": {
                 "name": "Produção anual"
+            },
+            "emma_capacity_control_periods": {
+                "name": "Períodos de controle de capacidade"
             },
             "emma_tou_periods": {
                 "name": "Períodos TOU"
@@ -1382,8 +1400,8 @@
             "description": "Definir períodos de controle de capacidade",
             "fields": {
                 "device_id": {
-                    "description": "Dispositivo inversor a ser carregado forçadamente",
-                    "name": "Inversor"
+                    "description": "Dispositivo inversor",
+                    "name": "Dispositivo"
                 },
                 "periods": {
                     "description": "Lista de períodos de controle de capacidade",
