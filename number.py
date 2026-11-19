@@ -1,6 +1,6 @@
 """Number entities for Huawei Solar."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import logging
 
 from huawei_solar import (
@@ -258,6 +258,9 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         native_unit_of_measurement=PERCENTAGE,
         entity_category=EntityCategory.CONFIG,
     ),
+)
+
+STORAGE_POWER_OF_CHARGE_FROM_GRID_NUMBER_DESCRIPTION = (
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_POWER_OF_CHARGE_FROM_GRID,
         native_min_value=0,
@@ -265,7 +268,7 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         icon="mdi:battery-negative",
         native_unit_of_measurement=UnitOfPower.WATT,
         entity_category=EntityCategory.CONFIG,
-    ),
+    )
 )
 
 CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
@@ -496,6 +499,16 @@ async def async_setup_entry(
                         )
                     )
 
+                if ucs.device.supports_charge_from_grid_power:
+                    slave_entities.append(
+                        await HuaweiSolarNumberEntity.create(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            STORAGE_POWER_OF_CHARGE_FROM_GRID_NUMBER_DESCRIPTION,
+                            ucs.device_info,
+                        )
+                    )
+
                 if ucs.device.supports_dongle_charge_power_limit:
                     slave_entities.append(
                         await HuaweiSolarNumberEntity.create(
@@ -529,30 +542,36 @@ async def async_setup_entry(
                         "Adding capacity control number entities on device %s",
                         ucs.device.serial_number,
                     )
-                    for entity_description in CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
-                        slave_entities.append(  # noqa: PERF401
-                            await HuaweiSolarNumberEntity.create(
-                                ucs.configuration_update_coordinator,
-                                ucs.device,
-                                entity_description,
-                                ucs.connected_energy_storage,
-                            )
-                        )
-
+                    capacity_descriptions = CAPACITY_CONTROL_NUMBER_DESCRIPTIONS
                 else:
                     _LOGGER.debug(
                         "Capacity control not supported on slave %s. Skipping capacity control number entities",
                         ucs.device.serial_number,
                     )
-                    for entity_description in NON_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
-                        slave_entities.append(  # noqa: PERF401
-                            await HuaweiSolarNumberEntity.create(
-                                ucs.configuration_update_coordinator,
-                                ucs.device,
-                                entity_description,
-                                ucs.connected_energy_storage,
-                            )
+                    capacity_descriptions = NON_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS
+
+                has_luna2000 = rv.StorageProductModel.HUAWEI_LUNA2000 in (
+                    ucs.device.battery_1_type,
+                    ucs.device.battery_2_type,
+                )
+                for entity_description in capacity_descriptions:
+                    adjusted_description = (
+                        replace(entity_description, native_min_value=12)
+                        if (
+                            entity_description.key
+                            == rn.STORAGE_DISCHARGING_CUTOFF_CAPACITY
+                            and not has_luna2000
                         )
+                        else entity_description
+                    )
+                    slave_entities.append(
+                        await HuaweiSolarNumberEntity.create(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            adjusted_description,
+                            ucs.connected_energy_storage,
+                        )
+                    )
 
         else:
             _LOGGER.debug(

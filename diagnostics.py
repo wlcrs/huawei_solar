@@ -51,6 +51,9 @@ async def async_get_config_entry_diagnostics(
                 "power_meter_type": dd.device.power_meter_type,
                 "supports_capacity_control": dd.device.supports_capacity_control,
                 "supports_ess_low_power": dd.device.supports_ess_low_power,
+                "supports_charge_from_grid_power": dd.device.supports_charge_from_grid_power,
+                "supports_discharge_power_adjustment": dd.device.supports_discharge_power_adjustment,
+                "supports_recharge": dd.device.supports_recharge,
                 "supports_third_party_control": dd.device.supports_third_party_control,
             }
 
