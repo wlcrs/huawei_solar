@@ -171,6 +171,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Putere maximă de încărcare din rețea"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "SOC reducere vârf de sarcină"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Putere maximă injectată în rețea (%)"
             },
@@ -244,6 +247,14 @@
                     "green_power_priority": "Prioritate energie verde"
                 }
             },
+            "emma_capacity_control_mode": {
+                "name": "Mod control capacitate",
+                "state": {
+                    "active_capacity_control": "Control activ al capacității",
+                    "apparent_power_limit": "Limită putere aparentă",
+                    "disable": "Dezactivat"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "Mod de control ESS",
                 "state": {
@@ -284,6 +295,7 @@
                     "fixed_charge_discharge": "Încărcare/descărcare fixă",
                     "fully_fed_to_grid": "Injectare totală în rețea",
                     "maximise_self_consumption": "Maximizare autoconsum",
+                    "third_party_control": "Control terți",
                     "time_of_use_lg": "Timp de utilizare (TOU)",
                     "time_of_use_luna2000": "Timp de utilizare (TOU)"
                 }
@@ -1190,6 +1202,9 @@
             "storage_state_of_capacity": {
                 "name": "Stare de încărcare baterie"
             },
+            "storage_state_of_health": {
+                "name": "Stare de sănătate (SOH)"
+            },
             "storage_total_charge": {
                 "name": "Încărcare totală baterie"
             },
@@ -1246,6 +1261,9 @@
             },
             "yearly_yield_energy": {
                 "name": "Producție anuală"
+            },
+            "emma_capacity_control_periods": {
+                "name": "Perioade de control al capacității"
             },
             "emma_tou_periods": {
                 "name": "Perioade TOU"
@@ -1382,8 +1400,8 @@
             "description": "Setare perioade de control al capacității",
             "fields": {
                 "device_id": {
-                    "description": "Dispozitivul invertor pentru încărcare forțată",
-                    "name": "Invertor"
+                    "description": "Dispozitiv invertor",
+                    "name": "Dispozitiv"
                 },
                 "periods": {
                     "description": "Lista perioadelor de control al capacității",
