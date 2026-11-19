@@ -171,6 +171,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Maximale Ladeleistung aus dem Netz"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "Peak-Shaving Ladestand"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximale Netzeinspeiseleistung (%)"
             },
@@ -244,6 +247,14 @@
                     "green_power_priority": "Priorität für Ökostrom"
                 }
             },
+            "emma_capacity_control_mode": {
+                "name": "Kapazitätsregelungsmodus",
+                "state": {
+                    "active_capacity_control": "Aktive Kapazitätsregelung",
+                    "apparent_power_limit": "Scheinleistungsbeschränkung",
+                    "disable": "Deaktivieren"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS-Kontroll-Modus",
                 "state": {
@@ -284,6 +295,7 @@
                     "fixed_charge_discharge": "Feste Lade-/Entladeleistung",
                     "fully_fed_to_grid": "Vollständige Einspeisung ins Netz",
                     "maximise_self_consumption": "Maximaler Eigenverbrauch",
+                    "third_party_control": "Drittanbieter-Steuerung",
                     "time_of_use_lg": "Zeitnutzung LG",
                     "time_of_use_luna2000": "Zeitnutzung Luna 2000"
                 }
@@ -1190,6 +1202,9 @@
             "storage_state_of_capacity": {
                 "name": "Batterieladung"
             },
+            "storage_state_of_health": {
+                "name": "Gesundheitszustand"
+            },
             "storage_total_charge": {
                 "name": "Gesamtladung"
             },
@@ -1246,6 +1261,9 @@
             },
             "yearly_yield_energy": {
                 "name": "Jährlicher Ertrag"
+            },
+            "emma_capacity_control_periods": {
+                "name": "Kapazitätsregelungsperioden"
             },
             "emma_tou_periods": {
                 "name": "TOU-Perioden"
@@ -1382,8 +1400,8 @@
             "description": "Kapazitätsregelungsperioden",
             "fields": {
                 "device_id": {
-                    "description": "Muss ein 'Batterie' Gerät sein",
-                    "name": "Batterie"
+                    "description": "Muss ein \"Wechselrichter\"sein",
+                    "name": "Gerät"
                 },
                 "periods": {
                     "description": "Ein Zeitraum pro Zeile. Format: '[Startzeit]-[Endzeit]/[Wochentage]/[Leistung]W', mit 1=Montag, 7=Sonntag. Beispiel: '00:00-23:59/1234567/2500W'.",
