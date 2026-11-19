@@ -10,6 +10,7 @@ from huawei_solar import (
     SChargerDevice,
     SmartAcGunDevice,
     register_names as rn,
+    register_values as rv,
 )
 
 from homeassistant.components.number import (
@@ -163,7 +164,9 @@ STORAGE_ADJUSTMENT_DEADBAND_NUMBER_DESCRIPTION = HuaweiSolarNumberEntityDescript
 """In FusionSolar: Settings > Power adjustment > Battery control > Power control hysteresis."""
 
 
-EMMA_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
+EMMA_POWER_LIMITED_GRID_CONNECTION_NUMBER_DESCRIPTIONS: tuple[
+    HuaweiSolarNumberEntityDescription, ...
+] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.EMMA_MAXIMUM_FEED_GRID_POWER_PERCENT,
         native_max_value=100,
@@ -183,6 +186,9 @@ EMMA_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfPower.WATT,
         entity_category=EntityCategory.CONFIG,
     ),
+)
+
+EMMA_BATTERY_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.EMMA_TOU_MAXIMUM_POWER_FOR_CHARGING_BATTERIES_FROM_GRID,
         native_min_value=0,
@@ -367,6 +373,11 @@ async def async_setup_entry(
         return
 
     device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
+    has_inverter_battery = any(
+        isinstance(dd, HuaweiSolarInverterData)
+        and dd.device.battery_type != rv.StorageProductModel.NONE
+        for dd in device_datas
+    )
 
     entities_to_add: list[NumberEntity] = []
     for ucs in device_datas:
@@ -374,14 +385,41 @@ async def async_setup_entry(
             continue
         slave_entities: list[HuaweiSolarNumberEntity] = []
         if isinstance(ucs.device, EMMADevice):
-            for entity_description in EMMA_NUMBER_DESCRIPTIONS:
-                slave_entities.append(  # noqa: PERF401
-                    await HuaweiSolarNumberEntity.create(
-                        ucs.configuration_update_coordinator,
-                        ucs.device,
-                        entity_description,
-                        ucs.device_info,
+            if ucs.device.supports_power_limited_grid_connection:
+                for (
+                    entity_description
+                ) in EMMA_POWER_LIMITED_GRID_CONNECTION_NUMBER_DESCRIPTIONS:
+                    slave_entities.append(  # noqa: PERF401
+                        await HuaweiSolarNumberEntity.create(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            entity_description,
+                            ucs.device_info,
+                        )
                     )
+            else:
+                _LOGGER.debug(
+                    "Power-limited grid connection not supported on EMMA %s. Skipping feed-in limit number entities",
+                    ucs.device.serial_number,
+                )
+
+            if (
+                ucs.device.battery_type != rv.StorageProductModel.NONE
+                or has_inverter_battery
+            ):
+                for entity_description in EMMA_BATTERY_NUMBER_DESCRIPTIONS:
+                    slave_entities.append(  # noqa: PERF401
+                        await HuaweiSolarNumberEntity.create(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            entity_description,
+                            ucs.device_info,
+                        )
+                    )
+            else:
+                _LOGGER.debug(
+                    "No battery detected on EMMA %s. Skipping EMMA battery number entities",
+                    ucs.device.serial_number,
                 )
 
             if ucs.device.supports_capacity_control:

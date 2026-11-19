@@ -826,37 +826,50 @@ async def async_setup_services(
         isinstance(uc.device, EMMADevice) and uc.device.supports_capacity_control
         for uc in hsucs
     )
+    has_emma_power_limited_grid_connection = any(
+        isinstance(uc.device, EMMADevice)
+        and uc.device.supports_power_limited_grid_connection
+        for uc in hsucs
+    )
+    has_emma_battery = any(
+        isinstance(uc.device, EMMADevice)
+        and uc.device.battery_type != rv.StorageProductModel.NONE
+        for uc in hsucs
+    )
     has_emma = any(isinstance(uc.device, EMMADevice) for uc in hsucs)
 
     # Register functions that are available on all inverters, no battery/emma required
     if has_emma:
-        hass.services.async_register(
-            DOMAIN,
-            SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
-            partial(reset_maximum_feed_grid_power, "emma"),
-            schema=EMMA_DEVICE_SCHEMA,
-        )
+        if has_emma_power_limited_grid_connection:
+            hass.services.async_register(
+                DOMAIN,
+                SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,
+                partial(reset_maximum_feed_grid_power, "emma"),
+                schema=EMMA_DEVICE_SCHEMA,
+            )
 
-        hass.services.async_register(
-            DOMAIN,
-            SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
-            partial(set_zero_power_grid_connection, "emma"),
-            schema=EMMA_DEVICE_SCHEMA,
-        )
+            hass.services.async_register(
+                DOMAIN,
+                SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
+                partial(set_zero_power_grid_connection, "emma"),
+                schema=EMMA_DEVICE_SCHEMA,
+            )
 
-        hass.services.async_register(
-            DOMAIN,
-            SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
-            partial(set_maximum_feed_grid_power, "emma"),
-            schema=EMMA_DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_SCHEMA),
-        )
+            hass.services.async_register(
+                DOMAIN,
+                SERVICE_SET_MAXIMUM_FEED_GRID_POWER,
+                partial(set_maximum_feed_grid_power, "emma"),
+                schema=EMMA_DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_SCHEMA),
+            )
 
-        hass.services.async_register(
-            DOMAIN,
-            SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
-            partial(set_maximum_feed_grid_power_percentage, "emma"),
-            schema=EMMA_DEVICE_SCHEMA.extend(MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA),
-        )
+            hass.services.async_register(
+                DOMAIN,
+                SERVICE_SET_MAXIMUM_FEED_GRID_POWER_PERCENT,
+                partial(set_maximum_feed_grid_power_percentage, "emma"),
+                schema=EMMA_DEVICE_SCHEMA.extend(
+                    MAXIMUM_FEED_GRID_POWER_PERCENTAGE_SCHEMA
+                ),
+            )
 
     else:
         hass.services.async_register(
@@ -897,17 +910,18 @@ async def async_setup_services(
             schema=INVERTER_DEVICE_SCHEMA,
         )
 
-    if has_battery:
+    if has_emma and (has_battery or has_emma_battery):
         # When an EMMA is present, it is responsible for managing the battery.
-        # No direct control of the battery is possible.
-        if has_emma:
-            hass.services.async_register(
-                DOMAIN,
-                SERVICE_SET_TOU_PERIODS,
-                set_emma_tou_periods,
-                schema=EMMA_TOU_PERIODS_SCHEMA,
-            )
-        else:
+        # No direct control of the battery TOU periods is possible.
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_SET_TOU_PERIODS,
+            set_emma_tou_periods,
+            schema=EMMA_TOU_PERIODS_SCHEMA,
+        )
+
+    if has_battery:
+        if not has_emma:
             hass.services.async_register(
                 DOMAIN,
                 SERVICE_SET_TOU_PERIODS,

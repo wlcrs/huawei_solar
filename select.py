@@ -112,7 +112,7 @@ ACTIVE_POWER_LIMITATION_MODE_SELECT_DESCRIPTION = (
 )
 """In FusionSolar: Settings > Power adjustment > Active power control > Grid-tied point control > Limitation mode."""
 
-EMMA_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
+EMMA_BATTERY_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     HuaweiSolarSelectEntityDescription(
         key=rn.EMMA_ESS_CONTROL_MODE,
         entity_category=EntityCategory.CONFIG,
@@ -163,6 +163,11 @@ async def async_setup_entry(
         return
 
     device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data[DATA_DEVICE_DATAS]
+    has_inverter_battery = any(
+        isinstance(dd, HuaweiSolarInverterData)
+        and dd.device.battery_type != rv.StorageProductModel.NONE
+        for dd in device_datas
+    )
 
     entities_to_add: list[SelectEntity] = []
     for ucs in device_datas:
@@ -171,14 +176,23 @@ async def async_setup_entry(
 
         slave_entities: list[HuaweiSolarSelectEntity | StorageModeSelectEntity] = []
         if isinstance(ucs.device, EMMADevice):
-            for entity_description in EMMA_SELECT_DESCRIPTIONS:
-                slave_entities.append(  # noqa: PERF401
-                    HuaweiSolarSelectEntity(
-                        ucs.configuration_update_coordinator,
-                        ucs.device,
-                        entity_description,
-                        ucs.device_info,
+            if (
+                ucs.device.battery_type != rv.StorageProductModel.NONE
+                or has_inverter_battery
+            ):
+                for entity_description in EMMA_BATTERY_SELECT_DESCRIPTIONS:
+                    slave_entities.append(  # noqa: PERF401
+                        HuaweiSolarSelectEntity(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            entity_description,
+                            ucs.device_info,
+                        )
                     )
+            else:
+                _LOGGER.debug(
+                    "No battery detected for EMMA %s. Skipping EMMA battery select entities",
+                    ucs.device.serial_number,
                 )
 
             if ucs.device.supports_capacity_control:
