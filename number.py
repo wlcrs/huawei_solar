@@ -193,6 +193,20 @@ EMMA_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     ),
 )
 
+EMMA_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[
+    HuaweiSolarNumberEntityDescription, ...
+] = (
+    HuaweiSolarNumberEntityDescription(
+        key=rn.EMMA_CAPACITY_CONTROL_SOC_PEAK_SHAVING,
+        native_min_value=0,
+        native_max_value=100,
+        native_step=0.1,
+        icon="mdi:battery-arrow-up",
+        native_unit_of_measurement=PERCENTAGE,
+        entity_category=EntityCategory.CONFIG,
+    ),
+)
+
 ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_MAXIMUM_CHARGING_POWER,
@@ -368,6 +382,26 @@ async def async_setup_entry(
                         entity_description,
                         ucs.device_info,
                     )
+                )
+
+            if ucs.device.supports_capacity_control:
+                _LOGGER.debug(
+                    "Adding capacity control number entities on EMMA %s",
+                    ucs.device.serial_number,
+                )
+                for entity_description in EMMA_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
+                    slave_entities.append(  # noqa: PERF401
+                        await HuaweiSolarNumberEntity.create(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            entity_description,
+                            ucs.device_info,
+                        )
+                    )
+            else:
+                _LOGGER.debug(
+                    "Capacity control not supported on EMMA %s. Skipping capacity control number entities",
+                    ucs.device.serial_number,
                 )
 
         if isinstance(ucs.device, SChargerDevice):

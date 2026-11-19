@@ -171,6 +171,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Potência máxima de carga da rede"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "SOC para corte de pico"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Potência máxima de injeção na rede (%)"
             },
@@ -242,6 +245,14 @@
                 "state": {
                     "fast_charging": "Carregamento rápido",
                     "green_power_priority": "Prioridade de energia verde"
+                }
+            },
+            "emma_capacity_control_mode": {
+                "name": "Modo de controle de capacidade",
+                "state": {
+                    "active_capacity_control": "Controle de capacidade ativo",
+                    "apparent_power_limit": "Limite de potência aparente",
+                    "disable": "Desativado"
                 }
             },
             "emma_ess_control_mode": {
@@ -1246,6 +1257,9 @@
             },
             "yearly_yield_energy": {
                 "name": "Produção anual"
+            },
+            "emma_capacity_control_periods": {
+                "name": "Períodos de controle de capacidade"
             },
             "emma_tou_periods": {
                 "name": "Períodos TOU"

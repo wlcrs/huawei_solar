@@ -171,6 +171,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Maximale Ladeleistung aus dem Netz"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "Peak-Shaving Ladestand"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximale Netzeinspeiseleistung (%)"
             },
@@ -242,6 +245,14 @@
                 "state": {
                     "fast_charging": "Schnellladen",
                     "green_power_priority": "Priorität für Ökostrom"
+                }
+            },
+            "emma_capacity_control_mode": {
+                "name": "Kapazitätsregelungsmodus",
+                "state": {
+                    "active_capacity_control": "Aktive Kapazitätsregelung",
+                    "apparent_power_limit": "Scheinleistungsbeschränkung",
+                    "disable": "Deaktivieren"
                 }
             },
             "emma_ess_control_mode": {
@@ -1247,6 +1258,9 @@
             "yearly_yield_energy": {
                 "name": "Jährlicher Ertrag"
             },
+            "emma_capacity_control_periods": {
+                "name": "Kapazitätsregelungsperioden"
+            },
             "emma_tou_periods": {
                 "name": "TOU-Perioden"
             }
@@ -1382,8 +1396,8 @@
             "description": "Kapazitätsregelungsperioden",
             "fields": {
                 "device_id": {
-                    "description": "Muss ein 'Batterie' Gerät sein",
-                    "name": "Batterie"
+                    "description": "Muss ein \"Wechselrichter\"sein",
+                    "name": "[%key:component::huawei_solar::services::forcible_charge::fields::device_id::name%]"
                 },
                 "periods": {
                     "description": "Ein Zeitraum pro Zeile. Format: '[Startzeit]-[Endzeit]/[Wochentage]/[Leistung]W', mit 1=Montag, 7=Sonntag. Beispiel: '00:00-23:59/1234567/2500W'.",

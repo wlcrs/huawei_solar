@@ -123,6 +123,21 @@ EMMA_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     ),
 )
 
+EMMA_CAPACITY_CONTROL_SELECT_DESCRIPTIONS: tuple[
+    HuaweiSolarSelectEntityDescription, ...
+] = (
+    HuaweiSolarSelectEntityDescription(
+        key=rn.EMMA_CAPACITY_CONTROL_MODE,
+        icon="mdi:battery-arrow-up",
+        entity_category=EntityCategory.CONFIG,
+        # Capacity control is not available in 'Fully fed to grid' mode
+        is_available_key=rn.EMMA_ESS_CONTROL_MODE,
+        check_is_available_func=lambda mode: (
+            mode is not None and mode != rv.EmmaEssControlMode.FULLY_FED_TO_GRID
+        ),
+    ),
+)
+
 SMART_AC_GUN_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     HuaweiSolarSelectEntityDescription(
         key=rn.CHARGER_GUN_WORK_MODE,
@@ -164,6 +179,26 @@ async def async_setup_entry(
                         entity_description,
                         ucs.device_info,
                     )
+                )
+
+            if ucs.device.supports_capacity_control:
+                _LOGGER.debug(
+                    "Adding capacity control select entities for EMMA %s",
+                    ucs.device.serial_number,
+                )
+                slave_entities.extend(
+                    HuaweiSolarSelectEntity(
+                        ucs.configuration_update_coordinator,
+                        ucs.device,
+                        entity_description,
+                        ucs.device_info,
+                    )
+                    for entity_description in EMMA_CAPACITY_CONTROL_SELECT_DESCRIPTIONS
+                )
+            else:
+                _LOGGER.debug(
+                    "Capacity control is not supported by EMMA %s",
+                    ucs.device.serial_number,
                 )
 
         if isinstance(ucs.device, SmartAcGunDevice):

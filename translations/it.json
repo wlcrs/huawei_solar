@@ -171,6 +171,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Potenza massima di carica dalla rete"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "Taglio del picco SOC batteria"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Potenza massima della rete di alimentazione (%)"
             },
@@ -242,6 +245,14 @@
                 "state": {
                     "fast_charging": "Ricarica rapida",
                     "green_power_priority": "Priorità energia verde"
+                }
+            },
+            "emma_capacity_control_mode": {
+                "name": "Modalità di controllo capacità di carica batteria",
+                "state": {
+                    "active_capacity_control": "Controllo capacità attivo",
+                    "apparent_power_limit": "Limite di potenza apparente",
+                    "disable": "Disabilita"
                 }
             },
             "emma_ess_control_mode": {
@@ -1247,6 +1258,9 @@
             "yearly_yield_energy": {
                 "name": "Rendimento annuale"
             },
+            "emma_capacity_control_periods": {
+                "name": "Tempo di controllo della capacità"
+            },
             "emma_tou_periods": {
                 "name": "Periodi TOU"
             }
@@ -1382,8 +1396,8 @@
             "description": "Impostare orari del Controllo Capacità",
             "fields": {
                 "device_id": {
-                    "description": "Deve essere un dispositivo 'Batterie'",
-                    "name": "Batteria"
+                    "description": "Quando è presente un EMMA, deve essere un dispositivo 'EMMA'. Altrimenti: deve essere un dispositivo 'Batterie'",
+                    "name": "Dispositivo"
                 },
                 "periods": {
                     "description": "Un periodo di tempo per linea. Formato: '[orario-inizio]-[orario fine]/[giorni effettivi]/[potenza]W', con 1=Lunedì, 7=Domenica. Esempio: '00:00-23:59/1234567/2500W'.",

@@ -296,6 +296,15 @@ CAPACITY_CONTROL_PERIODS_SCHEMA = BATTERY_DEVICE_SCHEMA.extend(
     }
 )
 
+EMMA_CAPACITY_CONTROL_PERIODS_SCHEMA = EMMA_DEVICE_SCHEMA.extend(
+    {
+        vol.Required(DATA_PERIODS): vol.All(
+            cv.string,
+            vol.Match(CAPACITY_CONTROL_PERIODS_PATTERN),
+        )
+    }
+)
+
 FIXED_CHARGE_PERIODS_PATTERN = r"([0-2]\d:\d\d-[0-2]\d:\d\d/\d+W\n?){0,10}"
 
 FIXED_CHARGE_PERIODS_SCHEMA = BATTERY_DEVICE_SCHEMA.extend(
@@ -734,6 +743,26 @@ async def set_capacity_control_periods(service_call: ServiceCall) -> None:
     _request_configuration_refresh(service_call, dd)
 
 
+async def set_emma_capacity_control_periods(service_call: ServiceCall) -> None:
+    """Set the Capacity Control Periods of an EMMA."""
+
+    dd = get_emma_device(service_call)
+
+    if not re.fullmatch(
+        CAPACITY_CONTROL_PERIODS_PATTERN, service_call.data[DATA_PERIODS]
+    ):
+        raise ValueError(
+            f"Invalid periods: could not validate '{service_call.data[DATA_PERIODS]}' as capacity control periods"
+        )
+
+    await dd.device.set(
+        rn.EMMA_CAPACITY_CONTROL_PERIODS,
+        _parse_capacity_control_periods(service_call.data[DATA_PERIODS]),
+    )
+
+    _request_configuration_refresh(service_call, dd)
+
+
 def _parse_fixed_charge_periods(text: str) -> list[ChargeDischargePeriod]:
     result = []
     for line in text.split("\n"):
@@ -791,6 +820,10 @@ async def async_setup_services(
 
     has_capacity_control = any(
         isinstance(uc.device, SUN2000Device) and uc.device.supports_capacity_control
+        for uc in hsucs
+    )
+    has_emma_capacity_control = any(
+        isinstance(uc.device, EMMADevice) and uc.device.supports_capacity_control
         for uc in hsucs
     )
     has_emma = any(isinstance(uc.device, EMMADevice) for uc in hsucs)
@@ -921,7 +954,14 @@ async def async_setup_services(
             schema=FIXED_CHARGE_PERIODS_SCHEMA,
         )
 
-    if has_capacity_control:
+    if has_emma_capacity_control:
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_SET_CAPACITY_CONTROL_PERIODS,
+            set_emma_capacity_control_periods,
+            schema=EMMA_CAPACITY_CONTROL_PERIODS_SCHEMA,
+        )
+    elif has_capacity_control:
         hass.services.async_register(
             DOMAIN,
             SERVICE_SET_CAPACITY_CONTROL_PERIODS,

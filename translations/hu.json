@@ -171,6 +171,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Hálózatból történő töltés maximális teljesítménye"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "Csúcslefaragási SOC"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximális hálózati betáplálási teljesítmény (%)"
             },
@@ -242,6 +245,14 @@
                 "state": {
                     "fast_charging": "Gyorstöltés",
                     "green_power_priority": "Zöldenergia prioritás"
+                }
+            },
+            "emma_capacity_control_mode": {
+                "name": "Kapacitásvezérlési mód",
+                "state": {
+                    "active_capacity_control": "Aktív kapacitásvezérlés",
+                    "apparent_power_limit": "Látszólagos teljesítménykorlát",
+                    "disable": "Letiltás"
                 }
             },
             "emma_ess_control_mode": {
@@ -1246,6 +1257,9 @@
             },
             "yearly_yield_energy": {
                 "name": "Éves hozam"
+            },
+            "emma_capacity_control_periods": {
+                "name": "Kapacitásvezérlési időszakok"
             },
             "emma_tou_periods": {
                 "name": "TOU időszakok"

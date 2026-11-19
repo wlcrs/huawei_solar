@@ -1800,6 +1800,16 @@ def create_emma_entities(
                 translation_key="emma_tou_periods",
             )
         )
+        if ucs.device.supports_capacity_control:
+            entities.append(
+                HuaweiSolarCapacityControlPeriodsSensorEntity(
+                    ucs.configuration_update_coordinator,
+                    ucs.device,
+                    ucs.device_info,
+                    register_name=rn.EMMA_CAPACITY_CONTROL_PERIODS,
+                    translation_key="emma_capacity_control_periods",
+                )
+            )
 
     return entities
 
@@ -2763,17 +2773,21 @@ class HuaweiSolarCapacityControlPeriodsSensorEntity(
         coordinator: HuaweiSolarUpdateCoordinator,
         device: HuaweiSolarDevice,
         device_info: DeviceInfo,
+        register_name: rn.RegisterName = rn.STORAGE_CAPACITY_CONTROL_PERIODS,
+        entity_registry_enabled_default: bool = True,
+        translation_key: str = "storage_capacity_control_periods",
     ) -> None:
         """Huawei Solar Capacity Control Periods Sensor Entity constructor."""
         super().__init__(
-            coordinator, {"register_names": [rn.STORAGE_CAPACITY_CONTROL_PERIODS]}
+            coordinator, {"register_names": [register_name]}
         )
         self.coordinator = coordinator
 
         self.entity_description = HuaweiSolarSensorEntityDescription(
-            key=rn.STORAGE_CAPACITY_CONTROL_PERIODS,
-            translation_key="storage_capacity_control_periods",
+            key=register_name,
+            translation_key=translation_key,
             icon="mdi:calendar-text",
+            entity_registry_enabled_default=entity_registry_enabled_default,
         )
 
         self._device = device

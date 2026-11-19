@@ -171,6 +171,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Maximaal laadvermogen van het elektriciteitsnet"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "Piekvermogen gereserveerd batterijpercentage"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximaal terugleververmogen (%)"
             },
@@ -242,6 +245,14 @@
                 "state": {
                     "fast_charging": "Snelladen",
                     "green_power_priority": "Groene stroom prioriteit"
+                }
+            },
+            "emma_capacity_control_mode": {
+                "name": "Capaciteitscontrolemodus",
+                "state": {
+                    "active_capacity_control": "Actieve capaciteits controle",
+                    "apparent_power_limit": "Schijnbaar vermogen limiet",
+                    "disable": "Uitzetten"
                 }
             },
             "emma_ess_control_mode": {
@@ -1247,6 +1258,9 @@
             "yearly_yield_energy": {
                 "name": "Jaarlijkse opbrengst"
             },
+            "emma_capacity_control_periods": {
+                "name": "Dagelijkse piek vermogen"
+            },
             "emma_tou_periods": {
                 "name": "TOU-perioden"
             },
@@ -1395,8 +1409,8 @@
             "description": "Capaciteitscontroleperiodes instellen",
             "fields": {
                 "device_id": {
-                    "description": "Toesteltype moet 'Batterijen' zijn",
-                    "name": "Batterij"
+                    "description": "Wanneer er een EMMA aanwezig is, moet dit een 'EMMA'-toestel zijn. Anders moet toesteltype 'Batterijen' zijn",
+                    "name": "Toestel"
                 },
                 "periods": {
                     "description": "Eén periode per regel. Formaat: '[start tijd]-[eind tijd]/[werkzame dagen]/[vermogen]W', met 1=maandag, 7=zondag. Voorbeeld: '00:00-23:59/1234567/2500W'.",

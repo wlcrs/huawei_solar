@@ -171,6 +171,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Maksymalna moc ładowania z sieci"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "Wygładzanie profilu SOC"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maksymalna moc oddawana do sieci (%)"
             },
@@ -242,6 +245,14 @@
                 "state": {
                     "fast_charging": "Szybkie ładowanie",
                     "green_power_priority": "Priorytet zielonej energii"
+                }
+            },
+            "emma_capacity_control_mode": {
+                "name": "Tryb Sterowania Pojemnością",
+                "state": {
+                    "active_capacity_control": "Aktywna kontrola pojemności",
+                    "apparent_power_limit": "Limitowanie mocy pozornej",
+                    "disable": "Wyłącz"
                 }
             },
             "emma_ess_control_mode": {
@@ -1247,6 +1258,9 @@
             "yearly_yield_energy": {
                 "name": "Roczny uzysk"
             },
+            "emma_capacity_control_periods": {
+                "name": "Okresy kontroli pojemności"
+            },
             "emma_tou_periods": {
                 "name": "Okresy TOU"
             }
@@ -1382,8 +1396,8 @@
             "description": "Ustawia okresy sterowania pojemnością",
             "fields": {
                 "device_id": {
-                    "description": "Musi być urządzeniem typu 'Akumulatory'",
-                    "name": "Akumulator"
+                    "description": "Gdy EMMA jest obecna, musi to być urządzenie typu 'EMMA'. W przeciwnym razie musi być urządzeniem typu 'Akumulatory'",
+                    "name": "Urządzenie"
                 },
                 "periods": {
                     "description": "Jeden okres na linię. Format: '[czas początku]-[czas końca]/[dni aktywne]/[moc]W', gdzie 1=Poniedziałek, 7=Niedziela. Przykład: '00:00-23:59/1234567/2500W'.",

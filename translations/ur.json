@@ -171,6 +171,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "گرڈ سے چارج کرنے کی زیادہ سے زیادہ پاور"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "چوٹی شیونگ SOC"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "گرڈ کو زیادہ سے زیادہ پاور فیڈ (%)"
             },
@@ -242,6 +245,14 @@
                 "state": {
                     "fast_charging": "فاسٹ چارجنگ",
                     "green_power_priority": "سبز توانائی کی ترجیح"
+                }
+            },
+            "emma_capacity_control_mode": {
+                "name": "صلاحیت کنٹرول موڈ",
+                "state": {
+                    "active_capacity_control": "فعال صلاحیت کا کنٹرول",
+                    "apparent_power_limit": "طاقت کی ظاہری حد",
+                    "disable": "غیر فعال کریں"
                 }
             },
             "emma_ess_control_mode": {
@@ -1247,6 +1258,9 @@
             "yearly_yield_energy": {
                 "name": "سالانہ پیداوار"
             },
+            "emma_capacity_control_periods": {
+                "name": "صلاحیت کنٹرول ادوار"
+            },
             "emma_tou_periods": {
                 "name": "TOU ادوار"
             },
@@ -1383,8 +1397,8 @@
             "description": "صلاحیت کنٹرول کی مدت مقرر کریں",
             "fields": {
                 "device_id": {
-                    "description": "یہ 'بیٹریاں' آلہ ہونا چاہیے۔",
-                    "name": "بیٹری"
+                    "description": "اگر EMMA موجود ہو تو یہ 'EMMA' آلہ ہونا چاہیے۔ ورنہ یہ 'بیٹریاں' آلہ ہونا چاہیے۔",
+                    "name": "آلہ"
                 },
                 "periods": {
                     "description": "فی لائن ایک مدت۔ فارمیٹ: '[آغاز وقت]-[اختتام کا وقت]/[دن مؤثر]/[طاقت]W'، 1=پیر، 7=اتوار کے ساتھ۔ مثال: '00:00-23:59/1234567/2500W'.",

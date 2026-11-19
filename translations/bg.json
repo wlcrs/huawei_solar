@@ -171,6 +171,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Максимална мощност за зареждане от мрежата"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "SOC за Peak Shaving"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Максимална мощност към мрежата (%)"
             },
@@ -242,6 +245,14 @@
                 "state": {
                     "fast_charging": "Бързо зареждане",
                     "green_power_priority": "Приоритет на зелена енергия"
+                }
+            },
+            "emma_capacity_control_mode": {
+                "name": "Режим на управление на капацитета",
+                "state": {
+                    "active_capacity_control": "Активно управление на капацитета",
+                    "apparent_power_limit": "Ограничение на видимата мощност",
+                    "disable": "Деактивиране"
                 }
             },
             "emma_ess_control_mode": {
@@ -1247,6 +1258,9 @@
             "yearly_yield_energy": {
                 "name": "Годишно производство"
             },
+            "emma_capacity_control_periods": {
+                "name": "Периоди за управление на капацитета"
+            },
             "emma_tou_periods": {
                 "name": "TOU периоди"
             }
@@ -1382,7 +1396,7 @@
             "description": "Задаване на периоди за контрол на капацитета",
             "fields": {
                 "device_id": {
-                    "description": "Трябва да е устройство от тип 'Инвертор'",
+                    "description": "Когато има EMMA, трябва да е устройство 'EMMA'. В противен случай: трябва да е устройство 'Инвертор'",
                     "name": "Инвертор"
                 },
                 "periods": {

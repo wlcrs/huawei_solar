@@ -171,6 +171,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Максимальная мощность заряда от сети"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "SOC сглаживания пиков"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Максимальная мощность отдачи в сеть (%)"
             },
@@ -242,6 +245,14 @@
                 "state": {
                     "fast_charging": "Быстрая зарядка",
                     "green_power_priority": "Приоритет зеленой энергии"
+                }
+            },
+            "emma_capacity_control_mode": {
+                "name": "Режим управления емкостью",
+                "state": {
+                    "active_capacity_control": "Активное управление емкостью",
+                    "apparent_power_limit": "Ограничение полной мощности",
+                    "disable": "Отключено"
                 }
             },
             "emma_ess_control_mode": {
@@ -1247,6 +1258,9 @@
             "yearly_yield_energy": {
                 "name": "Годовая выработка"
             },
+            "emma_capacity_control_periods": {
+                "name": "Периоды управления емкостью"
+            },
             "emma_tou_periods": {
                 "name": "Периоды TOU"
             }
@@ -1382,8 +1396,8 @@
             "description": "Установить периоды управления емкостью",
             "fields": {
                 "device_id": {
-                    "description": "Должно быть устройством 'Батареи'",
-                    "name": "Батарея"
+                    "description": "При наличии EMMA, это должно быть устройство 'EMMA'. В противном случае: это должно быть устройство 'Батареи'",
+                    "name": "Устройство"
                 },
                 "periods": {
                     "description": "Один период на строку. Формат: '[время начала]-[время окончания]/[активные дни]/[мощность]Вт', где 1=Понедельник, 7=Воскресенье. Пример: '00:00-23:59/1234567/2500W'.",

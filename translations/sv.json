@@ -171,6 +171,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Maximal laddningseffekt från nätet"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "Toppkapnings-SOC"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximal inmatningseffekt till nätet (%)"
             },
@@ -242,6 +245,14 @@
                 "state": {
                     "fast_charging": "Snabbladdning",
                     "green_power_priority": "Prioritet för grön energi"
+                }
+            },
+            "emma_capacity_control_mode": {
+                "name": "Kapacitetskontrolläge",
+                "state": {
+                    "active_capacity_control": "Aktiv kapacitetskontroll",
+                    "apparent_power_limit": "Skenbar effektgräns",
+                    "disable": "Inaktivera"
                 }
             },
             "emma_ess_control_mode": {
@@ -1246,6 +1257,9 @@
             },
             "yearly_yield_energy": {
                 "name": "Årlig avkastning"
+            },
+            "emma_capacity_control_periods": {
+                "name": "Kapacitetskontrollperioder"
             },
             "emma_tou_periods": {
                 "name": "TOU-perioder"
