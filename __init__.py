@@ -3,7 +3,7 @@
 from datetime import datetime
 import logging
 
-from homeassistant.config_entries import ConfigEntry
+from homeassistant.config_entries import ConfigEntry, ConfigEntryState
 from homeassistant.const import (
     CONF_HOST,
     CONF_PASSWORD,
@@ -398,6 +398,34 @@ async def async_unload_entry(
         await primary_device.client.disconnect()
 
     return unload_ok
+
+
+async def async_remove_config_entry_device(
+    hass: HomeAssistant,
+    config_entry: HuaweiSolarConfigEntry,
+    device_entry: dr.DeviceEntry,
+) -> bool:
+    """Allow removing a device if it is no longer active in this config entry."""
+    if config_entry.state is not ConfigEntryState.LOADED:
+        return False
+
+    active_identifiers: set[tuple[str, str]] = set()
+    for dd in config_entry.runtime_data[DATA_DEVICE_DATAS]:
+        active_identifiers.update(dd.device_info.get("identifiers", ()))
+        if isinstance(dd, HuaweiSolarInverterData):
+            for device_info in (
+                dd.power_meter,
+                dd.connected_energy_storage,
+                dd.battery_1,
+                dd.battery_2,
+            ):
+                if device_info is not None:
+                    active_identifiers.update(device_info.get("identifiers", ()))
+            if dd.optimizer_update_coordinator and dd.optimizer_device_infos:
+                for opt_device_info in dd.optimizer_device_infos.values():
+                    active_identifiers.update(opt_device_info.get("identifiers", ()))
+
+    return active_identifiers.isdisjoint(device_entry.identifiers)
 
 
 def _battery_product_model_to_manufacturer(spm: rv.StorageProductModel) -> str | None:
