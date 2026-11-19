@@ -1201,6 +1201,9 @@
             "storage_state_of_capacity": {
                 "name": "صلاحیت کی حالت"
             },
+            "storage_state_of_health": {
+                "name": "صحت کی حالت (SOH)"
+            },
             "storage_total_charge": {
                 "name": "کُل چارج"
             },

@@ -1201,6 +1201,9 @@
             "storage_state_of_capacity": {
                 "name": "Akkumulátor töltöttségi állapota"
             },
+            "storage_state_of_health": {
+                "name": "Akkumulátor állapota (SOH)"
+            },
             "storage_total_charge": {
                 "name": "Összes akkumulátortöltés"
             },

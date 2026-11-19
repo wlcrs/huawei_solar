@@ -1201,6 +1201,9 @@
             "storage_state_of_capacity": {
                 "name": "Batterieladung"
             },
+            "storage_state_of_health": {
+                "name": "Gesundheitszustand"
+            },
             "storage_total_charge": {
                 "name": "Gesamtladung"
             },

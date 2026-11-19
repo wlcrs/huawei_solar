@@ -1201,6 +1201,9 @@
             "storage_state_of_capacity": {
                 "name": "Batteriets laddningsstatus"
             },
+            "storage_state_of_health": {
+                "name": "Hälsotillstånd (SOH)"
+            },
             "storage_total_charge": {
                 "name": "Total batteriladdning"
             },

@@ -1201,6 +1201,9 @@
             "storage_state_of_capacity": {
                 "name": "Estado de la capacidad"
             },
+            "storage_state_of_health": {
+                "name": "Estado de salud"
+            },
             "storage_total_charge": {
                 "name": "Carga total"
             },

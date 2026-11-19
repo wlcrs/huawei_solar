@@ -1201,6 +1201,9 @@
             "storage_state_of_capacity": {
                 "name": "Състояние на капацитета"
             },
+            "storage_state_of_health": {
+                "name": "Здравословно състояние (SOH)"
+            },
             "storage_total_charge": {
                 "name": "Общо зареждане"
             },

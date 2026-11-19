@@ -1168,6 +1168,15 @@ LUNA2000_BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[
     ),
 )
 
+LG_RESU_BATTERY_1_SOH_SENSOR_DESCRIPTION = HuaweiSolarSensorEntityDescription(
+    key=rn.STORAGE_UNIT_1_STATE_OF_HEALTH,
+    translation_key="storage_state_of_health",
+    icon="mdi:battery-heart-variant",
+    native_unit_of_measurement=PERCENTAGE,
+    state_class=SensorStateClass.MEASUREMENT,
+    entity_category=EntityCategory.DIAGNOSTIC,
+)
+
 
 def _create_battery_unit_entities(
     coordinator: HuaweiSolarUpdateCoordinator,
@@ -1356,6 +1365,14 @@ async def create_sun2000_entities(
                     is_battery_1=True,
                 )
             )
+            if ucs.device.battery_1_type == rv.StorageProductModel.LG_RESU:
+                entities_to_add.append(
+                    HuaweiSolarSensorEntity(
+                        ucs.energy_storage_update_coordinator,
+                        LG_RESU_BATTERY_1_SOH_SENSOR_DESCRIPTION,
+                        ucs.battery_1,
+                    )
+                )
 
         if ucs.battery_2:
             entities_to_add.extend(

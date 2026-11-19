@@ -1201,6 +1201,9 @@
             "storage_state_of_capacity": {
                 "name": "Stare de încărcare baterie"
             },
+            "storage_state_of_health": {
+                "name": "Stare de sănătate (SOH)"
+            },
             "storage_total_charge": {
                 "name": "Încărcare totală baterie"
             },

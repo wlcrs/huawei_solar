@@ -1201,6 +1201,9 @@
             "storage_state_of_capacity": {
                 "name": "Уровень заряда (SOC)"
             },
+            "storage_state_of_health": {
+                "name": "Состояние работоспособности (SOH)"
+            },
             "storage_total_charge": {
                 "name": "Общий заряд"
             },
