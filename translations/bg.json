@@ -171,6 +171,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Максимална мощност за зареждане от мрежата"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "SOC за Peak Shaving"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Максимална мощност към мрежата (%)"
             },
@@ -244,6 +247,14 @@
                     "green_power_priority": "Приоритет на зелена енергия"
                 }
             },
+            "emma_capacity_control_mode": {
+                "name": "Режим на управление на капацитета",
+                "state": {
+                    "active_capacity_control": "Активно управление на капацитета",
+                    "apparent_power_limit": "Ограничение на видимата мощност",
+                    "disable": "Деактивиране"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "Режим на управление на ESS",
                 "state": {
@@ -284,6 +295,7 @@
                     "fixed_charge_discharge": "Фиксирано зареждане/разреждане",
                     "fully_fed_to_grid": "Изцяло подаване към мрежата",
                     "maximise_self_consumption": "Максимално самопотребление",
+                    "third_party_control": "Управление от трета страна",
                     "time_of_use_lg": "По часови тарифи",
                     "time_of_use_luna2000": "По часови тарифи"
                 }
@@ -1190,6 +1202,9 @@
             "storage_state_of_capacity": {
                 "name": "Състояние на капацитета"
             },
+            "storage_state_of_health": {
+                "name": "Здравословно състояние (SOH)"
+            },
             "storage_total_charge": {
                 "name": "Общо зареждане"
             },
@@ -1246,6 +1261,9 @@
             },
             "yearly_yield_energy": {
                 "name": "Годишно производство"
+            },
+            "emma_capacity_control_periods": {
+                "name": "Периоди за управление на капацитета"
             },
             "emma_tou_periods": {
                 "name": "TOU периоди"
@@ -1382,8 +1400,8 @@
             "description": "Задаване на периоди за контрол на капацитета",
             "fields": {
                 "device_id": {
-                    "description": "Трябва да е устройство от тип 'Батерии'",
-                    "name": "Батерия"
+                    "description": "Когато има EMMA, трябва да е устройство 'EMMA'. В противен случай: трябва да е устройство 'Инвертор'",
+                    "name": "Устройство"
                 },
                 "periods": {
                     "description": "Периоди за контрол на капацитета",
