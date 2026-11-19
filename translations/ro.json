@@ -295,6 +295,7 @@
                     "fixed_charge_discharge": "Încărcare/descărcare fixă",
                     "fully_fed_to_grid": "Injectare totală în rețea",
                     "maximise_self_consumption": "Maximizare autoconsum",
+                    "third_party_control": "Control terți",
                     "time_of_use_lg": "Timp de utilizare (TOU)",
                     "time_of_use_luna2000": "Timp de utilizare (TOU)"
                 }

@@ -295,6 +295,7 @@
                     "fixed_charge_discharge": "Фиксирано зареждане/разреждане",
                     "fully_fed_to_grid": "Изцяло подаване към мрежата",
                     "maximise_self_consumption": "Максимално самопотребление",
+                    "third_party_control": "Управление от трета страна",
                     "time_of_use_lg": "По часови тарифи",
                     "time_of_use_luna2000": "По часови тарифи"
                 }

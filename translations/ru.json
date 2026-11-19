@@ -295,6 +295,7 @@
                     "fixed_charge_discharge": "Фиксированный заряд/разряд",
                     "fully_fed_to_grid": "Полная отдача в сеть",
                     "maximise_self_consumption": "Максимизация собственного потребления",
+                    "third_party_control": "Управление третьей стороной",
                     "time_of_use_lg": "По времени использования",
                     "time_of_use_luna2000": "По времени использования"
                 }

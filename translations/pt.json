@@ -295,6 +295,7 @@
                     "fixed_charge_discharge": "Carga/descarga fixa",
                     "fully_fed_to_grid": "Injeção total na rede",
                     "maximise_self_consumption": "Maximizar autoconsumo",
+                    "third_party_control": "Controlo de terceiros",
                     "time_of_use_lg": "Tarifa bi-horária (TOU)",
                     "time_of_use_luna2000": "Tarifa bi-horária (TOU)"
                 }

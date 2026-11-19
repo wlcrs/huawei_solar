@@ -295,6 +295,7 @@
                     "fixed_charge_discharge": "Feste Lade-/Entladeleistung",
                     "fully_fed_to_grid": "Vollständige Einspeisung ins Netz",
                     "maximise_self_consumption": "Maximaler Eigenverbrauch",
+                    "third_party_control": "Drittanbieter-Steuerung",
                     "time_of_use_lg": "Zeitnutzung LG",
                     "time_of_use_luna2000": "Zeitnutzung Luna 2000"
                 }

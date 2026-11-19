@@ -295,6 +295,7 @@
                     "fixed_charge_discharge": "Càrrega i descàrrega fixa",
                     "fully_fed_to_grid": "Vertit complet a la xarxa",
                     "maximise_self_consumption": "Maximitzar l'autoconsum",
+                    "third_party_control": "Control de tercers",
                     "time_of_use_lg": "Horari d'ús",
                     "time_of_use_luna2000": "Horari d'ús"
                 }

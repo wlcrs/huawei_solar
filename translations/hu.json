@@ -295,6 +295,7 @@
                     "fixed_charge_discharge": "Fix töltés/kisütés",
                     "fully_fed_to_grid": "Teljes betáplálás a hálózatba",
                     "maximise_self_consumption": "Önfogyasztás maximalizálása",
+                    "third_party_control": "Harmadik fél általi vezérlés",
                     "time_of_use_lg": "Csúcsidőszaki (TOU)",
                     "time_of_use_luna2000": "Csúcsidőszaki (TOU)"
                 }

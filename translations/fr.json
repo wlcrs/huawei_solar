@@ -295,6 +295,7 @@
                     "fixed_charge_discharge": "Charge/décharge fixe",
                     "fully_fed_to_grid": "Entièrement alimenté au réseau",
                     "maximise_self_consumption": "Maximiser l'autoconsommation",
+                    "third_party_control": "Contrôle par un tiers",
                     "time_of_use_lg": "Heure creuse",
                     "time_of_use_luna2000": "Heure creuse"
                 }

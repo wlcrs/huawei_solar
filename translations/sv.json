@@ -295,6 +295,7 @@
                     "fixed_charge_discharge": "Fast laddning/urladdning",
                     "fully_fed_to_grid": "Full inmatning till nätet",
                     "maximise_self_consumption": "Maximera egenförbrukning",
+                    "third_party_control": "Tredjepartsstyrning",
                     "time_of_use_lg": "Tidstariff (TOU)",
                     "time_of_use_luna2000": "Tidstariff (TOU)"
                 }

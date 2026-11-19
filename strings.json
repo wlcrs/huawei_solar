@@ -295,6 +295,7 @@
                     "fixed_charge_discharge": "Fixed charge discharge",
                     "fully_fed_to_grid": "Fully fed to grid",
                     "maximise_self_consumption": "Maximise self consumption",
+                    "third_party_control": "Third party control",
                     "time_of_use_lg": "Time of use",
                     "time_of_use_luna2000": "Time of use"
                 }

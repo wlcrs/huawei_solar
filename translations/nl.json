@@ -295,6 +295,7 @@
                     "fixed_charge_discharge": "Vaste (ont)lading",
                     "fully_fed_to_grid": "Volledig aan stroomnet gevoed",
                     "maximise_self_consumption": "Maximaliseer eigen gebruik",
+                    "third_party_control": "Controle door derde partij",
                     "time_of_use_lg": "Gebruikstijd",
                     "time_of_use_luna2000": "Gebruikstijd"
                 }

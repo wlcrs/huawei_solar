@@ -295,6 +295,7 @@
                     "fixed_charge_discharge": "Stałe ładowanie rozładowanie",
                     "fully_fed_to_grid": "Pełne wysyłanie do sieci",
                     "maximise_self_consumption": "Maksymalizowanie własnej konsumpcji",
+                    "third_party_control": "Sterowanie przez stronę trzecią",
                     "time_of_use_lg": "Taryfa LG",
                     "time_of_use_luna2000": "Taryfa LUNA2000"
                 }

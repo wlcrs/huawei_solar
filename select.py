@@ -248,15 +248,16 @@ async def async_setup_entry(
                 )
 
             if ucs.connected_energy_storage:
-                slave_entities.extend(
-                    HuaweiSolarSelectEntity(
-                        ucs.configuration_update_coordinator,
-                        ucs.device,
-                        entity_description,
-                        ucs.connected_energy_storage,
+                if ucs.device.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000:
+                    slave_entities.extend(
+                        HuaweiSolarSelectEntity(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            entity_description,
+                            ucs.connected_energy_storage,
+                        )
+                        for entity_description in ENERGY_STORAGE_SWITCH_DESCRIPTIONS
                     )
-                    for entity_description in ENERGY_STORAGE_SWITCH_DESCRIPTIONS
-                )
                 slave_entities.append(
                     StorageModeSelectEntity(
                         ucs.configuration_update_coordinator,
@@ -417,13 +418,34 @@ class StorageModeSelectEntity(
         self._attr_unique_id = f"{device.serial_number}_{self.entity_description.key}"
 
         self._attr_current_option = None
-        # The options depend on the type of battery
-        available_options = [swm.name for swm in rv.StorageWorkingModesC]
-        if device.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000:
-            available_options.remove(rv.StorageWorkingModesC.TIME_OF_USE_LG.name)
-        elif device.battery_type == rv.StorageProductModel.LG_RESU:
-            available_options.remove(rv.StorageWorkingModesC.TIME_OF_USE_LUNA2000.name)
-        self._attr_options = [option.lower() for option in available_options]
+        # The options depend on the type of battery and feature mask 30283
+        battery_working_modes: dict[
+            rv.StorageProductModel, tuple[rv.StorageWorkingModesC, ...]
+        ] = {
+            rv.StorageProductModel.HUAWEI_LUNA2000: (
+                rv.StorageWorkingModesC.MAXIMISE_SELF_CONSUMPTION,
+                rv.StorageWorkingModesC.FULLY_FED_TO_GRID,
+                rv.StorageWorkingModesC.TIME_OF_USE_LUNA2000,
+            ),
+            rv.StorageProductModel.LG_RESU: (
+                rv.StorageWorkingModesC.FIXED_CHARGE_DISCHARGE,
+                rv.StorageWorkingModesC.MAXIMISE_SELF_CONSUMPTION,
+                rv.StorageWorkingModesC.TIME_OF_USE_LG,
+            ),
+        }
+        available_modes = list(
+            battery_working_modes.get(
+                device.battery_type,
+                (
+                    swm
+                    for swm in rv.StorageWorkingModesC
+                    if swm != rv.StorageWorkingModesC.THIRD_PARTY_CONTROL
+                ),
+            )
+        )
+        if device.supports_third_party_control:
+            available_modes.append(rv.StorageWorkingModesC.THIRD_PARTY_CONTROL)
+        self._attr_options = [mode.name.lower() for mode in available_modes]
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -432,9 +454,12 @@ class StorageModeSelectEntity(
             self.coordinator.data
             and self.entity_description.key in self.coordinator.data
         ):
-            self._attr_current_option = self.coordinator.data[
+            value = self.coordinator.data[
                 self.entity_description.register_name
-            ].value.name.lower()
+            ].value
+            self._attr_current_option = (
+                value.name.lower() if value is not None else None
+            )
             self._attr_available = True
         else:
             self._attr_current_option = None

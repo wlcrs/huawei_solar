@@ -295,6 +295,7 @@
                     "fixed_charge_discharge": "فکسڈ چارج ڈسچارج",
                     "fully_fed_to_grid": "مکمل طور پر گرڈ کو فیڈ",
                     "maximise_self_consumption": "زیادہ سے زیادہ خود استعمال کریں۔",
+                    "third_party_control": "تھرڈ پارٹی کنٹرول",
                     "time_of_use_lg": "استعمال کا وقت",
                     "time_of_use_luna2000": "استعمال کا وقت"
                 }
