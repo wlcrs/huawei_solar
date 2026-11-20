@@ -429,7 +429,7 @@
             "charger_charging_wait_reason": {
                 "name": "چارجنگ انتظار کی وجہ",
                 "state": {
-                    "unknown": "نامعلوم",
+                    "none": "کوئی نہیں",
                     "waiting_for_ev": "ای وی کا انتظار",
                     "household_power_excessive": "گھریلو بجلی زیادہ ہے",
                     "insufficient_green_power": "ناکافی سبز توانائی",

@@ -1936,7 +1936,15 @@ CHARGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_CHARGING_WAIT_REASON,
         device_class=SensorDeviceClass.ENUM,
-        options=[s.name.lower() for s in rv.ChargerChargingWaitReason],
+        # Value 0 (UNKNOWN in the library) means the charger is not waiting. Shown as
+        # "none": "unknown" is the state Home Assistant uses for missing data.
+        options=[
+            "none" if s == rv.ChargerChargingWaitReason.UNKNOWN else s.name.lower()
+            for s in rv.ChargerChargingWaitReason
+        ],
+        value_conversion_function=lambda value: (
+            "none" if value == rv.ChargerChargingWaitReason.UNKNOWN else value
+        ),
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_INDICATOR_LIGHT_STATUS,

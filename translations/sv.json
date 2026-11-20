@@ -429,7 +429,7 @@
             "charger_charging_wait_reason": {
                 "name": "Väntorsak för laddning",
                 "state": {
-                    "unknown": "Okänd",
+                    "none": "Ingen",
                     "waiting_for_ev": "Väntar på elfordon",
                     "household_power_excessive": "För hög hushållseffekt",
                     "insufficient_green_power": "Otillräcklig grön energi",

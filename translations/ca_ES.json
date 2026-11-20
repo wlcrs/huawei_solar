@@ -429,7 +429,7 @@
             "charger_charging_wait_reason": {
                 "name": "Motiu d'espera de càrrega",
                 "state": {
-                    "unknown": "Desconegut",
+                    "none": "Cap",
                     "waiting_for_ev": "Esperant el vehicle elèctric",
                     "household_power_excessive": "Potència domèstica excessiva",
                     "insufficient_green_power": "Energia verda insuficient",

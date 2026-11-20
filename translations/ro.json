@@ -429,7 +429,7 @@
             "charger_charging_wait_reason": {
                 "name": "Motiv așteptare încărcare",
                 "state": {
-                    "unknown": "Necunoscut",
+                    "none": "Niciunul",
                     "waiting_for_ev": "Se așteaptă vehiculul electric",
                     "household_power_excessive": "Putere casnică excesivă",
                     "insufficient_green_power": "Energie verde insuficientă",
