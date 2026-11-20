@@ -35,6 +35,7 @@ from huawei_solar import (
     SChargerDevice,
     SDongleDevice,
     SmartAcGunDevice,
+    SmartGuardDevice,
     SmartLoggerDevice,
     SUN2000Device,
 )
@@ -2217,6 +2218,87 @@ SMARTLOGGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] 
 )
 
 
+SMARTGUARD_STATUS_SENSOR_DESCRIPTION = HuaweiSolarSensorEntityDescription(
+    key=rn.SMARTGUARD_STATUS,
+    device_class=SensorDeviceClass.ENUM,
+    options=[s.name.lower() for s in rv.SmartGuardStatus],
+)
+
+# The FusionSolar app only shows the temperature and the backup-load voltages when
+# bit 0 of the SmartGuard feature mask is set, the same bit that gates the manual
+# on/off-grid switchover. Only the three-phase voltage registers were verified on
+# hardware, and the generator voltages are left out (no generator to verify them).
+SMARTGUARD_TEMPERATURE_SENSOR_DESCRIPTION = HuaweiSolarSensorEntityDescription(
+    key=rn.SMARTGUARD_INTERNAL_TEMPERATURE,
+    native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+    device_class=SensorDeviceClass.TEMPERATURE,
+    state_class=SensorStateClass.MEASUREMENT,
+    entity_category=EntityCategory.DIAGNOSTIC,
+)
+
+SMARTGUARD_GRID_VOLTAGE_SENSOR_DESCRIPTIONS: tuple[
+    HuaweiSolarSensorEntityDescription, ...
+] = (
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTGUARD_GRID_PHASE_A_VOLTAGE,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTGUARD_GRID_PHASE_B_VOLTAGE,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTGUARD_GRID_PHASE_C_VOLTAGE,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+)
+
+SMARTGUARD_BACKUP_LOAD_VOLTAGE_SENSOR_DESCRIPTIONS: tuple[
+    HuaweiSolarSensorEntityDescription, ...
+] = (
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTGUARD_BACKUP_LOAD_PHASE_A_VOLTAGE,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTGUARD_BACKUP_LOAD_PHASE_B_VOLTAGE,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTGUARD_BACKUP_LOAD_PHASE_C_VOLTAGE,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+)
+
+
+def _smartguard_sensor_descriptions(
+    device: SmartGuardDevice,
+) -> list[HuaweiSolarSensorEntityDescription]:
+    """Return the sensor descriptions that apply to this SmartGuard."""
+    three_phase = device.phase_type == rv.SmartGuardPhaseType.THREE_PHASE
+    descriptions: list[HuaweiSolarSensorEntityDescription] = []
+    if three_phase:
+        descriptions.extend(SMARTGUARD_GRID_VOLTAGE_SENSOR_DESCRIPTIONS)
+    descriptions.append(SMARTGUARD_STATUS_SENSOR_DESCRIPTION)
+    if device.supports_grid_switchover:
+        descriptions.append(SMARTGUARD_TEMPERATURE_SENSOR_DESCRIPTION)
+        if three_phase:
+            descriptions.extend(SMARTGUARD_BACKUP_LOAD_VOLTAGE_SENSOR_DESCRIPTIONS)
+    return descriptions
+
+
 def create_charger_entities(
     ucs: HuaweiSolarDeviceData,
 ) -> list["HuaweiSolarSensorEntity"]:
@@ -2242,6 +2324,20 @@ def create_smart_ac_gun_entities(
             ucs.update_coordinator, entity_description, ucs.device_info
         )
         for entity_description in SMART_AC_GUN_SENSOR_DESCRIPTIONS
+    ]
+
+
+def create_smartguard_entities(
+    ucs: HuaweiSolarDeviceData,
+) -> list["HuaweiSolarSensorEntity"]:
+    """Create SmartGuard sensor entities."""
+    assert isinstance(ucs.device, SmartGuardDevice)
+
+    return [
+        HuaweiSolarSensorEntity(
+            ucs.update_coordinator, entity_description, ucs.device_info
+        )
+        for entity_description in _smartguard_sensor_descriptions(ucs.device)
     ]
 
 
@@ -2483,6 +2579,8 @@ async def async_setup_entry(
             entities_to_add.extend(create_charger_entities(ucs))
         elif isinstance(ucs.device, SmartAcGunDevice):
             entities_to_add.extend(create_smart_ac_gun_entities(ucs))
+        elif isinstance(ucs.device, SmartGuardDevice):
+            entities_to_add.extend(create_smartguard_entities(ucs))
         elif isinstance(ucs.device, SDongleDevice):
             entities_to_add.extend(create_sdongle_entities(ucs))
         elif isinstance(ucs.device, MeterDevice):
@@ -3060,6 +3158,12 @@ def get_device_sensor_registers(device: HuaweiSolarDevice) -> set[rn.RegisterNam
         return {
             desc.register_name
             for desc in METER_SENSOR_DESCRIPTIONS
+            if desc.entity_registry_enabled_default
+        }
+    if isinstance(device, SmartGuardDevice):
+        return {
+            desc.register_name
+            for desc in _smartguard_sensor_descriptions(device)
             if desc.entity_registry_enabled_default
         }
     if isinstance(device, SmartLoggerDevice):

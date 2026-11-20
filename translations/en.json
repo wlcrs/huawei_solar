@@ -1167,6 +1167,40 @@
             "single_phase_meter_voltage": {
                 "name": "Voltage"
             },
+            "smartguard_backup_load_phase_a_voltage": {
+                "name": "Backup load phase A voltage"
+            },
+            "smartguard_backup_load_phase_b_voltage": {
+                "name": "Backup load phase B voltage"
+            },
+            "smartguard_backup_load_phase_c_voltage": {
+                "name": "Backup load phase C voltage"
+            },
+            "smartguard_grid_phase_a_voltage": {
+                "name": "Grid phase A voltage"
+            },
+            "smartguard_grid_phase_b_voltage": {
+                "name": "Grid phase B voltage"
+            },
+            "smartguard_grid_phase_c_voltage": {
+                "name": "Grid phase C voltage"
+            },
+            "smartguard_internal_temperature": {
+                "name": "Internal temperature"
+            },
+            "smartguard_status": {
+                "name": "Status",
+                "state": {
+                    "standby": "Standby",
+                    "on_grid": "On-grid",
+                    "off_grid_generator": "Off-grid: powered by generator",
+                    "off_grid_inverter": "Off-grid: powered by inverter",
+                    "off_grid_generator_and_inverter": "Off-grid: powered by generator and inverter",
+                    "bypassed": "Bypassed",
+                    "unexpected_shutdown": "Unexpected shutdown",
+                    "unexpected_shutdown_grid_supply": "Unexpected shutdown: power supply from grid"
+                }
+            },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "Grid A-B line voltage"
             },
@@ -1417,6 +1451,9 @@
             "mppt_multimodal_scanning": {
                 "name": "MPPT-Scan"
             },
+            "smartguard_off_grid": {
+                "name": "Off-grid"
+            },
             "startup": {
                 "name": "Inverter ON/OFF"
             },
@@ -1488,6 +1525,18 @@
         },
         "power_exceeds_maximum": {
             "message": "Power cannot be more than {max_power} W."
+        },
+        "smartguard_grid_not_present": {
+            "message": "The grid voltage is not present ({voltages} V), so the SmartGuard was not switched to on-grid."
+        },
+        "smartguard_switchover_not_allowed": {
+            "message": "The SmartGuard cannot be switched from its current status ({status})."
+        },
+        "smartguard_switchover_not_confirmed": {
+            "message": "The SmartGuard did not confirm the switchover within {seconds} seconds (last status: {status})."
+        },
+        "smartguard_toggle_state_unknown": {
+            "message": "The SmartGuard off-grid state is unknown, so it cannot be toggled; turn the switch on or off explicitly."
         },
         "unsupported_battery_type": {
             "message": "Unsupported battery type for device {device_id}."
