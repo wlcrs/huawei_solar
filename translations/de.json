@@ -405,6 +405,13 @@
             "bms_temperature": {
                 "name": "BMS Temperatur"
             },
+            "charger_ac_wiring_mode": {
+                "name": "AC-Verkabelung",
+                "state": {
+                    "single_phase": "Einphasig",
+                    "three_phase_four_wire": "Dreiphasig, vieradrig"
+                }
+            },
             "charger_cable_max_current": {
                 "name": "Maximaler Kabelstrom"
             },
@@ -424,6 +431,13 @@
                     "household_power_excessive": "Haushaltsleistung zu hoch",
                     "insufficient_green_power": "Unzureichende grüne Energie",
                     "phase_switching": "Phasenumschaltung"
+                }
+            },
+            "charger_contactor_control_mode": {
+                "name": "Schützsteuerungsmodus",
+                "state": {
+                    "single_phase": "Einphasig",
+                    "three_phase": "Dreiphasig"
                 }
             },
             "charger_gun_lock_status": {
@@ -493,6 +507,9 @@
             "charger_max_charging_power": {
                 "name": "Maximale Ladeleistung"
             },
+            "charger_max_fixed_power": {
+                "name": "Feste maximale Ladeleistung"
+            },
             "charger_min_charging_power": {
                 "name": "Minimale Ladeleistung"
             },
@@ -514,6 +531,9 @@
             },
             "charger_planned_departure_time": {
                 "name": "Geplante Abfahrtszeit"
+            },
+            "charger_pwm_duty_cycle": {
+                "name": "PWM-Tastverhältnis"
             },
             "charger_rated_power": {
                 "name": "Nennleistung"

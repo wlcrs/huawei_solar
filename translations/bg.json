@@ -405,6 +405,13 @@
             "bms_temperature": {
                 "name": "Температура на BMS"
             },
+            "charger_ac_wiring_mode": {
+                "name": "AC окабеляване",
+                "state": {
+                    "single_phase": "Еднофазно",
+                    "three_phase_four_wire": "Трифазно, четирипроводно"
+                }
+            },
             "charger_cable_max_current": {
                 "name": "Максимален ток на кабела"
             },
@@ -424,6 +431,13 @@
                     "household_power_excessive": "Прекомерна битова мощност",
                     "insufficient_green_power": "Недостатъчна зелена енергия",
                     "phase_switching": "Превключване на фаза"
+                }
+            },
+            "charger_contactor_control_mode": {
+                "name": "Режим на управление на контактора",
+                "state": {
+                    "single_phase": "Еднофазен",
+                    "three_phase": "Трифазен"
                 }
             },
             "charger_gun_lock_status": {
@@ -493,6 +507,9 @@
             "charger_max_charging_power": {
                 "name": "Максимална мощност на зареждане"
             },
+            "charger_max_fixed_power": {
+                "name": "Фиксирана максимална мощност на зареждане"
+            },
             "charger_min_charging_power": {
                 "name": "Минимална мощност на зареждане"
             },
@@ -514,6 +531,9 @@
             },
             "charger_planned_departure_time": {
                 "name": "Планирано време за тръгване"
+            },
+            "charger_pwm_duty_cycle": {
+                "name": "PWM коефициент на запълване"
             },
             "charger_rated_power": {
                 "name": "Номинална мощност на зарядното"

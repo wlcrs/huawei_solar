@@ -405,6 +405,13 @@
             "bms_temperature": {
                 "name": "BMS hőmérséklet"
             },
+            "charger_ac_wiring_mode": {
+                "name": "AC vezetékezés",
+                "state": {
+                    "single_phase": "Egyfázisú",
+                    "three_phase_four_wire": "Háromfázisú, négyvezetékes"
+                }
+            },
             "charger_cable_max_current": {
                 "name": "Kábel maximális áramerőssége"
             },
@@ -424,6 +431,13 @@
                     "household_power_excessive": "Túl nagy háztartási teljesítmény",
                     "insufficient_green_power": "Elégtelen zöld energia",
                     "phase_switching": "Fázisváltás"
+                }
+            },
+            "charger_contactor_control_mode": {
+                "name": "Kontaktor vezérlési mód",
+                "state": {
+                    "single_phase": "Egyfázisú",
+                    "three_phase": "Háromfázisú"
                 }
             },
             "charger_gun_lock_status": {
@@ -493,6 +507,9 @@
             "charger_max_charging_power": {
                 "name": "Maximális töltési teljesítmény"
             },
+            "charger_max_fixed_power": {
+                "name": "Rögzített maximális töltési teljesítmény"
+            },
             "charger_min_charging_power": {
                 "name": "Minimális töltési teljesítmény"
             },
@@ -514,6 +531,9 @@
             },
             "charger_planned_departure_time": {
                 "name": "Tervezett indulási idő"
+            },
+            "charger_pwm_duty_cycle": {
+                "name": "PWM kitöltési tényező"
             },
             "charger_rated_power": {
                 "name": "Töltő névleges teljesítménye"

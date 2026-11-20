@@ -405,6 +405,13 @@
             "bms_temperature": {
                 "name": "Temperatură BMS"
             },
+            "charger_ac_wiring_mode": {
+                "name": "Cablaj CA",
+                "state": {
+                    "single_phase": "Monofazat",
+                    "three_phase_four_wire": "Trifazat, patru fire"
+                }
+            },
             "charger_cable_max_current": {
                 "name": "Curent maxim cablu"
             },
@@ -424,6 +431,13 @@
                     "household_power_excessive": "Putere casnică excesivă",
                     "insufficient_green_power": "Energie verde insuficientă",
                     "phase_switching": "Comutare fază"
+                }
+            },
+            "charger_contactor_control_mode": {
+                "name": "Mod de control al contactorului",
+                "state": {
+                    "single_phase": "Monofazat",
+                    "three_phase": "Trifazat"
                 }
             },
             "charger_gun_lock_status": {
@@ -493,6 +507,9 @@
             "charger_max_charging_power": {
                 "name": "Putere maximă de încărcare"
             },
+            "charger_max_fixed_power": {
+                "name": "Putere maximă de încărcare fixă"
+            },
             "charger_min_charging_power": {
                 "name": "Putere minimă de încărcare"
             },
@@ -514,6 +531,9 @@
             },
             "charger_planned_departure_time": {
                 "name": "Ora de plecare planificată"
+            },
+            "charger_pwm_duty_cycle": {
+                "name": "Factor de umplere PWM"
             },
             "charger_rated_power": {
                 "name": "Putere nominală încărcător"

@@ -405,6 +405,13 @@
             "bms_temperature": {
                 "name": "BMS-temperatur"
             },
+            "charger_ac_wiring_mode": {
+                "name": "AC-kablage",
+                "state": {
+                    "single_phase": "Enfas",
+                    "three_phase_four_wire": "Trefas, fyra ledare"
+                }
+            },
             "charger_cable_max_current": {
                 "name": "Maximal kabelström"
             },
@@ -424,6 +431,13 @@
                     "household_power_excessive": "För hög hushållseffekt",
                     "insufficient_green_power": "Otillräcklig grön energi",
                     "phase_switching": "Fasväxling"
+                }
+            },
+            "charger_contactor_control_mode": {
+                "name": "Kontaktorstyrningsläge",
+                "state": {
+                    "single_phase": "Enfas",
+                    "three_phase": "Trefas"
                 }
             },
             "charger_gun_lock_status": {
@@ -493,6 +507,9 @@
             "charger_max_charging_power": {
                 "name": "Maximal laddeffekt"
             },
+            "charger_max_fixed_power": {
+                "name": "Fast maximal laddeffekt"
+            },
             "charger_min_charging_power": {
                 "name": "Minimal laddeffekt"
             },
@@ -514,6 +531,9 @@
             },
             "charger_planned_departure_time": {
                 "name": "Planerad avresetid"
+            },
+            "charger_pwm_duty_cycle": {
+                "name": "PWM-pulskvot"
             },
             "charger_rated_power": {
                 "name": "Märkeffekt laddare"

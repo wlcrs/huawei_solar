@@ -405,6 +405,13 @@
             "bms_temperature": {
                 "name": "Температура BMS"
             },
+            "charger_ac_wiring_mode": {
+                "name": "Схема подключения переменного тока",
+                "state": {
+                    "single_phase": "Однофазное",
+                    "three_phase_four_wire": "Трёхфазное, четырёхпроводное"
+                }
+            },
             "charger_cable_max_current": {
                 "name": "Максимальный ток кабеля"
             },
@@ -424,6 +431,13 @@
                     "household_power_excessive": "Превышена бытовая мощность",
                     "insufficient_green_power": "Недостаточно зелёной энергии",
                     "phase_switching": "Переключение фаз"
+                }
+            },
+            "charger_contactor_control_mode": {
+                "name": "Режим управления контактором",
+                "state": {
+                    "single_phase": "Однофазный",
+                    "three_phase": "Трёхфазный"
                 }
             },
             "charger_gun_lock_status": {
@@ -493,6 +507,9 @@
             "charger_max_charging_power": {
                 "name": "Максимальная мощность зарядки"
             },
+            "charger_max_fixed_power": {
+                "name": "Фиксированная максимальная мощность зарядки"
+            },
             "charger_min_charging_power": {
                 "name": "Минимальная мощность зарядки"
             },
@@ -514,6 +531,9 @@
             },
             "charger_planned_departure_time": {
                 "name": "Планируемое время отъезда"
+            },
+            "charger_pwm_duty_cycle": {
+                "name": "Коэффициент заполнения ШИМ"
             },
             "charger_rated_power": {
                 "name": "Номинальная мощность зарядного устройства"

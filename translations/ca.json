@@ -405,6 +405,13 @@
             "bms_temperature": {
                 "name": "Temperatura del BMS"
             },
+            "charger_ac_wiring_mode": {
+                "name": "Cablejat de CA",
+                "state": {
+                    "single_phase": "Monofàsic",
+                    "three_phase_four_wire": "Trifàsic, quatre fils"
+                }
+            },
             "charger_cable_max_current": {
                 "name": "Corrent màxim del cable"
             },
@@ -424,6 +431,13 @@
                     "household_power_excessive": "Potència domèstica excessiva",
                     "insufficient_green_power": "Energia verda insuficient",
                     "phase_switching": "Canvi de fase"
+                }
+            },
+            "charger_contactor_control_mode": {
+                "name": "Mode de control del contactor",
+                "state": {
+                    "single_phase": "Monofàsic",
+                    "three_phase": "Trifàsic"
                 }
             },
             "charger_gun_lock_status": {
@@ -493,6 +507,9 @@
             "charger_max_charging_power": {
                 "name": "Potència de càrrega màxima"
             },
+            "charger_max_fixed_power": {
+                "name": "Potència de càrrega màxima fixa"
+            },
             "charger_min_charging_power": {
                 "name": "Potència de càrrega mínima"
             },
@@ -514,6 +531,9 @@
             },
             "charger_planned_departure_time": {
                 "name": "Hora de sortida prevista"
+            },
+            "charger_pwm_duty_cycle": {
+                "name": "Cicle de treball PWM"
             },
             "charger_rated_power": {
                 "name": "Potència nominal del carregador"
