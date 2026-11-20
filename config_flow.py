@@ -6,8 +6,28 @@ import asyncio
 import contextlib
 import logging
 from collections.abc import Callable, Coroutine
-from typing import Any
+from typing import Any, override
 
+import voluptuous as vol
+from tmodbus.exceptions import ModbusConnectionError
+
+import homeassistant.helpers.config_validation as cv
+from homeassistant import config_entries
+from homeassistant.config_entries import ConfigFlowResult
+from homeassistant.const import (
+    CONF_HOST,
+    CONF_PASSWORD,
+    CONF_PORT,
+    CONF_TYPE,
+    CONF_USERNAME,
+)
+from homeassistant.helpers.selector import (
+    SelectSelector,
+    SelectSelectorConfig,
+    SelectSelectorMode,
+    SerialPortSelector,
+)
+from homeassistant.helpers.service_info.dhcp import DhcpServiceInfo
 from huawei_solar import (
     ConnectionException,
     ConnectionInterruptedException,
@@ -20,30 +40,10 @@ from huawei_solar import (
     create_tcp_client,
     get_device_infos,
 )
-from huawei_solar.modbus_client import create_scan_rtu_client, create_scan_tcp_client
 from huawei_solar.device import detect_device_type
 from huawei_solar.device.base import HuaweiSolarDeviceWithLogin
 from huawei_solar.exceptions import DeviceDetectionError
-from tmodbus.exceptions import ModbusConnectionError
-import voluptuous as vol
-
-from homeassistant import config_entries
-from homeassistant.config_entries import ConfigFlowResult
-from homeassistant.const import (
-    CONF_HOST,
-    CONF_PASSWORD,
-    CONF_PORT,
-    CONF_TYPE,
-    CONF_USERNAME,
-)
-import homeassistant.helpers.config_validation as cv
-from homeassistant.helpers.selector import (
-    SelectSelector,
-    SelectSelectorConfig,
-    SelectSelectorMode,
-    SerialPortSelector,
-)
-from homeassistant.helpers.service_info.dhcp import DhcpServiceInfo
+from huawei_solar.modbus_client import create_scan_rtu_client, create_scan_tcp_client
 
 from .const import (
     CONF_BAUDRATE,
@@ -51,7 +51,6 @@ from .const import (
     CONF_SLAVE_IDS,
     DEFAULT_BAUDRATE,
     DEFAULT_PORT,
-    DEFAULT_SERIAL_SLAVE_ID,
     DEFAULT_USERNAME,
     DOMAIN,
 )
@@ -64,8 +63,6 @@ BAUDRATE_SELECTOR = SelectSelector(
 )
 
 
-async def validate_serial_setup(
-    port: str, unit_ids: list[int], baudrate: int = DEFAULT_BAUDRATE
 async def _async_validate_setup(
     client: Any,
     unit_ids: list[int],
@@ -75,17 +72,9 @@ async def _async_validate_setup(
     skip_failed_sub_devices: bool = False,
     wrap_primary_disconnect_as_device_error: bool = False,
 ) -> dict[str, Any]:
-    """Validate the serial device that was passed by the user."""
-    client = create_rtu_client(
-        port=port,
-        baudrate=baudrate,
-        unit_id=unit_ids[0],
-    )
     """Connect using ``client``, probe the primary device and any sub-devices."""
     await client.connect()
     try:
-        await client.connect()
-        device = await create_device_instance(client)
         try:
             device = await create_device_instance(client)
         except (ConnectionException, ModbusConnectionError, TimeoutError) as err:
@@ -103,10 +92,6 @@ async def _async_validate_setup(
             device.serial_number,
         )
 
-        result = {
-            "model_name": device.model_name,
-            "serial_number": device.serial_number,
-        }
         has_write_permission = (
             elevated_permissions
             and (
@@ -118,19 +103,12 @@ async def _async_validate_setup(
         )
 
         # Also validate the other slave-ids
-        for slave_id in unit_ids[1:]:
         connected_unit_ids = [unit_ids[0]]
         for unit_id in unit_ids[1:]:
             try:
-                slave_bridge = await create_sub_device_instance(device, slave_id)
-
                 sub_device = await create_sub_device_instance(device, unit_id)
                 _LOGGER.info(
                     "Successfully connected to sub device %s with ID %s: %s with SN %s",
-                    type(slave_bridge).__name__,
-                    slave_id,
-                    slave_bridge.model_name,
-                    slave_bridge.serial_number,
                     type(sub_device).__name__,
                     unit_id,
                     sub_device.model_name,
@@ -143,7 +121,6 @@ async def _async_validate_setup(
                 ModbusConnectionError,
                 TimeoutError,
             ) as err:
-                _LOGGER.error("Could not connect to slave %s", slave_id)
                 if skip_failed_sub_devices:
                     _LOGGER.exception(
                         "Error while connecting to sub device with unit_id %s. Skipping",
@@ -152,8 +129,6 @@ async def _async_validate_setup(
                     continue
                 _LOGGER.error("Could not connect to sub device %s", unit_id)
                 raise DeviceException(
-                    f"Could not connect to slave {slave_id}",
-                    unit_id=slave_id,
                     f"Could not connect to sub device {unit_id}",
                     unit_id=unit_id,
                 ) from err
@@ -198,7 +173,7 @@ async def _auto_slave_discovery(
     """
     unit_ids_to_scan = [0, 100, *list(range(1, 17))]
 
-    async def _probe(unit_id: int):
+    async def _probe(unit_id: int) -> tuple[int, Any]:
         _LOGGER.debug("AUTO: probing unit_id %s via get_device_infos", unit_id)
         try:
             device_infos = await get_device_infos(client.for_unit_id(unit_id))
@@ -392,9 +367,6 @@ async def _connect_to_discovered_devices(
     Returns a dict with slave_ids, model_name, serial_number and has_write_permission.
     """
     client = create_tcp_client(host=host, port=port, unit_id=primary_unit_id)
-    try:
-        await client.connect()
-        device = await create_device_instance(client)
     return await _async_validate_setup(
         client,
         [primary_unit_id, *sub_unit_ids],
@@ -402,47 +374,6 @@ async def _connect_to_discovered_devices(
         check_write_permission=True,
         skip_failed_sub_devices=True,
     )
-
-        _LOGGER.info(
-            "Successfully connected to primary device with unit_id %s: %s %s with SN %s",
-            primary_unit_id,
-            type(device).__name__,
-            device.model_name,
-            device.serial_number,
-        )
-
-        has_write_permission = elevated_permissions and (
-            not isinstance(device, HuaweiSolarDeviceWithLogin)
-            or await device.has_write_permission()
-        )
-
-        unit_ids = [primary_unit_id]
-        for sub_unit_id in sub_unit_ids:
-            try:
-                sub_device = await create_sub_device_instance(device, sub_unit_id)
-                _LOGGER.info(
-                    "Successfully connected to sub device with unit_id %s. %s: %s with SN %s",
-                    sub_unit_id,
-                    type(sub_device).__name__,
-                    sub_device.model_name,
-                    sub_device.serial_number,
-                )
-                unit_ids.append(sub_unit_id)
-            except HuaweiSolarException:
-                _LOGGER.exception(
-                    "Error while connecting to sub device with unit_id %s. Skipping",
-                    sub_unit_id,
-                )
-
-        return {
-            "slave_ids": unit_ids,
-            "model_name": device.model_name,
-            "serial_number": device.serial_number,
-            "has_write_permission": has_write_permission,
-        }
-    finally:
-        with contextlib.suppress(Exception):
-            await client.disconnect()
 
 
 async def validate_network_setup(
@@ -476,60 +407,6 @@ async def validate_network_setup(
         check_write_permission=True,
         wrap_primary_disconnect_as_device_error=True,
     )
-
-    try:
-        try:
-            device = await create_device_instance(client)
-        except (ConnectionException, ModbusConnectionError, TimeoutError) as err:
-            # TCP connected but device closed the connection → wrong slave ID.
-            raise DeviceException(
-                f"Device closed connection for unit_id {unit_ids[0]} - possibly wrong slave ID",
-                unit_id=unit_ids[0],
-            ) from err
-
-        _LOGGER.info(
-            "Successfully connected to device %s %s with SN %s",
-            type(device).__name__,
-            device.model_name,
-            device.serial_number,
-        )
-
-        has_write_permission = elevated_permissions and (
-            not isinstance(device, HuaweiSolarDeviceWithLogin)
-            or await device.has_write_permission()
-        )
-
-        for unit_id in unit_ids[1:]:
-            try:
-                sub_device = await create_sub_device_instance(device, unit_id)
-
-                _LOGGER.info(
-                    "Successfully connected to sub device %s %s: %s with SN %s",
-                    type(sub_device).__name__,
-                    unit_id,
-                    sub_device.model_name,
-                    sub_device.serial_number,
-                )
-            except (
-                HuaweiSolarException,
-                ConnectionException,
-                ModbusConnectionError,
-                TimeoutError,
-            ) as err:
-                _LOGGER.error("Could not connect to sub device %s", unit_id)
-                raise DeviceException(
-                    f"Could not connect to sub device {unit_id}",
-                    unit_id=unit_id,
-                ) from err
-
-        return {
-            "model_name": device.model_name,
-            "serial_number": device.serial_number,
-            "has_write_permission": has_write_permission,
-        }
-    finally:
-        with contextlib.suppress(Exception):
-            await client.disconnect()
 
 
 async def validate_network_setup_login(
@@ -660,9 +537,14 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     # Used across the auto/scan/finish discovery steps
     _discovery_task: asyncio.Task | None = None
     _discovered_primary_unit_id: int | None = None
-    _discovered_sub_unit_ids: list[int] = []
+    _discovered_sub_unit_ids: list[int]
     _failed_slave_id: int | None = None
     _scanning_slave_id: int | None = None
+
+    def __init__(self) -> None:
+        """Initialize the config flow."""
+        super().__init__()
+        self._discovered_sub_unit_ids = []
 
     def _reset_discovery_state(self) -> None:
         """Clear all state used by the discovery progress steps."""
@@ -675,6 +557,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
     MINOR_VERSION = 2
 
+    @override
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
@@ -743,6 +626,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
         return await self.async_step_network_login()
 
+    @override
     async def async_step_dhcp(
         self, discovery_info: DhcpServiceInfo
     ) -> ConfigFlowResult:

@@ -1,19 +1,9 @@
 """Number entities for Huawei Solar."""
 
-from dataclasses import dataclass
-from itertools import chain
 import logging
-
-from huawei_solar import (
-    EMMADevice,
-    HuaweiSolarDevice,
-    RegisterName,
-    SChargerDevice,
-    SmartAcGunDevice,
-    SUN2000Device,
-    register_names as rn,
-    register_values as rv,
-)
+from dataclasses import dataclass, replace
+from itertools import chain
+from typing import override
 
 from homeassistant.components.number import (
     NumberEntity,
@@ -29,8 +19,22 @@ from homeassistant.const import (
     UnitOfTime,
 )
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.device_registry import ChildDeviceInfo, DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from huawei_solar import (
+    EMMADevice,
+    HuaweiSolarDevice,
+    RegisterName,
+    SChargerDevice,
+    SmartAcGunDevice,
+    SUN2000Device,
+)
+from huawei_solar import (
+    register_names as rn,
+)
+from huawei_solar import (
+    register_values as rv,
+)
 
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION
 from .types import (
@@ -58,6 +62,7 @@ class HuaweiSolarNumberEntityDescription(
     maximum_key: RegisterName | None = None
 
     @property
+    @override
     def context(self) -> HuaweiSolarEntityContext:
         """Context used by DataUpdateCoordinator."""
         context = super().context
@@ -144,7 +149,9 @@ STORAGE_ADJUSTMENT_DEADBAND_NUMBER_DESCRIPTION = HuaweiSolarNumberEntityDescript
 """In FusionSolar: Settings > Power adjustment > Battery control > Power control hysteresis."""
 
 
-EMMA_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
+EMMA_POWER_LIMITED_GRID_CONNECTION_NUMBER_DESCRIPTIONS: tuple[
+    HuaweiSolarNumberEntityDescription, ...
+] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.EMMA_MAXIMUM_FEED_GRID_POWER_PERCENT,
         native_max_value=100,
@@ -162,11 +169,28 @@ EMMA_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfPower.WATT,
         entity_category=EntityCategory.CONFIG,
     ),
+)
+
+EMMA_BATTERY_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
     HuaweiSolarNumberEntityDescription(
         key=rn.EMMA_TOU_MAXIMUM_POWER_FOR_CHARGING_BATTERIES_FROM_GRID,
         native_min_value=0,
         native_max_value=50000,
         native_unit_of_measurement=UnitOfPower.WATT,
+        entity_category=EntityCategory.CONFIG,
+    ),
+)
+
+EMMA_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[
+    HuaweiSolarNumberEntityDescription, ...
+] = (
+    HuaweiSolarNumberEntityDescription(
+        key=rn.EMMA_CAPACITY_CONTROL_SOC_PEAK_SHAVING,
+        native_min_value=0,
+        native_max_value=100,
+        native_step=0.1,
+        icon="mdi:battery-arrow-up",
+        native_unit_of_measurement=PERCENTAGE,
         entity_category=EntityCategory.CONFIG,
     ),
 )
@@ -211,13 +235,16 @@ ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ..
         native_unit_of_measurement=PERCENTAGE,
         entity_category=EntityCategory.CONFIG,
     ),
+)
+
+STORAGE_POWER_OF_CHARGE_FROM_GRID_NUMBER_DESCRIPTION = (
     HuaweiSolarNumberEntityDescription(
         key=rn.STORAGE_POWER_OF_CHARGE_FROM_GRID,
         native_min_value=0,
         maximum_key=rn.STORAGE_MAXIMUM_POWER_OF_CHARGE_FROM_GRID,
         native_unit_of_measurement=UnitOfPower.WATT,
         entity_category=EntityCategory.CONFIG,
-    ),
+    )
 )
 
 CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
@@ -317,6 +344,11 @@ async def async_setup_entry(
         return
 
     device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data
+    has_inverter_battery = any(
+        isinstance(dd, HuaweiSolarInverterData)
+        and dd.device.battery_type != rv.StorageProductModel.NONE
+        for dd in device_datas
+    )
 
     entities_to_add: list[NumberEntity] = []
     for ucs in device_datas:
@@ -324,48 +356,93 @@ async def async_setup_entry(
             continue
         slave_entities: list[HuaweiSolarNumberEntity] = []
         if isinstance(ucs.device, EMMADevice):
-            for entity_description in EMMA_NUMBER_DESCRIPTIONS:
-                slave_entities.append(
+            if ucs.device.supports_power_limited_grid_connection:
+                slave_entities.extend(
                     HuaweiSolarNumberEntity(
                         ucs.configuration_update_coordinator,
                         ucs.device,
                         entity_description,
                         ucs.device_info,
                     )
+                    for entity_description in EMMA_POWER_LIMITED_GRID_CONNECTION_NUMBER_DESCRIPTIONS
+                )
+            else:
+                _LOGGER.debug(
+                    "Power-limited grid connection not supported on EMMA %s. Skipping feed-in limit number entities",
+                    ucs.device.serial_number,
+                )
+
+            if (
+                ucs.device.battery_type != rv.StorageProductModel.NONE
+                or has_inverter_battery
+            ):
+                slave_entities.extend(
+                    HuaweiSolarNumberEntity(
+                        ucs.configuration_update_coordinator,
+                        ucs.device,
+                        entity_description,
+                        ucs.device_info,
+                    )
+                    for entity_description in EMMA_BATTERY_NUMBER_DESCRIPTIONS
+                )
+            else:
+                _LOGGER.debug(
+                    "No battery detected on EMMA %s. Skipping EMMA battery number entities",
+                    ucs.device.serial_number,
+                )
+
+            if ucs.device.supports_capacity_control:
+                _LOGGER.debug(
+                    "Adding capacity control number entities on EMMA %s",
+                    ucs.device.serial_number,
+                )
+                slave_entities.extend(
+                    HuaweiSolarNumberEntity(
+                        ucs.configuration_update_coordinator,
+                        ucs.device,
+                        entity_description,
+                        ucs.device_info,
+                    )
+                    for entity_description in EMMA_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS
+                )
+            else:
+                _LOGGER.debug(
+                    "Capacity control not supported on EMMA %s. Skipping capacity control number entities",
+                    ucs.device.serial_number,
                 )
 
         if isinstance(ucs.device, SChargerDevice):
-            for entity_description in CHARGER_NUMBER_DESCRIPTIONS:
-                slave_entities.append(
-                    HuaweiSolarNumberEntity(
-                        ucs.configuration_update_coordinator,
-                        ucs.device,
-                        entity_description,
-                        ucs.device_info,
-                    )
+            slave_entities.extend(
+                HuaweiSolarNumberEntity(
+                    ucs.configuration_update_coordinator,
+                    ucs.device,
+                    entity_description,
+                    ucs.device_info,
                 )
+                for entity_description in CHARGER_NUMBER_DESCRIPTIONS
+            )
 
         if isinstance(ucs.device, SmartAcGunDevice):
-            for entity_description in SMART_AC_GUN_NUMBER_DESCRIPTIONS:
-                slave_entities.append(
-                    HuaweiSolarNumberEntity(
-                        ucs.configuration_update_coordinator,
-                        ucs.device,
-                        entity_description,
-                        ucs.device_info,
-                    )
+            slave_entities.extend(
+                HuaweiSolarNumberEntity(
+                    ucs.configuration_update_coordinator,
+                    ucs.device,
+                    entity_description,
+                    ucs.device_info,
                 )
+                for entity_description in SMART_AC_GUN_NUMBER_DESCRIPTIONS
+            )
 
         if isinstance(ucs, HuaweiSolarInverterData):
-            for entity_description in INVERTER_NUMBER_DESCRIPTIONS:
-                slave_entities.append(
-                    HuaweiSolarNumberEntity(
-                        ucs.configuration_update_coordinator,
-                        ucs.device,
-                        entity_description,
-                        ucs.device_info,
-                    )
+            slave_entities.extend(
+                HuaweiSolarNumberEntity(
+                    ucs.configuration_update_coordinator,
+                    ucs.device,
+                    entity_description,
+                    ucs.device_info,
                 )
+                for entity_description in INVERTER_NUMBER_DESCRIPTIONS
+            )
 
             if ucs.device.supports_active_power_fail_safe:
                 slave_entities.append(
@@ -378,13 +455,23 @@ async def async_setup_entry(
                 )
 
             if ucs.connected_energy_storage:
-                for entity_description in ENERGY_STORAGE_NUMBER_DESCRIPTIONS:
+                slave_entities.extend(
+                    HuaweiSolarNumberEntity(
+                        ucs.configuration_update_coordinator,
+                        ucs.device,
+                        entity_description,
+                        ucs.connected_energy_storage,
+                    )
+                    for entity_description in ENERGY_STORAGE_NUMBER_DESCRIPTIONS
+                )
+
+                if ucs.device.supports_charge_from_grid_power:
                     slave_entities.append(
                         HuaweiSolarNumberEntity(
                             ucs.configuration_update_coordinator,
                             ucs.device,
-                            entity_description,
-                            ucs.connected_energy_storage,
+                            STORAGE_POWER_OF_CHARGE_FROM_GRID_NUMBER_DESCRIPTION,
+                            ucs.device_info,
                         )
                     )
 
@@ -421,30 +508,36 @@ async def async_setup_entry(
                         "Adding capacity control number entities on device %s",
                         ucs.device.serial_number,
                     )
-                    for entity_description in CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
-                        slave_entities.append(
-                            HuaweiSolarNumberEntity(
-                                ucs.configuration_update_coordinator,
-                                ucs.device,
-                                entity_description,
-                                ucs.connected_energy_storage,
-                            )
-                        )
-
+                    capacity_descriptions = CAPACITY_CONTROL_NUMBER_DESCRIPTIONS
                 else:
                     _LOGGER.debug(
                         "Capacity control not supported on slave %s. Skipping capacity control number entities",
                         ucs.device.serial_number,
                     )
-                    for entity_description in NON_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
-                        slave_entities.append(
-                            HuaweiSolarNumberEntity(
-                                ucs.configuration_update_coordinator,
-                                ucs.device,
-                                entity_description,
-                                ucs.connected_energy_storage,
-                            )
+                    capacity_descriptions = NON_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS
+
+                has_luna2000 = rv.StorageProductModel.HUAWEI_LUNA2000 in (
+                    ucs.device.battery_1_type,
+                    ucs.device.battery_2_type,
+                )
+                for entity_description in capacity_descriptions:
+                    adjusted_description = (
+                        replace(entity_description, native_min_value=12)
+                        if (
+                            entity_description.key
+                            == rn.STORAGE_DISCHARGING_CUTOFF_CAPACITY
+                            and not has_luna2000
                         )
+                        else entity_description
+                    )
+                    slave_entities.append(
+                        HuaweiSolarNumberEntity(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            adjusted_description,
+                            ucs.connected_energy_storage,
+                        )
+                    )
 
             else:
                 _LOGGER.debug(
@@ -471,7 +564,7 @@ class HuaweiSolarNumberEntity(HuaweiSolarCoordinatorEntity, NumberEntity):
         coordinator: HuaweiSolarUpdateCoordinator,
         device: HuaweiSolarDevice,
         description: HuaweiSolarNumberEntityDescription,
-        device_info: DeviceInfo,
+        device_info: DeviceInfo | ChildDeviceInfo,
     ) -> None:
         """Huawei Solar Number Entity constructor."""
         super().__init__(coordinator, description.context)
@@ -481,8 +574,8 @@ class HuaweiSolarNumberEntity(HuaweiSolarCoordinatorEntity, NumberEntity):
 
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_{description.key}"
-
     @callback
+    @override
     def _async_update_attrs(self) -> None:
         """Update entity attributes from coordinator data."""
         if (
@@ -512,6 +605,7 @@ class HuaweiSolarNumberEntity(HuaweiSolarCoordinatorEntity, NumberEntity):
             self._attr_available = False
             self._attr_native_value = None
 
+    @override
     async def async_set_native_value(self, value: float) -> None:
         """Set a new value."""
         if await self._async_set_register(
@@ -522,6 +616,7 @@ class HuaweiSolarNumberEntity(HuaweiSolarCoordinatorEntity, NumberEntity):
         await self.coordinator.async_request_refresh()
 
     @property
+    @override
     def native_max_value(self) -> float:
         """Maximum value, possibly determined dynamically using maximum_key."""
         if self._maximum_value is not None:
@@ -535,6 +630,7 @@ class HuaweiSolarNumberEntity(HuaweiSolarCoordinatorEntity, NumberEntity):
         return DEFAULT_MAX_VALUE
 
     @property
+    @override
     def native_min_value(self) -> float:
         """Minimum value, possibly determined dynamically using minimum_key."""
         if self._minimum_value is not None:
@@ -552,7 +648,11 @@ def get_number_registers(device: HuaweiSolarDevice) -> set[RegisterName]:
     """Get registers needed for number entities."""
     descriptions: list[HuaweiSolarNumberEntityDescription] = []
     if isinstance(device, EMMADevice):
-        descriptions.extend(EMMA_NUMBER_DESCRIPTIONS)
+        if device.supports_power_limited_grid_connection:
+            descriptions.extend(EMMA_POWER_LIMITED_GRID_CONNECTION_NUMBER_DESCRIPTIONS)
+        descriptions.extend(EMMA_BATTERY_NUMBER_DESCRIPTIONS)
+        if device.supports_capacity_control:
+            descriptions.extend(EMMA_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS)
     elif isinstance(device, SChargerDevice):
         descriptions.extend(CHARGER_NUMBER_DESCRIPTIONS)
     elif isinstance(device, SmartAcGunDevice):

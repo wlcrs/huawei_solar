@@ -175,6 +175,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Hálózatból történő töltés maximális teljesítménye"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "Csúcslefaragási SOC"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximális hálózati betáplálási teljesítmény (%)"
             },
@@ -248,6 +251,14 @@
                     "green_power_priority": "Zöldenergia prioritás"
                 }
             },
+            "emma_capacity_control_mode": {
+                "name": "Kapacitásvezérlési mód",
+                "state": {
+                    "active_capacity_control": "Aktív kapacitásvezérlés",
+                    "apparent_power_limit": "Látszólagos teljesítménykorlát",
+                    "disable": "Letiltás"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS szabályozási mód",
                 "state": {
@@ -288,6 +299,7 @@
                     "fixed_charge_discharge": "Fix töltés/kisütés",
                     "fully_fed_to_grid": "Teljes betáplálás a hálózatba",
                     "maximise_self_consumption": "Önfogyasztás maximalizálása",
+                    "third_party_control": "Harmadik fél általi vezérlés",
                     "time_of_use_lg": "Csúcsidőszaki (TOU)",
                     "time_of_use_luna2000": "Csúcsidőszaki (TOU)"
                 }
@@ -1319,6 +1331,9 @@
             "storage_state_of_capacity": {
                 "name": "Akkumulátor töltöttségi állapota"
             },
+            "storage_state_of_health": {
+                "name": "Akkumulátor állapota (SOH)"
+            },
             "storage_total_charge": {
                 "name": "Összes akkumulátortöltés"
             },
@@ -1375,6 +1390,9 @@
             },
             "yearly_yield_energy": {
                 "name": "Éves hozam"
+            },
+            "emma_capacity_control_periods": {
+                "name": "Kapacitásvezérlési időszakok"
             },
             "emma_tou_periods": {
                 "name": "TOU időszakok"

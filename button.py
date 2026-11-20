@@ -1,14 +1,14 @@
 """Button entities for Huawei Solar."""
 
 import logging
-
-from huawei_solar import SUN2000Device
+from typing import override
 
 from homeassistant.components.button import ButtonEntity
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from huawei_solar import SUN2000Device
 
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION
 from .services import async_stop_forcible_charge
@@ -73,6 +73,7 @@ class StopForcibleChargeButtonEntity(HuaweiSolarCoordinatorEntity, ButtonEntity)
         self._attr_device_info = device_info
         self._attr_unique_id = f"{device.serial_number}_stop_forcible_charge"
 
+    @override
     async def async_press(self) -> None:
         """Stop the forcible charge or discharge."""
         await async_call_with_device_error_handling(

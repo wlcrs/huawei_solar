@@ -178,6 +178,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Maximum power of charge from grid"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "Peak Shaving SOC"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Maximum feed grid power (%)"
             },
@@ -251,6 +254,14 @@
                     "green_power_priority": "Green power priority"
                 }
             },
+            "emma_capacity_control_mode": {
+                "name": "Capacity Control Mode",
+                "state": {
+                    "active_capacity_control": "Active capacity control",
+                    "apparent_power_limit": "Apparent power limit",
+                    "disable": "Disable"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "ESS Control Mode",
                 "state": {
@@ -291,6 +302,7 @@
                     "fixed_charge_discharge": "Fixed charge discharge",
                     "fully_fed_to_grid": "Fully fed to grid",
                     "maximise_self_consumption": "Maximise self consumption",
+                    "third_party_control": "Third party control",
                     "time_of_use_lg": "Time of use",
                     "time_of_use_luna2000": "Time of use"
                 }
@@ -1322,6 +1334,9 @@
             "storage_state_of_capacity": {
                 "name": "State of capacity"
             },
+            "storage_state_of_health": {
+                "name": "State of health"
+            },
             "storage_total_charge": {
                 "name": "Total charge"
             },
@@ -1378,6 +1393,9 @@
             },
             "yearly_yield_energy": {
                 "name": "Yearly yield"
+            },
+            "emma_capacity_control_periods": {
+                "name": "Capacity control periods"
             },
             "emma_tou_periods": {
                 "name": "TOU periods"
@@ -1565,8 +1583,8 @@
             "description": "Set Capacity Control Periods",
             "fields": {
                 "device_id": {
-                    "description": "Must be a 'Batteries' device",
-                    "name": "Battery"
+                    "description": "When an EMMA is present, it must be an 'EMMA' device. Otherwise: it must be a 'Batteries' device",
+                    "name": "Device"
                 },
                 "periods": {
                     "description": "One period per line. Format: '[start time]-[end time]/[days effective]/[power]W', with 1=Monday, 7=Sunday. Example: '00:00-23:59/1234567/2500W'.",

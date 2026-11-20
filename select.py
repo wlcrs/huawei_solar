@@ -1,37 +1,37 @@
 """Switch entities for Huawei Solar."""
 
+import logging
 from dataclasses import dataclass
 from enum import IntEnum
 from itertools import chain
-import logging
-from typing import Any, cast, overload
-
-from huawei_solar import (
-    EMMADevice,
-    HuaweiSolarDevice,
-    RegisterName,
-    SChargerDevice,
-    SmartAcGunDevice,
-    SUN2000Device,
-    register_names as rn,
-    register_values as rv,
-)
-from huawei_solar.register_definitions.number import NumberRegister
-from huawei_solar.registers import REGISTERS
+from typing import cast, overload, override
 
 from homeassistant.components.select import SelectEntity, SelectEntityDescription
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.device_registry import ChildDeviceInfo, DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from huawei_solar import (
+    EMMADevice,
+    HuaweiSolarDevice,
+    RegisterName,
+    SmartAcGunDevice,
+    SUN2000Device,
+)
+from huawei_solar import (
+    register_names as rn,
+)
+from huawei_solar import (
+    register_values as rv,
+)
+from huawei_solar.register_definitions.number import NumberRegister
+from huawei_solar.registers import REGISTERS
 
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION
 from .types import (
     HuaweiSolarConfigEntry,
     HuaweiSolarCoordinatorEntity,
     HuaweiSolarDeviceData,
-    HuaweiSolarEntity,
     HuaweiSolarEntityDescription,
     HuaweiSolarInverterData,
 )
@@ -84,7 +84,7 @@ ACTIVE_POWER_LIMITATION_MODE_SELECT_DESCRIPTION = (
 )
 """In FusionSolar: Settings > Power adjustment > Active power control > Grid-tied point control > Limitation mode."""
 
-EMMA_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
+EMMA_BATTERY_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     HuaweiSolarSelectEntityDescription(
         key=rn.EMMA_ESS_CONTROL_MODE,
         entity_category=EntityCategory.CONFIG,
@@ -92,6 +92,21 @@ EMMA_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     HuaweiSolarSelectEntityDescription(
         key=rn.EMMA_TOU_PREFERRED_USE_OF_SURPLUS_PV_POWER,
         entity_category=EntityCategory.CONFIG,
+    ),
+)
+
+EMMA_CAPACITY_CONTROL_SELECT_DESCRIPTIONS: tuple[
+    HuaweiSolarSelectEntityDescription, ...
+] = (
+    HuaweiSolarSelectEntityDescription(
+        key=rn.EMMA_CAPACITY_CONTROL_MODE,
+        icon="mdi:battery-arrow-up",
+        entity_category=EntityCategory.CONFIG,
+        # Capacity control is not available in 'Fully fed to grid' mode
+        is_available_key=rn.EMMA_ESS_CONTROL_MODE,
+        check_is_available_func=lambda mode: (
+            mode is not None and mode != rv.EmmaEssControlMode.FULLY_FED_TO_GRID
+        ),
     ),
 )
 
@@ -118,6 +133,11 @@ async def async_setup_entry(
         return
 
     device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data
+    has_inverter_battery = any(
+        isinstance(dd, HuaweiSolarInverterData)
+        and dd.device.battery_type != rv.StorageProductModel.NONE
+        for dd in device_datas
+    )
 
     entities_to_add: list[SelectEntity] = []
     for ucs in device_datas:
@@ -126,14 +146,43 @@ async def async_setup_entry(
 
         slave_entities: list[HuaweiSolarSelectEntity] = []
         if isinstance(ucs.device, EMMADevice):
-            for entity_description in EMMA_SELECT_DESCRIPTIONS:
-                slave_entities.append(  # noqa: PERF401
+            if (
+                ucs.device.battery_type != rv.StorageProductModel.NONE
+                or has_inverter_battery
+            ):
+                for entity_description in EMMA_BATTERY_SELECT_DESCRIPTIONS:
+                    slave_entities.append(  # noqa: PERF401
+                        HuaweiSolarSelectEntity(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            entity_description,
+                            ucs.device_info,
+                        )
+                    )
+            else:
+                _LOGGER.debug(
+                    "No battery detected for EMMA %s. Skipping EMMA battery select entities",
+                    ucs.device.serial_number,
+                )
+
+            if ucs.device.supports_capacity_control:
+                _LOGGER.debug(
+                    "Adding capacity control select entities for EMMA %s",
+                    ucs.device.serial_number,
+                )
+                slave_entities.extend(
                     HuaweiSolarSelectEntity(
                         ucs.configuration_update_coordinator,
                         ucs.device,
                         entity_description,
                         ucs.device_info,
                     )
+                    for entity_description in EMMA_CAPACITY_CONTROL_SELECT_DESCRIPTIONS
+                )
+            else:
+                _LOGGER.debug(
+                    "Capacity control is not supported by EMMA %s",
+                    ucs.device.serial_number,
                 )
 
         if isinstance(ucs.device, SmartAcGunDevice):
@@ -169,24 +218,45 @@ async def async_setup_entry(
                 )
 
             if ucs.connected_energy_storage:
-                slave_entities.extend(
-                    HuaweiSolarSelectEntity(
-                        ucs.configuration_update_coordinator,
-                        ucs.device,
-                        entity_description,
-                        ucs.connected_energy_storage,
-                    )
-                    for entity_description in ENERGY_STORAGE_SWITCH_DESCRIPTIONS
-                )
-                available_options = [swm.name for swm in rv.StorageWorkingModesC]
                 if ucs.device.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000:
-                    available_options.remove(
-                        rv.StorageWorkingModesC.TIME_OF_USE_LG.name
+                    slave_entities.extend(
+                        HuaweiSolarSelectEntity(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            entity_description,
+                            ucs.connected_energy_storage,
+                        )
+                        for entity_description in ENERGY_STORAGE_SWITCH_DESCRIPTIONS
                     )
-                elif ucs.device.battery_type == rv.StorageProductModel.LG_RESU:
-                    available_options.remove(
-                        rv.StorageWorkingModesC.TIME_OF_USE_LUNA2000.name
+
+                # The options depend on the type of battery and feature mask 30283
+                battery_working_modes: dict[
+                    rv.StorageProductModel, tuple[rv.StorageWorkingModesC, ...]
+                ] = {
+                    rv.StorageProductModel.HUAWEI_LUNA2000: (
+                        rv.StorageWorkingModesC.MAXIMISE_SELF_CONSUMPTION,
+                        rv.StorageWorkingModesC.FULLY_FED_TO_GRID,
+                        rv.StorageWorkingModesC.TIME_OF_USE_LUNA2000,
+                    ),
+                    rv.StorageProductModel.LG_RESU: (
+                        rv.StorageWorkingModesC.FIXED_CHARGE_DISCHARGE,
+                        rv.StorageWorkingModesC.MAXIMISE_SELF_CONSUMPTION,
+                        rv.StorageWorkingModesC.TIME_OF_USE_LG,
+                    ),
+                }
+                available_modes = list(
+                    battery_working_modes.get(
+                        ucs.device.battery_type,
+                        (
+                            swm
+                            for swm in rv.StorageWorkingModesC
+                            if swm != rv.StorageWorkingModesC.THIRD_PARTY_CONTROL
+                        ),
                     )
+                )
+                if ucs.device.supports_third_party_control:
+                    available_modes.append(rv.StorageWorkingModesC.THIRD_PARTY_CONTROL)
+
                 slave_entities.append(
                     HuaweiSolarSelectEntity(
                         ucs.configuration_update_coordinator,
@@ -196,7 +266,7 @@ async def async_setup_entry(
                             entity_category=EntityCategory.CONFIG,
                         ),
                         ucs.connected_energy_storage,
-                        options=[option.lower() for option in available_options],
+                        options=[mode.name.lower() for mode in available_modes],
                     )
                 )
                 if ucs.device.supports_capacity_control:
@@ -248,7 +318,7 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
         coordinator: HuaweiSolarUpdateCoordinator,
         device: HuaweiSolarDevice,
         description: HuaweiSolarSelectEntityDescription,
-        device_info: DeviceInfo,
+        device_info: DeviceInfo | ChildDeviceInfo,
         *,
         options: list[str] | None = None,
     ) -> None:
@@ -276,6 +346,7 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
         )
 
     @callback
+    @override
     def _async_update_attrs(self) -> None:
         """Update entity attributes from coordinator data."""
         if (
@@ -295,6 +366,7 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
             self._attr_current_option = None
             self._attr_available = False
 
+    @override
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
         await self._async_set_register(
@@ -311,7 +383,9 @@ def get_select_registers(device: HuaweiSolarDevice) -> set[RegisterName]:
     extra_registers: set[RegisterName] = set()
 
     if isinstance(device, EMMADevice):
-        descriptions.extend(EMMA_SELECT_DESCRIPTIONS)
+        descriptions.extend(EMMA_BATTERY_SELECT_DESCRIPTIONS)
+        if device.supports_capacity_control:
+            descriptions.extend(EMMA_CAPACITY_CONTROL_SELECT_DESCRIPTIONS)
     elif isinstance(device, SmartAcGunDevice):
         descriptions.extend(SMART_AC_GUN_SELECT_DESCRIPTIONS)
     elif isinstance(device, SUN2000Device):
@@ -322,7 +396,8 @@ def get_select_registers(device: HuaweiSolarDevice) -> set[RegisterName]:
         if device.supports_active_power_limitation_mode:
             descriptions.append(ACTIVE_POWER_LIMITATION_MODE_SELECT_DESCRIPTION)
         if device.battery_type != rv.StorageProductModel.NONE:
-            descriptions.extend(ENERGY_STORAGE_SWITCH_DESCRIPTIONS)
+            if device.battery_type == rv.StorageProductModel.HUAWEI_LUNA2000:
+                descriptions.extend(ENERGY_STORAGE_SWITCH_DESCRIPTIONS)
             extra_registers.add(rn.STORAGE_WORKING_MODE_SETTINGS)
             if device.supports_capacity_control:
                 descriptions.extend(CAPACITY_CONTROL_SWITCH_DESCRIPTIONS)

@@ -2,29 +2,31 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from itertools import chain
 import logging
 import time
-from typing import Any
-
-from huawei_solar import (
-    HuaweiSolarDevice,
-    HuaweiSolarException,
-    RegisterName,
-    SChargerDevice,
-    SmartAcGunDevice,
-    SUN2000Device,
-    register_names as rn,
-    register_values as rv,
-)
+from dataclasses import dataclass
+from itertools import chain
+from typing import Any, override
 
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import HomeAssistantError
-from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.device_registry import ChildDeviceInfo, DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from huawei_solar import (
+    HuaweiSolarDevice,
+    RegisterName,
+    SChargerDevice,
+    SmartAcGunDevice,
+    SUN2000Device,
+)
+from huawei_solar import (
+    register_names as rn,
+)
+from huawei_solar import (
+    register_values as rv,
+)
 
 from .const import CONF_ENABLE_PARAMETER_CONFIGURATION, DOMAIN
 from .types import (
@@ -235,7 +237,7 @@ class HuaweiSolarSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
         coordinator: HuaweiSolarUpdateCoordinator,
         device: HuaweiSolarDevice,
         description: HuaweiSolarSwitchEntityDescription,
-        device_info: DeviceInfo,
+        device_info: DeviceInfo | ChildDeviceInfo,
     ) -> None:
         """Huawei Solar Switch Entity constructor."""
         super().__init__(coordinator, description.context)
@@ -247,6 +249,7 @@ class HuaweiSolarSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
         self._attr_unique_id = f"{device.serial_number}_{description.key}"
 
     @callback
+    @override
     def _async_update_attrs(self) -> None:
         """Update entity attributes from coordinator data."""
         if (
@@ -264,6 +267,7 @@ class HuaweiSolarSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
             self._attr_is_on = None
             self._attr_available = False
 
+    @override
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the setting on."""
         if await self._async_set_register(self.entity_description.register_name, True):
@@ -271,6 +275,7 @@ class HuaweiSolarSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
 
         await self.coordinator.async_request_refresh()
 
+    @override
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the setting off."""
         if await self._async_set_register(self.entity_description.register_name, False):
@@ -290,7 +295,7 @@ class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
         # this entity depends on the 'Device Status' register
         coordinator: HuaweiSolarUpdateCoordinator,
         device: HuaweiSolarDevice,
-        device_info: DeviceInfo,
+        device_info: DeviceInfo | ChildDeviceInfo,
     ) -> None:
         """Huawei Solar Switch Entity constructor."""
         super().__init__(coordinator, {"register_names": [rn.DEVICE_STATUS]})
@@ -312,6 +317,7 @@ class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
         return device_status.startswith("Shutdown")
 
     @callback
+    @override
     def _async_update_attrs(self) -> None:
         """Update entity attributes from coordinator data."""
         if (
@@ -358,10 +364,12 @@ class HuaweiSolarOnOffSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
         self._attr_is_on = target_is_on
         self.async_write_ha_state()
 
+    @override
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the setting on."""
         await self._async_set_power_state(True, rn.STARTUP)
 
+    @override
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the setting off."""
         await self._async_set_power_state(False, rn.SHUTDOWN)

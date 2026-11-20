@@ -175,6 +175,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Puissance maximale de charge depuis le réseau"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "SOC de l'écrêtage de puissance de la batterie"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Puissance maximale fournie au réseau (%)"
             },
@@ -248,6 +251,14 @@
                     "green_power_priority": "Priorité énergie verte"
                 }
             },
+            "emma_capacity_control_mode": {
+                "name": "Mode de contrôle de capacité",
+                "state": {
+                    "active_capacity_control": "Contrôle de capacité actif",
+                    "apparent_power_limit": "Limite de puissance apparente",
+                    "disable": "Désactiver"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "Mode de contrôle de l'ESS",
                 "state": {
@@ -288,6 +299,7 @@
                     "fixed_charge_discharge": "Charge/décharge fixe",
                     "fully_fed_to_grid": "Entièrement alimenté au réseau",
                     "maximise_self_consumption": "Maximiser l'autoconsommation",
+                    "third_party_control": "Contrôle par un tiers",
                     "time_of_use_lg": "Heure creuse",
                     "time_of_use_luna2000": "Heure creuse"
                 }
@@ -1319,6 +1331,9 @@
             "storage_state_of_capacity": {
                 "name": "État de la capacité"
             },
+            "storage_state_of_health": {
+                "name": "État de santé"
+            },
             "storage_total_charge": {
                 "name": "Charge cumulée"
             },
@@ -1375,6 +1390,9 @@
             },
             "yearly_yield_energy": {
                 "name": "Rendement annuel"
+            },
+            "emma_capacity_control_periods": {
+                "name": "Périodes de contrôle de la capacité"
             },
             "emma_tou_periods": {
                 "name": "Périodes TOU"
@@ -1562,8 +1580,8 @@
             "description": "Définir les périodes de contrôle de capacité",
             "fields": {
                 "device_id": {
-                    "description": "Doit être un périphérique 'Batteries'",
-                    "name": "Batterie"
+                    "description": "Lorsqu'un EMMA est présent, il doit s'agir d'un périphérique 'EMMA'. Sinon : il doit s'agir d'un périphérique 'Batteries'",
+                    "name": "Périphérique"
                 },
                 "periods": {
                     "description": "Une période par ligne. Format : '[heure de début]-[heure de fin]/[jours effectifs]/[puissance]W', avec 1=lundi, 7=dimanche. Exemple : '00:00-23:59/1234567/2500W'.",

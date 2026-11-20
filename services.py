@@ -2,18 +2,30 @@
 
 from __future__ import annotations
 
-from collections.abc import Awaitable, Callable
 import functools
 import logging
 import re
+from collections.abc import Callable, Coroutine
 from typing import Any, Literal, TypedDict, TypeVar
 
+import voluptuous as vol
+
+import homeassistant.helpers.config_validation as cv
+from homeassistant.config_entries import ConfigEntryState
+from homeassistant.const import ATTR_DEVICE_ID
+from homeassistant.core import HomeAssistant, ServiceCall, callback
+from homeassistant.exceptions import ServiceValidationError
+from homeassistant.helpers import device_registry as dr
 from huawei_solar import (
     EMMADevice,
     HuaweiSolarDevice,
     RegisterName,
     SUN2000Device,
+)
+from huawei_solar import (
     register_names as rn,
+)
+from huawei_solar import (
     register_values as rv,
 )
 from huawei_solar.register_definitions.periods import (
@@ -23,19 +35,10 @@ from huawei_solar.register_definitions.periods import (
     LG_RESU_TimeOfUsePeriod,
     PeakSettingPeriod,
 )
-import voluptuous as vol
-
-from homeassistant.config_entries import ConfigEntryState
-from homeassistant.const import ATTR_DEVICE_ID
-from homeassistant.core import HomeAssistant, ServiceCall, callback
-from homeassistant.exceptions import ServiceValidationError
-from homeassistant.helpers import device_registry as dr
-import homeassistant.helpers.config_validation as cv
 
 from .const import (
     CONF_ENABLE_PARAMETER_CONFIGURATION,
     DOMAIN,
-    SERVICES,
     SERVICE_FORCIBLE_CHARGE,
     SERVICE_FORCIBLE_CHARGE_SOC,
     SERVICE_FORCIBLE_DISCHARGE,
@@ -49,6 +52,7 @@ from .const import (
     SERVICE_SET_TOU_PERIODS,
     SERVICE_SET_ZERO_POWER_GRID_CONNECTION,
     SERVICE_STOP_FORCIBLE_CHARGE,
+    SERVICES,
 )
 from .types import (
     HuaweiSolarConfigEntry,
@@ -99,7 +103,7 @@ def _get_call_device_id(call: ServiceCall) -> str:
 @callback
 def async_get_entry_id_for_service_call(
     call: ServiceCall,
-) -> tuple[dr.DeviceEntry, HuaweiSolarConfigEntry]:
+) -> tuple[dr.DeviceEntry | dr.ChildDeviceEntry, HuaweiSolarConfigEntry]:
     """Get the entry ID related to a service call (by device ID)."""
     device_registry = dr.async_get(call.hass)
     device_id = _get_call_device_id(call)
@@ -477,8 +481,6 @@ def _request_configuration_refresh(
     )
 
 
-async def forcible_charge(service_call: ServiceCall) -> None:
-    """Start a forcible charge on the battery."""
 async def _async_start_forcible_charge_discharge(
     service_call: ServiceCall,
     *,
@@ -492,33 +494,17 @@ async def _async_start_forcible_charge_discharge(
     """Start a forcible charge or discharge on the battery."""
     dd = get_battery_device_data(service_call)
     power = await _validate_power_value(
-        service_call.data[DATA_POWER], dd, rn.STORAGE_MAXIMUM_CHARGE_POWER
         service_call.data[DATA_POWER], dd, max_power_register
     )
 
-    duration = service_call.data[DATA_DURATION]
-    if duration > 1440:
-        raise ServiceValidationError(
-            translation_domain=DOMAIN,
-            translation_key="duration_exceeds_maximum",
-            translation_placeholders={"max_duration": "1440"},
-        )
-
-    await dd.device.set(rn.STORAGE_FORCIBLE_CHARGE_POWER, power)
     await dd.device.set(power_register, power)
     await dd.device.set(target_register, service_call.data[target_value_key])
     await dd.device.set(
-        rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD,
-        duration,
-    )
-    await dd.device.set(
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,
-        rv.StorageForcibleChargeDischargeTargetMode.TIME,
         target_mode,
     )
     await dd.device.set(
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
-        rv.StorageForcibleChargeDischarge.CHARGE,
         action,
     )
 
@@ -528,12 +514,8 @@ async def _async_start_forcible_charge_discharge(
     _request_configuration_refresh(service_call, dd)
 
 
-async def forcible_discharge(service_call: ServiceCall) -> None:
 async def forcible_charge(service_call: ServiceCall) -> None:
     """Start a forcible charge on the battery."""
-    dd = get_battery_device_data(service_call)
-    power = await _validate_power_value(
-        service_call.data[DATA_POWER], dd, rn.STORAGE_MAXIMUM_DISCHARGE_POWER
     await _async_start_forcible_charge_discharge(
         service_call,
         power_register=rn.STORAGE_FORCIBLE_CHARGE_POWER,
@@ -544,18 +526,7 @@ async def forcible_charge(service_call: ServiceCall) -> None:
         target_value_key=DATA_DURATION,
     )
 
-    duration = service_call.data[DATA_DURATION]
-    if duration > 1440:
-        raise ServiceValidationError(
-            translation_domain=DOMAIN,
-            translation_key="duration_exceeds_maximum",
-            translation_placeholders={"max_duration": "1440"},
-        )
 
-    await dd.device.set(rn.STORAGE_FORCIBLE_DISCHARGE_POWER, power)
-    await dd.device.set(
-        rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD,
-        duration,
 async def forcible_discharge(service_call: ServiceCall) -> None:
     """Start a forcible discharge on the battery."""
     await _async_start_forcible_charge_discharge(
@@ -567,23 +538,10 @@ async def forcible_discharge(service_call: ServiceCall) -> None:
         target_register=rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD,
         target_value_key=DATA_DURATION,
     )
-    await dd.device.set(
-        rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,
-        rv.StorageForcibleChargeDischargeTargetMode.TIME,
-    )
-    await dd.device.set(
-        rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
-        rv.StorageForcibleChargeDischarge.DISCHARGE,
-    )
-    _request_configuration_refresh(service_call, dd)
 
 
 async def forcible_charge_soc(service_call: ServiceCall) -> None:
     """Start a forcible charge on the battery until the target SOC is hit."""
-    dd = get_battery_device_data(service_call)
-    target_soc = service_call.data[DATA_TARGET_SOC]
-    power = await _validate_power_value(
-        service_call.data[DATA_POWER], dd, rn.STORAGE_MAXIMUM_CHARGE_POWER
     await _async_start_forcible_charge_discharge(
         service_call,
         power_register=rn.STORAGE_FORCIBLE_CHARGE_POWER,
@@ -594,25 +552,9 @@ async def forcible_charge_soc(service_call: ServiceCall) -> None:
         target_value_key=DATA_TARGET_SOC,
     )
 
-    await dd.device.set(rn.STORAGE_FORCIBLE_CHARGE_POWER, power)
-    await dd.device.set(rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SOC, target_soc)
-    await dd.device.set(
-        rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,
-        rv.StorageForcibleChargeDischargeTargetMode.SOC,
-    )
-    await dd.device.set(
-        rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
-        rv.StorageForcibleChargeDischarge.CHARGE,
-    )
-    _request_configuration_refresh(service_call, dd)
-
 
 async def forcible_discharge_soc(service_call: ServiceCall) -> None:
     """Start a forcible discharge on the battery until the target SOC is hit."""
-    dd = get_battery_device_data(service_call)
-    target_soc = service_call.data[DATA_TARGET_SOC]
-    power = await _validate_power_value(
-        service_call.data[DATA_POWER], dd, rn.STORAGE_MAXIMUM_DISCHARGE_POWER
     await _async_start_forcible_charge_discharge(
         service_call,
         power_register=rn.STORAGE_FORCIBLE_DISCHARGE_POWER,
@@ -622,18 +564,6 @@ async def forcible_discharge_soc(service_call: ServiceCall) -> None:
         target_register=rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SOC,
         target_value_key=DATA_TARGET_SOC,
     )
-
-    await dd.device.set(rn.STORAGE_FORCIBLE_DISCHARGE_POWER, power)
-    await dd.device.set(rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SOC, target_soc)
-    await dd.device.set(
-        rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,
-        rv.StorageForcibleChargeDischargeTargetMode.SOC,
-    )
-    await dd.device.set(
-        rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
-        rv.StorageForcibleChargeDischarge.DISCHARGE,
-    )
-    _request_configuration_refresh(service_call, dd)
 
 
 async def async_stop_forcible_charge(device: HuaweiSolarDevice) -> None:
@@ -703,24 +633,15 @@ def _get_power_control_device_data(
     )
 
 
-async def reset_maximum_feed_grid_power(
-    service_call: ServiceCall,
 async def _async_set_power_control_zero(
     service_call: ServiceCall, mode: rv.ActivePowerControlMode
 ) -> None:
-    """Set Active Power Control to 'Unlimited'."""
     """Set Active Power Control mode and reset power limits to 0."""
     dd, manager_type = _get_power_control_device_data(service_call)
 
-    await dd.device.set(
-        POWER_CONTROL_REGISTERS[manager_type]["MODE_REGISTER"],
-        rv.ActivePowerControlMode.UNLIMITED,
-    )
     await dd.device.set(POWER_CONTROL_REGISTERS[manager_type]["MODE_REGISTER"], mode)
     await dd.device.set(POWER_CONTROL_REGISTERS[manager_type]["POWER_WATT_REGISTER"], 0)
     await dd.device.set(
-        POWER_CONTROL_REGISTERS[manager_type]["POWER_PERCENT_REGISTER"],
-        0,
         POWER_CONTROL_REGISTERS[manager_type]["POWER_PERCENT_REGISTER"], 0
     )
 
@@ -757,20 +678,9 @@ async def set_zero_power_grid_connection(
     service_call: ServiceCall,
 ) -> None:
     """Set Active Power Control to 'Zero-Power Grid Connection'."""
-    dd, manager_type = _get_power_control_device_data(service_call)
-    await dd.device.set(
-        POWER_CONTROL_REGISTERS[manager_type]["MODE_REGISTER"],
-        rv.ActivePowerControlMode.ZERO_POWER_GRID_CONNECTION,
     await _async_set_power_control_zero(
         service_call, rv.ActivePowerControlMode.ZERO_POWER_GRID_CONNECTION
     )
-    await dd.device.set(POWER_CONTROL_REGISTERS[manager_type]["POWER_WATT_REGISTER"], 0)
-    await dd.device.set(
-        POWER_CONTROL_REGISTERS[manager_type]["POWER_PERCENT_REGISTER"],
-        0,
-    )
-
-    _request_configuration_refresh(service_call, dd)
 
 
 async def set_maximum_feed_grid_power(
@@ -820,14 +730,6 @@ def _is_emma_device(call: ServiceCall) -> bool:
     """Check if the service call targets an EMMA device."""
     device_entry, entry = async_get_entry_id_for_service_call(call)
     device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data
-    for dd in device_datas:
-        if isinstance(dd.device, EMMADevice):
-            assert "identifiers" in dd.device_info
-            for identifier in dd.device_info["identifiers"]:
-                for device_identifier in device_entry.identifiers:
-                    if identifier == device_identifier:
-                        return True
-    return False
     return any(
         isinstance(dd.device, EMMADevice) and dd.ha_device_id == device_entry.id
         for dd in device_datas
@@ -931,9 +833,9 @@ def _parse_capacity_control_periods(text: str) -> list[PeakSettingPeriod]:
 
 
 async def set_capacity_control_periods(service_call: ServiceCall) -> None:
-    """Set the Capacity Control Periods of the battery."""
-
-    dd = get_battery_device_data(service_call)
+    """Set the Capacity Control Periods of the battery or EMMA."""
+    is_emma = _is_emma_device(service_call)
+    dd = get_emma_device(service_call) if is_emma else get_battery_device_data(service_call)
 
     if not dd.device.supports_capacity_control:
         raise ServiceValidationError(
@@ -955,8 +857,13 @@ async def set_capacity_control_periods(service_call: ServiceCall) -> None:
             },
         )
 
+    register_name = (
+        rn.EMMA_CAPACITY_CONTROL_PERIODS
+        if is_emma
+        else rn.STORAGE_CAPACITY_CONTROL_PERIODS
+    )
     await dd.device.set(
-        rn.STORAGE_CAPACITY_CONTROL_PERIODS,
+        register_name,
         _parse_capacity_control_periods(service_call.data[DATA_PERIODS]),
     )
 
@@ -1010,8 +917,8 @@ async def set_fixed_charge_periods(service_call: ServiceCall) -> None:
 
 
 def _wrap_device_errors(
-    func: Callable[[ServiceCall], Awaitable[None]],
-) -> Callable[[ServiceCall], Awaitable[None]]:
+    func: Callable[[ServiceCall], Coroutine[Any, Any, None]],
+) -> Callable[[ServiceCall], Coroutine[Any, Any, None]]:
     """Translate device communication errors to HomeAssistantError."""
 
     @functools.wraps(func)
@@ -1029,7 +936,7 @@ def async_setup_services(
         return
 
     service_registrations: tuple[
-        tuple[str, Callable[[ServiceCall], Awaitable[None]], vol.Schema], ...
+        tuple[str, Callable[[ServiceCall], Coroutine[Any, Any, None]], vol.Schema], ...
     ] = (
         (
             SERVICE_RESET_MAXIMUM_FEED_GRID_POWER,

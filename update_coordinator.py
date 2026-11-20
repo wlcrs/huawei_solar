@@ -1,11 +1,17 @@
 """Specialized DataUpdateCoordinators for Huawei Solar entities."""
 
+import logging
 from collections.abc import Awaitable, Callable, Iterable
 from datetime import timedelta
 from itertools import chain
-import logging
-from typing import Any
+from typing import Any, override
 
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryAuthFailed
+from homeassistant.helpers.debounce import Debouncer
+from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from huawei_solar import (
     ConnectionInterruptedException,
     DecodeError,
@@ -18,12 +24,6 @@ from huawei_solar import (
 )
 from huawei_solar.device.base import HuaweiSolarDevice
 from huawei_solar.files import OptimizerRealTimeData
-
-from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import ConfigEntryAuthFailed
-from homeassistant.helpers.debounce import Debouncer
-from homeassistant.helpers.device_registry import ConfigEntry, DeviceInfo
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -64,6 +64,7 @@ class HuaweiSolarUpdateCoordinator(
         self.initial_registers = set(initial_registers or [])
         self._initial_refresh_done = False
 
+    @override
     async def _async_update_data(self) -> dict[RegisterName, Result[Any]]:
         contexts = list(self.async_contexts())
         if contexts:
@@ -145,6 +146,7 @@ class HuaweiSolarOptimizerUpdateCoordinator(
         self.device = device
         self.optimizer_device_infos = optimizer_device_infos
 
+    @override
     async def _async_update_data(self) -> dict[int, OptimizerRealTimeData]:
         """Retrieve the latest values from the optimizers."""
         try:

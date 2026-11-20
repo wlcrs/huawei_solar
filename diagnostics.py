@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from huawei_solar import register_names as rn
-
 from homeassistant.components.diagnostics import async_redact_data
 from homeassistant.const import CONF_PASSWORD, CONF_UNIQUE_ID, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
+from huawei_solar import EMMADevice
+from huawei_solar import register_names as rn
 
 from .types import (
     HuaweiSolarConfigEntry,
@@ -50,7 +50,7 @@ async def async_get_config_entry_diagnostics(
     """Return diagnostics for a config entry."""
     device_datas: list[HuaweiSolarDeviceData] = entry.runtime_data
 
-    diagnostics_data = {
+    diagnostics_data: dict[str, Any] = {
         "config_entry_data": dict(entry.data),
         "entities": {
             entity_entry.entity_id: entity_entry.extended_dict
@@ -74,6 +74,10 @@ async def async_get_config_entry_diagnostics(
                 "power_meter_type": dd.device.power_meter_type,
                 "supports_capacity_control": dd.device.supports_capacity_control,
                 "supports_ess_low_power": dd.device.supports_ess_low_power,
+                "supports_charge_from_grid_power": dd.device.supports_charge_from_grid_power,
+                "supports_discharge_power_adjustment": dd.device.supports_discharge_power_adjustment,
+                "supports_recharge": dd.device.supports_recharge,
+                "supports_third_party_control": dd.device.supports_third_party_control,
             }
 
             if dd.power_meter_update_coordinator:
@@ -90,6 +94,17 @@ async def async_get_config_entry_diagnostics(
                 diagnostics_data[
                     f"device_{dd.device.client.unit_id}_optimizer_data"
                 ] = dd.optimizer_update_coordinator.data
+        elif isinstance(dd.device, EMMADevice):
+            diagnostics_data[f"device_{dd.device.client.unit_id}"] = {
+                "_type": type(dd.device).__name__,
+                "model_name": dd.device.model_name,
+                "serial_number": dd.device.serial_number,
+                "software_version": dd.device.software_version,
+                "battery_type": dd.device.battery_type,
+                "supports_capacity_control": dd.device.supports_capacity_control,
+                "supports_power_limited_grid_connection": dd.device.supports_power_limited_grid_connection,
+                "supports_di_scheduling": dd.device.supports_di_scheduling,
+            }
         else:
             diagnostics_data[f"device_{dd.device.client.unit_id}"] = {
                 "_type": type(dd.device).__name__,

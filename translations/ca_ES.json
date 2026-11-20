@@ -175,6 +175,9 @@
             "dongle_plant_maximum_charge_from_grid_power": {
                 "name": "Potència màxima de càrrega des de la xarxa"
             },
+            "emma_capacity_control_soc_peak_shaving": {
+                "name": "Raspat de pic SoC"
+            },
             "emma_maximum_feed_grid_power_percent": {
                 "name": "Potència màxima d'abocament a la xarxa (%)"
             },
@@ -248,6 +251,14 @@
                     "green_power_priority": "Prioritat d'energia verda"
                 }
             },
+            "emma_capacity_control_mode": {
+                "name": "Mode de control de capacitat",
+                "state": {
+                    "active_capacity_control": "Control de capacitat actiu",
+                    "apparent_power_limit": "Límit de potència aparent",
+                    "disable": "Desactivar"
+                }
+            },
             "emma_ess_control_mode": {
                 "name": "Mode de control d'ESS",
                 "state": {
@@ -288,6 +299,7 @@
                     "fixed_charge_discharge": "Càrrega i descàrrega fixa",
                     "fully_fed_to_grid": "Vertit complet a la xarxa",
                     "maximise_self_consumption": "Maximitzar l'autoconsum",
+                    "third_party_control": "Control de tercers",
                     "time_of_use_lg": "Horari d'ús",
                     "time_of_use_luna2000": "Horari d'ús"
                 }
@@ -1319,6 +1331,9 @@
             "storage_state_of_capacity": {
                 "name": "Estat de la capacitat"
             },
+            "storage_state_of_health": {
+                "name": "Estat de salut"
+            },
             "storage_total_charge": {
                 "name": "Càrrega total"
             },
@@ -1375,6 +1390,9 @@
             },
             "yearly_yield_energy": {
                 "name": "Rendiment anual"
+            },
+            "emma_capacity_control_periods": {
+                "name": "Períodes de control de capacitat"
             },
             "emma_tou_periods": {
                 "name": "Períodes TOU"

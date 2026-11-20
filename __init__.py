@@ -1,8 +1,12 @@
 """The Huawei Solar integration."""
 
 import logging
+from datetime import datetime
+from typing import cast
 
-from homeassistant.config_entries import ConfigEntry
+from tmodbus.exceptions import IllegalFunctionError
+
+from homeassistant.config_entries import ConfigEntry, ConfigEntryState
 from homeassistant.const import (
     CONF_HOST,
     CONF_PASSWORD,
@@ -10,10 +14,12 @@ from homeassistant.const import (
     CONF_USERNAME,
     Platform,
 )
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
-from homeassistant.helpers import device_registry as dr, entity_registry as er
-from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers.device_registry import ChildDeviceInfo, DeviceInfo
+from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.typing import ConfigType
 from huawei_solar import (
     ConnectionException,
@@ -34,11 +40,12 @@ from huawei_solar import (
     create_rtu_client,
     create_sub_device_instance,
     create_tcp_client,
+)
+from huawei_solar import (
     register_values as rv,
 )
 from huawei_solar.device.base import HuaweiSolarDevice, HuaweiSolarDeviceWithLogin
 from huawei_solar.modbus_pdu import PermissionDeniedError
-from tmodbus.exceptions import IllegalFunctionError
 
 from .const import (
     CONF_BAUDRATE,
@@ -51,6 +58,7 @@ from .const import (
     INVERTER_UPDATE_INTERVAL,
     OPTIMIZER_UPDATE_INTERVAL,
     POWER_METER_UPDATE_INTERVAL,
+    SUB_DEVICE_RETRY_INTERVAL,
 )
 from .number import get_number_registers
 from .select import get_select_registers
@@ -243,11 +251,32 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
             )
 
             device_datas: list[HuaweiSolarDeviceData] = [primary_device_data]
+            skipped_unit_ids: list[int] = []
 
-            for extra_unit_id in entry.data[CONF_SLAVE_IDS][1:]:
-                sub_device = await create_sub_device_instance(
-                    primary_device, extra_unit_id
-                )
+            # Sorted, so that an SCharger is always set up before the SmartAcGun(s)
+            # that follow it, whatever order the slave IDs were entered in.
+            for extra_unit_id in sorted(entry.data[CONF_SLAVE_IDS][1:]):
+                try:
+                    sub_device = await create_sub_device_instance(
+                        primary_device, extra_unit_id
+                    )
+                except (ConnectionException, ConnectionInterruptedException):
+                    # The connection to the primary device is broken: retry the whole setup.
+                    raise
+                except (HuaweiSolarException, TimeoutError) as err:
+                    # A sub-device that does not respond (e.g. an EV charger on a circuit
+                    # without power) must not prevent the primary device and the other
+                    # sub-devices from being set up.
+                    _LOGGER.warning(
+                        "Cannot set up the device at unit_id %s, continuing without it. "
+                        "The integration will be reloaded once the device responds again. "
+                        "If the device was removed, reconfigure the integration without "
+                        "this unit_id. Error: %r",
+                        extra_unit_id,
+                        err,
+                    )
+                    skipped_unit_ids.append(extra_unit_id)
+                    continue
                 if isinstance(sub_device, MeterDevice) and not isinstance(
                     primary_device, SmartLoggerDevice
                 ):
@@ -256,23 +285,37 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
                         extra_unit_id,
                     )
                     continue
-                parent_ha_device_id = primary_device_data.ha_device_id
+                parent_device_id: str | None = None
                 if isinstance(sub_device, SmartAcGunDevice):
-                    for dd in device_datas:
-                        if isinstance(dd.device, SChargerDevice):
-                            parent_ha_device_id = dd.ha_device_id
-                            break
+                    # Link the connector to the SCharger with the highest unit ID below
+                    # its own: the connector(s) of an SCharger follow it in unit ID.
+                    parent_device_id = next(
+                        (
+                            dd.ha_device_id
+                            for dd in reversed(device_datas)
+                            if isinstance(dd.device, SChargerDevice)
+                        ),
+                        None,
+                    )
 
                 sub_device_data = await _setup_device_data(
                     hass,
                     entry,
                     sub_device,
-                    via_device_id=parent_ha_device_id,
+                    parent_device_id=parent_device_id,
+                    via_device_id=primary_device_data.ha_device_id
+                    if parent_device_id is None
+                    else None,
                 )
 
                 device_datas.append(sub_device_data)
 
             entry.runtime_data = device_datas
+
+            if skipped_unit_ids:
+                _async_track_skipped_sub_devices(
+                    hass, entry, primary_device, skipped_unit_ids
+                )
         except ConnectionInterruptedException as err:
             host = entry.data.get(CONF_HOST) or entry.data.get(CONF_PORT)
             raise ConfigEntryNotReady(
@@ -309,6 +352,42 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
     return True
 
 
+@callback
+def _async_track_skipped_sub_devices(
+    hass: HomeAssistant,
+    entry: HuaweiSolarConfigEntry,
+    primary_device: HuaweiSolarDevice,
+    unit_ids: list[int],
+) -> None:
+    """Reload the config entry once a skipped sub-device responds again."""
+
+    async def _async_check_skipped_sub_devices(_now: datetime) -> None:
+        for unit_id in unit_ids:
+            try:
+                await create_sub_device_instance(primary_device, unit_id)
+            except (HuaweiSolarException, TimeoutError) as err:
+                _LOGGER.debug(
+                    "Device at unit_id %s still does not respond: %r", unit_id, err
+                )
+                continue
+            _LOGGER.info(
+                "Device at unit_id %s responds again, reloading the integration",
+                unit_id,
+            )
+            hass.config_entries.async_schedule_reload(entry.entry_id)
+            return
+
+    entry.async_on_unload(
+        async_track_time_interval(
+            hass,
+            _async_check_skipped_sub_devices,
+            SUB_DEVICE_RETRY_INTERVAL,
+            name="Huawei Solar skipped sub-device check",
+            cancel_on_shutdown=True,
+        )
+    )
+
+
 async def async_unload_entry(
     hass: HomeAssistant, entry: HuaweiSolarConfigEntry
 ) -> bool:
@@ -319,6 +398,34 @@ async def async_unload_entry(
             await device_data.device.stop()
 
     return unload_ok
+
+
+async def async_remove_config_entry_device(
+    hass: HomeAssistant,
+    config_entry: HuaweiSolarConfigEntry,
+    device_entry: dr.DeviceEntry | dr.ChildDeviceEntry,
+) -> bool:
+    """Allow removing a device if it is no longer active in this config entry."""
+    if config_entry.state is not ConfigEntryState.LOADED:
+        return False
+
+    active_identifiers: set[tuple[str, str]] = set()
+    for dd in config_entry.runtime_data:
+        active_identifiers.update(dd.device_info.get("identifiers", ()))
+        if isinstance(dd, HuaweiSolarInverterData):
+            for device_info in (
+                dd.power_meter,
+                dd.connected_energy_storage,
+                dd.battery_1,
+                dd.battery_2,
+            ):
+                if device_info is not None:
+                    active_identifiers.update(device_info.get("identifiers", ()))
+            if dd.optimizer_update_coordinator and dd.optimizer_device_infos:
+                for opt_device_info in dd.optimizer_device_infos.values():
+                    active_identifiers.update(opt_device_info.get("identifiers", ()))
+
+    return active_identifiers.isdisjoint(device_entry.identifiers)
 
 
 def _battery_product_model_to_manufacturer(spm: rv.StorageProductModel) -> str | None:
@@ -351,19 +458,14 @@ def _get_configuration_registers(
     )
 
 
-async def _setup_inverter_device_data(
 async def _async_create_common_device_setup(
     hass: HomeAssistant,
     entry: ConfigEntry,
-    device: SUN2000Device,
-    *,
-    via_device_id: str | None = None,
-) -> HuaweiSolarInverterData:
     device: HuaweiSolarDevice,
-    device_info: DeviceInfo,
+    device_info: DeviceInfo | ChildDeviceInfo,
     initial_registers: set[RegisterName],
 ) -> tuple[
-    dr.DeviceEntry,
+    dr.DeviceEntry | dr.ChildDeviceEntry,
     bool,
     HuaweiSolarUpdateCoordinator,
     HuaweiSolarUpdateCoordinator | None,
@@ -371,31 +473,21 @@ async def _async_create_common_device_setup(
     """Register device, check write permission, and create main & config coordinators."""
     device_registry = dr.async_get(hass)
 
-    inverter_device_info = DeviceInfo(
-        identifiers={(DOMAIN, device.serial_number)},
-        translation_key="inverter",
-        manufacturer="Huawei",
-        model=device.model_name,
-        serial_number=device.serial_number,
-        sw_version=device.software_version,
-        via_device_id=via_device_id,
-    )
-
-    # Add inverter device to device registry
-    ha_device = device_registry.async_get_or_create_from_info(
-        config_entry_id=entry.entry_id,
-        device_info=inverter_device_info,
-        device_info=device_info,
-    )
+    if "parent_device_id" in device_info:
+        ha_device: dr.DeviceEntry | dr.ChildDeviceEntry = (
+            device_registry.async_get_or_create_child_from_info(
+                config_entry_id=entry.entry_id,
+                device_info=cast(ChildDeviceInfo, device_info),
+            )
+        )
+    else:
+        ha_device = device_registry.async_get_or_create_from_info(
+            config_entry_id=entry.entry_id,
+            device_info=cast(DeviceInfo, device_info),
+        )
 
     has_write_permission = False
     if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
-        try:
-            has_write_permission = await device.has_write_permission()
-        except HuaweiSolarException:
-            _LOGGER.debug(
-                "Failed to check write permission for %s", device.serial_number
-            )
         if isinstance(device, HuaweiSolarDeviceWithLogin):
             try:
                 has_write_permission = await device.has_write_permission()
@@ -413,7 +505,6 @@ async def _async_create_common_device_setup(
         device=device,
         name=f"{device.serial_number}_data_update_coordinator",
         update_interval=INVERTER_UPDATE_INTERVAL,
-        initial_registers=get_inverter_sensor_registers(device),
         initial_registers=initial_registers,
     )
     await update_coordinator.async_config_entry_first_refresh()
@@ -656,6 +747,7 @@ async def _setup_device_data(
     entry: ConfigEntry,
     device: HuaweiSolarDevice,
     *,
+    parent_device_id: str | None = None,
     via_device_id: str | None = None,
 ) -> HuaweiSolarDeviceData:
     """Create the correct DeviceInfo-objects, which can be used to correctly assign to entities in this integration."""
@@ -664,25 +756,25 @@ async def _setup_device_data(
             hass, entry, device, via_device_id=via_device_id
         )
 
-    device_registry = dr.async_get(hass)
+    translation_key = DEVICE_CLASS_TO_TRANSLATION_KEY[type(device)]
 
-    sw_version = getattr(device, "software_version", None)
+    if parent_device_id is not None:
+        device_info: DeviceInfo | ChildDeviceInfo = ChildDeviceInfo(
+            identifiers={(DOMAIN, device.serial_number)},
+            parent_device_id=parent_device_id,
+            translation_key=translation_key,
+        )
+    else:
+        device_info = DeviceInfo(
+            identifiers={(DOMAIN, device.serial_number)},
+            translation_key=translation_key,
+            manufacturer="Huawei",
+            model=device.model_name,
+            serial_number=device.serial_number,
+            sw_version=getattr(device, "software_version", None),
+            via_device_id=via_device_id,
+        )
 
-    device_info = DeviceInfo(
-        identifiers={(DOMAIN, device.serial_number)},
-        translation_key=DEVICE_CLASS_TO_TRANSLATION_KEY[type(device)],
-        manufacturer="Huawei",
-        model=device.model_name,
-        serial_number=device.serial_number,
-        sw_version=sw_version,
-        sw_version=getattr(device, "software_version", None),
-        via_device_id=via_device_id,
-    )
-
-    # Add device to device registry
-    ha_device = device_registry.async_get_or_create_from_info(
-        config_entry_id=entry.entry_id,
-        device_info=device_info,
     (
         ha_device,
         has_write_permission,
@@ -691,45 +783,6 @@ async def _setup_device_data(
     ) = await _async_create_common_device_setup(
         hass, entry, device, device_info, get_device_sensor_registers(device)
     )
-
-    has_write_permission = False
-    if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
-        if isinstance(device, HuaweiSolarDeviceWithLogin):
-            try:
-                has_write_permission = await device.has_write_permission()
-            except HuaweiSolarException:
-                _LOGGER.debug(
-                    "Failed to check write permission for %s", device.serial_number
-                )
-        else:
-            has_write_permission = True
-
-    update_coordinator = HuaweiSolarUpdateCoordinator(
-        hass,
-        _LOGGER,
-        config_entry=entry,
-        device=device,
-        name=f"{device.serial_number}_data_update_coordinator",
-        update_interval=INVERTER_UPDATE_INTERVAL,
-        initial_registers=get_device_sensor_registers(device),
-    )
-    await update_coordinator.async_config_entry_first_refresh()
-
-    if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
-        configuration_update_coordinator = HuaweiSolarUpdateCoordinator(
-            hass,
-            _LOGGER,
-            config_entry=entry,
-            device=device,
-            name=f"{device.serial_number}_config_data_update_coordinator",
-            update_interval=CONFIGURATION_UPDATE_INTERVAL,
-            initial_registers=_get_configuration_registers(
-                device, has_write_permission=has_write_permission
-            ),
-        )
-        await configuration_update_coordinator.async_config_entry_first_refresh()
-    else:
-        configuration_update_coordinator = None
 
     return HuaweiSolarDeviceData(
         device=device,

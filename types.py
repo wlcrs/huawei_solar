@@ -2,8 +2,17 @@
 
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
-from typing import Any, TypedDict
+from typing import Any, TypedDict, override
 
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import callback
+from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
+from homeassistant.helpers.device_registry import ChildDeviceInfo, DeviceInfo
+from homeassistant.helpers.entity import Entity, EntityDescription
+from homeassistant.helpers.update_coordinator import (
+    CoordinatorEntity,
+    DataUpdateCoordinator,
+)
 from huawei_solar import (
     ConnectionInterruptedException,
     EncodeError,
@@ -16,16 +25,6 @@ from huawei_solar import (
     TimeOfUsePeriodsException,
 )
 from huawei_solar.modbus_pdu import PermissionDeniedError
-
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import callback
-from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
-from homeassistant.helpers.device_registry import DeviceInfo
-from homeassistant.helpers.entity import Entity, EntityDescription
-from homeassistant.helpers.update_coordinator import (
-    CoordinatorEntity,
-    DataUpdateCoordinator,
-)
 
 from .const import DOMAIN
 from .update_coordinator import (
@@ -40,7 +39,7 @@ class HuaweiSolarDeviceData:
 
     device: HuaweiSolarDevice
     ha_device_id: str
-    device_info: DeviceInfo
+    device_info: DeviceInfo | ChildDeviceInfo
     update_coordinator: HuaweiSolarUpdateCoordinator
     configuration_update_coordinator: HuaweiSolarUpdateCoordinator | None
     has_write_permission: bool = False
@@ -125,6 +124,12 @@ class HuaweiSolarEntity(Entity):
         )
 
 
+class HuaweiSolarEntityContext(TypedDict):
+    """Context for Huawei Solar Entities."""
+
+    register_names: list[RegisterName]
+
+
 @dataclass(frozen=True)
 class HuaweiSolarEntityDescription(EntityDescription):
     """Huawei Solar Entity Description."""
@@ -154,18 +159,13 @@ class HuaweiSolarEntityDescription(EntityDescription):
         return {"register_names": registers}
 
 
-class HuaweiSolarEntityContext(TypedDict):
-    """Context for Huawei Solar Entities."""
-
-    register_names: list[RegisterName]
-
-
 class HuaweiSolarCoordinatorEntity[
     CoordinatorT: DataUpdateCoordinator[Any] = HuaweiSolarUpdateCoordinator
 ](CoordinatorEntity[CoordinatorT], HuaweiSolarEntity):
     """Huawei Solar Coordinator Entity."""
 
     @property
+    @override
     def available(self) -> bool:
         """Return if entity is available."""
         return super().available and self._attr_available
@@ -189,11 +189,13 @@ class HuaweiSolarCoordinatorEntity[
         """Update entity attributes from coordinator data."""
 
     @callback
+    @override
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         self._async_update_attrs()
         super()._handle_coordinator_update()
 
+    @override
     async def async_added_to_hass(self) -> None:
         """When entity is added to hass update state from existing coordinator data."""
         await super().async_added_to_hass()
