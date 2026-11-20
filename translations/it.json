@@ -405,6 +405,13 @@
             "bms_temperature": {
                 "name": "Temperatura BMS"
             },
+            "charger_ac_wiring_mode": {
+                "name": "Cablaggio CA",
+                "state": {
+                    "single_phase": "Monofase",
+                    "three_phase_four_wire": "Trifase, quattro fili"
+                }
+            },
             "charger_cable_max_current": {
                 "name": "Corrente massima del cavo"
             },
@@ -424,6 +431,13 @@
                     "household_power_excessive": "Potenza domestica eccessiva",
                     "insufficient_green_power": "Energia verde insufficiente",
                     "phase_switching": "Cambio di fase"
+                }
+            },
+            "charger_contactor_control_mode": {
+                "name": "Modalità di controllo contattore",
+                "state": {
+                    "single_phase": "Monofase",
+                    "three_phase": "Trifase"
                 }
             },
             "charger_gun_lock_status": {
@@ -493,6 +507,9 @@
             "charger_max_charging_power": {
                 "name": "Massima potenza di carica"
             },
+            "charger_max_fixed_power": {
+                "name": "Massima potenza di carica fissa"
+            },
             "charger_min_charging_power": {
                 "name": "Minima potenza di carica"
             },
@@ -514,6 +531,9 @@
             },
             "charger_planned_departure_time": {
                 "name": "Ora di partenza programmata"
+            },
+            "charger_pwm_duty_cycle": {
+                "name": "Ciclo di lavoro PWM"
             },
             "charger_rated_power": {
                 "name": "Potenza nominale caricatore"

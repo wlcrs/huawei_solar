@@ -405,6 +405,13 @@
             "bms_temperature": {
                 "name": "Temperatura BMS"
             },
+            "charger_ac_wiring_mode": {
+                "name": "Okablowanie AC",
+                "state": {
+                    "single_phase": "Jednofazowe",
+                    "three_phase_four_wire": "Trójfazowe, czteroprzewodowe"
+                }
+            },
             "charger_cable_max_current": {
                 "name": "Maksymalny prąd kabla"
             },
@@ -424,6 +431,13 @@
                     "household_power_excessive": "Zbyt duża moc domowa",
                     "insufficient_green_power": "Niewystarczająca zielona energia",
                     "phase_switching": "Przełączanie fazy"
+                }
+            },
+            "charger_contactor_control_mode": {
+                "name": "Tryb sterowania stycznikiem",
+                "state": {
+                    "single_phase": "Jednofazowy",
+                    "three_phase": "Trójfazowy"
                 }
             },
             "charger_gun_lock_status": {
@@ -493,6 +507,9 @@
             "charger_max_charging_power": {
                 "name": "Maksymalna moc ładowania"
             },
+            "charger_max_fixed_power": {
+                "name": "Stała maksymalna moc ładowania"
+            },
             "charger_min_charging_power": {
                 "name": "Minimalna moc ładowania"
             },
@@ -514,6 +531,9 @@
             },
             "charger_planned_departure_time": {
                 "name": "Planowany czas odjazdu"
+            },
+            "charger_pwm_duty_cycle": {
+                "name": "Wypełnienie PWM"
             },
             "charger_rated_power": {
                 "name": "Moc znamionowa ładowarki"

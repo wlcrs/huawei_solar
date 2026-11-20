@@ -405,6 +405,13 @@
             "bms_temperature": {
                 "name": "BMS-temperatuur"
             },
+            "charger_ac_wiring_mode": {
+                "name": "AC-bedrading",
+                "state": {
+                    "single_phase": "Eenfasig",
+                    "three_phase_four_wire": "Driefasig, vierdraads"
+                }
+            },
             "charger_cable_max_current": {
                 "name": "Maximale kabelstroom"
             },
@@ -424,6 +431,13 @@
                     "household_power_excessive": "Huishoudelijk vermogen te hoog",
                     "insufficient_green_power": "Onvoldoende groene stroom",
                     "phase_switching": "Fasewisseling"
+                }
+            },
+            "charger_contactor_control_mode": {
+                "name": "Contactorbesturingsmodus",
+                "state": {
+                    "single_phase": "Eenfasig",
+                    "three_phase": "Driefasig"
                 }
             },
             "charger_gun_lock_status": {
@@ -493,6 +507,9 @@
             "charger_max_charging_power": {
                 "name": "Maximaal laadvermogen"
             },
+            "charger_max_fixed_power": {
+                "name": "Vast maximaal laadvermogen"
+            },
             "charger_min_charging_power": {
                 "name": "Minimaal laadvermogen"
             },
@@ -514,6 +531,9 @@
             },
             "charger_planned_departure_time": {
                 "name": "Geplande vertrektijd"
+            },
+            "charger_pwm_duty_cycle": {
+                "name": "PWM-duty-cycle"
             },
             "charger_rated_power": {
                 "name": "Nominaal vermogen lader"

@@ -408,6 +408,13 @@
             "bms_temperature": {
                 "name": "BMS temperature"
             },
+            "charger_ac_wiring_mode": {
+                "name": "AC wiring",
+                "state": {
+                    "single_phase": "Single phase",
+                    "three_phase_four_wire": "Three phase, four wire"
+                }
+            },
             "charger_cable_max_current": {
                 "name": "Cable maximum current"
             },
@@ -427,6 +434,13 @@
                     "household_power_excessive": "Household power excessive",
                     "insufficient_green_power": "Insufficient green power",
                     "phase_switching": "Phase switching"
+                }
+            },
+            "charger_contactor_control_mode": {
+                "name": "Contactor control mode",
+                "state": {
+                    "single_phase": "Single phase",
+                    "three_phase": "Three phase"
                 }
             },
             "charger_gun_lock_status": {
@@ -496,6 +510,9 @@
             "charger_max_charging_power": {
                 "name": "Maximum charging power"
             },
+            "charger_max_fixed_power": {
+                "name": "Fixed maximum charging power"
+            },
             "charger_min_charging_power": {
                 "name": "Minimum charging power"
             },
@@ -517,6 +534,9 @@
             },
             "charger_planned_departure_time": {
                 "name": "Planned departure time"
+            },
+            "charger_pwm_duty_cycle": {
+                "name": "PWM duty cycle"
             },
             "charger_rated_power": {
                 "name": "Charger rated power"
