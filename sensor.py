@@ -2039,6 +2039,10 @@ SMART_AC_GUN_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...]
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_PLANNED_DEPARTURE_TIME,
         device_class=SensorDeviceClass.TIMESTAMP,
+        # 0 (1970-01-01) means that no departure time is set.
+        value_conversion_function=lambda value: (
+            None if value is not None and value.timestamp() == 0 else value
+        ),
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_TARGET_CHARGED_ENERGY,
