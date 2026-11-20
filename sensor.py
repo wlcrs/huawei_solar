@@ -1841,6 +1841,35 @@ def create_emma_entities(
     return entities
 
 
+# Charger settings, read through the charger's configuration coordinator (only created
+# when parameter configuration is enabled). The two modes are disabled by default: while
+# they stay disabled, a charger model that rejects them cannot fail that coordinator's
+# reads and take the charger's numbers and switches down with it.
+CHARGER_CONFIGURATION_SENSOR_DESCRIPTIONS: tuple[
+    HuaweiSolarSensorEntityDescription, ...
+] = (
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_CONTACTOR_CONTROL_MODE,
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.ChargerContactorControlMode],
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_AC_WIRING_MODE,
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.ChargerAcWiringMode],
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_MAX_FIXED_POWER,
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+)
+
 CHARGER_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_RATED_POWER,
@@ -1982,6 +2011,12 @@ SMART_AC_GUN_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...]
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.CHARGER_PWM_DUTY_CYCLE,
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     HuaweiSolarSensorEntityDescription(
         key=rn.CHARGER_GUN_LOCK_STATUS,
@@ -2223,12 +2258,22 @@ def create_charger_entities(
     """Create Charger sensor entities."""
     assert isinstance(ucs.device, SChargerDevice)
 
-    return [
+    entities = [
         HuaweiSolarSensorEntity(
             ucs.update_coordinator, entity_description, ucs.device_info
         )
         for entity_description in CHARGER_SENSOR_DESCRIPTIONS
     ]
+    if ucs.configuration_update_coordinator:
+        entities.extend(
+            HuaweiSolarSensorEntity(
+                ucs.configuration_update_coordinator,
+                entity_description,
+                ucs.device_info,
+            )
+            for entity_description in CHARGER_CONFIGURATION_SENSOR_DESCRIPTIONS
+        )
+    return entities
 
 
 def create_smart_ac_gun_entities(
@@ -3096,4 +3141,10 @@ def get_configuration_sensor_registers(
             registers.update(HuaweiSolarForcibleChargeEntity.REGISTER_NAMES)
             if device.supports_capacity_control:
                 registers.add(rn.STORAGE_CAPACITY_CONTROL_PERIODS)
+    elif isinstance(device, SChargerDevice):
+        registers.update(
+            desc.register_name
+            for desc in CHARGER_CONFIGURATION_SENSOR_DESCRIPTIONS
+            if desc.entity_registry_enabled_default
+        )
     return registers
