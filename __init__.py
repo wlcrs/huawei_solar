@@ -229,7 +229,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
 
         device_datas: list[HuaweiSolarDeviceData] = [primary_device_data]
         skipped_unit_ids: list[int] = []
-        scharger_ha_device_ids: dict[int, str] = {}
 
         # Sorted, so that an SCharger is always set up before the SmartAcGun(s)
         # that follow it, whatever order the slave IDs were entered in.
@@ -267,15 +266,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
             if isinstance(sub_device, SmartAcGunDevice):
                 # Link the connector to the SCharger with the highest unit ID below
                 # its own: the connector(s) of an SCharger follow it in unit ID.
-                lower_scharger_unit_ids = [
-                    unit_id
-                    for unit_id in scharger_ha_device_ids
-                    if unit_id < extra_unit_id
-                ]
-                if lower_scharger_unit_ids:
-                    parent_ha_device_id = scharger_ha_device_ids[
-                        max(lower_scharger_unit_ids)
-                    ]
+                parent_ha_device_id = next(
+                    (
+                        dd.ha_device_id
+                        for dd in reversed(device_datas)
+                        if isinstance(dd.device, SChargerDevice)
+                    ),
+                    primary_device_data.ha_device_id,
+                )
 
             sub_device_data = await _setup_device_data(
                 hass,
@@ -285,8 +283,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
             )
 
             device_datas.append(sub_device_data)
-            if isinstance(sub_device, SChargerDevice):
-                scharger_ha_device_ids[extra_unit_id] = sub_device_data.ha_device_id
 
         entry.runtime_data = {
             DATA_DEVICE_DATAS: device_datas,
