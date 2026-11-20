@@ -259,6 +259,9 @@
             "shutdown_time": {
                 "default": "mdi:weather-sunset-down"
             },
+            "smartguard_status": {
+                "default": "mdi:transmission-tower"
+            },
             "smartlogger_energy_charged_today": {
                 "default": "mdi:battery-plus-variant"
             },
@@ -359,6 +362,9 @@
             },
             "mppt_multimodal_scanning": {
                 "default": "mdi:magnify-scan"
+            },
+            "smartguard_off_grid": {
+                "default": "mdi:transmission-tower-off"
             },
             "startup": {
                 "default": "mdi:power-standby"
