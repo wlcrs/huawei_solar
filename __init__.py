@@ -352,12 +352,23 @@ def _get_configuration_registers(
 
 
 async def _setup_inverter_device_data(
+async def _async_create_common_device_setup(
     hass: HomeAssistant,
     entry: ConfigEntry,
     device: SUN2000Device,
     *,
     via_device_id: str | None = None,
 ) -> HuaweiSolarInverterData:
+    device: HuaweiSolarDevice,
+    device_info: DeviceInfo,
+    initial_registers: set[RegisterName],
+) -> tuple[
+    dr.DeviceEntry,
+    bool,
+    HuaweiSolarUpdateCoordinator,
+    HuaweiSolarUpdateCoordinator | None,
+]:
+    """Register device, check write permission, and create main & config coordinators."""
     device_registry = dr.async_get(hass)
 
     inverter_device_info = DeviceInfo(
@@ -374,6 +385,7 @@ async def _setup_inverter_device_data(
     ha_device = device_registry.async_get_or_create_from_info(
         config_entry_id=entry.entry_id,
         device_info=inverter_device_info,
+        device_info=device_info,
     )
 
     has_write_permission = False
@@ -384,6 +396,15 @@ async def _setup_inverter_device_data(
             _LOGGER.debug(
                 "Failed to check write permission for %s", device.serial_number
             )
+        if isinstance(device, HuaweiSolarDeviceWithLogin):
+            try:
+                has_write_permission = await device.has_write_permission()
+            except HuaweiSolarException:
+                _LOGGER.debug(
+                    "Failed to check write permission for %s", device.serial_number
+                )
+        else:
+            has_write_permission = True
 
     update_coordinator = HuaweiSolarUpdateCoordinator(
         hass,
@@ -393,8 +414,59 @@ async def _setup_inverter_device_data(
         name=f"{device.serial_number}_data_update_coordinator",
         update_interval=INVERTER_UPDATE_INTERVAL,
         initial_registers=get_inverter_sensor_registers(device),
+        initial_registers=initial_registers,
     )
     await update_coordinator.async_config_entry_first_refresh()
+
+    if entry.data.get(CONF_ENABLE_PARAMETER_CONFIGURATION, False):
+        configuration_update_coordinator = HuaweiSolarUpdateCoordinator(
+            hass,
+            _LOGGER,
+            config_entry=entry,
+            device=device,
+            name=f"{device.serial_number}_config_data_update_coordinator",
+            update_interval=CONFIGURATION_UPDATE_INTERVAL,
+            initial_registers=_get_configuration_registers(
+                device, has_write_permission=has_write_permission
+            ),
+        )
+        await configuration_update_coordinator.async_config_entry_first_refresh()
+    else:
+        configuration_update_coordinator = None
+
+    return (
+        ha_device,
+        has_write_permission,
+        update_coordinator,
+        configuration_update_coordinator,
+    )
+
+
+async def _setup_inverter_device_data(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+    device: SUN2000Device,
+    *,
+    via_device_id: str | None = None,
+) -> HuaweiSolarInverterData:
+    inverter_device_info = DeviceInfo(
+        identifiers={(DOMAIN, device.serial_number)},
+        translation_key="inverter",
+        manufacturer="Huawei",
+        model=device.model_name,
+        serial_number=device.serial_number,
+        sw_version=device.software_version,
+        via_device_id=via_device_id,
+    )
+
+    (
+        ha_device,
+        has_write_permission,
+        update_coordinator,
+        configuration_update_coordinator,
+    ) = await _async_create_common_device_setup(
+        hass, entry, device, inverter_device_info, get_inverter_sensor_registers(device)
+    )
 
     # Add power meter device if a power meter is detected
     if device.power_meter_type is not None:
@@ -603,6 +675,7 @@ async def _setup_device_data(
         model=device.model_name,
         serial_number=device.serial_number,
         sw_version=sw_version,
+        sw_version=getattr(device, "software_version", None),
         via_device_id=via_device_id,
     )
 
@@ -610,6 +683,13 @@ async def _setup_device_data(
     ha_device = device_registry.async_get_or_create_from_info(
         config_entry_id=entry.entry_id,
         device_info=device_info,
+    (
+        ha_device,
+        has_write_permission,
+        update_coordinator,
+        configuration_update_coordinator,
+    ) = await _async_create_common_device_setup(
+        hass, entry, device, device_info, get_device_sensor_registers(device)
     )
 
     has_write_permission = False

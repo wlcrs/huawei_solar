@@ -66,6 +66,14 @@ BAUDRATE_SELECTOR = SelectSelector(
 
 async def validate_serial_setup(
     port: str, unit_ids: list[int], baudrate: int = DEFAULT_BAUDRATE
+async def _async_validate_setup(
+    client: Any,
+    unit_ids: list[int],
+    *,
+    elevated_permissions: bool = False,
+    check_write_permission: bool = False,
+    skip_failed_sub_devices: bool = False,
+    wrap_primary_disconnect_as_device_error: bool = False,
 ) -> dict[str, Any]:
     """Validate the serial device that was passed by the user."""
     client = create_rtu_client(
@@ -73,9 +81,20 @@ async def validate_serial_setup(
         baudrate=baudrate,
         unit_id=unit_ids[0],
     )
+    """Connect using ``client``, probe the primary device and any sub-devices."""
+    await client.connect()
     try:
         await client.connect()
         device = await create_device_instance(client)
+        try:
+            device = await create_device_instance(client)
+        except (ConnectionException, ModbusConnectionError, TimeoutError) as err:
+            if wrap_primary_disconnect_as_device_error:
+                raise DeviceException(
+                    f"Device closed connection for unit_id {unit_ids[0]} - possibly wrong slave ID",
+                    unit_id=unit_ids[0],
+                ) from err
+            raise
 
         _LOGGER.info(
             "Successfully connected to device %s %s with SN %s",
@@ -88,19 +107,36 @@ async def validate_serial_setup(
             "model_name": device.model_name,
             "serial_number": device.serial_number,
         }
+        has_write_permission = (
+            elevated_permissions
+            and (
+                not isinstance(device, HuaweiSolarDeviceWithLogin)
+                or await device.has_write_permission()
+            )
+            if check_write_permission
+            else False
+        )
 
         # Also validate the other slave-ids
         for slave_id in unit_ids[1:]:
+        connected_unit_ids = [unit_ids[0]]
+        for unit_id in unit_ids[1:]:
             try:
                 slave_bridge = await create_sub_device_instance(device, slave_id)
 
+                sub_device = await create_sub_device_instance(device, unit_id)
                 _LOGGER.info(
                     "Successfully connected to sub device %s with ID %s: %s with SN %s",
                     type(slave_bridge).__name__,
                     slave_id,
                     slave_bridge.model_name,
                     slave_bridge.serial_number,
+                    type(sub_device).__name__,
+                    unit_id,
+                    sub_device.model_name,
+                    sub_device.serial_number,
                 )
+                connected_unit_ids.append(unit_id)
             except (
                 HuaweiSolarException,
                 ConnectionException,
@@ -108,17 +144,46 @@ async def validate_serial_setup(
                 TimeoutError,
             ) as err:
                 _LOGGER.error("Could not connect to slave %s", slave_id)
+                if skip_failed_sub_devices:
+                    _LOGGER.exception(
+                        "Error while connecting to sub device with unit_id %s. Skipping",
+                        unit_id,
+                    )
+                    continue
+                _LOGGER.error("Could not connect to sub device %s", unit_id)
                 raise DeviceException(
                     f"Could not connect to slave {slave_id}",
                     unit_id=slave_id,
+                    f"Could not connect to sub device {unit_id}",
+                    unit_id=unit_id,
                 ) from err
 
         # Return info that you want to store in the config entry.
+        result: dict[str, Any] = {
+            "model_name": device.model_name,
+            "serial_number": device.serial_number,
+        }
+        if check_write_permission:
+            result["has_write_permission"] = has_write_permission
+        if skip_failed_sub_devices:
+            result["slave_ids"] = connected_unit_ids
         return result
     finally:
         # Cleanup this device object explicitly to prevent it from trying to maintain a modbus connection
         with contextlib.suppress(Exception):
             await client.disconnect()
+
+
+async def validate_serial_setup(
+    port: str, unit_ids: list[int], baudrate: int = DEFAULT_BAUDRATE
+) -> dict[str, Any]:
+    """Validate the serial device that was passed by the user."""
+    client = create_rtu_client(
+        port=port,
+        baudrate=baudrate,
+        unit_id=unit_ids[0],
+    )
+    return await _async_validate_setup(client, unit_ids)
 
 
 async def _auto_slave_discovery(
@@ -330,6 +395,13 @@ async def _connect_to_discovered_devices(
     try:
         await client.connect()
         device = await create_device_instance(client)
+    return await _async_validate_setup(
+        client,
+        [primary_unit_id, *sub_unit_ids],
+        elevated_permissions=elevated_permissions,
+        check_write_permission=True,
+        skip_failed_sub_devices=True,
+    )
 
         _LOGGER.info(
             "Successfully connected to primary device with unit_id %s: %s %s with SN %s",
@@ -388,6 +460,7 @@ async def validate_network_setup(
         DeviceException: if the TCP connection was established but the device rejected the
             slave ID (connection closed by remote), or a sub-device could not be reached.
     """
+    """Validate the user input allows us to connect."""
     client = create_scan_tcp_client(
         host=host,
         port=port,
@@ -396,6 +469,13 @@ async def validate_network_setup(
     # Separate the TCP connect from the device communication so callers can
     # distinguish "host unreachable" from "wrong slave ID".
     await client.connect()
+    return await _async_validate_setup(
+        client,
+        unit_ids,
+        elevated_permissions=elevated_permissions,
+        check_write_permission=True,
+        wrap_primary_disconnect_as_device_error=True,
+    )
 
     try:
         try:

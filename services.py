@@ -157,6 +157,8 @@ def _get_device_data(
             for device_identifier in device_entry.identifiers:
                 if identifier == device_identifier:
                     return dd
+        if dd.ha_device_id == device_entry.id:
+            return dd
 
     raise ServiceValidationError(
         translation_domain=DOMAIN,
@@ -228,6 +230,26 @@ def _get_battery_device_data(call: ServiceCall) -> HuaweiSolarInverterData:
                             },
                         )
                     return dd
+        if not dd.connected_energy_storage["identifiers"].isdisjoint(
+            device_entry.identifiers
+        ):
+            if isinstance(dd.device.primary_device, EMMADevice):
+                raise ServiceValidationError(
+                    translation_domain=DOMAIN,
+                    translation_key="emma_no_direct_battery_control",
+                    translation_placeholders={
+                        "device_id": _get_call_device_id(call),
+                    },
+                )
+            if dd.device.battery_type == rv.StorageProductModel.NONE:
+                raise ServiceValidationError(
+                    translation_domain=DOMAIN,
+                    translation_key="no_battery_connected",
+                    translation_placeholders={
+                        "device_id": _get_call_device_id(call),
+                    },
+                )
+            return dd
 
     # If the device ID belongs to a known non-battery device (inverter or EMMA), give a specific error
     for dd in device_datas:
@@ -244,6 +266,16 @@ def _get_battery_device_data(call: ServiceCall) -> HuaweiSolarInverterData:
                             "actual_type": type(dd.device).__name__,
                         },
                     )
+        if dd.ha_device_id == device_entry.id:
+            raise ServiceValidationError(
+                translation_domain=DOMAIN,
+                translation_key="wrong_device_type",
+                translation_placeholders={
+                    "device_id": _get_call_device_id(call),
+                    "expected_type": "Batteries",
+                    "actual_type": type(dd.device).__name__,
+                },
+            )
 
     raise ServiceValidationError(
         translation_domain=DOMAIN,
@@ -447,9 +479,21 @@ def _request_configuration_refresh(
 
 async def forcible_charge(service_call: ServiceCall) -> None:
     """Start a forcible charge on the battery."""
+async def _async_start_forcible_charge_discharge(
+    service_call: ServiceCall,
+    *,
+    power_register: rn.RegisterName,
+    max_power_register: rn.RegisterName,
+    action: rv.StorageForcibleChargeDischarge,
+    target_mode: rv.StorageForcibleChargeDischargeTargetMode,
+    target_register: rn.RegisterName,
+    target_value_key: str,
+) -> None:
+    """Start a forcible charge or discharge on the battery."""
     dd = get_battery_device_data(service_call)
     power = await _validate_power_value(
         service_call.data[DATA_POWER], dd, rn.STORAGE_MAXIMUM_CHARGE_POWER
+        service_call.data[DATA_POWER], dd, max_power_register
     )
 
     duration = service_call.data[DATA_DURATION]
@@ -461,6 +505,8 @@ async def forcible_charge(service_call: ServiceCall) -> None:
         )
 
     await dd.device.set(rn.STORAGE_FORCIBLE_CHARGE_POWER, power)
+    await dd.device.set(power_register, power)
+    await dd.device.set(target_register, service_call.data[target_value_key])
     await dd.device.set(
         rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD,
         duration,
@@ -468,10 +514,12 @@ async def forcible_charge(service_call: ServiceCall) -> None:
     await dd.device.set(
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,
         rv.StorageForcibleChargeDischargeTargetMode.TIME,
+        target_mode,
     )
     await dd.device.set(
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_WRITE,
         rv.StorageForcibleChargeDischarge.CHARGE,
+        action,
     )
 
     # Request a refresh without awaiting to avoid deadlocks between the
@@ -481,10 +529,19 @@ async def forcible_charge(service_call: ServiceCall) -> None:
 
 
 async def forcible_discharge(service_call: ServiceCall) -> None:
+async def forcible_charge(service_call: ServiceCall) -> None:
     """Start a forcible charge on the battery."""
     dd = get_battery_device_data(service_call)
     power = await _validate_power_value(
         service_call.data[DATA_POWER], dd, rn.STORAGE_MAXIMUM_DISCHARGE_POWER
+    await _async_start_forcible_charge_discharge(
+        service_call,
+        power_register=rn.STORAGE_FORCIBLE_CHARGE_POWER,
+        max_power_register=rn.STORAGE_MAXIMUM_CHARGE_POWER,
+        action=rv.StorageForcibleChargeDischarge.CHARGE,
+        target_mode=rv.StorageForcibleChargeDischargeTargetMode.TIME,
+        target_register=rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD,
+        target_value_key=DATA_DURATION,
     )
 
     duration = service_call.data[DATA_DURATION]
@@ -499,6 +556,16 @@ async def forcible_discharge(service_call: ServiceCall) -> None:
     await dd.device.set(
         rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD,
         duration,
+async def forcible_discharge(service_call: ServiceCall) -> None:
+    """Start a forcible discharge on the battery."""
+    await _async_start_forcible_charge_discharge(
+        service_call,
+        power_register=rn.STORAGE_FORCIBLE_DISCHARGE_POWER,
+        max_power_register=rn.STORAGE_MAXIMUM_DISCHARGE_POWER,
+        action=rv.StorageForcibleChargeDischarge.DISCHARGE,
+        target_mode=rv.StorageForcibleChargeDischargeTargetMode.TIME,
+        target_register=rn.STORAGE_FORCED_CHARGING_AND_DISCHARGING_PERIOD,
+        target_value_key=DATA_DURATION,
     )
     await dd.device.set(
         rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SETTING_MODE,
@@ -517,6 +584,14 @@ async def forcible_charge_soc(service_call: ServiceCall) -> None:
     target_soc = service_call.data[DATA_TARGET_SOC]
     power = await _validate_power_value(
         service_call.data[DATA_POWER], dd, rn.STORAGE_MAXIMUM_CHARGE_POWER
+    await _async_start_forcible_charge_discharge(
+        service_call,
+        power_register=rn.STORAGE_FORCIBLE_CHARGE_POWER,
+        max_power_register=rn.STORAGE_MAXIMUM_CHARGE_POWER,
+        action=rv.StorageForcibleChargeDischarge.CHARGE,
+        target_mode=rv.StorageForcibleChargeDischargeTargetMode.SOC,
+        target_register=rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SOC,
+        target_value_key=DATA_TARGET_SOC,
     )
 
     await dd.device.set(rn.STORAGE_FORCIBLE_CHARGE_POWER, power)
@@ -538,6 +613,14 @@ async def forcible_discharge_soc(service_call: ServiceCall) -> None:
     target_soc = service_call.data[DATA_TARGET_SOC]
     power = await _validate_power_value(
         service_call.data[DATA_POWER], dd, rn.STORAGE_MAXIMUM_DISCHARGE_POWER
+    await _async_start_forcible_charge_discharge(
+        service_call,
+        power_register=rn.STORAGE_FORCIBLE_DISCHARGE_POWER,
+        max_power_register=rn.STORAGE_MAXIMUM_DISCHARGE_POWER,
+        action=rv.StorageForcibleChargeDischarge.DISCHARGE,
+        target_mode=rv.StorageForcibleChargeDischargeTargetMode.SOC,
+        target_register=rn.STORAGE_FORCIBLE_CHARGE_DISCHARGE_SOC,
+        target_value_key=DATA_TARGET_SOC,
     )
 
     await dd.device.set(rn.STORAGE_FORCIBLE_DISCHARGE_POWER, power)
@@ -622,21 +705,35 @@ def _get_power_control_device_data(
 
 async def reset_maximum_feed_grid_power(
     service_call: ServiceCall,
+async def _async_set_power_control_zero(
+    service_call: ServiceCall, mode: rv.ActivePowerControlMode
 ) -> None:
     """Set Active Power Control to 'Unlimited'."""
+    """Set Active Power Control mode and reset power limits to 0."""
     dd, manager_type = _get_power_control_device_data(service_call)
 
     await dd.device.set(
         POWER_CONTROL_REGISTERS[manager_type]["MODE_REGISTER"],
         rv.ActivePowerControlMode.UNLIMITED,
     )
+    await dd.device.set(POWER_CONTROL_REGISTERS[manager_type]["MODE_REGISTER"], mode)
     await dd.device.set(POWER_CONTROL_REGISTERS[manager_type]["POWER_WATT_REGISTER"], 0)
     await dd.device.set(
         POWER_CONTROL_REGISTERS[manager_type]["POWER_PERCENT_REGISTER"],
         0,
+        POWER_CONTROL_REGISTERS[manager_type]["POWER_PERCENT_REGISTER"], 0
     )
 
     _request_configuration_refresh(service_call, dd)
+
+
+async def reset_maximum_feed_grid_power(
+    service_call: ServiceCall,
+) -> None:
+    """Set Active Power Control to 'Unlimited'."""
+    await _async_set_power_control_zero(
+        service_call, rv.ActivePowerControlMode.UNLIMITED
+    )
 
 
 # only available for inverters
@@ -664,6 +761,8 @@ async def set_zero_power_grid_connection(
     await dd.device.set(
         POWER_CONTROL_REGISTERS[manager_type]["MODE_REGISTER"],
         rv.ActivePowerControlMode.ZERO_POWER_GRID_CONNECTION,
+    await _async_set_power_control_zero(
+        service_call, rv.ActivePowerControlMode.ZERO_POWER_GRID_CONNECTION
     )
     await dd.device.set(POWER_CONTROL_REGISTERS[manager_type]["POWER_WATT_REGISTER"], 0)
     await dd.device.set(
@@ -729,6 +828,10 @@ def _is_emma_device(call: ServiceCall) -> bool:
                     if identifier == device_identifier:
                         return True
     return False
+    return any(
+        isinstance(dd.device, EMMADevice) and dd.ha_device_id == device_entry.id
+        for dd in device_datas
+    )
 
 
 async def set_tou_periods(service_call: ServiceCall) -> None:
