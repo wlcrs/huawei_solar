@@ -134,6 +134,9 @@
         "power_meter": {
             "name": "Pomiar mocy"
         },
+        "sdongle": {
+            "name": "SDongle"
+        },
         "smartguard": {
             "name": "SmartGuard"
         },

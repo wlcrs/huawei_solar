@@ -134,6 +134,9 @@
         "power_meter": {
             "name": "پاور میٹر"
         },
+        "sdongle": {
+            "name": "SDongle"
+        },
         "smartguard": {
             "name": "SmartGuard"
         },

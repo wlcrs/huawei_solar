@@ -134,6 +134,9 @@
         "power_meter": {
             "name": "Medidor de energia"
         },
+        "sdongle": {
+            "name": "SDongle"
+        },
         "smartguard": {
             "name": "SmartGuard"
         },
