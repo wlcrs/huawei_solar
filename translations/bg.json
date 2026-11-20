@@ -1187,6 +1187,40 @@
             "single_phase_meter_voltage": {
                 "name": "[%key:component::sensor::entity_component::voltage::name%]"
             },
+            "smartguard_backup_load_phase_a_voltage": {
+                "name": "Напрежение на резервния товар фаза A"
+            },
+            "smartguard_backup_load_phase_b_voltage": {
+                "name": "Напрежение на резервния товар фаза B"
+            },
+            "smartguard_backup_load_phase_c_voltage": {
+                "name": "Напрежение на резервния товар фаза C"
+            },
+            "smartguard_grid_phase_a_voltage": {
+                "name": "Мрежово напрежение фаза A"
+            },
+            "smartguard_grid_phase_b_voltage": {
+                "name": "Мрежово напрежение фаза B"
+            },
+            "smartguard_grid_phase_c_voltage": {
+                "name": "Мрежово напрежение фаза C"
+            },
+            "smartguard_internal_temperature": {
+                "name": "Вътрешна температура"
+            },
+            "smartguard_status": {
+                "name": "Статус",
+                "state": {
+                    "standby": "В готовност",
+                    "on_grid": "В мрежата",
+                    "off_grid_generator": "Извън мрежата: захранване от генератор",
+                    "off_grid_inverter": "Извън мрежата: захранване от инвертор",
+                    "off_grid_generator_and_inverter": "Извън мрежата: захранване от генератор и инвертор",
+                    "bypassed": "Байпас",
+                    "unexpected_shutdown": "Неочаквано изключване",
+                    "unexpected_shutdown_grid_supply": "Неочаквано изключване: захранване от мрежата"
+                }
+            },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "Линейно напрежение на мрежата A-B"
             },
@@ -1437,6 +1471,9 @@
             "mppt_multimodal_scanning": {
                 "name": "MPPT сканиране"
             },
+            "smartguard_off_grid": {
+                "name": "Извън мрежата"
+            },
             "startup": {
                 "name": "Инвертор ВКЛ./ИЗКЛ."
             },
@@ -1508,6 +1545,18 @@
         },
         "power_exceeds_maximum": {
             "message": "Мощността не може да надвишава {max_power} W."
+        },
+        "smartguard_grid_not_present": {
+            "message": "Мрежовото напрежение не е налично ({voltages} V), така че SmartGuard не беше превключен към мрежата."
+        },
+        "smartguard_switchover_not_allowed": {
+            "message": "SmartGuard не може да бъде превключен от текущия си статус ({status})."
+        },
+        "smartguard_switchover_not_confirmed": {
+            "message": "SmartGuard не потвърди превключването в рамките на {seconds} секунди (последен статус: {status})."
+        },
+        "smartguard_toggle_state_unknown": {
+            "message": "Състоянието извън мрежата на SmartGuard е неизвестно, така че не може да бъде превключено; включете или изключете превключвателя изрично."
         },
         "unsupported_battery_type": {
             "message": "Неподдържан тип батерия за устройство {device_id}."

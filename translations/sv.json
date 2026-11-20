@@ -1187,6 +1187,40 @@
             "single_phase_meter_voltage": {
                 "name": "[%key:component::sensor::entity_component::voltage::name%]"
             },
+            "smartguard_backup_load_phase_a_voltage": {
+                "name": "Reservlast fas A spänning"
+            },
+            "smartguard_backup_load_phase_b_voltage": {
+                "name": "Reservlast fas B spänning"
+            },
+            "smartguard_backup_load_phase_c_voltage": {
+                "name": "Reservlast fas C spänning"
+            },
+            "smartguard_grid_phase_a_voltage": {
+                "name": "Nät fas A spänning"
+            },
+            "smartguard_grid_phase_b_voltage": {
+                "name": "Nät fas B spänning"
+            },
+            "smartguard_grid_phase_c_voltage": {
+                "name": "Nät fas C spänning"
+            },
+            "smartguard_internal_temperature": {
+                "name": "Intern temperatur"
+            },
+            "smartguard_status": {
+                "name": "Status",
+                "state": {
+                    "standby": "Standby",
+                    "on_grid": "Nätansluten",
+                    "off_grid_generator": "Ö-drift: drivs av generator",
+                    "off_grid_inverter": "Ö-drift: drivs av växelriktare",
+                    "off_grid_generator_and_inverter": "Ö-drift: drivs av generator och växelriktare",
+                    "bypassed": "Förbikopplad (bypass)",
+                    "unexpected_shutdown": "Oväntad avstängning",
+                    "unexpected_shutdown_grid_supply": "Oväntad avstängning: strömförsörjning från nätet"
+                }
+            },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "Nätets huvudspänning A-B"
             },
@@ -1437,6 +1471,9 @@
             "mppt_multimodal_scanning": {
                 "name": "Multimodal MPPT-skanning"
             },
+            "smartguard_off_grid": {
+                "name": "Ö-drift"
+            },
             "startup": {
                 "name": "Växelriktare PÅ/AV"
             },
@@ -1508,6 +1545,18 @@
         },
         "power_exceeds_maximum": {
             "message": "Effekten får inte överstiga {max_power} W."
+        },
+        "smartguard_grid_not_present": {
+            "message": "Nätspänningen saknas ({voltages} V), så SmartGuard växlades inte till nätansluten drift."
+        },
+        "smartguard_switchover_not_allowed": {
+            "message": "SmartGuard kan inte växlas från sin nuvarande status ({status})."
+        },
+        "smartguard_switchover_not_confirmed": {
+            "message": "SmartGuard bekräftade inte växlingen inom {seconds} sekunder (senaste status: {status})."
+        },
+        "smartguard_toggle_state_unknown": {
+            "message": "SmartGuards ö-driftsläge är okänt och kan därför inte växlas; slå på eller av brytaren explicit."
         },
         "unsupported_battery_type": {
             "message": "Batterityp stöds inte för enhet {device_id}."

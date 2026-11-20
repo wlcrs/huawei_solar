@@ -1187,6 +1187,40 @@
             "single_phase_meter_voltage": {
                 "name": "Spanning"
             },
+            "smartguard_backup_load_phase_a_voltage": {
+                "name": "Back-upbelasting fase A spanning"
+            },
+            "smartguard_backup_load_phase_b_voltage": {
+                "name": "Back-upbelasting fase B spanning"
+            },
+            "smartguard_backup_load_phase_c_voltage": {
+                "name": "Back-upbelasting fase C spanning"
+            },
+            "smartguard_grid_phase_a_voltage": {
+                "name": "Net fase A spanning"
+            },
+            "smartguard_grid_phase_b_voltage": {
+                "name": "Net fase B spanning"
+            },
+            "smartguard_grid_phase_c_voltage": {
+                "name": "Net fase C spanning"
+            },
+            "smartguard_internal_temperature": {
+                "name": "Interne temperatuur"
+            },
+            "smartguard_status": {
+                "name": "Status",
+                "state": {
+                    "standby": "Stand-by",
+                    "on_grid": "Netgekoppeld",
+                    "off_grid_generator": "Off-grid: gevoed door generator",
+                    "off_grid_inverter": "Off-grid: gevoed door omvormer",
+                    "off_grid_generator_and_inverter": "Off-grid: gevoed door generator en omvormer",
+                    "bypassed": "Omgeleid (bypass)",
+                    "unexpected_shutdown": "Onverwachte uitschakeling",
+                    "unexpected_shutdown_grid_supply": "Onverwachte uitschakeling: voeding via net"
+                }
+            },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "Net lijnspanning A-B"
             },
@@ -1450,6 +1484,9 @@
             "mppt_multimodal_scanning": {
                 "name": "MPPT scanning"
             },
+            "smartguard_off_grid": {
+                "name": "Off-grid"
+            },
             "startup": {
                 "name": "Omvormer AAN/UIT"
             },
@@ -1521,6 +1558,18 @@
         },
         "power_exceeds_maximum": {
             "message": "Het vermogen mag niet hoger zijn dan {max_power} W."
+        },
+        "smartguard_grid_not_present": {
+            "message": "De netspanning is niet aanwezig ({voltages} V), dus de SmartGuard is niet naar netgekoppeld geschakeld."
+        },
+        "smartguard_switchover_not_allowed": {
+            "message": "De SmartGuard kan niet worden geschakeld vanuit de huidige status ({status})."
+        },
+        "smartguard_switchover_not_confirmed": {
+            "message": "De SmartGuard heeft de omschakeling niet binnen {seconds} seconden bevestigd (laatste status: {status})."
+        },
+        "smartguard_toggle_state_unknown": {
+            "message": "De off-gridstatus van de SmartGuard is onbekend en kan daarom niet worden omgeschakeld; zet de schakelaar expliciet aan of uit."
         },
         "unsupported_battery_type": {
             "message": "Niet-ondersteund batterijtype voor apparaat {device_id}."

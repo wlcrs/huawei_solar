@@ -1187,6 +1187,40 @@
             "single_phase_meter_voltage": {
                 "name": "Tensión"
             },
+            "smartguard_backup_load_phase_a_voltage": {
+                "name": "Tensión de carga de respaldo fase A"
+            },
+            "smartguard_backup_load_phase_b_voltage": {
+                "name": "Tensión de carga de respaldo fase B"
+            },
+            "smartguard_backup_load_phase_c_voltage": {
+                "name": "Tensión de carga de respaldo fase C"
+            },
+            "smartguard_grid_phase_a_voltage": {
+                "name": "Tensión de red fase A"
+            },
+            "smartguard_grid_phase_b_voltage": {
+                "name": "Tensión de red fase B"
+            },
+            "smartguard_grid_phase_c_voltage": {
+                "name": "Tensión de red fase C"
+            },
+            "smartguard_internal_temperature": {
+                "name": "Temperatura interna"
+            },
+            "smartguard_status": {
+                "name": "Estado",
+                "state": {
+                    "standby": "En espera",
+                    "on_grid": "Conectado a la red",
+                    "off_grid_generator": "Fuera de red: alimentado por generador",
+                    "off_grid_inverter": "Fuera de red: alimentado por inversor",
+                    "off_grid_generator_and_inverter": "Fuera de red: alimentado por generador e inversor",
+                    "bypassed": "En bypass",
+                    "unexpected_shutdown": "Apagado inesperado",
+                    "unexpected_shutdown_grid_supply": "Apagado inesperado: suministro eléctrico desde la red"
+                }
+            },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "Tensión de red de línea A-B"
             },
@@ -1437,6 +1471,9 @@
             "mppt_multimodal_scanning": {
                 "name": "MPPT scanning"
             },
+            "smartguard_off_grid": {
+                "name": "Fuera de red"
+            },
             "startup": {
                 "name": "Encendido/Apagado del inversor"
             },
@@ -1508,6 +1545,18 @@
         },
         "power_exceeds_maximum": {
             "message": "La potencia no puede superar los {max_power} W."
+        },
+        "smartguard_grid_not_present": {
+            "message": "No hay tensión de red ({voltages} V), por lo que el SmartGuard no se conmutó a conectado a la red."
+        },
+        "smartguard_switchover_not_allowed": {
+            "message": "No se puede conmutar el SmartGuard desde su estado actual ({status})."
+        },
+        "smartguard_switchover_not_confirmed": {
+            "message": "El SmartGuard no confirmó la conmutación en {seconds} segundos (último estado: {status})."
+        },
+        "smartguard_toggle_state_unknown": {
+            "message": "El estado fuera de red del SmartGuard es desconocido, por lo que no se puede alternar; encienda o apague el interruptor explícitamente."
         },
         "unsupported_battery_type": {
             "message": "Tipo de batería no compatible para el dispositivo {device_id}."

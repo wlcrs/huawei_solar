@@ -1187,6 +1187,40 @@
             "single_phase_meter_voltage": {
                 "name": "[%key:component::sensor::entity_component::voltage::name%]"
             },
+            "smartguard_backup_load_phase_a_voltage": {
+                "name": "Tartalék terhelés A fázis feszültség"
+            },
+            "smartguard_backup_load_phase_b_voltage": {
+                "name": "Tartalék terhelés B fázis feszültség"
+            },
+            "smartguard_backup_load_phase_c_voltage": {
+                "name": "Tartalék terhelés C fázis feszültség"
+            },
+            "smartguard_grid_phase_a_voltage": {
+                "name": "Hálózat A fázis feszültség"
+            },
+            "smartguard_grid_phase_b_voltage": {
+                "name": "Hálózat B fázis feszültség"
+            },
+            "smartguard_grid_phase_c_voltage": {
+                "name": "Hálózat C fázis feszültség"
+            },
+            "smartguard_internal_temperature": {
+                "name": "Belső hőmérséklet"
+            },
+            "smartguard_status": {
+                "name": "Állapot",
+                "state": {
+                    "standby": "Készenlét",
+                    "on_grid": "Hálózatra kapcsolva",
+                    "off_grid_generator": "Szigetüzem: generátorról táplálva",
+                    "off_grid_inverter": "Szigetüzem: inverterről táplálva",
+                    "off_grid_generator_and_inverter": "Szigetüzem: generátorról és inverterről táplálva",
+                    "bypassed": "Áthidalva (bypass)",
+                    "unexpected_shutdown": "Váratlan leállás",
+                    "unexpected_shutdown_grid_supply": "Váratlan leállás: hálózati tápellátás"
+                }
+            },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "Hálózat A-B vonali feszültsége"
             },
@@ -1437,6 +1471,9 @@
             "mppt_multimodal_scanning": {
                 "name": "Többmódú MPPT pásztázás"
             },
+            "smartguard_off_grid": {
+                "name": "Szigetüzem"
+            },
             "startup": {
                 "name": "Inverter BE/KI"
             },
@@ -1508,6 +1545,18 @@
         },
         "power_exceeds_maximum": {
             "message": "A teljesítmény nem haladhatja meg a {max_power} W értéket."
+        },
+        "smartguard_grid_not_present": {
+            "message": "A hálózati feszültség nem elérhető ({voltages} V), így a SmartGuard nem kapcsolt át hálózati üzemmódba."
+        },
+        "smartguard_switchover_not_allowed": {
+            "message": "A SmartGuard nem kapcsolható át a jelenlegi állapotából ({status})."
+        },
+        "smartguard_switchover_not_confirmed": {
+            "message": "A SmartGuard nem erősítette meg az átkapcsolást {seconds} másodpercen belül (utolsó állapot: {status})."
+        },
+        "smartguard_toggle_state_unknown": {
+            "message": "A SmartGuard szigetüzemi állapota ismeretlen, ezért nem kapcsolható át; kapcsolja be vagy ki a kapcsolót kifejezetten."
         },
         "unsupported_battery_type": {
             "message": "Nem támogatott akkumulátortípus a(z) {device_id} eszközhöz."

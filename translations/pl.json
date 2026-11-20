@@ -1187,6 +1187,40 @@
             "single_phase_meter_voltage": {
                 "name": "Napięcie"
             },
+            "smartguard_backup_load_phase_a_voltage": {
+                "name": "Napięcie obciążenia rezerwowego fazy A"
+            },
+            "smartguard_backup_load_phase_b_voltage": {
+                "name": "Napięcie obciążenia rezerwowego fazy B"
+            },
+            "smartguard_backup_load_phase_c_voltage": {
+                "name": "Napięcie obciążenia rezerwowego fazy C"
+            },
+            "smartguard_grid_phase_a_voltage": {
+                "name": "Napięcie sieci fazy A"
+            },
+            "smartguard_grid_phase_b_voltage": {
+                "name": "Napięcie sieci fazy B"
+            },
+            "smartguard_grid_phase_c_voltage": {
+                "name": "Napięcie sieci fazy C"
+            },
+            "smartguard_internal_temperature": {
+                "name": "Temperatura wewnętrzna"
+            },
+            "smartguard_status": {
+                "name": "Status",
+                "state": {
+                    "standby": "Gotowość",
+                    "on_grid": "Praca sieciowa",
+                    "off_grid_generator": "Poza siecią: zasilanie z generatora",
+                    "off_grid_inverter": "Poza siecią: zasilanie z falownika",
+                    "off_grid_generator_and_inverter": "Poza siecią: zasilanie z generatora i falownika",
+                    "bypassed": "Obejście (bypass)",
+                    "unexpected_shutdown": "Nieoczekiwane wyłączenie",
+                    "unexpected_shutdown_grid_supply": "Nieoczekiwane wyłączenie: zasilanie z sieci"
+                }
+            },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "Napięcie międzyfazowe sieci A-B"
             },
@@ -1437,6 +1471,9 @@
             "mppt_multimodal_scanning": {
                 "name": "MPPT scanning"
             },
+            "smartguard_off_grid": {
+                "name": "Poza siecią"
+            },
             "startup": {
                 "name": "Włącz/wyłącz inwerter"
             },
@@ -1508,6 +1545,18 @@
         },
         "power_exceeds_maximum": {
             "message": "Moc nie może przekraczać {max_power} W."
+        },
+        "smartguard_grid_not_present": {
+            "message": "Brak napięcia sieci ({voltages} V), więc SmartGuard nie został przełączony na pracę sieciową."
+        },
+        "smartguard_switchover_not_allowed": {
+            "message": "Nie można przełączyć urządzenia SmartGuard z jego bieżącego statusu ({status})."
+        },
+        "smartguard_switchover_not_confirmed": {
+            "message": "SmartGuard nie potwierdził przełączenia w ciągu {seconds} sekund (ostatni status: {status})."
+        },
+        "smartguard_toggle_state_unknown": {
+            "message": "Stan pracy poza siecią urządzenia SmartGuard jest nieznany, więc nie można go przełączyć; włącz lub wyłącz przełącznik jawnie."
         },
         "unsupported_battery_type": {
             "message": "Nieobsługiwany typ akumulatora dla urządzenia {device_id}."

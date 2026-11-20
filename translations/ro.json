@@ -1187,6 +1187,40 @@
             "single_phase_meter_voltage": {
                 "name": "[%key:component::sensor::entity_component::voltage::name%]"
             },
+            "smartguard_backup_load_phase_a_voltage": {
+                "name": "Tensiune sarcină de rezervă faza A"
+            },
+            "smartguard_backup_load_phase_b_voltage": {
+                "name": "Tensiune sarcină de rezervă faza B"
+            },
+            "smartguard_backup_load_phase_c_voltage": {
+                "name": "Tensiune sarcină de rezervă faza C"
+            },
+            "smartguard_grid_phase_a_voltage": {
+                "name": "Tensiune rețea faza A"
+            },
+            "smartguard_grid_phase_b_voltage": {
+                "name": "Tensiune rețea faza B"
+            },
+            "smartguard_grid_phase_c_voltage": {
+                "name": "Tensiune rețea faza C"
+            },
+            "smartguard_internal_temperature": {
+                "name": "Temperatură internă"
+            },
+            "smartguard_status": {
+                "name": "Stare",
+                "state": {
+                    "standby": "În așteptare",
+                    "on_grid": "Conectat la rețea",
+                    "off_grid_generator": "În afara rețelei: alimentat de generator",
+                    "off_grid_inverter": "În afara rețelei: alimentat de invertor",
+                    "off_grid_generator_and_inverter": "În afara rețelei: alimentat de generator și invertor",
+                    "bypassed": "Ocolit (bypass)",
+                    "unexpected_shutdown": "Oprire neașteptată",
+                    "unexpected_shutdown_grid_supply": "Oprire neașteptată: alimentare de la rețea"
+                }
+            },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "Tensiune de linie a rețelei A-B"
             },
@@ -1437,6 +1471,9 @@
             "mppt_multimodal_scanning": {
                 "name": "Scanare MPPT multimodală"
             },
+            "smartguard_off_grid": {
+                "name": "În afara rețelei"
+            },
             "startup": {
                 "name": "Invertor PORNIT/OPRIT"
             },
@@ -1508,6 +1545,18 @@
         },
         "power_exceeds_maximum": {
             "message": "Puterea nu poate depăși {max_power} W."
+        },
+        "smartguard_grid_not_present": {
+            "message": "Tensiunea rețelei nu este prezentă ({voltages} V), astfel încât SmartGuard nu a fost comutat la rețea."
+        },
+        "smartguard_switchover_not_allowed": {
+            "message": "SmartGuard nu poate fi comutat din starea sa curentă ({status})."
+        },
+        "smartguard_switchover_not_confirmed": {
+            "message": "SmartGuard nu a confirmat comutarea în {seconds} secunde (ultima stare: {status})."
+        },
+        "smartguard_toggle_state_unknown": {
+            "message": "Starea în afara rețelei a SmartGuard este necunoscută, deci nu poate fi comutată; porniți sau opriți comutatorul în mod explicit."
         },
         "unsupported_battery_type": {
             "message": "Tip de baterie neacceptat pentru dispozitivul {device_id}."

@@ -1187,6 +1187,40 @@
             "single_phase_meter_voltage": {
                 "name": "[%key:component::sensor::entity_component::voltage::name%]"
             },
+            "smartguard_backup_load_phase_a_voltage": {
+                "name": "Напряжение резервной нагрузки фазы A"
+            },
+            "smartguard_backup_load_phase_b_voltage": {
+                "name": "Напряжение резервной нагрузки фазы B"
+            },
+            "smartguard_backup_load_phase_c_voltage": {
+                "name": "Напряжение резервной нагрузки фазы C"
+            },
+            "smartguard_grid_phase_a_voltage": {
+                "name": "Напряжение сети фазы A"
+            },
+            "smartguard_grid_phase_b_voltage": {
+                "name": "Напряжение сети фазы B"
+            },
+            "smartguard_grid_phase_c_voltage": {
+                "name": "Напряжение сети фазы C"
+            },
+            "smartguard_internal_temperature": {
+                "name": "Внутренняя температура"
+            },
+            "smartguard_status": {
+                "name": "Статус",
+                "state": {
+                    "standby": "Ожидание",
+                    "on_grid": "От сети",
+                    "off_grid_generator": "Автономный режим: питание от генератора",
+                    "off_grid_inverter": "Автономный режим: питание от инвертора",
+                    "off_grid_generator_and_inverter": "Автономный режим: питание от генератора и инвертора",
+                    "bypassed": "Байпас",
+                    "unexpected_shutdown": "Неожиданное отключение",
+                    "unexpected_shutdown_grid_supply": "Неожиданное отключение: питание от сети"
+                }
+            },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "Линейное напряжение сети A-B"
             },
@@ -1437,6 +1471,9 @@
             "mppt_multimodal_scanning": {
                 "name": "Сканирование MPPT"
             },
+            "smartguard_off_grid": {
+                "name": "Автономный режим"
+            },
             "startup": {
                 "name": "Инвертор ВКЛ/ВЫКЛ"
             },
@@ -1508,6 +1545,18 @@
         },
         "power_exceeds_maximum": {
             "message": "Мощность не может превышать {max_power} Вт."
+        },
+        "smartguard_grid_not_present": {
+            "message": "Напряжение сети отсутствует ({voltages} В), поэтому SmartGuard не был переключён на работу от сети."
+        },
+        "smartguard_switchover_not_allowed": {
+            "message": "SmartGuard не может быть переключён из текущего состояния ({status})."
+        },
+        "smartguard_switchover_not_confirmed": {
+            "message": "SmartGuard не подтвердил переключение в течение {seconds} секунд (последний статус: {status})."
+        },
+        "smartguard_toggle_state_unknown": {
+            "message": "Состояние автономного режима SmartGuard неизвестно, поэтому его нельзя переключить; включите или выключите переключатель явно."
         },
         "unsupported_battery_type": {
             "message": "Неподдерживаемый тип аккумулятора для устройства {device_id}."

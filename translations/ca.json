@@ -1187,6 +1187,40 @@
             "single_phase_meter_voltage": {
                 "name": "Tensió"
             },
+            "smartguard_backup_load_phase_a_voltage": {
+                "name": "Tensió de càrrega de reserva fase A"
+            },
+            "smartguard_backup_load_phase_b_voltage": {
+                "name": "Tensió de càrrega de reserva fase B"
+            },
+            "smartguard_backup_load_phase_c_voltage": {
+                "name": "Tensió de càrrega de reserva fase C"
+            },
+            "smartguard_grid_phase_a_voltage": {
+                "name": "Tensió de xarxa fase A"
+            },
+            "smartguard_grid_phase_b_voltage": {
+                "name": "Tensió de xarxa fase B"
+            },
+            "smartguard_grid_phase_c_voltage": {
+                "name": "Tensió de xarxa fase C"
+            },
+            "smartguard_internal_temperature": {
+                "name": "Temperatura interna"
+            },
+            "smartguard_status": {
+                "name": "Estat",
+                "state": {
+                    "standby": "En espera",
+                    "on_grid": "Connectat a la xarxa",
+                    "off_grid_generator": "Fora de xarxa: alimentat per generador",
+                    "off_grid_inverter": "Fora de xarxa: alimentat per inversor",
+                    "off_grid_generator_and_inverter": "Fora de xarxa: alimentat per generador i inversor",
+                    "bypassed": "En bypass",
+                    "unexpected_shutdown": "Apagada inesperada",
+                    "unexpected_shutdown_grid_supply": "Apagada inesperada: subministrament des de la xarxa"
+                }
+            },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "Tensió de xarxa de línia A-B"
             },
@@ -1439,6 +1473,9 @@
             "mppt_multimodal_scanning": {
                 "name": "MPPT scanning"
             },
+            "smartguard_off_grid": {
+                "name": "Fora de xarxa"
+            },
             "startup": {
                 "name": "Engegat/Apagat de l'inversor"
             },
@@ -1510,6 +1547,18 @@
         },
         "power_exceeds_maximum": {
             "message": "La potència no pot superar els {max_power} W."
+        },
+        "smartguard_grid_not_present": {
+            "message": "La tensió de la xarxa no és present ({voltages} V), per la qual cosa no s'ha commutat l'SmartGuard a connectat a la xarxa."
+        },
+        "smartguard_switchover_not_allowed": {
+            "message": "No es pot commutar l'SmartGuard des del seu estat actual ({status})."
+        },
+        "smartguard_switchover_not_confirmed": {
+            "message": "L'SmartGuard no ha confirmat la commutació en {seconds} segons (últim estat: {status})."
+        },
+        "smartguard_toggle_state_unknown": {
+            "message": "L'estat fora de xarxa de l'SmartGuard és desconegut, per la qual cosa no es pot commutar; activeu o desactiveu l'interruptor explícitament."
         },
         "unsupported_battery_type": {
             "message": "Tipus de bateria no compatible per al dispositiu {device_id}."

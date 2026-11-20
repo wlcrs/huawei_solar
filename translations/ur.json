@@ -1187,6 +1187,40 @@
             "single_phase_meter_voltage": {
                 "name": "وولٹیج"
             },
+            "smartguard_backup_load_phase_a_voltage": {
+                "name": "بیک اپ لوڈ فیز اے وولٹیج"
+            },
+            "smartguard_backup_load_phase_b_voltage": {
+                "name": "بیک اپ لوڈ فیز بی وولٹیج"
+            },
+            "smartguard_backup_load_phase_c_voltage": {
+                "name": "بیک اپ لوڈ فیز سی وولٹیج"
+            },
+            "smartguard_grid_phase_a_voltage": {
+                "name": "گرڈ فیز اے وولٹیج"
+            },
+            "smartguard_grid_phase_b_voltage": {
+                "name": "گرڈ فیز بی وولٹیج"
+            },
+            "smartguard_grid_phase_c_voltage": {
+                "name": "گرڈ فیز سی وولٹیج"
+            },
+            "smartguard_internal_temperature": {
+                "name": "اندرونی درجہ حرارت"
+            },
+            "smartguard_status": {
+                "name": "حالت",
+                "state": {
+                    "standby": "اسٹینڈ بائی",
+                    "on_grid": "آن گرڈ",
+                    "off_grid_generator": "آف گرڈ: جنریٹر سے چلنے والا",
+                    "off_grid_inverter": "آف گرڈ: انورٹر سے چلنے والا",
+                    "off_grid_generator_and_inverter": "آف گرڈ: جنریٹر اور انورٹر سے چلنے والا",
+                    "bypassed": "بائی پاس شدہ",
+                    "unexpected_shutdown": "غیر متوقع بندش",
+                    "unexpected_shutdown_grid_supply": "غیر متوقع بندش: گرڈ سے بجلی کی فراہمی"
+                }
+            },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "گرڈ A-B لائن وولٹیج"
             },
@@ -1438,6 +1472,9 @@
             "mppt_multimodal_scanning": {
                 "name": "MPPT scanning"
             },
+            "smartguard_off_grid": {
+                "name": "آف گرڈ"
+            },
             "startup": {
                 "name": "انورٹر آن/آف"
             },
@@ -1509,6 +1546,18 @@
         },
         "power_exceeds_maximum": {
             "message": "طاقت {max_power} W سے زیادہ نہیں ہو سکتی۔"
+        },
+        "smartguard_grid_not_present": {
+            "message": "گرڈ وولٹیج موجود نہیں ہے ({voltages} V)، اس لیے SmartGuard کو آن گرڈ پر سوئچ نہیں کیا گیا۔"
+        },
+        "smartguard_switchover_not_allowed": {
+            "message": "SmartGuard کو اس کی موجودہ حالت ({status}) سے سوئچ نہیں کیا جا سکتا۔"
+        },
+        "smartguard_switchover_not_confirmed": {
+            "message": "SmartGuard نے {seconds} سیکنڈ کے اندر سوئچ اوور کی تصدیق نہیں کی (آخری حالت: {status})۔"
+        },
+        "smartguard_toggle_state_unknown": {
+            "message": "SmartGuard کی آف گرڈ حالت نامعلوم ہے، اس لیے اسے ٹوگل نہیں کیا جا سکتا؛ سوئچ کو واضح طور پر آن یا آف کریں۔"
         },
         "unsupported_battery_type": {
             "message": "ڈیوائس {device_id} کے لیے غیر تعاون یافتہ بیٹری کی قسم۔"

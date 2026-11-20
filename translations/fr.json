@@ -1187,6 +1187,40 @@
             "single_phase_meter_voltage": {
                 "name": "Tension"
             },
+            "smartguard_backup_load_phase_a_voltage": {
+                "name": "Tension de charge de secours phase A"
+            },
+            "smartguard_backup_load_phase_b_voltage": {
+                "name": "Tension de charge de secours phase B"
+            },
+            "smartguard_backup_load_phase_c_voltage": {
+                "name": "Tension de charge de secours phase C"
+            },
+            "smartguard_grid_phase_a_voltage": {
+                "name": "Tension réseau phase A"
+            },
+            "smartguard_grid_phase_b_voltage": {
+                "name": "Tension réseau phase B"
+            },
+            "smartguard_grid_phase_c_voltage": {
+                "name": "Tension réseau phase C"
+            },
+            "smartguard_internal_temperature": {
+                "name": "Température interne"
+            },
+            "smartguard_status": {
+                "name": "Statut",
+                "state": {
+                    "standby": "En veille",
+                    "on_grid": "Connecté au réseau",
+                    "off_grid_generator": "Hors réseau : alimenté par générateur",
+                    "off_grid_inverter": "Hors réseau : alimenté par onduleur",
+                    "off_grid_generator_and_inverter": "Hors réseau : alimenté par générateur et onduleur",
+                    "bypassed": "Contourné (bypass)",
+                    "unexpected_shutdown": "Arrêt inattendu",
+                    "unexpected_shutdown_grid_supply": "Arrêt inattendu : alimentation par le réseau"
+                }
+            },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "Tension de ligne réseau A-B"
             },
@@ -1437,6 +1471,9 @@
             "mppt_multimodal_scanning": {
                 "name": "MPPT scanning"
             },
+            "smartguard_off_grid": {
+                "name": "Hors réseau"
+            },
             "startup": {
                 "name": "Marche/Arrêt de l'onduleur"
             },
@@ -1508,6 +1545,18 @@
         },
         "power_exceeds_maximum": {
             "message": "La puissance ne peut pas dépasser {max_power} W."
+        },
+        "smartguard_grid_not_present": {
+            "message": "La tension réseau est absente ({voltages} V), le SmartGuard n'a donc pas été basculé sur le réseau."
+        },
+        "smartguard_switchover_not_allowed": {
+            "message": "Le SmartGuard ne peut pas être basculé depuis son statut actuel ({status})."
+        },
+        "smartguard_switchover_not_confirmed": {
+            "message": "Le SmartGuard n'a pas confirmé le basculement dans les {seconds} secondes (dernier statut : {status})."
+        },
+        "smartguard_toggle_state_unknown": {
+            "message": "L'état hors réseau du SmartGuard est inconnu, il ne peut donc pas être basculé ; activez ou désactivez l'interrupteur explicitement."
         },
         "unsupported_battery_type": {
             "message": "Type de batterie non pris en charge pour l'appareil {device_id}."

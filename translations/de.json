@@ -1187,6 +1187,40 @@
             "single_phase_meter_voltage": {
                 "name": "Spannung"
             },
+            "smartguard_backup_load_phase_a_voltage": {
+                "name": "Backup-Last Phase A Spannung"
+            },
+            "smartguard_backup_load_phase_b_voltage": {
+                "name": "Backup-Last Phase B Spannung"
+            },
+            "smartguard_backup_load_phase_c_voltage": {
+                "name": "Backup-Last Phase C Spannung"
+            },
+            "smartguard_grid_phase_a_voltage": {
+                "name": "Netz Phase A Spannung"
+            },
+            "smartguard_grid_phase_b_voltage": {
+                "name": "Netz Phase B Spannung"
+            },
+            "smartguard_grid_phase_c_voltage": {
+                "name": "Netz Phase C Spannung"
+            },
+            "smartguard_internal_temperature": {
+                "name": "Interne Temperatur"
+            },
+            "smartguard_status": {
+                "name": "Status",
+                "state": {
+                    "standby": "Bereitschaft",
+                    "on_grid": "Netzgebunden",
+                    "off_grid_generator": "Inselbetrieb: Versorgung durch Generator",
+                    "off_grid_inverter": "Inselbetrieb: Versorgung durch Wechselrichter",
+                    "off_grid_generator_and_inverter": "Inselbetrieb: Versorgung durch Generator und Wechselrichter",
+                    "bypassed": "Überbrückt",
+                    "unexpected_shutdown": "Unerwartete Abschaltung",
+                    "unexpected_shutdown_grid_supply": "Unerwartete Abschaltung: Stromversorgung aus dem Netz"
+                }
+            },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "A-B-Netzspannung"
             },
@@ -1437,6 +1471,9 @@
             "mppt_multimodal_scanning": {
                 "name": "MPPT Scan"
             },
+            "smartguard_off_grid": {
+                "name": "Inselbetrieb"
+            },
             "startup": {
                 "name": "Inverter EIN/AUS"
             },
@@ -1508,6 +1545,18 @@
         },
         "power_exceeds_maximum": {
             "message": "Die Leistung darf {max_power} W nicht überschreiten."
+        },
+        "smartguard_grid_not_present": {
+            "message": "Die Netzspannung liegt nicht an ({voltages} V), daher wurde der SmartGuard nicht auf Netzbetrieb umgeschaltet."
+        },
+        "smartguard_switchover_not_allowed": {
+            "message": "Der SmartGuard kann aus seinem aktuellen Status ({status}) nicht umgeschaltet werden."
+        },
+        "smartguard_switchover_not_confirmed": {
+            "message": "Der SmartGuard hat die Umschaltung nicht innerhalb von {seconds} Sekunden bestätigt (letzter Status: {status})."
+        },
+        "smartguard_toggle_state_unknown": {
+            "message": "Der Inselbetrieb-Status des SmartGuard ist unbekannt und kann daher nicht umgeschaltet werden; schalten Sie den Schalter explizit ein oder aus."
         },
         "unsupported_battery_type": {
             "message": "Nicht unterstützter Batterietyp für Gerät {device_id}."
