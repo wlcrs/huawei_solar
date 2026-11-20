@@ -26,7 +26,7 @@ from homeassistant.const import (
     UnitOfPower,
 )
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.device_registry import ChildDeviceInfo, DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -603,7 +603,7 @@ class HuaweiSolarNumberEntity(
         coordinator: HuaweiSolarUpdateCoordinator,
         device: HuaweiSolarDevice,
         description: HuaweiSolarNumberEntityDescription,
-        device_info: DeviceInfo,
+        device_info: DeviceInfo | ChildDeviceInfo,
         static_max_value: float | None = None,
         static_min_value: float | None = None,
     ) -> None:
@@ -629,7 +629,7 @@ class HuaweiSolarNumberEntity(
         coordinator: HuaweiSolarUpdateCoordinator,
         device: HuaweiSolarDevice,
         description: HuaweiSolarNumberEntityDescription,
-        device_info: DeviceInfo,
+        device_info: DeviceInfo | ChildDeviceInfo,
     ) -> "HuaweiSolarNumberEntity":
         """Huawei Solar Number Entity constructor.
 

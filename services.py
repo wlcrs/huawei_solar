@@ -96,7 +96,7 @@ T = TypeVar("T", bound=HuaweiSolarDevice)
 @callback
 def async_get_entry_id_for_service_call(
     call: ServiceCall,
-) -> tuple[dr.DeviceEntry, HuaweiSolarConfigEntry]:
+) -> tuple[dr.DeviceEntry | dr.ChildDeviceEntry, HuaweiSolarConfigEntry]:
     """Get the entry ID related to a service call (by device ID)."""
     device_registry = dr.async_get(call.hass)
     device_id = call.data[ATTR_DEVICE_ID]

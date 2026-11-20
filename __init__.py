@@ -14,7 +14,7 @@ from homeassistant.const import (
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers import device_registry as dr, entity_registry as er
-from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.device_registry import ChildDeviceInfo, DeviceInfo
 from homeassistant.helpers.event import async_track_time_interval
 from huawei_solar import (
     ConnectionException,
@@ -262,24 +262,27 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
                     extra_unit_id,
                 )
                 continue
-            parent_ha_device_id = primary_device_data.ha_device_id
+            parent_device_id: str | None = None
             if isinstance(sub_device, SmartAcGunDevice):
                 # Link the connector to the SCharger with the highest unit ID below
                 # its own: the connector(s) of an SCharger follow it in unit ID.
-                parent_ha_device_id = next(
+                parent_device_id = next(
                     (
                         dd.ha_device_id
                         for dd in reversed(device_datas)
                         if isinstance(dd.device, SChargerDevice)
                     ),
-                    primary_device_data.ha_device_id,
+                    None,
                 )
 
             sub_device_data = await _setup_device_data(
                 hass,
                 entry,
                 sub_device,
-                via_device_id=parent_ha_device_id,
+                parent_device_id=parent_device_id,
+                via_device_id=primary_device_data.ha_device_id
+                if parent_device_id is None
+                else None,
             )
 
             device_datas.append(sub_device_data)
@@ -411,7 +414,7 @@ async def async_unload_entry(
 async def async_remove_config_entry_device(
     hass: HomeAssistant,
     config_entry: HuaweiSolarConfigEntry,
-    device_entry: dr.DeviceEntry,
+    device_entry: dr.DeviceEntry | dr.ChildDeviceEntry,
 ) -> bool:
     """Allow removing a device if it is no longer active in this config entry."""
     if config_entry.state is not ConfigEntryState.LOADED:
@@ -669,6 +672,7 @@ async def _setup_device_data(
     entry: ConfigEntry,
     device: HuaweiSolarDevice,
     *,
+    parent_device_id: str | None = None,
     via_device_id: str | None = None,
 ) -> HuaweiSolarDeviceData:
     """Create the correct DeviceInfo-objects, which can be used to correctly assign to entities in this integration."""
@@ -678,29 +682,47 @@ async def _setup_device_data(
         )
 
     device_registry = dr.async_get(hass)
+    translation_key = DEVICE_CLASS_TO_TRANSLATION_KEY[type(device)]
 
-    sw_version = getattr(device, "software_version", None)
+    if parent_device_id is not None:
+        device_info: DeviceInfo | ChildDeviceInfo = ChildDeviceInfo(
+            identifiers={(DOMAIN, device.serial_number)},
+            parent_device_id=parent_device_id,
+            translation_key=translation_key,
+        )
 
-    device_info = DeviceInfo(
-        identifiers={(DOMAIN, device.serial_number)},
-        translation_key=DEVICE_CLASS_TO_TRANSLATION_KEY[type(device)],
-        manufacturer="Huawei",
-        model=device.model_name,
-        serial_number=device.serial_number,
-        sw_version=sw_version,
-        via_device_id=via_device_id,
-    )
+        # Add child device to device registry (converts existing device if present)
+        ha_device: dr.DeviceEntry | dr.ChildDeviceEntry = (
+            device_registry.async_get_or_create_child(
+                config_entry_id=entry.entry_id,
+                identifiers={(DOMAIN, device.serial_number)},
+                parent_device_id=parent_device_id,
+                translation_key=translation_key,
+            )
+        )
+    else:
+        sw_version = getattr(device, "software_version", None)
 
-    # Add device to device registery
-    ha_device = device_registry.async_get_or_create(
-        config_entry_id=entry.entry_id,
-        identifiers={(DOMAIN, device.serial_number)},
-        manufacturer="Huawei",
-        name=device.model_name,
-        model=device.model_name,
-        sw_version=sw_version,
-        via_device_id=via_device_id,
-    )
+        device_info = DeviceInfo(
+            identifiers={(DOMAIN, device.serial_number)},
+            translation_key=translation_key,
+            manufacturer="Huawei",
+            model=device.model_name,
+            serial_number=device.serial_number,
+            sw_version=sw_version,
+            via_device_id=via_device_id,
+        )
+
+        # Add device to device registery
+        ha_device = device_registry.async_get_or_create(
+            config_entry_id=entry.entry_id,
+            identifiers={(DOMAIN, device.serial_number)},
+            manufacturer="Huawei",
+            name=device.model_name,
+            model=device.model_name,
+            sw_version=sw_version,
+            via_device_id=via_device_id,
+        )
 
     update_coordinator = HuaweiSolarUpdateCoordinator(
         hass,

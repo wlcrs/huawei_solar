@@ -19,7 +19,7 @@ from huawei_solar import (
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.device_registry import ChildDeviceInfo, DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -268,7 +268,7 @@ class HuaweiSolarSwitchEntity(
         coordinator: HuaweiSolarUpdateCoordinator,
         device: HuaweiSolarDevice,
         description: HuaweiSolarSwitchEntityDescription,
-        device_info: DeviceInfo,
+        device_info: DeviceInfo | ChildDeviceInfo,
     ) -> None:
         """Huawei Solar Switch Entity constructor.
 

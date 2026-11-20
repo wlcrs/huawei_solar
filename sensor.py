@@ -43,7 +43,7 @@ from homeassistant.const import (
     UnitOfTime,
 )
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.device_registry import ChildDeviceInfo, DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -2540,7 +2540,7 @@ class HuaweiSolarSensorEntity(
         self,
         coordinator: HuaweiSolarUpdateCoordinator,
         description: HuaweiSolarSensorEntityDescription,
-        device_info: DeviceInfo,
+        device_info: DeviceInfo | ChildDeviceInfo,
         context: Any = None,
     ) -> None:
         """Batched Huawei Solar Sensor Entity constructor."""

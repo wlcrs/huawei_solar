@@ -6,7 +6,7 @@ from typing import TypedDict, cast
 from huawei_solar import HuaweiSolarDevice, RegisterName, SUN2000Device
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.device_registry import ChildDeviceInfo, DeviceInfo
 from homeassistant.helpers.entity import Entity, EntityDescription
 
 from .update_coordinator import (
@@ -21,7 +21,7 @@ class HuaweiSolarDeviceData:
 
     device: HuaweiSolarDevice
     ha_device_id: str
-    device_info: DeviceInfo
+    device_info: DeviceInfo | ChildDeviceInfo
     update_coordinator: HuaweiSolarUpdateCoordinator
     configuration_update_coordinator: HuaweiSolarUpdateCoordinator | None
 
