@@ -402,7 +402,8 @@
                     "remote_scheduling_full_internet_access": "Agendamento remoto (acesso total à internet)",
                     "remote_scheduling_tou": "Agendamento remoto (TOU)",
                     "ai_energy_management_and_scheduling": "Gestão e agendamento energético com IA",
-                    "remote_scheduling_ai_control": "Agendamento remoto (controlo por IA)"
+                    "remote_scheduling_ai_control": "Agendamento remoto (controlo por IA)",
+                    "third_party_dispatch": "Despacho de terceiros"
                 }
             },
             "bms_temperature": {

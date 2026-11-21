@@ -402,7 +402,8 @@
                     "remote_scheduling_full_internet_access": "Távoli ütemezés (teljes internet-hozzáférés)",
                     "remote_scheduling_tou": "Távoli ütemezés (TOU)",
                     "ai_energy_management_and_scheduling": "AI energiagazdálkodás és ütemezés",
-                    "remote_scheduling_ai_control": "Távoli ütemezés (AI vezérlés)"
+                    "remote_scheduling_ai_control": "Távoli ütemezés (AI vezérlés)",
+                    "third_party_dispatch": "Harmadik fél általi vezérlés"
                 }
             },
             "bms_temperature": {

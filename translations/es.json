@@ -402,7 +402,8 @@
                     "remote_scheduling_full_internet_access": "Programación remota (acceso completo a internet)",
                     "remote_scheduling_tou": "Programación remota (TOU)",
                     "ai_energy_management_and_scheduling": "Gestión y programación energética con IA",
-                    "remote_scheduling_ai_control": "Programación remota (control con IA)"
+                    "remote_scheduling_ai_control": "Programación remota (control con IA)",
+                    "third_party_dispatch": "Despacho de terceros"
                 }
             },
             "bms_temperature": {

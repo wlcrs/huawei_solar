@@ -402,7 +402,8 @@
                     "remote_scheduling_full_internet_access": "Planning op afstand (volledige internettoegang)",
                     "remote_scheduling_tou": "Planning op afstand (TOU)",
                     "ai_energy_management_and_scheduling": "AI-energiebeheer en -planning",
-                    "remote_scheduling_ai_control": "Planning op afstand (AI-regeling)"
+                    "remote_scheduling_ai_control": "Planning op afstand (AI-regeling)",
+                    "third_party_dispatch": "Controle door derde partij"
                 }
             },
             "bms_temperature": {
