@@ -78,6 +78,7 @@ async def async_get_config_entry_diagnostics(
                 "supports_discharge_power_adjustment": dd.device.supports_discharge_power_adjustment,
                 "supports_recharge": dd.device.supports_recharge,
                 "supports_third_party_control": dd.device.supports_third_party_control,
+                "parameters_held_by_energy_manager": dd.device.parameters_held_by_energy_manager,
             }
 
             if dd.power_meter_update_coordinator:

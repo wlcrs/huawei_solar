@@ -44,6 +44,7 @@ from .types import (
     HuaweiSolarEntityContext,
     HuaweiSolarEntityDescription,
     HuaweiSolarInverterData,
+    is_held_by_energy_manager,
 )
 from .update_coordinator import HuaweiSolarUpdateCoordinator
 
@@ -545,7 +546,11 @@ async def async_setup_entry(
                     ucs.device.client.unit_id,
                 )
 
-        entities_to_add.extend(slave_entities)
+        entities_to_add.extend(
+            entity
+            for entity in slave_entities
+            if not is_held_by_energy_manager(ucs.device, entity.entity_description.key)
+        )
 
     async_add_entities(entities_to_add)
 
@@ -684,5 +689,6 @@ def get_number_registers(device: HuaweiSolarDevice) -> set[RegisterName]:
             desc.context["register_names"]
             for desc in descriptions
             if desc.entity_registry_enabled_default
+            and not is_held_by_energy_manager(device, desc.key)
         )
     )
