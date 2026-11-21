@@ -429,7 +429,7 @@
             "charger_charging_wait_reason": {
                 "name": "Töltési várakozás oka",
                 "state": {
-                    "unknown": "Ismeretlen",
+                    "none": "Nincs",
                     "waiting_for_ev": "Várakozás az elektromos járműre",
                     "household_power_excessive": "Túl nagy háztartási teljesítmény",
                     "insufficient_green_power": "Elégtelen zöld energia",

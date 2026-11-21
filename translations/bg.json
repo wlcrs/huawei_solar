@@ -429,7 +429,7 @@
             "charger_charging_wait_reason": {
                 "name": "Причина за изчакване на зареждането",
                 "state": {
-                    "unknown": "Неизвестно",
+                    "none": "Няма",
                     "waiting_for_ev": "Изчакване на ЕМ",
                     "household_power_excessive": "Прекомерна битова мощност",
                     "insufficient_green_power": "Недостатъчна зелена енергия",

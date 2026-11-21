@@ -429,7 +429,7 @@
             "charger_charging_wait_reason": {
                 "name": "Wachtreden laden",
                 "state": {
-                    "unknown": "Onbekend",
+                    "none": "Geen",
                     "waiting_for_ev": "Wachten op voertuig",
                     "household_power_excessive": "Huishoudelijk vermogen te hoog",
                     "insufficient_green_power": "Onvoldoende groene stroom",

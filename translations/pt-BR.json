@@ -429,7 +429,7 @@
             "charger_charging_wait_reason": {
                 "name": "Motivo de espera de carregamento",
                 "state": {
-                    "unknown": "Desconhecido",
+                    "none": "Nenhum",
                     "waiting_for_ev": "Aguardando veículo elétrico",
                     "household_power_excessive": "Potência residencial excessiva",
                     "insufficient_green_power": "Energia verde insuficiente",
