@@ -392,7 +392,7 @@ async def async_setup_entry(
                 for (
                     entity_description
                 ) in EMMA_POWER_LIMITED_GRID_CONNECTION_NUMBER_DESCRIPTIONS:
-                    slave_entities.append(  # noqa: PERF401
+                    slave_entities.append(
                         await HuaweiSolarNumberEntity.create(
                             ucs.configuration_update_coordinator,
                             ucs.device,
@@ -406,12 +406,9 @@ async def async_setup_entry(
                     ucs.device.serial_number,
                 )
 
-            if (
-                ucs.device.battery_type != rv.StorageProductModel.NONE
-                or has_inverter_battery
-            ):
+            if ucs.device.has_battery or has_inverter_battery:
                 for entity_description in EMMA_BATTERY_NUMBER_DESCRIPTIONS:
-                    slave_entities.append(  # noqa: PERF401
+                    slave_entities.append(
                         await HuaweiSolarNumberEntity.create(
                             ucs.configuration_update_coordinator,
                             ucs.device,
@@ -431,7 +428,7 @@ async def async_setup_entry(
                     ucs.device.serial_number,
                 )
                 for entity_description in EMMA_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS:
-                    slave_entities.append(  # noqa: PERF401
+                    slave_entities.append(
                         await HuaweiSolarNumberEntity.create(
                             ucs.configuration_update_coordinator,
                             ucs.device,
@@ -447,7 +444,7 @@ async def async_setup_entry(
 
         if isinstance(ucs.device, SChargerDevice):
             for entity_description in CHARGER_NUMBER_DESCRIPTIONS:
-                slave_entities.append(  # noqa: PERF401
+                slave_entities.append(
                     await HuaweiSolarNumberEntity.create(
                         ucs.configuration_update_coordinator,
                         ucs.device,
@@ -458,7 +455,7 @@ async def async_setup_entry(
 
         if isinstance(ucs.device, SmartAcGunDevice):
             for entity_description in SMART_AC_GUN_NUMBER_DESCRIPTIONS:
-                slave_entities.append(  # noqa: PERF401
+                slave_entities.append(
                     await HuaweiSolarNumberEntity.create(
                         ucs.configuration_update_coordinator,
                         ucs.device,
@@ -469,7 +466,7 @@ async def async_setup_entry(
 
         if isinstance(ucs, HuaweiSolarInverterData):
             for entity_description in INVERTER_NUMBER_DESCRIPTIONS:
-                slave_entities.append(  # noqa: PERF401
+                slave_entities.append(
                     await HuaweiSolarNumberEntity.create(
                         ucs.configuration_update_coordinator,
                         ucs.device,
@@ -490,7 +487,7 @@ async def async_setup_entry(
 
             if ucs.connected_energy_storage:
                 for entity_description in ENERGY_STORAGE_NUMBER_DESCRIPTIONS:
-                    slave_entities.append(  # noqa: PERF401
+                    slave_entities.append(
                         await HuaweiSolarNumberEntity.create(
                             ucs.configuration_update_coordinator,
                             ucs.device,

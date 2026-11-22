@@ -832,8 +832,7 @@ async def async_setup_services(
         for uc in hsucs
     )
     has_emma_battery = any(
-        isinstance(uc.device, EMMADevice)
-        and uc.device.battery_type != rv.StorageProductModel.NONE
+        isinstance(uc.device, EMMADevice) and uc.device.has_battery
         for uc in hsucs
     )
     has_emma = any(isinstance(uc.device, EMMADevice) for uc in hsucs)

@@ -2510,8 +2510,7 @@ async def async_setup_entry(
                 create_emma_entities(
                     ucs,
                     has_battery=(
-                        ucs.device.battery_type != rv.StorageProductModel.NONE
-                        or has_inverter_battery
+                        ucs.device.has_battery or has_inverter_battery
                     ),
                 )
             )

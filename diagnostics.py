@@ -78,6 +78,7 @@ async def async_get_config_entry_diagnostics(
                 "serial_number": dd.device.serial_number,
                 "software_version": dd.device.software_version,
                 "battery_type": dd.device.battery_type,
+                "has_battery": dd.device.has_battery,
                 "supports_capacity_control": dd.device.supports_capacity_control,
                 "supports_power_limited_grid_connection": dd.device.supports_power_limited_grid_connection,
                 "supports_di_scheduling": dd.device.supports_di_scheduling,

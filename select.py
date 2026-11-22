@@ -176,12 +176,9 @@ async def async_setup_entry(
 
         slave_entities: list[HuaweiSolarSelectEntity | StorageModeSelectEntity] = []
         if isinstance(ucs.device, EMMADevice):
-            if (
-                ucs.device.battery_type != rv.StorageProductModel.NONE
-                or has_inverter_battery
-            ):
+            if ucs.device.has_battery or has_inverter_battery:
                 for entity_description in EMMA_BATTERY_SELECT_DESCRIPTIONS:
-                    slave_entities.append(  # noqa: PERF401
+                    slave_entities.append( 
                         HuaweiSolarSelectEntity(
                             ucs.configuration_update_coordinator,
                             ucs.device,
