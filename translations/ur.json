@@ -402,7 +402,8 @@
                     "remote_scheduling_full_internet_access": "ریموٹ شیڈولنگ (مکمل انٹرنیٹ رسائی)",
                     "remote_scheduling_tou": "ریموٹ شیڈولنگ (TOU)",
                     "ai_energy_management_and_scheduling": "AI توانائی کا انتظام اور شیڈولنگ",
-                    "remote_scheduling_ai_control": "ریموٹ شیڈولنگ (AI کنٹرول)"
+                    "remote_scheduling_ai_control": "ریموٹ شیڈولنگ (AI کنٹرول)",
+                    "third_party_dispatch": "تھرڈ پارٹی ڈسپیچ"
                 }
             },
             "bms_temperature": {

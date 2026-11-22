@@ -402,7 +402,8 @@
                     "remote_scheduling_full_internet_access": "Programare la distanță (acces complet la internet)",
                     "remote_scheduling_tou": "Programare la distanță (TOU)",
                     "ai_energy_management_and_scheduling": "Gestionare și programare energetică IA",
-                    "remote_scheduling_ai_control": "Programare la distanță (control IA)"
+                    "remote_scheduling_ai_control": "Programare la distanță (control IA)",
+                    "third_party_dispatch": "Dispecerizare terți"
                 }
             },
             "bms_temperature": {

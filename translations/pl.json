@@ -402,7 +402,8 @@
                     "remote_scheduling_full_internet_access": "Zdalne harmonogramowanie (pełny dostęp do internetu)",
                     "remote_scheduling_tou": "Zdalne harmonogramowanie (TOU)",
                     "ai_energy_management_and_scheduling": "Zarządzanie i planowanie energii przez AI",
-                    "remote_scheduling_ai_control": "Zdalne harmonogramowanie (sterowanie AI)"
+                    "remote_scheduling_ai_control": "Zdalne harmonogramowanie (sterowanie AI)",
+                    "third_party_dispatch": "Dyspozycja strony trzeciej"
                 }
             },
             "bms_temperature": {

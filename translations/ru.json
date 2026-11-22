@@ -402,7 +402,8 @@
                     "remote_scheduling_full_internet_access": "Удалённое планирование (полный доступ к интернету)",
                     "remote_scheduling_tou": "Удалённое планирование (TOU)",
                     "ai_energy_management_and_scheduling": "Управление и планирование энергии с ИИ",
-                    "remote_scheduling_ai_control": "Удалённое планирование (управление ИИ)"
+                    "remote_scheduling_ai_control": "Удалённое планирование (управление ИИ)",
+                    "third_party_dispatch": "Управление третьей стороной"
                 }
             },
             "bms_temperature": {

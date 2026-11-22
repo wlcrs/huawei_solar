@@ -402,7 +402,8 @@
                     "remote_scheduling_full_internet_access": "Fernplanung (voller Internetzugang)",
                     "remote_scheduling_tou": "Fernplanung (TOU)",
                     "ai_energy_management_and_scheduling": "KI-Energiemanagement und -Planung",
-                    "remote_scheduling_ai_control": "Fernplanung (KI-Steuerung)"
+                    "remote_scheduling_ai_control": "Fernplanung (KI-Steuerung)",
+                    "third_party_dispatch": "Drittanbieter-Steuerung"
                 }
             },
             "bms_temperature": {

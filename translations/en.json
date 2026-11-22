@@ -402,7 +402,8 @@
                     "remote_scheduling_full_internet_access": "Remote scheduling (full internet access)",
                     "remote_scheduling_tou": "Remote scheduling (TOU)",
                     "ai_energy_management_and_scheduling": "AI energy management and scheduling",
-                    "remote_scheduling_ai_control": "Remote scheduling (AI control)"
+                    "remote_scheduling_ai_control": "Remote scheduling (AI control)",
+                    "third_party_dispatch": "Third party dispatch"
                 }
             },
             "bms_temperature": {

@@ -402,7 +402,8 @@
                     "remote_scheduling_full_internet_access": "Fjärrschemaläggning (full internetåtkomst)",
                     "remote_scheduling_tou": "Fjärrschemaläggning (TOU)",
                     "ai_energy_management_and_scheduling": "AI-energihantering och schemaläggning",
-                    "remote_scheduling_ai_control": "Fjärrschemaläggning (AI-styrning)"
+                    "remote_scheduling_ai_control": "Fjärrschemaläggning (AI-styrning)",
+                    "third_party_dispatch": "Tredjepartsstyrning"
                 }
             },
             "bms_temperature": {
