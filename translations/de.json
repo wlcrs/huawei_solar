@@ -140,6 +140,9 @@
         "smartguard": {
             "name": "SmartGuard"
         },
+        "smartload": {
+            "name": "Intelligente Last"
+        },
         "smartlogger": {
             "name": "SmartLogger"
         }
@@ -1220,6 +1223,39 @@
                     "bypassed": "Überbrückt",
                     "unexpected_shutdown": "Unerwartete Abschaltung",
                     "unexpected_shutdown_grid_supply": "Unerwartete Abschaltung: Stromversorgung aus dem Netz"
+                }
+            },
+            "smartload_min_switching_interval": {
+                "name": "Mindestintervall zwischen Ein- und Ausschalten"
+            },
+            "smartload_off_grid_auto_control": {
+                "name": "Automatische Steuerung bei Netzausfall",
+                "state": {
+                    "off": "Aus",
+                    "on": "Ein"
+                }
+            },
+            "smartload_off_grid_mode": {
+                "name": "Modus bei Netzausfall",
+                "state": {
+                    "basic": "Grundmodus",
+                    "battery": "Batteriemodus"
+                }
+            },
+            "smartload_off_grid_resume_soc": {
+                "name": "Netzausfall: Wiederaufnahme ab SOC"
+            },
+            "smartload_off_grid_stop_soc": {
+                "name": "Netzausfall: Abschaltung unter SOC"
+            },
+            "smartload_rated_power": {
+                "name": "Nennleistung"
+            },
+            "smartload_switch_status": {
+                "name": "Schaltzustand",
+                "state": {
+                    "off": "Aus",
+                    "on": "Ein"
                 }
             },
             "smartlogger_a_b_line_voltage_of_grid": {

@@ -137,6 +137,9 @@
         "smartguard": {
             "name": "SmartGuard"
         },
+        "smartload": {
+            "name": "Smart load"
+        },
         "smartlogger": {
             "name": "SmartLogger"
         },
@@ -1220,6 +1223,39 @@
                     "bypassed": "Bypassed",
                     "unexpected_shutdown": "Unexpected shutdown",
                     "unexpected_shutdown_grid_supply": "Unexpected shutdown: power supply from grid"
+                }
+            },
+            "smartload_min_switching_interval": {
+                "name": "Minimum switching interval"
+            },
+            "smartload_off_grid_auto_control": {
+                "name": "Off-grid automatic control",
+                "state": {
+                    "off": "Off",
+                    "on": "On"
+                }
+            },
+            "smartload_off_grid_mode": {
+                "name": "Off-grid mode",
+                "state": {
+                    "basic": "Basic mode",
+                    "battery": "Battery mode"
+                }
+            },
+            "smartload_off_grid_resume_soc": {
+                "name": "Off-grid resume SOC"
+            },
+            "smartload_off_grid_stop_soc": {
+                "name": "Off-grid stop SOC"
+            },
+            "smartload_rated_power": {
+                "name": "Rated power"
+            },
+            "smartload_switch_status": {
+                "name": "Switch status",
+                "state": {
+                    "off": "Off",
+                    "on": "On"
                 }
             },
             "smartlogger_a_b_line_voltage_of_grid": {
