@@ -27,6 +27,7 @@ from huawei_solar import (
     RegisterName,
     SChargerDevice,
     SmartAcGunDevice,
+    SmartLoadDevice,
     SUN2000Device,
 )
 from huawei_solar import (
@@ -333,6 +334,46 @@ SMART_AC_GUN_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...]
 )
 
 
+SMARTLOAD_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
+    HuaweiSolarNumberEntityDescription(
+        key=rn.SMARTLOAD_RATED_POWER,
+        native_min_value=0,
+        native_max_value=65534,
+        native_step=1,
+        native_unit_of_measurement=UnitOfPower.WATT,
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.SMARTLOAD_MIN_SWITCHING_INTERVAL,
+        native_min_value=0,
+        native_max_value=1440,
+        native_step=1,
+        native_unit_of_measurement=UnitOfTime.MINUTES,
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.SMARTLOAD_OFF_GRID_RESUME_SOC,
+        minimum_key=rn.SMARTLOAD_OFF_GRID_STOP_SOC,
+        native_min_value=0,
+        native_max_value=100,
+        native_step=1,
+        icon="mdi:battery-arrow-up",
+        native_unit_of_measurement=PERCENTAGE,
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.SMARTLOAD_OFF_GRID_STOP_SOC,
+        maximum_key=rn.SMARTLOAD_OFF_GRID_RESUME_SOC,
+        native_min_value=0,
+        native_max_value=100,
+        native_step=1,
+        icon="mdi:battery-arrow-down",
+        native_unit_of_measurement=PERCENTAGE,
+        entity_category=EntityCategory.CONFIG,
+    ),
+)
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: HuaweiSolarConfigEntry,
@@ -431,6 +472,17 @@ async def async_setup_entry(
                     ucs.device_info,
                 )
                 for entity_description in SMART_AC_GUN_NUMBER_DESCRIPTIONS
+            )
+
+        if isinstance(ucs.device, SmartLoadDevice):
+            slave_entities.extend(
+                HuaweiSolarNumberEntity(
+                    ucs.configuration_update_coordinator,
+                    ucs.device,
+                    entity_description,
+                    ucs.device_info,
+                )
+                for entity_description in SMARTLOAD_NUMBER_DESCRIPTIONS
             )
 
         if isinstance(ucs, HuaweiSolarInverterData):
@@ -657,6 +709,8 @@ def get_number_registers(device: HuaweiSolarDevice) -> set[RegisterName]:
         descriptions.extend(CHARGER_NUMBER_DESCRIPTIONS)
     elif isinstance(device, SmartAcGunDevice):
         descriptions.extend(SMART_AC_GUN_NUMBER_DESCRIPTIONS)
+    elif isinstance(device, SmartLoadDevice):
+        descriptions.extend(SMARTLOAD_NUMBER_DESCRIPTIONS)
     elif isinstance(device, SUN2000Device):
         descriptions.extend(INVERTER_NUMBER_DESCRIPTIONS)
         if device.supports_active_power_fail_safe:

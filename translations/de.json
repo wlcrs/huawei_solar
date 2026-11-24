@@ -140,6 +140,9 @@
         "smartguard": {
             "name": "SmartGuard"
         },
+        "smartload": {
+            "name": "Intelligente Last"
+        },
         "smartlogger": {
             "name": "SmartLogger"
         }
@@ -192,6 +195,18 @@
             },
             "mppt_scanning_interval": {
                 "name": "MPPT-Scan Intervall"
+            },
+            "smartload_min_switching_interval": {
+                "name": "Mindestintervall zwischen Ein- und Ausschalten"
+            },
+            "smartload_off_grid_resume_soc": {
+                "name": "Netzausfall: Wiederaufnahme ab SOC"
+            },
+            "smartload_off_grid_stop_soc": {
+                "name": "Netzausfall: Abschaltung unter SOC"
+            },
+            "smartload_rated_power": {
+                "name": "Nennleistung"
             },
             "storage_adjustment_deadband": {
                 "name": "Totband für Batterieeinstellung"
@@ -278,6 +293,20 @@
                 "state": {
                     "charge": "Laden",
                     "fed_to_grid": "Einspeisen ins Netz"
+                }
+            },
+            "smartload_control_mode": {
+                "name": "Steuerung",
+                "state": {
+                    "manual": "Manuell",
+                    "automatic": "Automatisch"
+                }
+            },
+            "smartload_off_grid_mode": {
+                "name": "Modus bei Netzausfall",
+                "state": {
+                    "basic": "Grundmodus",
+                    "battery": "Batteriemodus"
                 }
             },
             "storage_capacity_control_mode": {
@@ -1222,6 +1251,39 @@
                     "unexpected_shutdown_grid_supply": "Unerwartete Abschaltung: Stromversorgung aus dem Netz"
                 }
             },
+            "smartload_min_switching_interval": {
+                "name": "Mindestintervall zwischen Ein- und Ausschalten"
+            },
+            "smartload_off_grid_auto_control": {
+                "name": "Automatische Steuerung bei Netzausfall",
+                "state": {
+                    "off": "Aus",
+                    "on": "Ein"
+                }
+            },
+            "smartload_off_grid_mode": {
+                "name": "Modus bei Netzausfall",
+                "state": {
+                    "basic": "Grundmodus",
+                    "battery": "Batteriemodus"
+                }
+            },
+            "smartload_off_grid_resume_soc": {
+                "name": "Netzausfall: Wiederaufnahme ab SOC"
+            },
+            "smartload_off_grid_stop_soc": {
+                "name": "Netzausfall: Abschaltung unter SOC"
+            },
+            "smartload_rated_power": {
+                "name": "Nennleistung"
+            },
+            "smartload_switch_status": {
+                "name": "Schaltzustand",
+                "state": {
+                    "off": "Aus",
+                    "on": "Ein"
+                }
+            },
             "smartlogger_a_b_line_voltage_of_grid": {
                 "name": "A-B-Netzspannung"
             },
@@ -1474,6 +1536,12 @@
             },
             "smartguard_off_grid": {
                 "name": "Inselbetrieb"
+            },
+            "smartload_off_grid_auto_control": {
+                "name": "Automatische Steuerung bei Netzausfall"
+            },
+            "smartload_switch": {
+                "name": "Schalter"
             },
             "startup": {
                 "name": "Inverter EIN/AUS"

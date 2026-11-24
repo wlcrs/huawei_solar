@@ -16,6 +16,7 @@ from huawei_solar import (
     HuaweiSolarDevice,
     RegisterName,
     SmartAcGunDevice,
+    SmartLoadDevice,
     SUN2000Device,
 )
 from huawei_solar import (
@@ -122,6 +123,20 @@ SMART_AC_GUN_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...]
 )
 
 
+SMARTLOAD_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
+    HuaweiSolarSelectEntityDescription(
+        key=rn.SMARTLOAD_CONTROL_MODE,
+        icon="mdi:auto-mode",
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarSelectEntityDescription(
+        key=rn.SMARTLOAD_OFF_GRID_MODE,
+        icon="mdi:transmission-tower-off",
+        entity_category=EntityCategory.CONFIG,
+    ),
+)
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: HuaweiSolarConfigEntry,
@@ -194,6 +209,17 @@ async def async_setup_entry(
                     ucs.device_info,
                 )
                 for entity_description in SMART_AC_GUN_SELECT_DESCRIPTIONS
+            )
+
+        if isinstance(ucs.device, SmartLoadDevice):
+            slave_entities.extend(
+                HuaweiSolarSelectEntity(
+                    ucs.configuration_update_coordinator,
+                    ucs.device,
+                    entity_description,
+                    ucs.device_info,
+                )
+                for entity_description in SMARTLOAD_SELECT_DESCRIPTIONS
             )
 
         if isinstance(ucs, HuaweiSolarInverterData):
@@ -388,6 +414,8 @@ def get_select_registers(device: HuaweiSolarDevice) -> set[RegisterName]:
             descriptions.extend(EMMA_CAPACITY_CONTROL_SELECT_DESCRIPTIONS)
     elif isinstance(device, SmartAcGunDevice):
         descriptions.extend(SMART_AC_GUN_SELECT_DESCRIPTIONS)
+    elif isinstance(device, SmartLoadDevice):
+        descriptions.extend(SMARTLOAD_SELECT_DESCRIPTIONS)
     elif isinstance(device, SUN2000Device):
         if device.supports_backup_voltage:
             descriptions.append(

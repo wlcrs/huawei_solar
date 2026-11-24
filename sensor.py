@@ -36,6 +36,7 @@ from huawei_solar import (
     SDongleDevice,
     SmartAcGunDevice,
     SmartGuardDevice,
+    SmartLoadDevice,
     SmartLoggerDevice,
     SUN2000Device,
 )
@@ -74,7 +75,7 @@ class HuaweiSolarSensorEntityDescription(
 ):
     """Huawei Solar Sensor Entity."""
 
-    value_conversion_function: Callable[[Any], str] | None = None
+    value_conversion_function: Callable[[Any], str | None] | None = None
 
 
 # Every list in this file describes a group of entities which are related to each other.
@@ -2327,6 +2328,71 @@ SMARTGUARD_BACKUP_LOAD_VOLTAGE_SENSOR_DESCRIPTIONS: tuple[
 )
 
 
+def _smartload_on_off(value: bool | None) -> str | None:
+    """Convert a SmartLoad on/off register. None (invalid value 65535) stays unknown."""
+    if value is None:
+        return None
+    return "on" if value else "off"
+
+
+def _smartload_off_grid_mode(value: rv.SmartLoadOffGridMode | None) -> str | None:
+    """Convert the SmartLoad off-grid mode. None (invalid value 65535) stays unknown."""
+    if value is None:
+        return None
+    return value.name.lower()
+
+
+SMARTLOAD_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOAD_SWITCH_STATUS,
+        icon="mdi:electric-switch",
+        device_class=SensorDeviceClass.ENUM,
+        options=["off", "on"],
+        value_conversion_function=_smartload_on_off,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOAD_RATED_POWER,
+        native_unit_of_measurement=UnitOfPower.WATT,
+        device_class=SensorDeviceClass.POWER,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOAD_MIN_SWITCHING_INTERVAL,
+        native_unit_of_measurement=UnitOfTime.MINUTES,
+        device_class=SensorDeviceClass.DURATION,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOAD_OFF_GRID_AUTO_CONTROL,
+        icon="mdi:transmission-tower-off",
+        device_class=SensorDeviceClass.ENUM,
+        options=["off", "on"],
+        value_conversion_function=_smartload_on_off,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOAD_OFF_GRID_MODE,
+        icon="mdi:transmission-tower-off",
+        device_class=SensorDeviceClass.ENUM,
+        options=["basic", "battery"],
+        value_conversion_function=_smartload_off_grid_mode,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOAD_OFF_GRID_RESUME_SOC,
+        icon="mdi:battery-arrow-up",
+        native_unit_of_measurement=PERCENTAGE,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.SMARTLOAD_OFF_GRID_STOP_SOC,
+        icon="mdi:battery-arrow-down",
+        native_unit_of_measurement=PERCENTAGE,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+)
+
+
 def _smartguard_sensor_descriptions(
     device: SmartGuardDevice,
 ) -> list[HuaweiSolarSensorEntityDescription]:
@@ -2392,6 +2458,20 @@ def create_smartguard_entities(
             ucs.update_coordinator, entity_description, ucs.device_info
         )
         for entity_description in _smartguard_sensor_descriptions(ucs.device)
+    ]
+
+
+def create_smartload_entities(
+    ucs: HuaweiSolarDeviceData,
+) -> list["HuaweiSolarSensorEntity"]:
+    """Create SmartLoad sensor entities."""
+    assert isinstance(ucs.device, SmartLoadDevice)
+
+    return [
+        HuaweiSolarSensorEntity(
+            ucs.update_coordinator, entity_description, ucs.device_info
+        )
+        for entity_description in SMARTLOAD_SENSOR_DESCRIPTIONS
     ]
 
 
@@ -2633,6 +2713,8 @@ async def async_setup_entry(
             entities_to_add.extend(create_charger_entities(ucs))
         elif isinstance(ucs.device, SmartAcGunDevice):
             entities_to_add.extend(create_smart_ac_gun_entities(ucs))
+        elif isinstance(ucs.device, SmartLoadDevice):
+            entities_to_add.extend(create_smartload_entities(ucs))
         elif isinstance(ucs.device, SmartGuardDevice):
             entities_to_add.extend(create_smartguard_entities(ucs))
         elif isinstance(ucs.device, SDongleDevice):
@@ -3218,6 +3300,12 @@ def get_device_sensor_registers(device: HuaweiSolarDevice) -> set[rn.RegisterNam
         return {
             desc.register_name
             for desc in _smartguard_sensor_descriptions(device)
+            if desc.entity_registry_enabled_default
+        }
+    if isinstance(device, SmartLoadDevice):
+        return {
+            desc.register_name
+            for desc in SMARTLOAD_SENSOR_DESCRIPTIONS
             if desc.entity_registry_enabled_default
         }
     if isinstance(device, SmartLoggerDevice):
