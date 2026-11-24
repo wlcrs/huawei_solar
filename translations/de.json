@@ -295,6 +295,13 @@
                     "fed_to_grid": "Einspeisen ins Netz"
                 }
             },
+            "smartload_control_mode": {
+                "name": "Steuerung",
+                "state": {
+                    "manual": "Manuell",
+                    "automatic": "Automatisch"
+                }
+            },
             "smartload_off_grid_mode": {
                 "name": "Modus bei Netzausfall",
                 "state": {
@@ -1532,6 +1539,9 @@
             },
             "smartload_off_grid_auto_control": {
                 "name": "Automatische Steuerung bei Netzausfall"
+            },
+            "smartload_switch": {
+                "name": "Schalter"
             },
             "startup": {
                 "name": "Inverter EIN/AUS"

@@ -295,6 +295,13 @@
                     "fed_to_grid": "Fed to grid"
                 }
             },
+            "smartload_control_mode": {
+                "name": "Control mode",
+                "state": {
+                    "manual": "Manual",
+                    "automatic": "Automatic"
+                }
+            },
             "smartload_off_grid_mode": {
                 "name": "Off-grid mode",
                 "state": {
@@ -1532,6 +1539,9 @@
             },
             "smartload_off_grid_auto_control": {
                 "name": "Off-grid automatic control"
+            },
+            "smartload_switch": {
+                "name": "Switch"
             },
             "startup": {
                 "name": "Inverter ON/OFF"

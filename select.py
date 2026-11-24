@@ -125,6 +125,11 @@ SMART_AC_GUN_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...]
 
 SMARTLOAD_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...] = (
     HuaweiSolarSelectEntityDescription(
+        key=rn.SMARTLOAD_CONTROL_MODE,
+        icon="mdi:auto-mode",
+        entity_category=EntityCategory.CONFIG,
+    ),
+    HuaweiSolarSelectEntityDescription(
         key=rn.SMARTLOAD_OFF_GRID_MODE,
         icon="mdi:transmission-tower-off",
         entity_category=EntityCategory.CONFIG,

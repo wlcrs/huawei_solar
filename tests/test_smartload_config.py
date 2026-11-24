@@ -15,8 +15,10 @@ from custom_components.huawei_solar.select import (
     get_select_registers,
 )
 from custom_components.huawei_solar.switch import (
+    SMARTLOAD_SWITCH_DESCRIPTION,
     SMARTLOAD_SWITCH_DESCRIPTIONS,
     HuaweiSolarSwitchEntity,
+    SmartLoadSwitchEntity,
     get_switch_registers,
 )
 from huawei_solar import SmartLoadDevice
@@ -25,6 +27,7 @@ from huawei_solar import register_values as rv
 from huawei_solar.registers import REGISTERS
 
 RAW_VALUES = {
+    rn.SMARTLOAD_CONTROL_MODE: 1,
     rn.SMARTLOAD_RATED_POWER: 3000,
     rn.SMARTLOAD_MIN_SWITCHING_INTERVAL: 5,
     rn.SMARTLOAD_OFF_GRID_MODE: 0,
@@ -64,6 +67,7 @@ def test_all_smartload_settings_registers_are_writeable() -> None:
             *SMARTLOAD_NUMBER_DESCRIPTIONS,
             *SMARTLOAD_SELECT_DESCRIPTIONS,
             *SMARTLOAD_SWITCH_DESCRIPTIONS,
+            SMARTLOAD_SWITCH_DESCRIPTION,
         )
     ]
 
@@ -127,9 +131,10 @@ async def test_off_grid_soc_limits_follow_each_other() -> None:
 async def test_off_grid_mode_select() -> None:
     """The off-grid mode select shows the mode and writes the enum value."""
     device = _device()
-    entity = HuaweiSolarSelectEntity(
-        _coordinator(device), device, SMARTLOAD_SELECT_DESCRIPTIONS[0], Mock()
+    description = next(
+        d for d in SMARTLOAD_SELECT_DESCRIPTIONS if d.key == rn.SMARTLOAD_OFF_GRID_MODE
     )
+    entity = HuaweiSolarSelectEntity(_coordinator(device), device, description, Mock())
     _update(entity)
 
     assert entity.options == ["basic", "battery"]
@@ -158,3 +163,68 @@ async def test_off_grid_auto_control_switch() -> None:
         await entity.async_turn_off()
 
     device.set.assert_awaited_once_with(rn.SMARTLOAD_OFF_GRID_AUTO_CONTROL, False)
+
+
+@pytest.mark.asyncio
+async def test_control_mode_select() -> None:
+    """The control mode select shows manual/automatic and writes the enum value."""
+    device = _device()
+    description = next(
+        d for d in SMARTLOAD_SELECT_DESCRIPTIONS if d.key == rn.SMARTLOAD_CONTROL_MODE
+    )
+    entity = HuaweiSolarSelectEntity(_coordinator(device), device, description, Mock())
+    _update(entity)
+
+    assert entity.options == ["manual", "automatic"]
+    assert entity.current_option == "automatic"
+
+    with patch.object(entity, "async_write_ha_state"):
+        await entity.async_select_option("manual")
+
+    device.set.assert_awaited_once_with(
+        rn.SMARTLOAD_CONTROL_MODE, rv.SmartLoadControlMode.MANUAL
+    )
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(("raw", "expected"), [(0, False), (1, True)])
+async def test_load_switch_follows_switch_status(raw: int, expected: bool) -> None:
+    """The load switch shows the switch status (30020) and writes 40007 (1 on, 2 off)."""
+    device = _device()
+    coordinator = _coordinator(device)
+    coordinator.data = {
+        rn.SMARTLOAD_SWITCH_STATUS: REGISTERS[rn.SMARTLOAD_SWITCH_STATUS].decode((raw,))
+    }
+    entity = SmartLoadSwitchEntity(
+        coordinator, device, SMARTLOAD_SWITCH_DESCRIPTION, Mock()
+    )
+    _update(entity)
+
+    assert entity.is_on is expected
+
+    with patch.object(entity, "async_write_ha_state"):
+        await entity.async_turn_on()
+        await entity.async_turn_off()
+
+    assert [call.args for call in device.set.await_args_list] == [
+        (rn.SMARTLOAD_SWITCH, rv.SmartLoadSwitch.ON),
+        (rn.SMARTLOAD_SWITCH, rv.SmartLoadSwitch.OFF),
+    ]
+
+
+@pytest.mark.asyncio
+async def test_load_switch_unavailable_on_invalid_status() -> None:
+    """The invalid value 65535 makes the load switch unavailable instead of off."""
+    device = _device()
+    coordinator = _coordinator(device)
+    coordinator.data = {
+        rn.SMARTLOAD_SWITCH_STATUS: REGISTERS[rn.SMARTLOAD_SWITCH_STATUS].decode(
+            (0xFFFF,)
+        )
+    }
+    entity = SmartLoadSwitchEntity(
+        coordinator, device, SMARTLOAD_SWITCH_DESCRIPTION, Mock()
+    )
+    _update(entity)
+
+    assert entity.is_on is None

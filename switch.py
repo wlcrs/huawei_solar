@@ -117,6 +117,12 @@ SMART_AC_GUN_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...]
 )
 
 
+SMARTLOAD_SWITCH_DESCRIPTION = HuaweiSolarSwitchEntityDescription(
+    key=rn.SMARTLOAD_SWITCH,
+    icon="mdi:electric-switch",
+)
+"""Switches the load itself, like the on/off button in the FusionSolar app."""
+
 SMARTLOAD_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...] = (
     HuaweiSolarSwitchEntityDescription(
         key=rn.SMARTLOAD_OFF_GRID_AUTO_CONTROL,
@@ -242,6 +248,14 @@ async def async_setup_entry(
                     ucs.device_info,
                 )
                 for entity_description in SMARTLOAD_SWITCH_DESCRIPTIONS
+            )
+            slave_entities.append(
+                SmartLoadSwitchEntity(
+                    ucs.update_coordinator,
+                    ucs.device,
+                    SMARTLOAD_SWITCH_DESCRIPTION,
+                    ucs.device_info,
+                )
             )
 
         if (
@@ -464,6 +478,62 @@ def _status_name(status: rv.SmartGuardStatus | None) -> str:
 
 DEVICE_STATUS_OFF_RANGE_START = 0x3000
 DEVICE_STATUS_OFF_RANGE_END = 0x3FFF
+
+
+class SmartLoadSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
+    """Switches a SmartLoad on or off.
+
+    The state is taken from the switch status (30020), which the regular update
+    coordinator reads, so that switching by the EMMA itself shows up quickly.
+    """
+
+    entity_description: HuaweiSolarSwitchEntityDescription
+
+    def __init__(
+        self,
+        coordinator: HuaweiSolarUpdateCoordinator,
+        device: HuaweiSolarDevice,
+        description: HuaweiSolarSwitchEntityDescription,
+        device_info: DeviceInfo | ChildDeviceInfo,
+    ) -> None:
+        """SmartLoad switch entity constructor."""
+        super().__init__(
+            coordinator, {"register_names": [rn.SMARTLOAD_SWITCH_STATUS]}
+        )
+
+        self.device = device
+        self.entity_description = description
+
+        self._attr_device_info = device_info
+        self._attr_unique_id = f"{device.serial_number}_{description.key}"
+
+    @callback
+    @override
+    def _async_update_attrs(self) -> None:
+        """Update entity attributes from coordinator data."""
+        status = (
+            self.coordinator.data.get(rn.SMARTLOAD_SWITCH_STATUS)
+            if self.coordinator.data
+            else None
+        )
+        self._attr_is_on = status.value if status is not None else None
+        self._attr_available = self._attr_is_on is not None
+
+    @override
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        """Switch the load on."""
+        if await self._async_set_register(rn.SMARTLOAD_SWITCH, rv.SmartLoadSwitch.ON):
+            self._attr_is_on = True
+
+        await self.coordinator.async_request_refresh()
+
+    @override
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        """Switch the load off."""
+        if await self._async_set_register(rn.SMARTLOAD_SWITCH, rv.SmartLoadSwitch.OFF):
+            self._attr_is_on = False
+
+        await self.coordinator.async_request_refresh()
 
 
 class HuaweiSolarSwitchEntity(HuaweiSolarCoordinatorEntity, SwitchEntity):
