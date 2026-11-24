@@ -196,6 +196,18 @@
             "mppt_scanning_interval": {
                 "name": "MPPT-Scan Interval"
             },
+            "smartload_min_switching_interval": {
+                "name": "Minimum switching interval"
+            },
+            "smartload_off_grid_resume_soc": {
+                "name": "Off-grid resume SOC"
+            },
+            "smartload_off_grid_stop_soc": {
+                "name": "Off-grid stop SOC"
+            },
+            "smartload_rated_power": {
+                "name": "Rated power"
+            },
             "storage_adjustment_deadband": {
                 "name": "Battery adjustment deadband"
             },
@@ -281,6 +293,13 @@
                 "state": {
                     "charge": "Charge",
                     "fed_to_grid": "Fed to grid"
+                }
+            },
+            "smartload_off_grid_mode": {
+                "name": "Off-grid mode",
+                "state": {
+                    "basic": "Basic mode",
+                    "battery": "Battery mode"
                 }
             },
             "storage_capacity_control_mode": {
@@ -1510,6 +1529,9 @@
             },
             "smartguard_off_grid": {
                 "name": "Off-grid"
+            },
+            "smartload_off_grid_auto_control": {
+                "name": "Off-grid automatic control"
             },
             "startup": {
                 "name": "Inverter ON/OFF"
