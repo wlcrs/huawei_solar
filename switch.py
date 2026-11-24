@@ -9,6 +9,7 @@ import logging
 from typing import Any, TypeVar
 
 from huawei_solar import (
+    EMMADevice,
     HuaweiSolarDevice,
     SChargerDevice,
     SmartAcGunDevice,
@@ -141,6 +142,33 @@ SMART_AC_GUN_SWITCH_DESCRIPTIONS: tuple[HuaweiSolarSwitchEntityDescription, ...]
     ),
 )
 
+EMMA_CHARGE_FROM_AC_SWITCH_DESCRIPTION = HuaweiSolarSwitchEntityDescription(
+    key=rn.HEMS_CHARGE_FROM_AC,
+    icon="mdi:battery-charging-50",
+    entity_category=EntityCategory.CONFIG,
+)
+
+EMMA_DI_SCHEDULING_SWITCH_DESCRIPTION = HuaweiSolarSwitchEntityDescription(
+    key=rn.HEMS_DI_SCHEDULING_SWITCH,
+    icon="mdi:electric-switch",
+    entity_category=EntityCategory.CONFIG,
+    entity_registry_enabled_default=False,
+)
+
+EMMA_SEAMLESS_SWITCH_DESCRIPTION = HuaweiSolarSwitchEntityDescription(
+    key=rn.HEMS_SEAMLESS_SWITCH,
+    icon="mdi:transmission-tower-off",
+    entity_category=EntityCategory.CONFIG,
+    entity_registry_enabled_default=False,
+)
+
+EMMA_GRID_PURCHASE_POWER_LIMIT_SWITCH_DESCRIPTION = HuaweiSolarSwitchEntityDescription(
+    key=rn.HEMS_GRID_PURCHASE_POWER_LIMIT,
+    icon="mdi:transmission-tower",
+    entity_category=EntityCategory.CONFIG,
+    entity_registry_enabled_default=False,
+)
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -246,6 +274,23 @@ async def async_setup_entry(
                 )
                 for entity_description in SMART_AC_GUN_SWITCH_DESCRIPTIONS
             )
+
+        if isinstance(ucs.device, EMMADevice):
+            for supported, entity_description in (
+                (ucs.device.supports_charge_from_ac, EMMA_CHARGE_FROM_AC_SWITCH_DESCRIPTION),
+                (ucs.device.supports_di_scheduling, EMMA_DI_SCHEDULING_SWITCH_DESCRIPTION),
+                (ucs.device.supports_seamless_switch, EMMA_SEAMLESS_SWITCH_DESCRIPTION),
+                (True, EMMA_GRID_PURCHASE_POWER_LIMIT_SWITCH_DESCRIPTION),
+            ):
+                if supported:
+                    slave_entities.append(
+                        HuaweiSolarSwitchEntity(
+                            ucs.configuration_update_coordinator,
+                            ucs.device,
+                            entity_description,
+                            ucs.device_info,
+                        )
+                    )
 
         entities_to_add.extend(slave_entities)
 

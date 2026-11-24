@@ -144,11 +144,11 @@
             }
         },
         "number": {
-            "active_power_fixed_value_derating": {
-                "name": "Vermogensbeperking"
-            },
             "active_power_fail_safe_threshold": {
                 "name": "Storingsveilige drempelwaarde voor werkelijk vermogen"
+            },
+            "active_power_fixed_value_derating": {
+                "name": "Vermogensbeperking"
             },
             "active_power_percentage_derating": {
                 "name": "Vermogensbeperking (percentage)"
@@ -182,6 +182,18 @@
             },
             "emma_tou_maximum_power_for_charging_batteries_from_grid": {
                 "name": "Maximaal vermogen voor laden van batterijen vanaf het net"
+            },
+            "hems_ess_grid_charging_power": {
+                "name": "ESS-laadvermogen vanaf het net"
+            },
+            "hems_ev_charger_charge_power": {
+                "name": "Laadvermogen EV-lader"
+            },
+            "hems_insufficient_backup_time_reminder": {
+                "name": "Herinnering onvoldoende back-uptijd"
+            },
+            "hems_off_grid_backup_power_soc": {
+                "name": "Off-grid back-upvermogen SOC"
             },
             "mppt_scanning_interval": {
                 "name": "MPPT scan interval"
@@ -470,6 +482,7 @@
             "current_electricity_generation_statistics_time": {
                 "name": "Statistiektijd huidige elektriciteitsproductie"
             },
+            "daily_yield": {},
             "daily_yield_energy": {
                 "name": "Dagelijkse opbrengst"
             },
@@ -479,8 +492,15 @@
             "device_status": {
                 "name": "Apparaatstatus"
             },
+            "dsp_data_collection": {},
             "efficiency": {
                 "name": "Rendement"
+            },
+            "emma_capacity_control_periods": {
+                "name": "Dagelijkse piek vermogen"
+            },
+            "emma_tou_periods": {
+                "name": "TOU-perioden"
             },
             "energy_charged_today": {
                 "name": "Geladen energie vandaag"
@@ -524,9 +544,15 @@
             "grid_c_voltage": {
                 "name": "Fase C spanning"
             },
+            "grid_code": {},
             "grid_exported_energy": {
                 "name": "Geëxporteerd"
             },
+            "grid_frequency": {},
+            "hems_backup_time": {
+                "name": "Back-uptijd"
+            },
+            "hourly_yield": {},
             "hourly_yield_energy": {
                 "name": "Uur opbrengst"
             },
@@ -554,6 +580,7 @@
             "inverter_rated_power": {
                 "name": "Nominaal vermogen omvormer"
             },
+            "inverter_state": {},
             "inverter_total_absorbed_energy": {
                 "name": "Totale opgenomen energie"
             },
@@ -590,6 +617,7 @@
             "load_power": {
                 "name": "Belastingsvermogen"
             },
+            "locking_status": {},
             "meter_a_b_line_voltage": {
                 "name": "Lijnspanning A-B"
             },
@@ -653,12 +681,17 @@
             "meter_total_reactive_energy": {
                 "name": "Totale reactieve energie"
             },
+            "monthly_yield": {},
             "monthly_yield_energy": {
                 "name": "Maandelijkse opbrengst"
             },
             "nb_online_optimizers": {
                 "name": "Online optimizers"
             },
+            "off_grid_status": {},
+            "off_grid_switch": {},
+            "online_optimizers": {},
+            "optimizers_fault": {},
             "output_current": {
                 "name": "Uitgangsstroom"
             },
@@ -1010,6 +1043,7 @@
             "pv_24_voltage": {
                 "name": "PV 24 spanning"
             },
+            "pv_connection_status": {},
             "pv_output_power": {
                 "name": "PV-uitgangsvermogen"
             },
@@ -1261,26 +1295,7 @@
             },
             "yearly_yield_energy": {
                 "name": "Jaarlijkse opbrengst"
-            },
-            "emma_capacity_control_periods": {
-                "name": "Dagelijkse piek vermogen"
-            },
-            "emma_tou_periods": {
-                "name": "TOU-perioden"
-            },
-            "daily_yield": {},
-            "dsp_data_collection": {},
-            "grid_code": {},
-            "grid_frequency": {},
-            "hourly_yield": {},
-            "inverter_state": {},
-            "locking_status": {},
-            "monthly_yield": {},
-            "off_grid_status": {},
-            "off_grid_switch": {},
-            "online_optimizers": {},
-            "optimizers_fault": {},
-            "pv_connection_status": {}
+            }
         },
         "switch": {
             "backup_switch_to_off_grid": {
@@ -1294,6 +1309,18 @@
             },
             "charger_single_three_phase_switch": {
                 "name": "Automatische fasewisseling"
+            },
+            "hems_charge_from_ac": {
+                "name": "Opladen vanaf AC"
+            },
+            "hems_di_scheduling_switch": {
+                "name": "DI-planning"
+            },
+            "hems_grid_purchase_power_limit": {
+                "name": "Vermogenslimiet netafname"
+            },
+            "hems_seamless_switch": {
+                "name": "Naadloze omschakeling"
             },
             "mppt_multimodal_scanning": {
                 "name": "MPPT scanning"

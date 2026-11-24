@@ -144,11 +144,11 @@
             }
         },
         "number": {
-            "active_power_fixed_value_derating": {
-                "name": "Снижение мощности"
-            },
             "active_power_fail_safe_threshold": {
                 "name": "Порог отказоустойчивости активной мощности"
+            },
+            "active_power_fixed_value_derating": {
+                "name": "Снижение мощности"
             },
             "active_power_percentage_derating": {
                 "name": "Снижение мощности (в процентах)"
@@ -182,6 +182,18 @@
             },
             "emma_tou_maximum_power_for_charging_batteries_from_grid": {
                 "name": "Максимальная мощность зарядки батарей от сети"
+            },
+            "hems_ess_grid_charging_power": {
+                "name": "Мощность заряда ESS от сети"
+            },
+            "hems_ev_charger_charge_power": {
+                "name": "Мощность зарядки зарядной станции ЭМ"
+            },
+            "hems_insufficient_backup_time_reminder": {
+                "name": "Напоминание о недостаточном времени резервного питания"
+            },
+            "hems_off_grid_backup_power_soc": {
+                "name": "SOC резервного питания вне сети"
             },
             "mppt_scanning_interval": {
                 "name": "Интервал сканирования MPPT"
@@ -482,6 +494,12 @@
             "efficiency": {
                 "name": "Эффективность"
             },
+            "emma_capacity_control_periods": {
+                "name": "Периоды управления емкостью"
+            },
+            "emma_tou_periods": {
+                "name": "Периоды TOU"
+            },
             "energy_charged_today": {
                 "name": "Заряжено энергии сегодня"
             },
@@ -526,6 +544,9 @@
             },
             "grid_exported_energy": {
                 "name": "Экспортировано"
+            },
+            "hems_backup_time": {
+                "name": "Время резервного питания"
             },
             "hourly_yield_energy": {
                 "name": "Часовая выработка"
@@ -1261,12 +1282,6 @@
             },
             "yearly_yield_energy": {
                 "name": "Годовая выработка"
-            },
-            "emma_capacity_control_periods": {
-                "name": "Периоды управления емкостью"
-            },
-            "emma_tou_periods": {
-                "name": "Периоды TOU"
             }
         },
         "switch": {
@@ -1281,6 +1296,18 @@
             },
             "charger_single_three_phase_switch": {
                 "name": "Автоматическое переключение фаз"
+            },
+            "hems_charge_from_ac": {
+                "name": "Заряд от сети переменного тока"
+            },
+            "hems_di_scheduling_switch": {
+                "name": "Планирование DI"
+            },
+            "hems_grid_purchase_power_limit": {
+                "name": "Ограничение мощности, потребляемой из сети"
+            },
+            "hems_seamless_switch": {
+                "name": "Бесшовное переключение"
             },
             "mppt_multimodal_scanning": {
                 "name": "Сканирование MPPT"

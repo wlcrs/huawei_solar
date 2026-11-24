@@ -144,11 +144,11 @@
             }
         },
         "number": {
-            "active_power_fixed_value_derating": {
-                "name": "Reducere de putere"
-            },
             "active_power_fail_safe_threshold": {
                 "name": "Prag de siguranță al puterii active"
+            },
+            "active_power_fixed_value_derating": {
+                "name": "Reducere de putere"
             },
             "active_power_percentage_derating": {
                 "name": "Reducere de putere (procentuală)"
@@ -182,6 +182,18 @@
             },
             "emma_tou_maximum_power_for_charging_batteries_from_grid": {
                 "name": "Putere maximă de încărcare a bateriilor din rețea"
+            },
+            "hems_ess_grid_charging_power": {
+                "name": "Putere de încărcare ESS din rețea"
+            },
+            "hems_ev_charger_charge_power": {
+                "name": "Putere de încărcare stație EV"
+            },
+            "hems_insufficient_backup_time_reminder": {
+                "name": "Memento timp de rezervă insuficient"
+            },
+            "hems_off_grid_backup_power_soc": {
+                "name": "SOC rezervă off-grid"
             },
             "mppt_scanning_interval": {
                 "name": "Interval scanare MPPT"
@@ -482,6 +494,12 @@
             "efficiency": {
                 "name": "Eficiență"
             },
+            "emma_capacity_control_periods": {
+                "name": "Perioade de control al capacității"
+            },
+            "emma_tou_periods": {
+                "name": "Perioade TOU"
+            },
             "energy_charged_today": {
                 "name": "Energie încărcată astăzi"
             },
@@ -526,6 +544,9 @@
             },
             "grid_exported_energy": {
                 "name": "Exportat"
+            },
+            "hems_backup_time": {
+                "name": "Timp de rezervă"
             },
             "hourly_yield_energy": {
                 "name": "Producție orară"
@@ -1261,12 +1282,6 @@
             },
             "yearly_yield_energy": {
                 "name": "Producție anuală"
-            },
-            "emma_capacity_control_periods": {
-                "name": "Perioade de control al capacității"
-            },
-            "emma_tou_periods": {
-                "name": "Perioade TOU"
             }
         },
         "switch": {
@@ -1281,6 +1296,18 @@
             },
             "charger_single_three_phase_switch": {
                 "name": "Comutare automată de faze"
+            },
+            "hems_charge_from_ac": {
+                "name": "Încărcare din AC"
+            },
+            "hems_di_scheduling_switch": {
+                "name": "Programare DI"
+            },
+            "hems_grid_purchase_power_limit": {
+                "name": "Limită putere cumpărată din rețea"
+            },
+            "hems_seamless_switch": {
+                "name": "Comutare fără întrerupere"
             },
             "mppt_multimodal_scanning": {
                 "name": "Scanare MPPT multimodală"

@@ -24,6 +24,7 @@ from homeassistant.const import (
     EntityCategory,
     UnitOfElectricCurrent,
     UnitOfPower,
+    UnitOfTime,
 )
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import ChildDeviceInfo, DeviceInfo
@@ -211,6 +212,53 @@ EMMA_CAPACITY_CONTROL_NUMBER_DESCRIPTIONS: tuple[
         native_unit_of_measurement=PERCENTAGE,
         entity_category=EntityCategory.CONFIG,
     ),
+)
+
+EMMA_OPTIONAL_NUMBER_DESCRIPTIONS: tuple[
+    HuaweiSolarNumberEntityDescription, ...
+] = (
+    HuaweiSolarNumberEntityDescription(
+        key=rn.HEMS_ESS_GRID_CHARGING_POWER,
+        native_min_value=0,
+        native_max_value=50000,
+        icon="mdi:battery-charging",
+        native_unit_of_measurement=UnitOfPower.WATT,
+        entity_category=EntityCategory.CONFIG,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarNumberEntityDescription(
+        key=rn.HEMS_EV_CHARGER_CHARGE_POWER,
+        native_min_value=0,
+        native_max_value=50000,
+        icon="mdi:ev-station",
+        native_unit_of_measurement=UnitOfPower.WATT,
+        entity_category=EntityCategory.CONFIG,
+        entity_registry_enabled_default=False,
+    ),
+)
+
+EMMA_OFF_GRID_BACKUP_POWER_SOC_NUMBER_DESCRIPTION = HuaweiSolarNumberEntityDescription(
+    key=rn.HEMS_OFF_GRID_BACKUP_POWER_SOC,
+    native_min_value=0,
+    native_max_value=100,
+    native_step=0.1,
+    icon="mdi:battery-negative",
+    native_unit_of_measurement=PERCENTAGE,
+    entity_category=EntityCategory.CONFIG,
+    entity_registry_enabled_default=False,
+)
+
+EMMA_INSUFFICIENT_BACKUP_TIME_REMINDER_NUMBER_DESCRIPTION = (
+    HuaweiSolarNumberEntityDescription(
+        key=rn.HEMS_INSUFFICIENT_BACKUP_TIME_REMINDER,
+        native_min_value=5,
+        native_max_value=60,
+        native_step=1,
+        icon="mdi:battery-alert",
+        native_unit_of_measurement=UnitOfTime.MINUTES,
+        entity_category=EntityCategory.CONFIG,
+        entity_registry_enabled_default=False,
+    )
 )
 
 ENERGY_STORAGE_NUMBER_DESCRIPTIONS: tuple[HuaweiSolarNumberEntityDescription, ...] = (
@@ -440,6 +488,35 @@ async def async_setup_entry(
                 _LOGGER.debug(
                     "Capacity control not supported on EMMA %s. Skipping capacity control number entities",
                     ucs.device.serial_number,
+                )
+
+            if ucs.device.supports_off_grid_backup_power_soc:
+                slave_entities.append(
+                    await HuaweiSolarNumberEntity.create(
+                        ucs.configuration_update_coordinator,
+                        ucs.device,
+                        EMMA_OFF_GRID_BACKUP_POWER_SOC_NUMBER_DESCRIPTION,
+                        ucs.device_info,
+                    )
+                )
+            if ucs.device.supports_insufficient_backup_time_reminder:
+                slave_entities.append(
+                    await HuaweiSolarNumberEntity.create(
+                        ucs.configuration_update_coordinator,
+                        ucs.device,
+                        EMMA_INSUFFICIENT_BACKUP_TIME_REMINDER_NUMBER_DESCRIPTION,
+                        ucs.device_info,
+                    )
+                )
+
+            for entity_description in EMMA_OPTIONAL_NUMBER_DESCRIPTIONS:
+                slave_entities.append(
+                    await HuaweiSolarNumberEntity.create(
+                        ucs.configuration_update_coordinator,
+                        ucs.device,
+                        entity_description,
+                        ucs.device_info,
+                    )
                 )
 
         if isinstance(ucs.device, SChargerDevice):

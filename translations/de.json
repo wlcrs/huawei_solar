@@ -144,11 +144,11 @@
             }
         },
         "number": {
-            "active_power_fixed_value_derating": {
-                "name": "Leistungsbegrenzung"
-            },
             "active_power_fail_safe_threshold": {
                 "name": "Ausfallsicherer Schwellenwert für Wirkleistung"
+            },
+            "active_power_fixed_value_derating": {
+                "name": "Leistungsbegrenzung"
             },
             "active_power_percentage_derating": {
                 "name": "Eingangsleistung Wechselrichter in %"
@@ -182,6 +182,18 @@
             },
             "emma_tou_maximum_power_for_charging_batteries_from_grid": {
                 "name": "Maximale Netzleistung zum Laden der Batterie"
+            },
+            "hems_ess_grid_charging_power": {
+                "name": "ESS-Netz-Ladeleistung"
+            },
+            "hems_ev_charger_charge_power": {
+                "name": "EV-Ladegerät-Ladeleistung"
+            },
+            "hems_insufficient_backup_time_reminder": {
+                "name": "Erinnerung bei unzureichender Notstromzeit"
+            },
+            "hems_off_grid_backup_power_soc": {
+                "name": "Inselbetrieb-Notstrom-SOC"
             },
             "mppt_scanning_interval": {
                 "name": "MPPT-Scan Intervall"
@@ -482,6 +494,12 @@
             "efficiency": {
                 "name": "Effizienz"
             },
+            "emma_capacity_control_periods": {
+                "name": "Kapazitätsregelungsperioden"
+            },
+            "emma_tou_periods": {
+                "name": "TOU-Perioden"
+            },
             "energy_charged_today": {
                 "name": "Heute geladene Energie"
             },
@@ -526,6 +544,9 @@
             },
             "grid_exported_energy": {
                 "name": "Exportierte Energie"
+            },
+            "hems_backup_time": {
+                "name": "Notstromzeit"
             },
             "hourly_yield_energy": {
                 "name": "Stündlicher Ertrag"
@@ -1261,12 +1282,6 @@
             },
             "yearly_yield_energy": {
                 "name": "Jährlicher Ertrag"
-            },
-            "emma_capacity_control_periods": {
-                "name": "Kapazitätsregelungsperioden"
-            },
-            "emma_tou_periods": {
-                "name": "TOU-Perioden"
             }
         },
         "switch": {
@@ -1281,6 +1296,18 @@
             },
             "charger_single_three_phase_switch": {
                 "name": "Automatische Phasenumschaltung"
+            },
+            "hems_charge_from_ac": {
+                "name": "Laden über AC"
+            },
+            "hems_di_scheduling_switch": {
+                "name": "DI-Zeitplansteuerung"
+            },
+            "hems_grid_purchase_power_limit": {
+                "name": "Netzbezugs-Leistungsbegrenzung"
+            },
+            "hems_seamless_switch": {
+                "name": "Nahtlose Umschaltung"
             },
             "mppt_multimodal_scanning": {
                 "name": "MPPT Scan"

@@ -1838,6 +1838,14 @@ EMMA_BATTERY_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...]
         state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
     ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.HEMS_BACKUP_TIME,
+        icon="mdi:battery-clock",
+        native_unit_of_measurement=UnitOfTime.MINUTES,
+        device_class=SensorDeviceClass.DURATION,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
 )
 
 

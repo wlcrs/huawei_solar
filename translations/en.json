@@ -144,11 +144,11 @@
             }
         },
         "number": {
-            "active_power_fixed_value_derating": {
-                "name": "Power derating"
-            },
             "active_power_fail_safe_threshold": {
                 "name": "Active power fail-safe threshold"
+            },
+            "active_power_fixed_value_derating": {
+                "name": "Power derating"
             },
             "active_power_percentage_derating": {
                 "name": "Power derating (by percentage)"
@@ -182,6 +182,18 @@
             },
             "emma_tou_maximum_power_for_charging_batteries_from_grid": {
                 "name": "Maximum power for charging batteries from grid"
+            },
+            "hems_ess_grid_charging_power": {
+                "name": "ESS grid charging power"
+            },
+            "hems_ev_charger_charge_power": {
+                "name": "EV charger charge power"
+            },
+            "hems_insufficient_backup_time_reminder": {
+                "name": "Insufficient backup time reminder"
+            },
+            "hems_off_grid_backup_power_soc": {
+                "name": "Off-grid backup power SOC"
             },
             "mppt_scanning_interval": {
                 "name": "MPPT-Scan Interval"
@@ -482,6 +494,12 @@
             "efficiency": {
                 "name": "Efficiency"
             },
+            "emma_capacity_control_periods": {
+                "name": "Capacity control periods"
+            },
+            "emma_tou_periods": {
+                "name": "TOU periods"
+            },
             "energy_charged_today": {
                 "name": "Energy charged today"
             },
@@ -526,6 +544,9 @@
             },
             "grid_exported_energy": {
                 "name": "Exported"
+            },
+            "hems_backup_time": {
+                "name": "Backup time"
             },
             "hourly_yield_energy": {
                 "name": "Hourly yield"
@@ -1261,12 +1282,6 @@
             },
             "yearly_yield_energy": {
                 "name": "Yearly yield"
-            },
-            "emma_capacity_control_periods": {
-                "name": "Capacity control periods"
-            },
-            "emma_tou_periods": {
-                "name": "TOU periods"
             }
         },
         "switch": {
@@ -1281,6 +1296,18 @@
             },
             "charger_single_three_phase_switch": {
                 "name": "Automatic phase switching"
+            },
+            "hems_charge_from_ac": {
+                "name": "Charge from AC"
+            },
+            "hems_di_scheduling_switch": {
+                "name": "DI scheduling"
+            },
+            "hems_grid_purchase_power_limit": {
+                "name": "Grid purchase power limit"
+            },
+            "hems_seamless_switch": {
+                "name": "Seamless switchover"
             },
             "mppt_multimodal_scanning": {
                 "name": "MPPT-Scan"
