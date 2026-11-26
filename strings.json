@@ -580,6 +580,26 @@
             "efficiency": {
                 "name": "Efficiency"
             },
+            "emma_active_alarms_critical": {
+                "name": "Active critical alarms"
+            },
+            "emma_active_alarms_major": {
+                "name": "Active major alarms"
+            },
+            "emma_active_alarms_minor": {
+                "name": "Active minor alarms"
+            },
+            "emma_active_alarms_warning": {
+                "name": "Active warnings"
+            },
+            "emma_system_state": {
+                "name": "System state",
+                "state": {
+                    "on_grid": "On-grid",
+                    "off_grid": "Off-grid",
+                    "standby_or_exception": "Standby or exception"
+                }
+            },
             "energy_charged_today": {
                 "name": "Energy charged today"
             },
@@ -789,6 +809,14 @@
             "pack_1_firmware_version": {
                 "name": "Pack 1 firmware version"
             },
+            "pack_1_heating_status": {
+                "name": "Pack 1 heating status",
+                "state": {
+                    "idle": "Idle",
+                    "heating": "Heating",
+                    "fault": "Fault"
+                }
+            },
             "pack_1_max_temperature": {
                 "name": "Pack 1 max temperature"
             },
@@ -809,6 +837,9 @@
             },
             "pack_1_state_of_capacity": {
                 "name": "Pack 1 state of capacity"
+            },
+            "pack_1_state_of_health": {
+                "name": "Pack 1 state of health"
             },
             "pack_1_total_charge": {
                 "name": "Pack 1 total charge"
@@ -831,6 +862,14 @@
             "pack_2_firmware_version": {
                 "name": "Pack 2 firmware version"
             },
+            "pack_2_heating_status": {
+                "name": "Pack 2 heating status",
+                "state": {
+                    "idle": "Idle",
+                    "heating": "Heating",
+                    "fault": "Fault"
+                }
+            },
             "pack_2_max_temperature": {
                 "name": "Pack 2 max temperature"
             },
@@ -851,6 +890,9 @@
             },
             "pack_2_state_of_capacity": {
                 "name": "Pack 2 state of capacity"
+            },
+            "pack_2_state_of_health": {
+                "name": "Pack 2 state of health"
             },
             "pack_2_total_charge": {
                 "name": "Pack 2 total charge"
@@ -873,6 +915,14 @@
             "pack_3_firmware_version": {
                 "name": "Pack 3 firmware version"
             },
+            "pack_3_heating_status": {
+                "name": "Pack 3 heating status",
+                "state": {
+                    "idle": "Idle",
+                    "heating": "Heating",
+                    "fault": "Fault"
+                }
+            },
             "pack_3_max_temperature": {
                 "name": "Pack 3 max temperature"
             },
@@ -893,6 +943,9 @@
             },
             "pack_3_state_of_capacity": {
                 "name": "Pack 3 state of capacity"
+            },
+            "pack_3_state_of_health": {
+                "name": "Pack 3 state of health"
             },
             "pack_3_total_charge": {
                 "name": "Pack 3 total charge"
@@ -1357,6 +1410,9 @@
             },
             "storage_current_day_discharge_capacity": {
                 "name": "Day discharge"
+            },
+            "storage_estimated_backup_time": {
+                "name": "Estimated backup time"
             },
             "storage_forcible_charge_discharge_write": {
                 "name": "Forcible charge/discharge"

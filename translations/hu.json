@@ -580,6 +580,26 @@
             "efficiency": {
                 "name": "Hatásfok"
             },
+            "emma_active_alarms_critical": {
+                "name": "Aktív kritikus riasztások"
+            },
+            "emma_active_alarms_major": {
+                "name": "Aktív jelentős riasztások"
+            },
+            "emma_active_alarms_minor": {
+                "name": "Aktív kisebb riasztások"
+            },
+            "emma_active_alarms_warning": {
+                "name": "Aktív figyelmeztetések"
+            },
+            "emma_system_state": {
+                "name": "Rendszerállapot",
+                "state": {
+                    "on_grid": "Hálózatra kapcsolva",
+                    "off_grid": "Szigetüzem",
+                    "standby_or_exception": "Készenlét vagy kivétel"
+                }
+            },
             "energy_charged_today": {
                 "name": "Ma betöltött energia"
             },
@@ -789,6 +809,14 @@
             "pack_1_firmware_version": {
                 "name": "1. modul firmware verzió"
             },
+            "pack_1_heating_status": {
+                "name": "1. modul fűtési állapota",
+                "state": {
+                    "idle": "Tétlen",
+                    "heating": "Fűtés",
+                    "fault": "Hiba"
+                }
+            },
             "pack_1_max_temperature": {
                 "name": "1. modul maximális hőmérséklet"
             },
@@ -809,6 +837,9 @@
             },
             "pack_1_state_of_capacity": {
                 "name": "1. modul kapacitás állapota"
+            },
+            "pack_1_state_of_health": {
+                "name": "1. modul állapota (SOH)"
             },
             "pack_1_total_charge": {
                 "name": "1. modul összes töltés"
@@ -831,6 +862,14 @@
             "pack_2_firmware_version": {
                 "name": "2. modul firmware verzió"
             },
+            "pack_2_heating_status": {
+                "name": "2. modul fűtési állapota",
+                "state": {
+                    "idle": "Tétlen",
+                    "heating": "Fűtés",
+                    "fault": "Hiba"
+                }
+            },
             "pack_2_max_temperature": {
                 "name": "2. modul maximális hőmérséklet"
             },
@@ -851,6 +890,9 @@
             },
             "pack_2_state_of_capacity": {
                 "name": "2. modul kapacitás állapota"
+            },
+            "pack_2_state_of_health": {
+                "name": "2. modul állapota (SOH)"
             },
             "pack_2_total_charge": {
                 "name": "2. modul összes töltés"
@@ -873,6 +915,14 @@
             "pack_3_firmware_version": {
                 "name": "3. modul firmware verzió"
             },
+            "pack_3_heating_status": {
+                "name": "3. modul fűtési állapota",
+                "state": {
+                    "idle": "Tétlen",
+                    "heating": "Fűtés",
+                    "fault": "Hiba"
+                }
+            },
             "pack_3_max_temperature": {
                 "name": "3. modul maximális hőmérséklet"
             },
@@ -893,6 +943,9 @@
             },
             "pack_3_state_of_capacity": {
                 "name": "3. modul kapacitás állapota"
+            },
+            "pack_3_state_of_health": {
+                "name": "3. modul állapota (SOH)"
             },
             "pack_3_total_charge": {
                 "name": "3. modul összes töltés"
@@ -1357,6 +1410,9 @@
             },
             "storage_current_day_discharge_capacity": {
                 "name": "Akkumulátor napi kisütése"
+            },
+            "storage_estimated_backup_time": {
+                "name": "Becsült tartalék üzemidő"
             },
             "storage_forcible_charge_discharge_write": {
                 "name": "Kényszerített töltés/kisütés"

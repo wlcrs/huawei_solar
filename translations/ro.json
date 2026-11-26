@@ -580,6 +580,26 @@
             "efficiency": {
                 "name": "Eficiență"
             },
+            "emma_active_alarms_critical": {
+                "name": "Alarme critice active"
+            },
+            "emma_active_alarms_major": {
+                "name": "Alarme majore active"
+            },
+            "emma_active_alarms_minor": {
+                "name": "Alarme minore active"
+            },
+            "emma_active_alarms_warning": {
+                "name": "Avertismente active"
+            },
+            "emma_system_state": {
+                "name": "Starea sistemului",
+                "state": {
+                    "on_grid": "Conectat la rețea",
+                    "off_grid": "În afara rețelei",
+                    "standby_or_exception": "Standby sau excepție"
+                }
+            },
             "energy_charged_today": {
                 "name": "Energie încărcată astăzi"
             },
@@ -789,6 +809,14 @@
             "pack_1_firmware_version": {
                 "name": "Versiune firmware modul 1"
             },
+            "pack_1_heating_status": {
+                "name": "Stare încălzire modul 1",
+                "state": {
+                    "idle": "Inactiv",
+                    "heating": "Încălzire",
+                    "fault": "Defecțiune"
+                }
+            },
             "pack_1_max_temperature": {
                 "name": "Temperatură maximă modul 1"
             },
@@ -809,6 +837,9 @@
             },
             "pack_1_state_of_capacity": {
                 "name": "Stare capacitate modul 1"
+            },
+            "pack_1_state_of_health": {
+                "name": "Stare de sănătate modul 1"
             },
             "pack_1_total_charge": {
                 "name": "Încărcare totală modul 1"
@@ -831,6 +862,14 @@
             "pack_2_firmware_version": {
                 "name": "Versiune firmware modul 2"
             },
+            "pack_2_heating_status": {
+                "name": "Stare încălzire modul 2",
+                "state": {
+                    "idle": "Inactiv",
+                    "heating": "Încălzire",
+                    "fault": "Defecțiune"
+                }
+            },
             "pack_2_max_temperature": {
                 "name": "Temperatură maximă modul 2"
             },
@@ -851,6 +890,9 @@
             },
             "pack_2_state_of_capacity": {
                 "name": "Stare capacitate modul 2"
+            },
+            "pack_2_state_of_health": {
+                "name": "Stare de sănătate modul 2"
             },
             "pack_2_total_charge": {
                 "name": "Încărcare totală modul 2"
@@ -873,6 +915,14 @@
             "pack_3_firmware_version": {
                 "name": "Versiune firmware modul 3"
             },
+            "pack_3_heating_status": {
+                "name": "Stare încălzire modul 3",
+                "state": {
+                    "idle": "Inactiv",
+                    "heating": "Încălzire",
+                    "fault": "Defecțiune"
+                }
+            },
             "pack_3_max_temperature": {
                 "name": "Temperatură maximă modul 3"
             },
@@ -893,6 +943,9 @@
             },
             "pack_3_state_of_capacity": {
                 "name": "Stare capacitate modul 3"
+            },
+            "pack_3_state_of_health": {
+                "name": "Stare de sănătate modul 3"
             },
             "pack_3_total_charge": {
                 "name": "Încărcare totală modul 3"
@@ -1357,6 +1410,9 @@
             },
             "storage_current_day_discharge_capacity": {
                 "name": "Descărcare baterie astăzi"
+            },
+            "storage_estimated_backup_time": {
+                "name": "Timp estimat de backup"
             },
             "storage_forcible_charge_discharge_write": {
                 "name": "Încărcare/descărcare forțată"

@@ -580,6 +580,26 @@
             "efficiency": {
                 "name": "Verkningsgrad"
             },
+            "emma_active_alarms_critical": {
+                "name": "Aktiva kritiska larm"
+            },
+            "emma_active_alarms_major": {
+                "name": "Aktiva större larm"
+            },
+            "emma_active_alarms_minor": {
+                "name": "Aktiva mindre larm"
+            },
+            "emma_active_alarms_warning": {
+                "name": "Aktiva varningar"
+            },
+            "emma_system_state": {
+                "name": "Systemstatus",
+                "state": {
+                    "on_grid": "Nätansluten",
+                    "off_grid": "Ö-drift",
+                    "standby_or_exception": "Standby eller undantag"
+                }
+            },
             "energy_charged_today": {
                 "name": "Laddad energi idag"
             },
@@ -789,6 +809,14 @@
             "pack_1_firmware_version": {
                 "name": "Modul 1 firmwareversion"
             },
+            "pack_1_heating_status": {
+                "name": "Modul 1 värmestatus",
+                "state": {
+                    "idle": "Inaktiv",
+                    "heating": "Värmer",
+                    "fault": "Fel"
+                }
+            },
             "pack_1_max_temperature": {
                 "name": "Modul 1 maxtemperatur"
             },
@@ -809,6 +837,9 @@
             },
             "pack_1_state_of_capacity": {
                 "name": "Modul 1 kapacitetsstatus"
+            },
+            "pack_1_state_of_health": {
+                "name": "Modul 1 hälsotillstånd (SOH)"
             },
             "pack_1_total_charge": {
                 "name": "Modul 1 total laddning"
@@ -831,6 +862,14 @@
             "pack_2_firmware_version": {
                 "name": "Modul 2 firmwareversion"
             },
+            "pack_2_heating_status": {
+                "name": "Modul 2 värmestatus",
+                "state": {
+                    "idle": "Inaktiv",
+                    "heating": "Värmer",
+                    "fault": "Fel"
+                }
+            },
             "pack_2_max_temperature": {
                 "name": "Modul 2 maxtemperatur"
             },
@@ -851,6 +890,9 @@
             },
             "pack_2_state_of_capacity": {
                 "name": "Modul 2 kapacitetsstatus"
+            },
+            "pack_2_state_of_health": {
+                "name": "Modul 2 hälsotillstånd (SOH)"
             },
             "pack_2_total_charge": {
                 "name": "Modul 2 total laddning"
@@ -873,6 +915,14 @@
             "pack_3_firmware_version": {
                 "name": "Modul 3 firmwareversion"
             },
+            "pack_3_heating_status": {
+                "name": "Modul 3 värmestatus",
+                "state": {
+                    "idle": "Inaktiv",
+                    "heating": "Värmer",
+                    "fault": "Fel"
+                }
+            },
             "pack_3_max_temperature": {
                 "name": "Modul 3 maxtemperatur"
             },
@@ -893,6 +943,9 @@
             },
             "pack_3_state_of_capacity": {
                 "name": "Modul 3 kapacitetsstatus"
+            },
+            "pack_3_state_of_health": {
+                "name": "Modul 3 hälsotillstånd (SOH)"
             },
             "pack_3_total_charge": {
                 "name": "Modul 3 total laddning"
@@ -1357,6 +1410,9 @@
             },
             "storage_current_day_discharge_capacity": {
                 "name": "Batteriurladdning idag"
+            },
+            "storage_estimated_backup_time": {
+                "name": "Beräknad reservtid"
             },
             "storage_forcible_charge_discharge_write": {
                 "name": "Tvingad laddning/urladdning"

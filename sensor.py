@@ -633,6 +633,13 @@ THREE_PHASE_METER_ENTITY_DESCRIPTIONS: tuple[
 
 BATTERIES_SENSOR_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
     HuaweiSolarSensorEntityDescription(
+        key=rn.STORAGE_ESTIMATED_BACKUP_TIME,
+        native_unit_of_measurement=UnitOfTime.MINUTES,
+        device_class=SensorDeviceClass.DURATION,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
         key=rn.STORAGE_MAXIMUM_CHARGE_POWER,
         native_unit_of_measurement=UnitOfPower.WATT,
         state_class=SensorStateClass.MEASUREMENT,
@@ -1117,6 +1124,54 @@ LUNA2000_BATTERY_TEMPLATE_SENSOR_DESCRIPTIONS: tuple[
         state_class=SensorStateClass.TOTAL_INCREASING,
         device_class=SensorDeviceClass.ENERGY,
     ),
+    BatteryTemplateEntityDescription(
+        battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_1_STATE_OF_HEALTH,
+        battery_2_key=None,
+        translation_key="pack_1_state_of_health",
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    BatteryTemplateEntityDescription(
+        battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_1_HEATING_STATUS,
+        battery_2_key=None,
+        translation_key="pack_1_heating_status",
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.BatteryPackHeatingStatus],
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    BatteryTemplateEntityDescription(
+        battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_2_STATE_OF_HEALTH,
+        battery_2_key=None,
+        translation_key="pack_2_state_of_health",
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    BatteryTemplateEntityDescription(
+        battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_2_HEATING_STATUS,
+        battery_2_key=None,
+        translation_key="pack_2_heating_status",
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.BatteryPackHeatingStatus],
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    BatteryTemplateEntityDescription(
+        battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_3_STATE_OF_HEALTH,
+        battery_2_key=None,
+        translation_key="pack_3_state_of_health",
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    BatteryTemplateEntityDescription(
+        battery_1_key=rn.STORAGE_UNIT_1_BATTERY_PACK_3_HEATING_STATUS,
+        battery_2_key=None,
+        translation_key="pack_3_heating_status",
+        device_class=SensorDeviceClass.ENUM,
+        options=[s.name.lower() for s in rv.BatteryPackHeatingStatus],
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
 )
 
 LG_RESU_BATTERY_1_SOH_SENSOR_DESCRIPTION = HuaweiSolarSensorEntityDescription(
@@ -1163,6 +1218,7 @@ def _create_battery_unit_entities(
                     native_unit_of_measurement=template.native_unit_of_measurement,
                     icon=template.icon,
                     entity_category=template.entity_category,
+                    options=template.options,
                     entity_registry_enabled_default=(
                         template.enabled_default_on_lg_resu if is_lg_resu else False
                     ),
@@ -1806,6 +1862,20 @@ def create_emma_entities(
         for entity_description in EMMA_SENSOR_DESCRIPTIONS
     ]
 
+    if ucs.device.supports_system_state:
+        entities.append(
+            HuaweiSolarSensorEntity(
+                ucs.update_coordinator, EMMA_SYSTEM_STATE_DESCRIPTION, ucs.device_info
+            )
+        )
+    if ucs.device.supports_active_alarm_counts:
+        entities.extend(
+            HuaweiSolarSensorEntity(
+                ucs.update_coordinator, entity_description, ucs.device_info
+            )
+            for entity_description in EMMA_ACTIVE_ALARM_COUNT_DESCRIPTIONS
+        )
+
     if has_battery:
         entities.extend(
             HuaweiSolarSensorEntity(
@@ -1841,6 +1911,40 @@ def create_emma_entities(
 
     return entities
 
+
+# Not in the public EMMA interface definitions: only created when the EMMA answers them (see EMMADevice).
+EMMA_SYSTEM_STATE_DESCRIPTION = HuaweiSolarSensorEntityDescription(
+    key=rn.EMMA_SYSTEM_STATE,
+    device_class=SensorDeviceClass.ENUM,
+    options=[s.name.lower() for s in rv.EmmaSystemState],
+)
+
+EMMA_ACTIVE_ALARM_COUNT_DESCRIPTIONS: tuple[HuaweiSolarSensorEntityDescription, ...] = (
+    HuaweiSolarSensorEntityDescription(
+        key=rn.EMMA_ACTIVE_ALARMS_CRITICAL,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.EMMA_ACTIVE_ALARMS_MAJOR,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.EMMA_ACTIVE_ALARMS_MINOR,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+    ),
+    HuaweiSolarSensorEntityDescription(
+        key=rn.EMMA_ACTIVE_ALARMS_WARNING,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+    ),
+)
 
 # Charger settings, read through the charger's configuration coordinator (only created
 # when parameter configuration is enabled). The two modes are disabled by default: while
