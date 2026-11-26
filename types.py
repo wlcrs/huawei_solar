@@ -24,6 +24,12 @@ from huawei_solar import (
     SUN2000Device,
     TimeOfUsePeriodsException,
 )
+from huawei_solar import (
+    register_names as rn,
+)
+from huawei_solar import (
+    register_values as rv,
+)
 from huawei_solar.modbus_pdu import PermissionDeniedError
 
 from .const import DOMAIN
@@ -200,3 +206,37 @@ class HuaweiSolarCoordinatorEntity[
         """When entity is added to hass update state from existing coordinator data."""
         await super().async_added_to_hass()
         self._async_update_attrs()
+
+
+HELD_BY_ENERGY_MANAGER: dict[RegisterName, rv.ParameterLockFlags] = {
+    rn.ACTIVE_POWER_PERCENTAGE_DERATING: (
+        rv.ParameterLockFlags.ACTIVE_POWER_PERCENTAGE_DERATING
+    ),
+    rn.ACTIVE_POWER_FIXED_VALUE_DERATING: (
+        rv.ParameterLockFlags.ACTIVE_POWER_FIXED_VALUE_DERATING
+    ),
+    rn.STORAGE_CHARGE_FROM_GRID_FUNCTION: rv.ParameterLockFlags.CHARGE_FROM_GRID,
+    rn.STORAGE_POWER_OF_CHARGE_FROM_GRID: (
+        rv.ParameterLockFlags.GRID_CHARGE_MAXIMUM_POWER
+    ),
+    rn.STORAGE_GRID_CHARGE_CUTOFF_STATE_OF_CHARGE: (
+        rv.ParameterLockFlags.GRID_CHARGE_CUTOFF_SOC
+    ),
+    rn.STORAGE_CHARGING_CUTOFF_CAPACITY: rv.ParameterLockFlags.END_OF_CHARGE_SOC,
+    rn.STORAGE_DISCHARGING_CUTOFF_CAPACITY: rv.ParameterLockFlags.END_OF_DISCHARGE_SOC,
+}
+"""Inverter settings an energy manager can hold, with their flag in register 30298."""
+
+
+def is_held_by_energy_manager(device: HuaweiSolarDevice, register_name: str) -> bool:
+    """Whether an energy manager (EMMA) holds this inverter setting.
+
+    The FusionSolar app shows such a setting read-only and asks to set it on the
+    energy manager instead. The library reads the flags once during setup.
+    """
+    return (
+        isinstance(device, SUN2000Device)
+        and register_name in HELD_BY_ENERGY_MANAGER
+        and HELD_BY_ENERGY_MANAGER[RegisterName(register_name)]
+        in device.parameters_held_by_energy_manager
+    )
