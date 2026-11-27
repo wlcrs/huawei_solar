@@ -349,6 +349,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: HuaweiSolarConfigEntry) 
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
+    # The first refresh of a configuration coordinator only reads the registers of entities that
+    # are enabled by default, so entities the user enabled stay unavailable until the next refresh
+    # (15 min). Refresh once more now that every entity has subscribed its registers.
+    for device_data in entry.runtime_data:
+        if device_data.configuration_update_coordinator:
+            await device_data.configuration_update_coordinator.async_request_refresh()
+
     return True
 
 
