@@ -88,6 +88,14 @@ EMMA_BATTERY_SELECT_DESCRIPTIONS: tuple[HuaweiSolarSelectEntityDescription, ...]
     HuaweiSolarSelectEntityDescription(
         key=rn.EMMA_ESS_CONTROL_MODE,
         entity_category=EntityCategory.CONFIG,
+        options=[
+            mode.name.lower()
+            for mode in rv.EmmaEssControlMode
+            if mode not in (
+                rv.EmmaEssControlMode.RESERVED_1,
+                rv.EmmaEssControlMode.RESERVED_3,
+            )
+        ],
     ),
     HuaweiSolarSelectEntityDescription(
         key=rn.EMMA_TOU_PREFERRED_USE_OF_SURPLUS_PV_POWER,
@@ -339,6 +347,8 @@ class HuaweiSolarSelectEntity(HuaweiSolarCoordinatorEntity, SelectEntity):
         self._register_unit: type[IntEnum] = register.unit
 
         self._attr_current_option = None
+        if options is None:
+            options = description.options
         self._attr_options = (
             options
             if options is not None
