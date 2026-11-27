@@ -156,7 +156,7 @@ EMMA_POWER_LIMITED_GRID_CONNECTION_NUMBER_DESCRIPTIONS: tuple[
         key=rn.EMMA_MAXIMUM_FEED_GRID_POWER_PERCENT,
         native_max_value=100,
         native_step=0.1,
-        native_min_value=-100,
+        native_min_value=0,
         native_unit_of_measurement=PERCENTAGE,
         entity_category=EntityCategory.CONFIG,
         entity_registry_enabled_default=False,
