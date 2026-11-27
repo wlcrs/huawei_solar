@@ -619,7 +619,9 @@ class HuaweiSolarNumberEntity(HuaweiSolarCoordinatorEntity, NumberEntity):
     @override
     def native_max_value(self) -> float:
         """Maximum value, possibly determined dynamically using maximum_key."""
-        if self._maximum_value is not None:
+        # The cable current reads 0 while no cable is plugged in: keep the static maximum then.
+        no_cable = self.entity_description.maximum_key == rn.CHARGER_CABLE_MAX_CURRENT and self._maximum_value == 0
+        if self._maximum_value is not None and not no_cable:
             if self.entity_description.native_max_value is not None:
                 return min(self._maximum_value, self.entity_description.native_max_value)
             return self._maximum_value
